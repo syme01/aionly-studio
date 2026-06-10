@@ -12,6 +12,7 @@ import { removeSpecialCharactersForFileName } from '@renderer/utils/file'
 import { captureScrollableAsBlob, captureScrollableAsDataURL } from '@renderer/utils/image'
 import { convertMathFormula, markdownToPlainText } from '@renderer/utils/markdown'
 import { getCitationContent, getMainTextContent, getThinkingContent } from '@renderer/utils/messageUtils/find'
+import { APP_NAME } from '@shared/config/constant'
 import { markdownToBlocks } from '@tryfabric/martian'
 import dayjs from 'dayjs'
 import DOMPurify from 'dompurify'
@@ -908,7 +909,7 @@ export const exportMarkdownToJoplin = async (
       body: JSON.stringify({
         title: title,
         body: content,
-        source: 'Cherry Studio'
+        source: APP_NAME
       })
     })
 

@@ -10,6 +10,7 @@ import {
   messageToMarkdownWithReasoning,
   topicToMarkdown
 } from '@renderer/utils/export'
+import { APP_NAME } from '@shared/config/constant'
 import { Alert, Empty, Form, Input, Modal, Select, Spin, Switch, TreeSelect } from 'antd'
 import React, { useEffect, useState } from 'react'
 
@@ -149,7 +150,7 @@ const PopupContainer: React.FC<PopupContainerProps> = ({
     title,
     tags: obsidianTags || '',
     createdAt: new Date().toISOString().split('T')[0],
-    source: 'Cherry Studio',
+    source: APP_NAME,
     processingMethod: processingMethod,
     folder: ''
   })

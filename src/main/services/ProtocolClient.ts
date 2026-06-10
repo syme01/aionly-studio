@@ -4,6 +4,7 @@ import path from 'node:path'
 import { promisify } from 'node:util'
 
 import { loggerService } from '@logger'
+import { APP_NAME, APP_PROTOCOL } from '@shared/config/constant'
 import { app } from 'electron'
 
 import { handleProvidersProtocolUrl } from './urlschema/handle-providers'
@@ -12,7 +13,7 @@ import { windowService } from './WindowService'
 
 const logger = loggerService.withContext('ProtocolClient')
 
-export const CHERRY_STUDIO_PROTOCOL = 'cherrystudio'
+export const CHERRY_STUDIO_PROTOCOL = APP_PROTOCOL
 
 export function registerProtocolClient(app: Electron.App) {
   if (process.defaultApp) {
@@ -87,7 +88,7 @@ export async function setupAppImageDeepLink(): Promise<void> {
     // %U allows passing the URL to the application
     // NoDisplay=true hides it from the regular application menu
     const desktopFileContent = `[Desktop Entry]
-Name=Cherry Studio
+Name=${APP_NAME}
 Exec=${escapePathForExec(appPath)} %U
 Terminal=false
 Type=Application

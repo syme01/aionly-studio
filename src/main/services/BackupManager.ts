@@ -17,6 +17,7 @@
 import type { Stats } from 'node:fs'
 
 import { loggerService } from '@logger'
+import { APP_NAME } from '@shared/config/constant'
 import { IpcChannel } from '@shared/IpcChannel'
 import type { WebDavConfig } from '@types'
 import type { S3Config } from '@types'
@@ -149,7 +150,7 @@ class BackupManager {
     return {
       version: 6,
       timestamp: Date.now(),
-      appName: 'Cherry Studio',
+      appName: APP_NAME,
       appVersion: app.getVersion(),
       platform: process.platform,
       arch: process.arch
@@ -581,8 +582,8 @@ class BackupManager {
       const metadata = await fs.readJson(metadataPath)
 
       // Validate appName to ensure backup is from Cherry Studio
-      if (metadata.appName !== 'Cherry Studio') {
-        throw new Error('This backup file is not from Cherry Studio and cannot be restored')
+      if (metadata.appName !== APP_NAME) {
+        throw new Error(`This backup file is not from ${APP_NAME} and cannot be restored`)
       }
 
       // Warn about cross-platform restore

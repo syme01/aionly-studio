@@ -9,6 +9,7 @@ import { isUserInChina } from '@main/utils/ipService'
 import { findCommandInShellEnv, getBinaryName, getBinaryPath, isBinaryExists } from '@main/utils/process'
 import getShellEnv from '@main/utils/shell-env'
 import type { TerminalConfig, TerminalConfigWithCommand } from '@shared/config/constant'
+import { APP_NAME } from '@shared/config/constant'
 import {
   codeTools,
   HOME_CHERRY_DIR,
@@ -1170,9 +1171,9 @@ class CodeToolsService {
         const batContent = [
           '@echo off',
           'chcp 65001 >nul 2>&1', // Switch to UTF-8 code page for international path support
-          `title ${cliTool} - Cherry Studio`,
+          `title ${cliTool} - ${APP_NAME}`,
           'echo ================================================',
-          'echo Cherry Studio CLI Tool Launcher',
+          `echo ${APP_NAME} CLI Tool Launcher`,
           `echo Tool: ${CodeToolsService.escapeBatchTextForEcho(cliTool)}`,
           `echo Directory: ${CodeToolsService.escapeBatchTextForEcho(directory)}`,
           `echo Time: ${new Date().toLocaleString()}`,

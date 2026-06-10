@@ -4,6 +4,7 @@ import { useProvider } from '@renderer/hooks/useProvider'
 import { fetchModels } from '@renderer/services/ApiService'
 import { useAppStore } from '@renderer/store'
 import { oauthWithCherryIn } from '@renderer/utils/oauth'
+import { APP_NAME } from '@shared/config/constant'
 import { Button, Divider } from 'antd'
 import type { FC } from 'react'
 import { useCallback, useState } from 'react'
@@ -71,7 +72,7 @@ const WelcomePage: FC<WelcomePageProps> = ({ setStep, setCherryInLoggedIn }) => 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
       <div className="flex flex-col items-center gap-6">
-        <img src={CherryStudioLogo} alt="Cherry Studio" className="h-16 w-16 rounded-xl" />
+        <img src={CherryStudioLogo} alt={APP_NAME} className="h-16 w-16 rounded-xl" />
 
         <div className="flex flex-col items-center gap-2">
           <h1 className="m-0 font-semibold text-(--color-text) text-2xl">{t('onboarding.welcome.title')}</h1>

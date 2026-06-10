@@ -1,4 +1,5 @@
 import { loggerService } from '@main/services/LoggerService'
+import { APP_NAME } from '@shared/config/constant'
 import cors from 'cors'
 import express from 'express'
 import { v4 as uuidv4 } from 'uuid'
@@ -121,7 +122,7 @@ app.get('/health', (_req, res) => {
  */
 app.get('/', (_req, res) => {
   res.json({
-    name: 'Cherry Studio API',
+    name: `${APP_NAME} API`,
     version: '1.0.0',
     endpoints: {
       health: 'GET /health',

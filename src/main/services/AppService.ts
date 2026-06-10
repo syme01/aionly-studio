@@ -1,5 +1,6 @@
 import { loggerService } from '@logger'
 import { isDev, isLinux, isMac, isWin } from '@main/constant'
+import { APP_NAME } from '@shared/config/constant'
 import { app } from 'electron'
 import fs from 'fs'
 import os from 'os'
@@ -49,7 +50,7 @@ export class AppService {
           // Create desktop file content
           const desktopContent = `[Desktop Entry]
   Type=Application
-  Name=Cherry Studio
+  Name=${APP_NAME}
   Comment=A powerful AI assistant for producer.
   Exec=${executablePath}
   Icon=cherrystudio

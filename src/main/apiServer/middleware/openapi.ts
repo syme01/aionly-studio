@@ -1,3 +1,4 @@
+import { APP_NAME } from '@shared/config/constant'
 import type { Express } from 'express'
 import swaggerUi from 'swagger-ui-express'
 
@@ -23,7 +24,7 @@ export function setupOpenAPIDocumentation(app: Express) {
         .swagger-ui .topbar { display: none; }
         .swagger-ui .info .title { color: #1890ff; }
       `,
-        customSiteTitle: 'Cherry Studio API Documentation'
+        customSiteTitle: `${APP_NAME} API Documentation`
       })
     )
 
