@@ -1,5 +1,7 @@
 import '@renderer/databases'
 
+import { useLoginState } from '@renderer/hooks/useLoginState'
+import LoginPage from '@renderer/pages/login'
 import type { FC } from 'react'
 import { useMemo } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
@@ -8,7 +10,7 @@ import Sidebar from './components/app/Sidebar'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import TabsContainer from './components/Tab/TabContainer'
 import NavigationHandler from './handler/NavigationHandler'
-import { useOnboardingState } from './hooks/useOnboardingState'
+// import { useOnboardingState } from './hooks/useOnboardingState'
 import { useNavbarPosition } from './hooks/useSettings'
 import AgentPage from './pages/agents/AgentPage'
 import CodeToolsPage from './pages/code/CodeToolsPage'
@@ -19,7 +21,7 @@ import LaunchpadPage from './pages/launchpad/LaunchpadPage'
 import MinAppPage from './pages/minapps/MinAppPage'
 import MinAppsPage from './pages/minapps/MinAppsPage'
 import NotesPage from './pages/notes/NotesPage'
-import { OnboardingPage } from './pages/onboarding'
+// import { OnboardingPage } from './pages/onboarding'
 import OpenClawPage from './pages/openclaw/OpenClawPage'
 import PaintingsRoutePage from './pages/paintings/PaintingsRoutePage'
 import SettingsPage from './pages/settings/SettingsPage'
@@ -27,7 +29,8 @@ import AssistantPresetsPage from './pages/store/assistants/presets/AssistantPres
 import TranslatePage from './pages/translate/TranslatePage'
 
 const Router: FC = () => {
-  const { onboardingCompleted, completeOnboarding } = useOnboardingState()
+  const { isLogin, completeLogin } = useLoginState()
+
   const { navbarPosition } = useNavbarPosition()
 
   const routes = useMemo(() => {
@@ -53,8 +56,12 @@ const Router: FC = () => {
     )
   }, [])
 
-  if (!onboardingCompleted) {
+  /*if (!onboardingCompleted) {
     return <OnboardingPage onComplete={completeOnboarding} />
+  }*/
+
+  if (!isLogin) {
+    return <LoginPage onComplete={completeLogin} />
   }
 
   if (navbarPosition === 'left') {
