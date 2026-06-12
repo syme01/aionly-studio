@@ -2933,7 +2933,10 @@
       "setup_hint": "请您先至少配置一个服务商，以获得最佳使用体验",
       "subtitle": "使用 AiOnly 服务商可畅享顶级 AI 服务",
       "title": "HELLO! 欢迎注册登录"
-    },
+    }
+  },
+  "login": {
+    "title": "HELLO! 欢迎注册登录",
     "newUserGift": "新用户首次注册即送新人礼>>",
     "login_register": "登录/注册",
     "sub_account": "子账户登录",
@@ -2957,6 +2960,12 @@
       "email_invalid": "邮箱格式错误",
       "code_required": "请输入验证码",
       "send_code": "获取验证码"
+    },
+    "account_login": {
+      "username_required": "请输入手机号或邮箱",
+      "username_invalid": "手机号或邮箱格式错误",
+      "password_required": "请输入密码",
+      "password_invalid": "请输入6-20位英文字母、数字或者符号（除空格），且字母、数字和标点符号至少包含两种"
     }
   },
   "openclaw": {

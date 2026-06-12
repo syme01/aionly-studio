@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
+import { getServiceApi } from './api/seat'
 import TopViewContainer from './components/TopView'
 import AntdProvider from './context/AntdProvider'
 import { CodeStyleProvider } from './context/CodeStyleProvider'
@@ -15,6 +16,16 @@ import { ThemeProvider } from './context/ThemeProvider'
 import Router from './Router'
 
 const logger = loggerService.withContext('App.tsx')
+
+// 供应商 信息设置(网页tab,logo,网页title)
+getServiceApi(window.location.hostname)
+  .then((res: any) => {
+    const agentInfo = res.data
+    localStorage.setItem('agentInfo', JSON.stringify(agentInfo))
+  })
+  .catch((err) => {
+    logger.error('获取供应商信息失败', err as Error)
+  })
 
 // 创建 React Query 客户端
 const queryClient = new QueryClient({

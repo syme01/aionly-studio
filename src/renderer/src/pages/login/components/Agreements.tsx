@@ -1,3 +1,4 @@
+import { loggerService } from '@logger'
 import i18n from '@renderer/i18n'
 import type { CheckboxProps } from 'antd'
 import { Button, Checkbox } from 'antd'
@@ -21,27 +22,30 @@ const LinkButton = styled(Button)`
 
 const SpanText = styled.span`
   font-size: 13px;
+  padding-top: 1px;
 `
+
+const logger = loggerService.withContext('Agreements')
 
 export const Agreements = (props: AgreementsProps) => {
   const onChange: CheckboxProps['onChange'] = (e) => {
-    console.log('checked', e.target.checked)
+    logger.debug('协议勾选状态变更', { checked: e.target.checked })
     props.onChange?.(e.target.checked)
   }
 
   return (
     <div className="flex justify-center">
-      <ACheckbox onChange={onChange}>{i18n.t('onboarding.agreements.accept')}</ACheckbox>
+      <ACheckbox onChange={onChange}>{i18n.t('login.agreements.accept')}</ACheckbox>
       <LinkButton type="link" size="small">
-        {i18n.t('onboarding.agreements.user')}{' '}
+        {i18n.t('login.agreements.user')}{' '}
       </LinkButton>
       <SpanText>、</SpanText>
       <LinkButton type="link" size="small">
-        {i18n.t('onboarding.agreements.privacy')}{' '}
+        {i18n.t('login.agreements.privacy')}{' '}
       </LinkButton>
-      <SpanText>{i18n.t('onboarding.agreements.yu')}</SpanText>
+      <SpanText>{i18n.t('login.agreements.yu')}</SpanText>
       <LinkButton type="link" size="small">
-        {i18n.t('onboarding.agreements.disclaimer')}
+        {i18n.t('login.agreements.disclaimer')}
       </LinkButton>
     </div>
   )

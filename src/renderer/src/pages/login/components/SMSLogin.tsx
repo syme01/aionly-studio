@@ -1,11 +1,10 @@
+import { loggerService } from '@logger'
 import { captchaEnabledApi, loginApi, smsCaptchaAndTokenApi } from '@renderer/api/login'
 import i18n from '@renderer/i18n'
 import type { FormProps } from 'antd'
 import { Button, Form, Input, message, Space } from 'antd'
 import { useEffect, useImperativeHandle, useRef, useState } from 'react'
 import styled from 'styled-components'
-
-import { Agreements } from './Agreements'
 
 const Container = styled.div`
   background: #fff;
@@ -16,38 +15,29 @@ const StyleInput = styled(Input)`
     height: 46px;
 `
 
-const LoginButton = styled(Button)`
-  width: 100%;
-  height: 46px;
-  background: rgba(6, 10, 38, 1);
-  border-radius: 8px;
-
-  &:not(:disabled):hover {
-    background: rgba(6, 10, 38, 0.8) !important;
-  }
-`
+const logger = loggerService.withContext('SMSLogin')
 
 interface LoginFormProps {
-  isAccept: boolean
-  onChange?: (isAccept: boolean) => void
+  ref?: React.Ref<SMSLoginRef>
   onSubmit?: () => void
+  onFormChange?: (valid: boolean) => void
   verifyRef?: any
 }
 
 export interface SMSLoginRef {
   sendCode?: (verifyParams: any) => void
+  login?: () => Promise<void>
+  triggerVerify?: () => void
 }
 
-export const SMSLogin = ({ ref, ...props }: LoginFormProps & { ref?: React.RefObject<SMSLoginRef | null> }) => {
+export const SMSLogin = ({ ref, ...props }: LoginFormProps) => {
   type FieldType = {
     phonenumber?: string
     smsCode?: string
-    accept?: boolean
   }
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const [loading, setLoading] = useState(false)
   const [form] = Form.useForm<FieldType>()
 
   const [codeForm, setCodeForm] = useState({
@@ -66,27 +56,24 @@ export const SMSLogin = ({ ref, ...props }: LoginFormProps & { ref?: React.RefOb
 
   // 登录接口
   const login = async () => {
-    try {
-      setLoading(true)
-      const { data } = await loginApi(codeForm)
-      if (data && data.access_token) {
-        localStorage.setItem('token', data.access_token)
-        props.onSubmit?.()
-      }
-    } finally {
-      setLoading(false)
+    // 先做表单验证
+    await form.validateFields()
+
+    const { data } = await loginApi(codeForm)
+    if (data && data.access_token) {
+      localStorage.setItem('token', data.access_token)
+      props.onSubmit?.()
     }
   }
 
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    console.log('Success:', values)
+    logger.debug('短信登录表单提交成功', values)
     login()
   }
 
-  const onValuesChange = (changedValues: any, allValues: any) => {
-    console.log('allValues', changedValues, allValues)
-    const disabled = !allValues.phonenumber || !allValues.smsCode || !allValues.accept
-    setDisabledLogin(disabled)
+  const onValuesChange = (_changedValues: any, allValues: any) => {
+    const valid = !!allValues.phonenumber && !!allValues.smsCode
+    props.onFormChange?.(valid)
     setCodeForm({
       ...codeForm,
       phonenumber: allValues.phonenumber,
@@ -95,8 +82,7 @@ export const SMSLogin = ({ ref, ...props }: LoginFormProps & { ref?: React.RefOb
   }
 
   const [disabled, setDisabled] = useState(true)
-  const [disabledLogin, setDisabledLogin] = useState(true)
-  const [codeBtnText, setCodeBtnText] = useState(i18n.t('onboarding.sms_login.send_code'))
+  const [codeBtnText, setCodeBtnText] = useState(i18n.t('login.sms_login.send_code'))
 
   const handleChangePhone = (e: any) => {
     const disabled = !e.target.value
@@ -109,9 +95,9 @@ export const SMSLogin = ({ ref, ...props }: LoginFormProps & { ref?: React.RefOb
       if (next <= 0) {
         timerRef.current = null
         setDisabled(false)
-        setCodeBtnText(i18n.t('onboarding.sms_login.send_code'))
+        setCodeBtnText(i18n.t('login.sms_login.send_code'))
       } else {
-        setCodeBtnText(i18n.t('onboarding.sms_login.send_code') + '(' + next + ')')
+        setCodeBtnText(i18n.t('login.sms_login.send_code') + '(' + next + ')')
         disCount(next)
       }
     }, 1000)
@@ -127,7 +113,7 @@ export const SMSLogin = ({ ref, ...props }: LoginFormProps & { ref?: React.RefOb
     }
 
     if (!regexp.test(phone)) {
-      message.error(i18n.t('onboarding.sms_login.phone_invalid'))
+      message.error(i18n.t('login.sms_login.phone_invalid'))
       return
     }
 
@@ -135,10 +121,15 @@ export const SMSLogin = ({ ref, ...props }: LoginFormProps & { ref?: React.RefOb
     props.verifyRef.current?.show()
   }
 
+  // 触发滑块验证码（供父组件调用）
+  const triggerVerify = () => {
+    handleSendCode()
+  }
+
   // 发送验证码---真正走接口的地方
   const sendCode = (verifyParams: any) => {
     setDisabled(true)
-    setCodeBtnText(i18n.t('onboarding.sms_login.send_code') + '(60)')
+    setCodeBtnText(i18n.t('login.sms_login.send_code') + '(60)')
     disCount(60)
     handleSmsCaptchaAndTokenApi(verifyParams)
   }
@@ -165,14 +156,16 @@ export const SMSLogin = ({ ref, ...props }: LoginFormProps & { ref?: React.RefOb
       if (timerRef.current) clearTimeout(timerRef.current)
       timerRef.current = null
       setDisabled(false)
-      setCodeBtnText(i18n.t('onboarding.sms_login.send_code'))
+      setCodeBtnText(i18n.t('login.sms_login.send_code'))
       throw new Error(e)
     }
   }
 
   // 暴露给父组件
   useImperativeHandle(ref, () => ({
-    sendCode
+    sendCode,
+    login,
+    triggerVerify
   }))
 
   const suffix = (
@@ -183,7 +176,8 @@ export const SMSLogin = ({ ref, ...props }: LoginFormProps & { ref?: React.RefOb
 
   useEffect(() => {
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current)
+      const timer = timerRef.current
+      if (timer) clearTimeout(timer)
     }
   }, [])
 
@@ -194,66 +188,50 @@ export const SMSLogin = ({ ref, ...props }: LoginFormProps & { ref?: React.RefOb
     const suffix: any = sessionStorage.getItem('suffix')
 
     if (inviteCode) {
-      setCodeForm({
-        ...codeForm,
+      setCodeForm((prev) => ({
+        ...prev,
         inviteAccountId: inviteCode,
         inviteCode: undefined,
         inviteSuffix: undefined
-      })
+      }))
       sessionStorage.removeItem('inviteCode')
     } else if (inviteLinkCode && suffix) {
-      setCodeForm({
-        ...codeForm,
+      setCodeForm((c) => ({
+        ...c,
         inviteAccountId: undefined,
         inviteCode: inviteLinkCode,
         inviteSuffix: suffix
-      })
+      }))
     } else {
-      setCodeForm({
-        ...codeForm,
+      setCodeForm((c) => ({
+        ...c,
         inviteAccountId: undefined,
         inviteCode: undefined,
         inviteSuffix: undefined
-      })
+      }))
     }
   }, [])
 
   return (
     <Container>
-      <Form
-        form={form}
-        name="basic"
-        size="large"
-        onFinish={onFinish}
-        onValuesChange={onValuesChange}
-        autoComplete="off">
+      <Form form={form} size="large" onFinish={onFinish} onValuesChange={onValuesChange} autoComplete="off">
         <Form.Item<FieldType>
           name="phonenumber"
-          rules={[{ required: true, message: i18n.t('onboarding.sms_login.phone_required') }]}>
+          rules={[{ required: true, message: i18n.t('login.sms_login.phone_required') }]}>
           <Space.Compact style={{ width: '100%' }}>
             <StyleInput style={{ width: '20%' }} value={'+86'} readOnly={true} />
             <StyleInput
               style={{ width: '80%' }}
               onChange={handleChangePhone}
-              placeholder={i18n.t('onboarding.sms_login.phone_required')}
+              placeholder={i18n.t('login.sms_login.phone_required')}
             />
           </Space.Compact>
         </Form.Item>
 
         <Form.Item<FieldType>
           name="smsCode"
-          rules={[{ required: true, message: i18n.t('onboarding.sms_login.code_required') }]}>
-          <StyleInput suffix={suffix} placeholder={i18n.t('onboarding.sms_login.code_required')} />
-        </Form.Item>
-
-        <Form.Item<FieldType> name="accept" style={{ marginBottom: '5px', marginTop: '0' }}>
-          <Agreements onChange={props.onChange} />
-        </Form.Item>
-
-        <Form.Item label={null} style={{ marginBottom: 0 }}>
-          <LoginButton type="primary" block={true} disabled={disabledLogin} loading={loading} htmlType="submit">
-            {i18n.t('onboarding.login_register')}
-          </LoginButton>
+          rules={[{ required: true, message: i18n.t('login.sms_login.code_required') }]}>
+          <StyleInput suffix={suffix} placeholder={i18n.t('login.sms_login.code_required')} />
         </Form.Item>
       </Form>
     </Container>

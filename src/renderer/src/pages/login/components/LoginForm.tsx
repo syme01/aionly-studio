@@ -2,19 +2,23 @@ import bgLoginF from '@renderer/assets/images/login/bg-login-f.jpg'
 import lwImg from '@renderer/assets/images/login/lw.png'
 import Verify from '@renderer/components/verifition/Verify'
 import i18n from '@renderer/i18n'
+import { Agreements } from '@renderer/pages/login/components/Agreements'
 import { Button, TabsProps } from 'antd'
 import { Tabs } from 'antd'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { AccountLogin } from './AccountLogin'
-import { EmailLogin } from './EmailLogin'
-import { SMSLogin } from './SMSLogin'
+import { AccountLogin, type AccountLoginRef } from './AccountLogin'
+import { EmailLogin, type EmailLoginRef } from './EmailLogin'
+import { SMSLogin, type SMSLoginRef } from './SMSLogin'
 
 const Container = styled.div`
   width: 100%;
   display: flex;
   height: 100%;
+  .ant-form-item-with-help .ant-form-item-explain{
+    font-size: 12px;
+  }
 `
 
 const LeftPanel = styled.div`
@@ -31,6 +35,10 @@ const RightPanel = styled.div`
   align-items: center;
   justify-content: center;
   background-color: var(--color-background);
+
+  .inner{
+    width: 432px;
+  }
 
   .ant-tabs-nav {
     &::before {
@@ -75,7 +83,8 @@ const LoginTitle = styled.div`
   font-weight: 700;
   color: #060a26;
   font-size: 30px;
-  margin-bottom: 30px;
+  margin: 0 auto 30px;
+  text-align: center;
 `
 
 const BottomPanel = styled.div`
@@ -97,84 +106,157 @@ const BottomPanel = styled.div`
   }
 `
 
+const LoginButton = styled(Button)`
+  width: 100%;
+  height: 46px;
+  background: rgba(6, 10, 38, 1);
+  border-radius: 8px;
+
+  &:not(:disabled):hover {
+    background: rgba(6, 10, 38, 0.8) !important;
+  }
+`
+
 interface LoginFormProps {
   onComplete?: () => void
 }
 
 export const LoginForm = (props: LoginFormProps) => {
+  const [activeTabKey, setActiveTabKey] = useState('1')
   const [isAccept, setIsAccept] = useState(false)
+  const [formValid, setFormValid] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [logoUrl, setLogoUrl] = useState('')
+
   const verifyRef = useRef<any>(null)
-  const smsLoginRef = useRef<any>(null)
+  const smsLoginRef = useRef<SMSLoginRef | null>(null)
+  const emailLoginRef = useRef<EmailLoginRef | null>(null)
+  const accountLoginRef = useRef<AccountLoginRef | null>(null)
+
+  useEffect(() => {
+    const agentInfoStr = localStorage.getItem('agentInfo')
+    if (agentInfoStr) {
+      const agentInfo = JSON.parse(agentInfoStr)
+      setLogoUrl(agentInfo.logoUrl)
+    }
+  }, [])
+
+  // 获取当前激活 tab 对应的子组件 ref
+  const getActiveRef = () => {
+    const map = {
+      '1': smsLoginRef,
+      '2': emailLoginRef,
+      '3': accountLoginRef
+    }
+    return map[activeTabKey]
+  }
 
   const onAcceptChange = (checked: boolean) => {
     setIsAccept(checked)
   }
 
-  const items: TabsProps['items'] = [
+  const onFormChange = (valid: boolean) => {
+    setFormValid(valid)
+  }
+
+  const tabList: TabsProps['items'] = [
     {
       key: '1',
       label: '短信登录',
       children: (
-        <SMSLogin
-          ref={smsLoginRef}
-          isAccept={isAccept}
-          verifyRef={verifyRef}
-          onChange={onAcceptChange}
-          onSubmit={props.onComplete}
-        />
+        <SMSLogin ref={smsLoginRef} verifyRef={verifyRef} onFormChange={onFormChange} onSubmit={props.onComplete} />
       )
     },
     {
       key: '2',
       label: '邮箱登录',
-      children: <EmailLogin isAccept={isAccept} />
+      children: (
+        <EmailLogin ref={emailLoginRef} verifyRef={verifyRef} onFormChange={onFormChange} onSubmit={props.onComplete} />
+      )
     },
     {
       key: '3',
       label: '账号登录',
-      children: <AccountLogin isAccept={isAccept} />
+      children: (
+        <AccountLogin
+          ref={accountLoginRef}
+          verifyRef={verifyRef}
+          onFormChange={onFormChange}
+          onSubmit={props.onComplete}
+        />
+      )
     }
   ]
 
   const onTabChange = (key: string) => {
-    console.log(key)
+    setActiveTabKey(key)
+    // 切换 tab 时重置表单有效状态
+    setFormValid(false)
   }
 
-  // 滑块验证码成功回调
+  // 滑块验证码成功回调——路由到当前激活的子组件
   const verifyOnSuccess = async (params: any) => {
-    console.log('verifyOnSuccess', params)
-    smsLoginRef.current?.sendCode(params)
+    const activeRef = getActiveRef()
+    activeRef?.current?.sendCode?.(params)
     verifyRef.current?.closeBox()
   }
+
+  // 登录按钮点击——调用当前激活子组件的 login 方法
+  const handleLoginSubmit = async () => {
+    if (!isAccept) return
+    const activeRef = getActiveRef()
+    if (!activeRef?.current?.login) return
+    setLoading(true)
+    try {
+      await activeRef.current.login()
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const disabledLogin = !isAccept || !formValid
 
   return (
     <>
       <Container>
         <LeftPanel>
-          <LogoImage
-            src="https://hf.rhwx-ai.com:9824/maas/2026/06/01/dfa6513b6b164feaa766fa9e13f64b32.png"
-            alt="logo"
-          />
+          <LogoImage src={logoUrl} alt="logo" />
           <NewUserGiftWrap>
             <img className="w-8" src={lwImg} alt="lw" />
-            {i18n.t('onboarding.newUserGift')}
+            {i18n.t('login.newUserGift')}
           </NewUserGiftWrap>
         </LeftPanel>
         <RightPanel>
-          <LoginTitle>{i18n.t('onboarding.welcome.title')}</LoginTitle>
-          <Tabs
-            centered
-            style={{ width: '432px' }}
-            tabBarGutter={48}
-            size="large"
-            defaultActiveKey="1"
-            items={items}
-            onChange={onTabChange}
-          />
-          <BottomPanel>
-            <Button type="link">{i18n.t('onboarding.sub_account')}</Button>
-            <Button type="link">{i18n.t('onboarding.forget_password')}</Button>
-          </BottomPanel>
+          <div className="inner">
+            <LoginTitle>{i18n.t('login.title')}</LoginTitle>
+            <Tabs
+              centered
+              style={{ width: '432px' }}
+              tabBarGutter={48}
+              size="large"
+              activeKey={activeTabKey}
+              defaultActiveKey="1"
+              items={tabList}
+              onChange={onTabChange}
+            />
+
+            <Agreements onChange={onAcceptChange} checked={isAccept} />
+
+            <LoginButton
+              type="primary"
+              block={true}
+              disabled={disabledLogin}
+              loading={loading}
+              onClick={handleLoginSubmit}
+              style={{ marginTop: 12 }}>
+              {i18n.t('login.login_register')}
+            </LoginButton>
+
+            <BottomPanel>
+              <Button type="link">{i18n.t('login.sub_account')}</Button>
+              <Button type="link">{i18n.t('login.forget_password')}</Button>
+            </BottomPanel>
+          </div>
         </RightPanel>
       </Container>
 

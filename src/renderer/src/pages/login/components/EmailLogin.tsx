@@ -1,20 +1,21 @@
+import { loggerService } from '@logger'
 import { captchaEnabledApi, emailCaptchaApi, loginApi } from '@renderer/api/login'
 import i18n from '@renderer/i18n'
 import { Button, Form, type FormProps, Input, message } from 'antd'
 import { useEffect, useImperativeHandle, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { Agreements } from './Agreements'
-
 interface EmailLoginProps {
-  isAccept: boolean
-  onChange?: (isAccept: boolean) => void
+  ref?: React.Ref<EmailLoginRef>
   onSubmit?: () => void
+  onFormChange?: (valid: boolean) => void
   verifyRef?: any
 }
 
 export interface EmailLoginRef {
   sendCode?: (verifyParams: any) => void
+  login?: () => Promise<void>
+  triggerVerify?: () => void
 }
 
 const Container = styled.div`
@@ -26,27 +27,16 @@ const StyleInput = styled(Input)`
     height: 46px;
 `
 
-const LoginButton = styled(Button)`
-  width: 100%;
-  height: 46px;
-  background: rgba(6, 10, 38, 1);
-  border-radius: 8px;
+const logger = loggerService.withContext('EmailLogin')
 
-  &:not(:disabled):hover {
-    background: rgba(6, 10, 38, 0.8) !important;
-  }
-`
-
-export const EmailLogin = ({ ref, ...props }: EmailLoginProps & { ref?: React.RefObject<EmailLoginRef | null> }) => {
+export const EmailLogin = ({ ref, ...props }: EmailLoginProps) => {
   type FieldType = {
     email?: string
     emailCode?: string
-    accept?: boolean
   }
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const [loading, setLoading] = useState(false)
   const [form] = Form.useForm<FieldType>()
 
   const [emailForm, setEmailForm] = useState({
@@ -65,27 +55,24 @@ export const EmailLogin = ({ ref, ...props }: EmailLoginProps & { ref?: React.Re
 
   // 登录接口
   const login = async () => {
-    try {
-      setLoading(true)
-      const { data } = await loginApi(emailForm)
-      if (data && data.access_token) {
-        localStorage.setItem('token', data.access_token)
-        props.onSubmit?.()
-      }
-    } finally {
-      setLoading(false)
+    // 先做表单验证
+    await form.validateFields()
+
+    const { data } = await loginApi(emailForm)
+    if (data && data.access_token) {
+      localStorage.setItem('token', data.access_token)
+      props.onSubmit?.()
     }
   }
 
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    console.log('Success:', values)
+    logger.debug('邮箱登录表单提交成功', values)
     login()
   }
 
-  const onValuesChange = (changedValues: any, allValues: any) => {
-    console.log('allValues', changedValues, allValues)
-    const disabled = !allValues.email || !allValues.emailCode || !allValues.accept
-    setDisabledLogin(disabled)
+  const onValuesChange = (_changedValues: any, allValues: any) => {
+    const valid = !!allValues.email && !!allValues.emailCode
+    props.onFormChange?.(valid)
     setEmailForm({
       ...emailForm,
       email: allValues.email,
@@ -94,8 +81,7 @@ export const EmailLogin = ({ ref, ...props }: EmailLoginProps & { ref?: React.Re
   }
 
   const [disabled, setDisabled] = useState(true)
-  const [disabledLogin, setDisabledLogin] = useState(true)
-  const [codeBtnText, setCodeBtnText] = useState(i18n.t('onboarding.email_login.send_code'))
+  const [codeBtnText, setCodeBtnText] = useState(i18n.t('login.email_login.send_code'))
 
   const handleChangeEmail = (e: any) => {
     const disabled = !e.target.value
@@ -108,9 +94,9 @@ export const EmailLogin = ({ ref, ...props }: EmailLoginProps & { ref?: React.Re
       if (next <= 0) {
         timerRef.current = null
         setDisabled(false)
-        setCodeBtnText(i18n.t('onboarding.email_login.send_code'))
+        setCodeBtnText(i18n.t('login.email_login.send_code'))
       } else {
-        setCodeBtnText(i18n.t('onboarding.email_login.send_code') + '(' + next + ')')
+        setCodeBtnText(i18n.t('login.email_login.send_code') + '(' + next + ')')
         disCount(next)
       }
     }, 1000)
@@ -125,7 +111,7 @@ export const EmailLogin = ({ ref, ...props }: EmailLoginProps & { ref?: React.Re
     }
 
     if (!regexp.test(email)) {
-      message.error(i18n.t('onboarding.email_login.email_invalid'))
+      message.error(i18n.t('login.email_login.email_invalid'))
       return
     }
 
@@ -133,10 +119,15 @@ export const EmailLogin = ({ ref, ...props }: EmailLoginProps & { ref?: React.Re
     props.verifyRef.current?.show()
   }
 
+  // 触发滑块验证码（供父组件调用）
+  const triggerVerify = () => {
+    handleSendCode()
+  }
+
   // 发送验证码---真正走接口的地方
   const sendCode = (verifyParams: any) => {
     setDisabled(true)
-    setCodeBtnText(i18n.t('onboarding.email_login.send_code') + '(60)')
+    setCodeBtnText(i18n.t('login.email_login.send_code') + '(60)')
     disCount(60)
     handleEmailCaptchaAndTokenApi(verifyParams)
   }
@@ -156,14 +147,16 @@ export const EmailLogin = ({ ref, ...props }: EmailLoginProps & { ref?: React.Re
       if (timerRef.current) clearTimeout(timerRef.current)
       timerRef.current = null
       setDisabled(false)
-      setCodeBtnText(i18n.t('onboarding.email_login.send_code'))
+      setCodeBtnText(i18n.t('login.email_login.send_code'))
       throw new Error(e)
     }
   }
 
   // 暴露给父组件
   useImperativeHandle(ref, () => ({
-    sendCode
+    sendCode,
+    login,
+    triggerVerify
   }))
 
   const suffix = (
@@ -174,7 +167,8 @@ export const EmailLogin = ({ ref, ...props }: EmailLoginProps & { ref?: React.Re
 
   useEffect(() => {
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current)
+      const timer = timerRef.current
+      if (timer) clearTimeout(timer)
     }
   }, [])
 
@@ -185,59 +179,43 @@ export const EmailLogin = ({ ref, ...props }: EmailLoginProps & { ref?: React.Re
     const suffix: any = sessionStorage.getItem('suffix')
 
     if (inviteCode) {
-      setEmailForm({
-        ...emailForm,
+      setEmailForm((prev) => ({
+        ...prev,
         inviteAccountId: inviteCode,
         inviteCode: undefined,
         inviteSuffix: undefined
-      })
+      }))
       sessionStorage.removeItem('inviteCode')
     } else if (inviteLinkCode && suffix) {
-      setEmailForm({
-        ...emailForm,
+      setEmailForm((e) => ({
+        ...e,
         inviteAccountId: undefined,
         inviteCode: inviteLinkCode,
         inviteSuffix: suffix
-      })
+      }))
     } else {
-      setEmailForm({
-        ...emailForm,
+      setEmailForm((e) => ({
+        ...e,
         inviteAccountId: undefined,
         inviteCode: undefined,
         inviteSuffix: undefined
-      })
+      }))
     }
   }, [])
 
   return (
     <Container>
-      <Form
-        form={form}
-        name="basic"
-        size="large"
-        onFinish={onFinish}
-        onValuesChange={onValuesChange}
-        autoComplete="off">
+      <Form form={form} size="large" onFinish={onFinish} onValuesChange={onValuesChange} autoComplete="off">
         <Form.Item<FieldType>
           name="email"
-          rules={[{ required: true, message: i18n.t('onboarding.email_login.email_required') }]}>
-          <StyleInput onChange={handleChangeEmail} placeholder={i18n.t('onboarding.email_login.email_required')} />
+          rules={[{ required: true, message: i18n.t('login.email_login.email_required') }]}>
+          <StyleInput onChange={handleChangeEmail} placeholder={i18n.t('login.email_login.email_required')} />
         </Form.Item>
 
         <Form.Item<FieldType>
           name="emailCode"
-          rules={[{ required: true, message: i18n.t('onboarding.email_login.code_required') }]}>
-          <StyleInput suffix={suffix} placeholder={i18n.t('onboarding.email_login.code_required')} />
-        </Form.Item>
-
-        <Form.Item<FieldType> name="accept" style={{ marginBottom: '5px', marginTop: '0' }}>
-          <Agreements onChange={props.onChange} />
-        </Form.Item>
-
-        <Form.Item label={null} style={{ marginBottom: 0 }}>
-          <LoginButton type="primary" block={true} disabled={disabledLogin} loading={loading} htmlType="submit">
-            {i18n.t('onboarding.login_register')}
-          </LoginButton>
+          rules={[{ required: true, message: i18n.t('login.email_login.code_required') }]}>
+          <StyleInput suffix={suffix} placeholder={i18n.t('login.email_login.code_required')} />
         </Form.Item>
       </Form>
     </Container>

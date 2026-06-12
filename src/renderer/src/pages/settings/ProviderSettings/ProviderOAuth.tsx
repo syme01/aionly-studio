@@ -66,7 +66,12 @@ const ProviderOAuth: FC<Props> = ({ providerId }) => {
           i18nKey="settings.provider.oauth.description"
           components={{
             website: (
-              <OfficialWebsite href={PROVIDER_URLS[provider.id].websites.official} target="_blank" rel="noreferrer" />
+              <OfficialWebsite
+                key="website"
+                href={PROVIDER_URLS[provider.id].websites.official}
+                target="_blank"
+                rel="noreferrer"
+              />
             )
           }}
           values={{ provider: providerWebsite }}
