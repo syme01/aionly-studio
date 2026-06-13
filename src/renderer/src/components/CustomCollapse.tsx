@@ -1,3 +1,4 @@
+import { useTheme } from '@renderer/context/ThemeProvider'
 import { Collapse } from 'antd'
 import { merge } from 'lodash'
 import { ChevronRight } from 'lucide-react'
@@ -34,9 +35,12 @@ const CustomCollapse: FC<CustomCollapseProps> = ({
 }) => {
   const [activeKeys, setActiveKeys] = useState(activeKey || defaultActiveKey)
 
+  const { theme } = useTheme()
+  const isDark = theme === 'dark'
+
   const defaultCollapseStyle = {
     width: '100%',
-    background: 'transparent',
+    background: isDark ? 'transparent' : '#fff',
     border: '0.5px solid var(--color-border)'
   }
 
@@ -44,7 +48,7 @@ const CustomCollapse: FC<CustomCollapseProps> = ({
     padding: '3px 16px',
     alignItems: 'center',
     justifyContent: 'space-between',
-    background: 'var(--color-background-soft)'
+    background: isDark ? 'var(--color-background-soft)' : '#fff'
   }
 
   const getHeaderStyle = () => {
@@ -71,7 +75,7 @@ const CustomCollapse: FC<CustomCollapseProps> = ({
   const collapseItemStyles = useMemo(() => {
     return merge({}, defaultCollapseItemStyles, styles)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeKeys])
+  }, [activeKeys, isDark])
 
   return (
     <Collapse

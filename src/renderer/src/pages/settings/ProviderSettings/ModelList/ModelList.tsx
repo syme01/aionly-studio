@@ -7,20 +7,22 @@ import { useProvider } from '@renderer/hooks/useProvider'
 import { getProviderLabel } from '@renderer/i18n/label'
 import { SettingHelpLink, SettingHelpText, SettingHelpTextRow, SettingSubtitle } from '@renderer/pages/settings'
 import EditModelPopup from '@renderer/pages/settings/ProviderSettings/EditModelPopup/EditModelPopup'
-import AddModelPopup from '@renderer/pages/settings/ProviderSettings/ModelList/AddModelPopup'
+// import AddModelPopup from '@renderer/pages/settings/ProviderSettings/ModelList/AddModelPopup'
 import DownloadOVMSModelPopup from '@renderer/pages/settings/ProviderSettings/ModelList/DownloadOVMSModelPopup'
-import ManageModelsPopup from '@renderer/pages/settings/ProviderSettings/ModelList/ManageModelsPopup'
+// import ManageModelsPopup from '@renderer/pages/settings/ProviderSettings/ModelList/ManageModelsPopup'
 import NewApiAddModelPopup from '@renderer/pages/settings/ProviderSettings/ModelList/NewApiAddModelPopup'
 import type { Model } from '@renderer/types'
 import { filterModelsByKeywords } from '@renderer/utils'
 import { getDuplicateModelNames } from '@renderer/utils/model'
 import { isNewApiProvider } from '@renderer/utils/provider'
-import { Button, Flex, Space, Spin } from 'antd'
+import { Button, Empty, Flex, Space, Spin } from 'antd'
 import { groupBy, isEmpty, sortBy, toPairs } from 'lodash'
 import { RefreshCw } from 'lucide-react'
 import React, { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import styled from 'styled-components'
 
+import AiOnlyAddModelPopup from '../AiOnlyModel/add/AddModelPopup'
 import ModelListGroup from './ModelListGroup'
 import { useHealthCheck } from './useHealthCheck'
 
@@ -30,6 +32,15 @@ interface ModelListProps {
 
 type ModelGroups = Record<string, Model[]>
 const MODEL_COUNT_THRESHOLD = 10
+
+const FlexContainer = styled(Flex)`
+  /* body 有 light 类名时的样式 */
+  body.light & {
+    background: #eee;
+    padding: 15px;
+    border-radius: 8px;
+  }
+`
 
 /**
  * 根据搜索文本筛选模型、分组并排序
@@ -48,7 +59,13 @@ const calculateModelGroups = (models: Model[], searchText: string): ModelGroups 
  */
 const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
   const { t } = useTranslation()
-  const { provider, models, removeModel } = useProvider(providerId)
+  // const { provider, models, removeModel } = useProvider(providerId)
+  const { provider, removeModel } = useProvider(providerId)
+  // TODO 模型数据源
+  const [models, setModels] = useState<any>([])
+
+  // TODO 模型数据源接口
+  useEffect(() => {}, [])
 
   // 稳定的编辑模型回调，避免内联函数导致子组件 memo 失效
   const handleEditModel = useCallback((model: Model) => EditModelPopup.show({ provider, model }), [provider])
@@ -93,9 +110,14 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
     return Object.values(displayedModelGroups ?? {}).reduce((acc, group) => acc + group.length, 0)
   }, [displayedModelGroups])
 
-  const onManageModel = useCallback(() => {
-    void ManageModelsPopup.show({ providerId: provider.id })
-  }, [provider.id])
+  const onManageModel = useCallback(async () => {
+    // void ManageModelsPopup.show({ providerId: provider.id })
+    const result = await AiOnlyAddModelPopup.show({ provider })
+    if (result.success) {
+      // 开通成功,result.modelIds 是本次开通的模型 id 列表
+      // 刷新列表或其他操作
+    }
+  }, [provider])
 
   const onAddModel = useCallback(() => {
     if (isNewApiProvider(provider)) {
@@ -157,7 +179,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
                   <SettingHelpText>{t('settings.provider.docs_check')} </SettingHelpText>
                   {docsWebsite && (
                     <SettingHelpLink target="_blank" href={docsWebsite}>
-                      {getProviderLabel(provider.id) + ' '}
+                      {getProviderLabel(provider.name) + ' '}
                       {t('common.docs')}
                     </SettingHelpLink>
                   )}
@@ -196,7 +218,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
       </SettingSubtitle>
       <Spin spinning={isLoading} indicator={<LoadingIcon color="var(--color-text-2)" />}>
         {displayedModelGroups && !isEmpty(displayedModelGroups) && (
-          <Flex gap={12} vertical>
+          <FlexContainer gap={12} vertical>
             {Object.keys(displayedModelGroups).map((group, i) => (
               <ModelListGroup
                 key={group}
@@ -210,6 +232,12 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
                 onRemoveGroup={() => displayedModelGroups[group].forEach((model) => removeModel(model))}
               />
             ))}
+          </FlexContainer>
+        )}
+
+        {isEmpty(displayedModelGroups) && (
+          <Flex justify="center" align="center">
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
           </Flex>
         )}
       </Spin>

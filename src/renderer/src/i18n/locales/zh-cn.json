@@ -5137,8 +5137,12 @@
     },
     "model": "默认模型",
     "models": {
+      "text_model": "文本模型",
+      "image_model": "图片模型",
       "add": {
         "add_model": "添加模型",
+        "activate_model": "确认开通",
+        "activate_desc": "使用模型调用等服务前需要进行模型的开通，开通模式为先用后付，使用则按照模型的刊例价服务计费，不使用则不产生费用。",
         "batch_add_models": "批量添加模型",
         "endpoint_type": {
           "label": "端点类型",
@@ -5490,7 +5494,7 @@
         "all": "全部服务商"
       },
       "filter_agent": "筛选支持 Agent 的服务商",
-      "get_api_key": "一键获取密钥",
+      "get_api_key": "一键生成密钥",
       "misc": "其他",
       "no_models_for_check": "没有可以被检测的模型（例如对话模型）",
       "not_checked": "未检测",

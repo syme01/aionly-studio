@@ -598,7 +598,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
                       <SettingHelpText>{t('settings.provider.vertex_ai.api_host_help')}</SettingHelpText>
                     </SettingHelpTextRow>
                   )}
-                  <SettingHelpTextRow style={{ justifyContent: 'space-between' }}>
+                  {/*<SettingHelpTextRow style={{ justifyContent: 'space-between' }}>
                     <SettingHelpText
                       style={{
                         marginLeft: 6,
@@ -608,7 +608,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
                       }}>
                       {t('settings.provider.api_host_preview', { url: hostPreview() })}
                     </SettingHelpText>
-                  </SettingHelpTextRow>
+                  </SettingHelpTextRow>*/}
                 </>
               )}
 
