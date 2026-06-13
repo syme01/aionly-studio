@@ -1,5 +1,5 @@
 import CollapsibleSearchBar from '@renderer/components/CollapsibleSearchBar'
-import { LoadingIcon, StreamlineGoodHealthAndWellBeing } from '@renderer/components/Icons'
+import { LoadingIcon } from '@renderer/components/Icons'
 import { HStack } from '@renderer/components/Layout'
 import CustomTag from '@renderer/components/Tags/CustomTag'
 import { PROVIDER_URLS } from '@renderer/config/providers'
@@ -15,9 +15,9 @@ import type { Model } from '@renderer/types'
 import { filterModelsByKeywords } from '@renderer/utils'
 import { getDuplicateModelNames } from '@renderer/utils/model'
 import { isNewApiProvider } from '@renderer/utils/provider'
-import { Button, Flex, Space, Spin, Tooltip } from 'antd'
+import { Button, Flex, Space, Spin } from 'antd'
 import { groupBy, isEmpty, sortBy, toPairs } from 'lodash'
-import { Plus, RefreshCw } from 'lucide-react'
+import { RefreshCw } from 'lucide-react'
 import React, { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -114,7 +114,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
   const hasNoModels = useMemo(() => models.length === 0, [models.length])
 
   const actionButtons = (
-    <Space.Compact>
+    /*<Space.Compact>
       <Button onClick={onManageModel} icon={<RefreshCw size={16} />} disabled={isHealthChecking}>
         {t('settings.models.manage.fetch_list')}
       </Button>
@@ -127,7 +127,19 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
           <Button onClick={onDownloadModel} icon={<Plus size={16} />} />
         </Tooltip>
       )}
-    </Space.Compact>
+    </Space.Compact>*/
+
+    <Space>
+      <CollapsibleSearchBar
+        onSearch={setSearchText}
+        placeholder={t('models.search.placeholder')}
+        tooltip={t('models.search.tooltip')}
+      />
+      <Button type="text" onClick={onManageModel} icon={<RefreshCw size={16} />} disabled={isHealthChecking}></Button>
+      <Button type="primary" onClick={onManageModel} disabled={isHealthChecking}>
+        {t('settings.models.manage.add_model')}
+      </Button>
+    </Space>
   )
 
   return (
@@ -139,7 +151,29 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
             <CustomTag color="#8c8c8c" size={10}>
               {modelCount}
             </CustomTag>
-            {!hasNoModels && (
+            <Flex justify="space-between" align="center">
+              {docsWebsite || modelsWebsite ? (
+                <SettingHelpTextRow>
+                  <SettingHelpText>{t('settings.provider.docs_check')} </SettingHelpText>
+                  {docsWebsite && (
+                    <SettingHelpLink target="_blank" href={docsWebsite}>
+                      {getProviderLabel(provider.id) + ' '}
+                      {t('common.docs')}
+                    </SettingHelpLink>
+                  )}
+                  {docsWebsite && modelsWebsite && <SettingHelpText>{t('common.and')}</SettingHelpText>}
+                  {modelsWebsite && (
+                    <SettingHelpLink target="_blank" href={modelsWebsite}>
+                      {t('common.models')}
+                    </SettingHelpLink>
+                  )}
+                  <SettingHelpText>{t('settings.provider.docs_more_details')}</SettingHelpText>
+                </SettingHelpTextRow>
+              ) : (
+                <div style={{ height: 5 }} />
+              )}
+            </Flex>
+            {/*{!hasNoModels && (
               <>
                 <Tooltip title={t('settings.models.check.button_caption')} mouseLeaveDelay={0}>
                   <Button
@@ -154,13 +188,8 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
                     }
                   />
                 </Tooltip>
-                <CollapsibleSearchBar
-                  onSearch={setSearchText}
-                  placeholder={t('models.search.placeholder')}
-                  tooltip={t('models.search.tooltip')}
-                />
               </>
-            )}
+            )}*/}
           </HStack>
           {actionButtons}
         </HStack>
@@ -184,28 +213,6 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
           </Flex>
         )}
       </Spin>
-      <Flex justify="space-between" align="center">
-        {docsWebsite || modelsWebsite ? (
-          <SettingHelpTextRow>
-            <SettingHelpText>{t('settings.provider.docs_check')} </SettingHelpText>
-            {docsWebsite && (
-              <SettingHelpLink target="_blank" href={docsWebsite}>
-                {getProviderLabel(provider.id) + ' '}
-                {t('common.docs')}
-              </SettingHelpLink>
-            )}
-            {docsWebsite && modelsWebsite && <SettingHelpText>{t('common.and')}</SettingHelpText>}
-            {modelsWebsite && (
-              <SettingHelpLink target="_blank" href={modelsWebsite}>
-                {t('common.models')}
-              </SettingHelpLink>
-            )}
-            <SettingHelpText>{t('settings.provider.docs_more_details')}</SettingHelpText>
-          </SettingHelpTextRow>
-        ) : (
-          <div style={{ height: 5 }} />
-        )}
-      </Flex>
     </>
   )
 }

@@ -2,8 +2,7 @@ import CustomCollapse from '@renderer/components/CustomCollapse'
 import { DynamicVirtualList, type DynamicVirtualListRef } from '@renderer/components/VirtualList'
 import type { Model } from '@renderer/types'
 import type { ModelWithStatus } from '@renderer/types/healthCheck'
-import { Button, Flex, Tooltip } from 'antd'
-import { Minus } from 'lucide-react'
+import { Flex } from 'antd'
 import React, { memo, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -57,7 +56,7 @@ const ModelListGroup: React.FC<ModelListGroupProps> = ({
             <span style={{ fontWeight: 'bold' }}>{groupName}</span>
           </Flex>
         }
-        extra={
+        /*extra={
           <Tooltip title={t('settings.models.manage.remove_whole_group')} mouseLeaveDelay={0}>
             <Button
               type="text"
@@ -70,7 +69,7 @@ const ModelListGroup: React.FC<ModelListGroupProps> = ({
               disabled={disabled}
             />
           </Tooltip>
-        }
+        }*/
         styles={{
           header: {
             padding: '3px calc(6px + var(--scrollbar-width)) 3px 16px'

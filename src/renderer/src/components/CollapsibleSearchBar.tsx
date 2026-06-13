@@ -51,7 +51,7 @@ const CollapsibleSearchBar = ({
   }, [searchVisible])
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', position: 'relative' }}>
       <motion.div
         initial="collapsed"
         animate={searchVisible ? 'expanded' : 'collapsed'}

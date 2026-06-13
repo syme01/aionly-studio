@@ -1,4 +1,3 @@
-import { GlobalOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 
 import type { CustomTagProps } from '../CustomTag'
@@ -17,7 +16,7 @@ export const WebSearchTag = ({ size, showTooltip, showLabel, ...restProps }: Pro
     <CustomTag
       size={size}
       color="#1677ff"
-      icon={<GlobalOutlined style={{ fontSize: size }} />}
+      /*icon={<GlobalOutlined style={{ fontSize: size }} />}*/
       tooltip={showTooltip ? t('models.type.websearch') : undefined}
       {...restProps}>
       {showLabel ? t('models.type.websearch') : ''}

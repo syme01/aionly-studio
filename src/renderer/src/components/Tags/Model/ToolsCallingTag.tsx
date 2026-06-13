@@ -1,4 +1,3 @@
-import { ToolOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 
 import type { CustomTagProps } from '../CustomTag'
@@ -16,7 +15,7 @@ export const ToolsCallingTag = ({ size, showTooltip, showLabel, ...restProps }: 
     <CustomTag
       size={size}
       color="#f18737"
-      icon={<ToolOutlined style={{ fontSize: size }} />}
+      /*icon={<ToolOutlined style={{ fontSize: size }} />}*/
       tooltip={showTooltip ? t('models.type.function_calling') : undefined}
       {...restProps}>
       {showLabel ? t('models.type.function_calling') : ''}

@@ -76,13 +76,11 @@ const ModelTagsWithLabel: FC<ModelTagsProps> = ({
 
   return (
     <Container ref={containerRef} style={style}>
-      {isVisionModel(model) && <VisionTag size={size} showTooltip={showTooltip} showLabel={shouldShowLabel} />}
-      {isWebSearchModel(model) && <WebSearchTag size={size} showTooltip={showTooltip} showLabel={shouldShowLabel} />}
-      {showReasoning && isReasoningModel(model) && (
-        <ReasoningTag size={size} showTooltip={showTooltip} showLabel={shouldShowLabel} />
-      )}
+      {isVisionModel(model) && <VisionTag size={size} showTooltip={false} showLabel={true} />}
+      {isWebSearchModel(model) && <WebSearchTag size={size} showTooltip={false} showLabel={true} />}
+      {showReasoning && isReasoningModel(model) && <ReasoningTag size={size} showTooltip={false} showLabel={true} />}
       {showToolsCalling && isFunctionCallingModel(model) && (
-        <ToolsCallingTag size={size} showTooltip={showTooltip} showLabel={shouldShowLabel} />
+        <ToolsCallingTag size={size} showTooltip={false} showLabel={true} />
       )}
       {isEmbeddingModel(model) && <EmbeddingTag size={size} />}
       {showFree && isFreeModel(model) && <FreeTag size={size} />}

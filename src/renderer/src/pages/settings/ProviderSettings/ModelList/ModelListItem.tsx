@@ -1,6 +1,6 @@
 import { showErrorDetailPopup } from '@renderer/components/ErrorDetailModal'
 import { FreeTrialModelTag } from '@renderer/components/FreeTrialModelTag'
-import { type HealthResult, HealthStatusIndicator } from '@renderer/components/HealthStatusIndicator'
+import { type HealthResult } from '@renderer/components/HealthStatusIndicator'
 import { HStack } from '@renderer/components/Layout'
 import ModelIdWithTags from '@renderer/components/ModelIdWithTags'
 import { getModelLogo } from '@renderer/config/models'
@@ -8,8 +8,7 @@ import type { Model } from '@renderer/types'
 import type { ModelWithStatus } from '@renderer/types/healthCheck'
 import { HealthStatus } from '@renderer/types/healthCheck'
 import { maskApiKey } from '@renderer/utils/api'
-import { Avatar, Button, Tooltip } from 'antd'
-import { Bolt, Minus } from 'lucide-react'
+import { Avatar } from 'antd'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -84,7 +83,7 @@ const ModelListItem: React.FC<ModelListItemProps> = ({
           />
           <FreeTrialModelTag model={model} />
         </HStack>
-        <HStack alignItems="center" gap={6}>
+        {/*<HStack alignItems="center" gap={6}>
           <HealthStatusIndicator
             results={healthResults}
             loading={isChecking}
@@ -99,7 +98,7 @@ const ModelListItem: React.FC<ModelListItemProps> = ({
               <Button type="text" onClick={handleRemove} disabled={disabled} icon={<Minus size={14} />} />
             </Tooltip>
           </HStack>
-        </HStack>
+        </HStack>*/}
       </ListItem>
     </>
   )

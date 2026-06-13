@@ -18,7 +18,7 @@ import { isProviderSupportAuth } from '@renderer/services/ProviderService'
 import { useAppDispatch } from '@renderer/store'
 import { updateWebSearchProvider } from '@renderer/store/websearch'
 import type { SystemProviderId } from '@renderer/types'
-import { isSystemProvider, isSystemProviderId, SystemProviderIds } from '@renderer/types'
+import { isSystemProviderId, SystemProviderIds } from '@renderer/types'
 import type { ApiKeyConnectivity } from '@renderer/types/healthCheck'
 import { HealthStatus } from '@renderer/types/healthCheck'
 import { formatApiHost, formatApiKeys, getFancyProviderName, validateApiHost } from '@renderer/utils'
@@ -32,27 +32,17 @@ import {
   isOllamaProvider,
   isOpenAICompatibleProvider,
   isOpenAIProvider,
-  isSupportAnthropicPromptCacheProvider,
   isVertexProvider
 } from '@renderer/utils/provider'
-import { Button, Divider, Flex, Input, Select, Space, Tooltip } from 'antd'
-import Link from 'antd/es/typography/Link'
+import { Button, Input, Select, Space, Tooltip } from 'antd'
 import { debounce, isEmpty } from 'lodash'
-import { Bolt, Check, Settings2, SquareArrowOutUpRight, TriangleAlert } from 'lucide-react'
+import { Check, Settings2, TriangleAlert } from 'lucide-react'
 import type { FC } from 'react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import {
-  SettingContainer,
-  SettingHelpLink,
-  SettingHelpText,
-  SettingHelpTextRow,
-  SettingSubtitle,
-  SettingTitle
-} from '..'
-import ApiOptionsSettingsPopup from './ApiOptionsSettings/ApiOptionsSettingsPopup'
+import { SettingContainer, SettingHelpLink, SettingHelpText, SettingHelpTextRow, SettingSubtitle } from '..'
 import AwsBedrockSettings from './AwsBedrockSettings'
 import CherryINOAuth from './CherryINOAuth'
 import CherryINSettings from './CherryINSettings'
@@ -446,7 +436,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
 
   return (
     <SettingContainer theme={theme} style={{ background: 'var(--color-background)' }}>
-      <SettingTitle>
+      {/*<SettingTitle>
         <Flex align="center" gap={8}>
           <ProviderName>{fancyProviderName}</ProviderName>
           {officialWebsite && (
@@ -465,7 +455,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
             </Tooltip>
           )}
         </Flex>
-        {/*<Switch
+        <Switch
           value={provider.enabled}
           key={provider.id}
           onChange={(enabled) => {
@@ -474,10 +464,12 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
               moveProviderToTop(provider.id)
             }
           }}
-        />*/}
-      </SettingTitle>
-      <Divider style={{ width: '100%', margin: '10px 0' }} />
-      {isProviderSupportAuth(provider) && <ProviderOAuth providerId={provider.id} />}
+        />
+      </SettingTitle>*/}
+      {/*<Divider style={{ width: '100%', margin: '10px 0' }} />*/}
+      {isProviderSupportAuth(provider) && (
+        <ProviderOAuth providerId={provider.id} fancyProviderName={fancyProviderName} />
+      )}
       {isCherryIN && <CherryINOAuth providerId={provider.id} />}
       {provider.id === 'openai' && <OpenAIAlert />}
       {provider.id === 'ovms' && <OVMSSettings />}
@@ -509,10 +501,15 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
                   justifyContent: 'space-between'
                 }}>
                 {t('settings.provider.api_key.label')}
-                {provider.id !== 'copilot' && (
+                {/*{provider.id !== 'copilot' && (
                   <Tooltip title={t('settings.provider.api.key.list.open')} mouseEnterDelay={0.5}>
                     <Button type="text" onClick={openApiKeyList} icon={<Settings2 size={16} />} />
                   </Tooltip>
+                )}*/}
+                {provider.id !== 'copilot' && (
+                  <Button type="link" onClick={openApiKeyList} style={{ padding: 0, fontSize: 12 }}>
+                    {t('settings.provider.api.key.list.more')}
+                  </Button>
                 )}
               </SettingSubtitle>
               <Space.Compact style={{ width: '100%', marginTop: 5 }}>

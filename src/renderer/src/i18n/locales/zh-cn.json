@@ -5207,6 +5207,7 @@
         "fetch_list": "获取模型列表",
         "refetch_list": "重新获取模型列表",
         "remove_listed": "移除列表中的模型",
+        "add_model": "添加模型",
         "remove_model": "移除模型",
         "remove_whole_group": "移除整个分组"
       },
@@ -5338,6 +5339,7 @@
             "empty": "API 密钥不能为空"
           },
           "list": {
+            "more": "更多",
             "open": "打开管理界面",
             "title": "API 密钥管理"
           },
@@ -5367,6 +5369,7 @@
             "label": "支持 enable_thinking"
           },
           "label": "API 设置",
+          "website": "访问官网",
           "service_tier": {
             "help": "该提供商是否支持配置 service_tier 参数。开启后，可在对话页面的服务层级设置中调整该参数。（仅限OpenAI模型）",
             "label": "支持 service_tier"
@@ -5487,7 +5490,7 @@
         "all": "全部服务商"
       },
       "filter_agent": "筛选支持 Agent 的服务商",
-      "get_api_key": "点击这里获取密钥",
+      "get_api_key": "一键获取密钥",
       "misc": "其他",
       "no_models_for_check": "没有可以被检测的模型（例如对话模型）",
       "not_checked": "未检测",
