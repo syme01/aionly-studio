@@ -1,5 +1,5 @@
 import CustomCollapse from '@renderer/components/CustomCollapse'
-import { DynamicVirtualList, type DynamicVirtualListRef } from '@renderer/components/VirtualList'
+import { type DynamicVirtualListRef } from '@renderer/components/VirtualList'
 import type { Model } from '@renderer/types'
 import type { ModelWithStatus } from '@renderer/types/healthCheck'
 import { Flex } from 'antd'
@@ -9,7 +9,7 @@ import styled from 'styled-components'
 
 import ModelListItem from './ModelListItem'
 
-const MAX_SCROLLER_HEIGHT = 390
+// 分组内不限制高度，滚动由外层虚拟列表统一控制
 
 interface ModelListGroupProps {
   groupName: string
@@ -75,15 +75,15 @@ const ModelListGroup: React.FC<ModelListGroupProps> = ({
             padding: '3px calc(6px + var(--scrollbar-width)) 3px 16px'
           }
         }}>
-        <DynamicVirtualList
+        {/*<DynamicVirtualList
           ref={listRef}
           list={models}
           estimateSize={useCallback(() => 52, [])} // 44px item + 8px padding
           overscan={5}
           scrollerStyle={{
-            maxHeight: `${MAX_SCROLLER_HEIGHT}px`,
-            padding: '4px 6px 4px 12px',
-            scrollbarGutter: 'stable'
+            overflow: 'visible',
+            height: 'auto',
+            padding: '4px 6px 4px 12px'
           }}
           itemContainerStyle={{
             padding: '4px 0'
@@ -98,7 +98,19 @@ const ModelListGroup: React.FC<ModelListGroupProps> = ({
               disabled={disabled}
             />
           )}
-        </DynamicVirtualList>
+        </DynamicVirtualList>*/}
+
+        {models.map((model) => (
+          <ModelListItem
+            key={model.id}
+            model={model}
+            modelStatus={modelStatusMap.get(model.id)}
+            showIdentifier={duplicateModelNames.has(model.name)}
+            onEdit={onEditModel}
+            onRemove={onRemoveModel}
+            disabled={disabled}
+          />
+        ))}
       </CustomCollapse>
     </CustomCollapseWrapper>
   )

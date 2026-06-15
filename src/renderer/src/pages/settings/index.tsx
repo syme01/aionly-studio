@@ -33,6 +33,10 @@ export const SettingSubtitle = styled.div`
   margin: 15px 0 0 0;
   user-select: none;
   font-weight: bold;
+
+  .ant-tabs-top >.ant-tabs-nav{
+    margin: 0;
+  }
 `
 
 export const SettingDescription = styled.div`

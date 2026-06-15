@@ -3,7 +3,6 @@ import { FreeTrialModelTag } from '@renderer/components/FreeTrialModelTag'
 import { type HealthResult } from '@renderer/components/HealthStatusIndicator'
 import { HStack } from '@renderer/components/Layout'
 import ModelIdWithTags from '@renderer/components/ModelIdWithTags'
-import { getModelLogo } from '@renderer/config/models'
 import type { Model } from '@renderer/types'
 import type { ModelWithStatus } from '@renderer/types/healthCheck'
 import { HealthStatus } from '@renderer/types/healthCheck'
@@ -69,7 +68,7 @@ const ModelListItem: React.FC<ModelListItemProps> = ({
     <>
       <ListItem ref={ref}>
         <HStack alignItems="center" gap={10} style={{ flex: 1 }}>
-          <Avatar src={getModelLogo(model)} size={24}>
+          <Avatar src={model?.modelFileUrl} size={24}>
             {model?.name?.[0]?.toUpperCase()}
           </Avatar>
           <ModelIdWithTags
@@ -112,6 +111,9 @@ const ListItem = styled.div`
   color: var(--color-text);
   font-size: 14px;
   line-height: 1;
+  &:not(:first-child){
+    margin-top: 10px;
+  }
 `
 
 export default memo(ModelListItem)

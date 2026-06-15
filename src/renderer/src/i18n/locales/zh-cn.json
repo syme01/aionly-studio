@@ -5399,7 +5399,8 @@
       "api_host_tooltip": "仅在服务商需要自定义的 OpenAI 兼容地址时覆盖。",
       "api_key": {
         "label": "API 密钥",
-        "tip": "多个密钥使用逗号分隔"
+        "tip": "多个密钥使用逗号分隔",
+        "max_tip": "最多可创建200个"
       },
       "api_version": "API 版本",
       "aws-bedrock": {

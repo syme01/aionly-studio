@@ -1,4 +1,5 @@
 import { adaptProvider } from '@renderer/aiCore/provider/providerConfig'
+import { addApikey, getApikeyList } from '@renderer/api/apikey'
 import OpenAIAlert from '@renderer/components/Alert/OpenAIAlert'
 import { showErrorDetailPopup } from '@renderer/components/ErrorDetailModal'
 import { LoadingIcon } from '@renderer/components/Icons'
@@ -14,6 +15,7 @@ import { useTimer } from '@renderer/hooks/useTimer'
 import AnthropicSettings from '@renderer/pages/settings/ProviderSettings/AnthropicSettings'
 import { ModelList } from '@renderer/pages/settings/ProviderSettings/ModelList'
 import { checkApi } from '@renderer/services/ApiService'
+import { loggerService } from '@renderer/services/LoggerService'
 import { isProviderSupportAuth } from '@renderer/services/ProviderService'
 import { useAppDispatch } from '@renderer/store'
 import { updateWebSearchProvider } from '@renderer/store/websearch'
@@ -34,15 +36,15 @@ import {
   isOpenAIProvider,
   isVertexProvider
 } from '@renderer/utils/provider'
-import { Button, Input, Select, Space, Tooltip } from 'antd'
+import { Button, Input, Select, Space, Tooltip, Typography } from 'antd'
 import { debounce, isEmpty } from 'lodash'
 import { Check, Settings2, TriangleAlert } from 'lucide-react'
-import type { FC } from 'react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, useEffect } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import { SettingContainer, SettingHelpLink, SettingHelpText, SettingHelpTextRow, SettingSubtitle } from '..'
+import { SettingContainer, SettingHelpText, SettingHelpTextRow, SettingSubtitle } from '..'
 import AwsBedrockSettings from './AwsBedrockSettings'
 import CherryINOAuth from './CherryINOAuth'
 import CherryINSettings from './CherryINSettings'
@@ -55,6 +57,10 @@ import OVMSSettings from './OVMSSettings'
 import ProviderOAuth from './ProviderOAuth'
 import SelectProviderModelPopup from './SelectProviderModelPopup'
 import VertexAISettings from './VertexAISettings'
+
+const { Text, Title } = Typography
+
+const logger = loggerService.withContext('ProviderSetting')
 
 interface Props {
   providerId: string
@@ -125,6 +131,58 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
     status: HealthStatus.NOT_CHECKED,
     checking: false
   })
+
+  const [localApiKeyLoading, setLocalApiKeyLoading] = useState(false)
+  const apiKeyPageQueryParams = useRef({
+    pageNum: 1,
+    pageSize: 10,
+    total: 10,
+    appname: '',
+    keyType: ''
+  })
+
+  const apikeyForm = useRef({
+    id: '',
+    keyType: '标准模式',
+    appname: '系统自动生成名称',
+    apikey: '',
+    remark: '',
+    createTime: '',
+    description: '',
+    modelId: '',
+    componentIds: [],
+    knowledgeFlag: 1,
+    knowledgeId: '',
+    knowledgeReturn: 10,
+    milvusType: '',
+    promptVal: ''
+  })
+
+  const getApiKeyPageList = useCallback(async () => {
+    const { rows, total } = await getApikeyList(apiKeyPageQueryParams.current)
+    if (rows.length > 0) {
+      setLocalApiKey(rows[0]?.apikey)
+    }
+    apiKeyPageQueryParams.current.total = total
+    return rows
+  }, [])
+
+  useEffect(() => {
+    getApiKeyPageList()
+  }, [getApiKeyPageList])
+
+  // TODO 生成密钥
+  const handleGetApiKey = async () => {
+    setLocalApiKeyLoading(true)
+    try {
+      await addApikey(apikeyForm.current)
+      await getApiKeyPageList()
+    } catch (e) {
+      logger.error(e)
+    } finally {
+      setLocalApiKeyLoading(false)
+    }
+  }
 
   const updateWebSearchProviderKey = useCallback(
     ({ apiKey }: { apiKey: string }) => {
@@ -501,6 +559,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
                   justifyContent: 'space-between'
                 }}>
                 {t('settings.provider.api_key.label')}
+
                 {/*{provider.id !== 'copilot' && (
                   <Tooltip title={t('settings.provider.api.key.list.open')} mouseEnterDelay={0.5}>
                     <Button type="text" onClick={openApiKeyList} icon={<Settings2 size={16} />} />
@@ -539,9 +598,17 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
               <SettingHelpTextRow style={{ justifyContent: 'space-between' }}>
                 <HStack>
                   {apiKeyWebsite && !isDmxapi && (
-                    <SettingHelpLink target="_blank" href={apiKeyWebsite}>
+                    /*<SettingHelpLink target="_blank" href={apiKeyWebsite}>
                       {t('settings.provider.get_api_key')}
-                    </SettingHelpLink>
+                    </SettingHelpLink>*/
+                    <>
+                      <Button style={{ fontSize: 12, padding: 0 }} type="link" size="small" onClick={handleGetApiKey}>
+                        {t('settings.provider.get_api_key')}
+                      </Button>
+                      <Text type="warning" style={{ fontSize: 12, padding: 0 }}>
+                        （{t('settings.provider.api_key.max_tip')}）
+                      </Text>
+                    </>
                   )}
                 </HStack>
                 <SettingHelpText>{t('settings.provider.api_key.tip')}</SettingHelpText>
