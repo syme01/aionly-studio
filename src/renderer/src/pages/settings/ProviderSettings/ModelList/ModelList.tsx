@@ -18,6 +18,7 @@ import { Button, Empty, Flex, Space, Spin, Tabs } from 'antd'
 import { groupBy, isEmpty, sortBy, toPairs } from 'lodash'
 import { RefreshCw } from 'lucide-react'
 import React, { memo, startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import AiOnlyAddModelPopup from '../AiOnlyModel/add/AddModelPopup'
