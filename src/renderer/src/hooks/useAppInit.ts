@@ -1,4 +1,5 @@
 import { loggerService } from '@logger'
+import bgApp from '@renderer/assets/images/bg-app.jpg'
 import PrivacyPolicyUpdateNotice from '@renderer/components/app/PrivacyPolicyUpdateNotice'
 import { isMac, LATEST_PRIVACY_POLICY_VERSION } from '@renderer/config/constant'
 import { isLocalAi } from '@renderer/config/env'
@@ -145,7 +146,8 @@ export function useAppInit() {
       return
     }
 
-    window.root.style.background = isMacTransparentWindow ? 'var(--navbar-background-mac)' : 'var(--navbar-background)'
+    window.root.style.background = isMacTransparentWindow ? 'var(--navbar-background-mac)' : `url(${bgApp})`
+    // window.root.style.background = isMacTransparentWindow ? 'var(--navbar-background-mac)' : 'var(--navbar-background)'
   }, [windowStyle, minappShow, theme, isLeftNavbar])
 
   useEffect(() => {

@@ -40,8 +40,8 @@ export const AccountLogin = ({ ref, ...props }: AccountLoginProps) => {
     /^(((13[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[3-8]{1})|(18[0-9]{1})|(19[0-9]{1})|(14[5-7]{1}))+\d{8})$/
   // 邮箱正则
   const emailRegexp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-  // 合并正则
-  const userNamePattern = phoneRegexp || emailRegexp
+  // 合并正则（手机号或邮箱）
+  const userNamePattern = new RegExp(`(${phoneRegexp.source})|(${emailRegexp.source})`)
   // 密码正则
   const passwordPattern = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$)([^\u4e00-\u9fa5\s]){6,20}$/
 
@@ -199,7 +199,7 @@ export const AccountLogin = ({ ref, ...props }: AccountLoginProps) => {
               message: i18n.t('login.account_login.password_invalid')
             }
           ]}>
-          <StyleInput placeholder={i18n.t('login.account_login.password_required')} />
+          <StyleInput type="password" placeholder={i18n.t('login.account_login.password_required')} />
         </Form.Item>
       </Form>
     </Container>

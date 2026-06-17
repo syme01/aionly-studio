@@ -70,7 +70,7 @@ const ProviderOAuth: FC<Props> = ({ providerId, fancyProviderName }) => {
               values={{ provider: providerWebsite }}
             />
           </Description>
-          <div className="flex items-center gap-2 mt-2">
+          <div className="mt-2 flex items-center gap-2">
             <Link target="_blank" href={PROVIDER_URLS[provider.id].websites.official} style={{ display: 'flex' }}>
               <LinkButton>{t('settings.provider.api.options.website')}</LinkButton>
             </Link>

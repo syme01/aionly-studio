@@ -326,19 +326,64 @@ export const providerCharge = async (provider: string) => {
       height: 700
     },
     aionly: {
-      url: `https://maas.aiionly.com/recharge`,
+      // url: `https://maas.aiionly.com/recharge`,
+      url: `http://localhost:7023/login?redirect=/recharge`,
       width: 900,
       height: 700
     }
   }
 
   const { url, width, height } = chargeUrlMap[provider]
+  const winW = Math.min(width, Math.floor(screen.availWidth * 1))
+  const winH = Math.min(height, Math.floor(screen.availHeight * 1))
 
-  window.open(
+  const win = window.open(
     url,
     'oauth',
-    `width=${width},height=${height},toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,alwaysOnTop=yes,alwaysRaised=yes`
+    `width=${winW},height=${winH},toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,alwaysOnTop=yes,alwaysRaised=yes`
   )
+
+  handleWindowMessage({ win, provider, targetPath: '/recharge' })
+}
+
+function handleWindowMessage({ win, provider, targetPath }) {
+  if (!win) {
+    alert('弹窗被浏览器拦截，请允许弹出窗口')
+    return
+  }
+
+  // 只处理aionly充值弹窗
+  if (provider !== 'aionly') return
+
+  // 定义监听函数，方便后续移除
+  const handleChildMsg = (e: MessageEvent) => {
+    // 严格校验来源，只接收7023页面消息
+    if (e.origin !== 'http://localhost:7023') return
+    logger.info('父页面收到子页面消息', { data: e.data })
+
+    if (e.data.type === 'user_ui_ready') {
+      logger.info('子页面就绪，下发用户数据')
+      const token = localStorage.getItem('token')
+      const sendData = {
+        type: 'client_user_data',
+        token,
+        targetPath
+      }
+      win.postMessage(sendData, 'http://localhost:7023')
+    }
+  }
+
+  // 绑定监听
+  window.addEventListener('message', handleChildMsg)
+
+  // 弹窗关闭后自动移除监听，防止堆积
+  const clearListener = setInterval(() => {
+    if (win.closed) {
+      logger.info('弹窗已关闭，清理message监听')
+      window.removeEventListener('message', handleChildMsg)
+      clearInterval(clearListener)
+    }
+  }, 500)
 }
 
 export const providerBills = async (provider: string) => {
@@ -369,7 +414,9 @@ export const providerBills = async (provider: string) => {
       height: 700
     },
     aionly: {
-      url: `https://maas.aiionly.com/billManagement`,
+      // url: `https://maas.aiionly.com/billManagement`,
+      // url: `https://maas.aiionly.com/login?redirect=/billManagement`,
+      url: `http://localhost:7023/login?redirect=/billManagement`,
       width: 900,
       height: 700
     }
@@ -377,9 +424,11 @@ export const providerBills = async (provider: string) => {
 
   const { url, width, height } = billsUrlMap[provider]
 
-  window.open(
+  const win = window.open(
     url,
     'oauth',
     `width=${width},height=${height},toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,alwaysOnTop=yes,alwaysRaised=yes`
   )
+
+  handleWindowMessage({ win, provider, targetPath: '/billManagement' })
 }

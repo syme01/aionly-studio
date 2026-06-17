@@ -1,6 +1,7 @@
 import './styles.css'
 
-import React, { CSSProperties, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react'
 
 import VerifyPoints from './Verify/VerifyPoints'
 import VerifySlide from './Verify/VerifySlide'

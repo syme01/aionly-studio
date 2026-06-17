@@ -8,7 +8,7 @@ enum LoginType {
 
 interface LoginOptions {
   loginType: LoginType
-  params: Object
+  params: object
   callback: (token: string) => void
 }
 

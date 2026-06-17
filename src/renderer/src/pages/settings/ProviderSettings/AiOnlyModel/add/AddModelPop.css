@@ -47,8 +47,10 @@ body.light .model-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   border: 1px solid #ccc;
   position: relative;
+  padding: 0 10px;
 }
 
 body.light .model-wrapper .list .item {
@@ -86,6 +88,11 @@ body.light .model-wrapper .list .item {
   position: absolute;
   left: 0;
   top: 0;
+}
+
+.model-img {
+  width: 30px;
+  max-height: 30px;
 }
 
 .loading {

@@ -20,7 +20,7 @@ interface Props extends ShowParams {
 /**
  * API Key 列表弹窗容器组件
  */
-const PopupContainer: React.FC<Props> = ({ providerId, title, resolve, showHealthCheck = true, providerType }) => {
+const PopupContainer: React.FC<Props> = ({ providerId, title, resolve, showHealthCheck = false, providerType }) => {
   const [open, setOpen] = useState(true)
   const { t } = useTranslation()
 
@@ -50,7 +50,7 @@ const PopupContainer: React.FC<Props> = ({ providerId, title, resolve, showHealt
 
   return (
     <Modal
-      title={title || t('settings.provider.api.key.list.title')}
+      title={t('settings.provider.api.key.list.title')}
       open={open}
       onCancel={onCancel}
       afterClose={onClose}

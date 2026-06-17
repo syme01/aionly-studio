@@ -1,10 +1,12 @@
+import AiOnlyApiKeyListPopup from '@renderer//components/Popups/ApiKeyListPopup/aionly/popup'
 import { adaptProvider } from '@renderer/aiCore/provider/providerConfig'
 import { addApikey, getApikeyList } from '@renderer/api/apikey'
+import { getApikeyByUserId, getUserProfileApi } from '@renderer/api/login'
 import OpenAIAlert from '@renderer/components/Alert/OpenAIAlert'
 import { showErrorDetailPopup } from '@renderer/components/ErrorDetailModal'
 import { LoadingIcon } from '@renderer/components/Icons'
 import { HStack } from '@renderer/components/Layout'
-import { ApiKeyListPopup } from '@renderer/components/Popups/ApiKeyListPopup'
+// import { ApiKeyListPopup } from '@renderer/components/Popups/ApiKeyListPopup'
 import Selector from '@renderer/components/Selector'
 import { HelpTooltip } from '@renderer/components/TooltipIcons'
 import { isRerankModel } from '@renderer/config/models'
@@ -39,7 +41,8 @@ import {
 import { Button, Input, Select, Space, Tooltip, Typography } from 'antd'
 import { debounce, isEmpty } from 'lodash'
 import { Check, Settings2, TriangleAlert } from 'lucide-react'
-import { FC, useEffect } from 'react'
+import type { FC } from 'react'
+import { useEffect } from 'react'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -160,15 +163,13 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
 
   const getApiKeyPageList = useCallback(async () => {
     const { rows, total } = await getApikeyList(apiKeyPageQueryParams.current)
-    if (rows.length > 0) {
-      setLocalApiKey(rows[0]?.apikey)
-    }
     apiKeyPageQueryParams.current.total = total
     return rows
   }, [])
 
   useEffect(() => {
     getApiKeyPageList()
+    initUserApi()
   }, [getApiKeyPageList])
 
   // TODO 生成密钥
@@ -177,11 +178,19 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
     try {
       await addApikey(apikeyForm.current)
       await getApiKeyPageList()
-    } catch (e) {
+    } catch (e: any) {
       logger.error(e)
     } finally {
       setLocalApiKeyLoading(false)
     }
+  }
+
+  const initUserApi = async () => {
+    const user_res: any = await getUserProfileApi()
+    const user = user_res.data?.user
+    const res = await getApikeyByUserId({ userId: user?.userId || '' })
+    const secretKey = res.msg
+    setLocalApiKey(secretKey)
   }
 
   const updateWebSearchProviderKey = useCallback(
@@ -299,11 +308,13 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
       await new Promise((resolve) => setTimeout(resolve, 0))
     }
 
-    await ApiKeyListPopup.show({
+    await AiOnlyApiKeyListPopup.show()
+
+    /*await ApiKeyListPopup.show({
       providerId: provider.id,
       title: `${fancyProviderName} ${t('settings.provider.api.key.list.title')}`,
       providerType: 'llm'
-    })
+    })*/
   }
 
   const onCheckApi = async () => {
@@ -597,10 +608,13 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
               </Space.Compact>
               <SettingHelpTextRow style={{ justifyContent: 'space-between' }}>
                 <HStack>
-                  {apiKeyWebsite && !isDmxapi && (
-                    /*<SettingHelpLink target="_blank" href={apiKeyWebsite}>
+                  {/*{apiKeyWebsite && !isDmxapi && (
+                    <SettingHelpLink target="_blank" href={apiKeyWebsite}>
                       {t('settings.provider.get_api_key')}
-                    </SettingHelpLink>*/
+                    </SettingHelpLink>
+                  )}*/}
+
+                  {!localApiKey && (
                     <>
                       <Button style={{ fontSize: 12, padding: 0 }} type="link" size="small" onClick={handleGetApiKey}>
                         {t('settings.provider.get_api_key')}

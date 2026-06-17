@@ -193,6 +193,11 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
     fetchModels(1)
   }, [fetchModels])
 
+  const reload = () => {
+    setModels([])
+    fetchModels(1)
+  }
+
   // 稳定的编辑模型回调，避免内联函数导致子组件 memo 失效
   const handleEditModel = useCallback((model: Model) => EditModelPopup.show({ provider, model }), [provider])
 
@@ -242,7 +247,9 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
     if (result.success) {
       // 开通成功,result.modelIds 是本次开通的模型 id 列表
       // 刷新列表或其他操作
+      reload()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provider])
 
   const onAddModel = useCallback(() => {
@@ -304,7 +311,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
         placeholder={t('models.search.placeholder')}
         tooltip={t('models.search.tooltip')}
       />*/}
-      <Button type="text" onClick={onManageModel} icon={<RefreshCw size={16} />} disabled={isHealthChecking}></Button>
+      <Button type="text" onClick={reload} icon={<RefreshCw size={16} />} disabled={isHealthChecking}></Button>
       <Button type="primary" onClick={onManageModel} disabled={isHealthChecking}>
         {t('settings.models.manage.add_model')}
       </Button>

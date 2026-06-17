@@ -1,4 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
+import { pageListApi } from '@renderer/api/openManagement'
 import { isNotSupportTextDeltaModel } from '@renderer/config/models'
 import { CHERRYAI_PROVIDER } from '@renderer/config/providers'
 import { getDefaultProvider } from '@renderer/services/AssistantService'
@@ -19,6 +20,22 @@ import { isNewApiProvider } from '@renderer/utils/provider'
 import { useCallback, useMemo } from 'react'
 
 import { useDefaultModel } from './useAssistant'
+
+export enum ModelAttribute {
+  TextModel = 'text_model',
+  ImageModel = 'image_generation'
+}
+
+const DEFAULT_PARAMS = {
+  type: '1',
+  modelAttribute: ModelAttribute.TextModel,
+  pageNum: 1,
+  pageSize: 999,
+  total: 0,
+  orderByStatus: 1,
+  orderByTime: 'desc',
+  domain: window.location.hostname
+}
 
 /**
  * Normalizes provider apiHost by removing trailing slashes.
@@ -58,12 +75,32 @@ export function useProviders() {
   const providers: Provider[] = useAppSelector(selectEnabledProviders)
   const dispatch = useAppDispatch()
 
+  // aiOnly models
+  const useAiOnlyModels = useCallback(
+    async (params = DEFAULT_PARAMS) => {
+      const res: any = await pageListApi(params)
+      if (res?.code === 200) {
+        const models: Model[] = (res.rows || [])
+          .filter((x: any) => x.packageNum == '先用后付')
+          .map((item: any) => ({
+            ...item,
+            name: item.modelName,
+            provider: 'aionly',
+            group: item.serviceName
+          }))
+        dispatch(updateProvider({ id: 'aionly', models }))
+      }
+    },
+    [dispatch]
+  )
+
   return {
     providers: providers || [],
     addProvider: (provider: Provider) => dispatch(addProvider(provider)),
     removeProvider: (provider: Provider) => dispatch(removeProvider(provider)),
     updateProvider: (updates: Partial<Provider> & { id: string }) => dispatch(updateProvider(updates)),
-    updateProviders: (providers: Provider[]) => dispatch(updateProviders(providers))
+    updateProviders: (providers: Provider[]) => dispatch(updateProviders(providers)),
+    useAiOnlyModels
   }
 }
 

@@ -76,7 +76,7 @@ asarUnpack:
   - "node_modules/@img/sharp-*/**"
 
 win:
-  executableName: Cherry Studio
+  executableName: AiiOnly
   artifactName: ${productName}-${version}-${arch}-setup.${ext}
   target:
     - target: nsis
@@ -113,7 +113,7 @@ dmg:
   writeUpdateInfo: false
 linux:
   artifactName: ${productName}-${version}-${arch}.${ext}
-  executableName: CherryStudio
+  executableName: AiiOnly
   target:
     - target: AppImage
     - target: deb
@@ -122,8 +122,8 @@ linux:
   category: Utility
   desktop:
     entry:
-      Name: Cherry Studio
-      StartupWMClass: CherryStudio
+      Name: AiiOnly
+      StartupWMClass: AiiOnly
   mimeTypes:
     - x-scheme-handler/cherrystudio
 rpm:

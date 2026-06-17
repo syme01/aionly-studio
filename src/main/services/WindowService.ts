@@ -299,16 +299,23 @@ export class WindowService {
         'https://console.aihubmix.com/statistics',
         'https://dash.302.ai/sso/login',
         'https://dash.302.ai/charge',
-        'https://maas.aiionly.com/login'
+        'https://maas.aiionly.com',
+        'http://localhost:7023'
       ]
 
+      const fullScreenUrls = ['https://maas.aiionly.com', 'http://localhost:7023']
+
       if (oauthProviderUrls.some((link) => url.startsWith(link))) {
+        const isFullScreenUrl = fullScreenUrls.some((u) => url.startsWith(u))
         return {
           action: 'allow',
           overrideBrowserWindowOptions: {
             webPreferences: {
               partition: 'persist:webview'
-            }
+            },
+            // 如果是全屏URL,不设置parent,让窗口独立
+            parent: isFullScreenUrl ? undefined : mainWindow,
+            show: false // 先不显示,等配置完成后再显示
           }
         }
       }
@@ -334,6 +341,26 @@ export class WindowService {
       }
 
       return { action: 'deny' }
+    })
+
+    mainWindow.webContents.on('did-create-window', (win, details) => {
+      const fullScreenUrls = ['https://maas.aiionly.com', 'http://localhost:7023']
+      if (fullScreenUrls.some((u) => details.url.startsWith(u))) {
+        // 等待窗口加载完成后最大化并显示
+        win.once('ready-to-show', () => {
+          win.maximize()
+          win.show()
+          win.focus()
+          // 提升窗口层级
+          win.setAlwaysOnTop(true, 'normal')
+          // 短暂延迟后取消置顶,避免一直遮挡其他应用
+          setTimeout(() => {
+            if (!win.isDestroyed()) {
+              win.setAlwaysOnTop(false)
+            }
+          }, 1000)
+        })
+      }
     })
 
     this.setupWebRequestHeaders(mainWindow)
@@ -540,6 +567,7 @@ export class WindowService {
       minHeight: 380,
       maxWidth: 1024,
       maxHeight: 768,
+      title: 'AiiOnly Quick Assistant',
       show: false,
       autoHideMenuBar: true,
       transparent: isMac,

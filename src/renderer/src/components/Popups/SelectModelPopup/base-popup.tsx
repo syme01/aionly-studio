@@ -4,16 +4,15 @@ import ModelTagsWithLabel from '@renderer/components/ModelTagsWithLabel'
 import { TopView } from '@renderer/components/TopView'
 import { DynamicVirtualList, type DynamicVirtualListRef } from '@renderer/components/VirtualList'
 import { getModelLogo } from '@renderer/config/models'
+import { convertToStandardModel, useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels'
 import { usePinnedModels } from '@renderer/hooks/usePinnedModels'
 import { getModelUniqId } from '@renderer/services/ModelService'
-import { getProviderById } from '@renderer/services/ProviderService'
 import type { Model, Provider } from '@renderer/types'
 import { objectEntries } from '@renderer/types'
 import { classNames, filterModelsByKeywords, getFancyProviderName } from '@renderer/utils'
-import { getDuplicateModelNames, getModelTags } from '@renderer/utils/model'
-import { Avatar, Divider, Empty, Modal, Tooltip } from 'antd'
+import { getModelTags } from '@renderer/utils/model'
+import { Avatar, Empty, Modal } from 'antd'
 import { first, sortBy } from 'lodash'
-import { Settings2 } from 'lucide-react'
 import React, {
   startTransition,
   useCallback,
@@ -28,8 +27,6 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import { useModelTagFilter } from './filters'
-import SelectModelSearchBar from './searchbar'
-import TagFilterSection from './TagFilterSection'
 import type { FlatListItem, FlatListModel } from './types'
 
 const PAGE_SIZE = 12
@@ -79,6 +76,17 @@ const SelectModelPopupView: React.FC<Props> = ({
       _setFocusedItemKey(key)
     })
   }, [])
+
+  // 使用 useAiOnlyModels Hook 加载模型数据
+  const {
+    models: aiOnlyModels,
+    loading: modelsLoading,
+    handleScroll: handleModelsScroll
+  } = useAiOnlyModels({
+    pageSize: 10,
+    autoFetch: true,
+    scrollThreshold: 50
+  })
 
   const { tagSelection, selectedTags, tagFilter, toggleTag } = useModelTagFilter()
 
@@ -172,6 +180,65 @@ const SelectModelPopupView: React.FC<Props> = ({
     const items: FlatListItem[] = []
     const pinnedModelIds = new Set(pinnedModels)
     const finalModelFilter = (model: Model) => !showTagFilter || tagFilter(model)
+
+    // 如果有从 API 获取的模型数据，添加到列表顶部
+    if (aiOnlyModels.length > 0) {
+      // 过滤出 packageNum 为 "先用后付" 的模型
+      const filteredModels = aiOnlyModels.filter((model) => model.packageNum === '先用后付')
+
+      // 按服务分组
+      const groupedByService = filteredModels.reduce((acc: Record<string, typeof filteredModels>, model) => {
+        const serviceName = model.serviceName || 'Other'
+        if (!acc[serviceName]) {
+          acc[serviceName] = []
+        }
+        acc[serviceName].push(model)
+        return acc
+      }, {})
+
+      // 为每个服务分组生成列表项
+      Object.entries(groupedByService).forEach(([serviceName, serviceModels]) => {
+        // 如果该分组没有模型，跳过
+        if (serviceModels.length === 0) return
+
+        // 添加分组标题
+        items.push({
+          key: `aionly-service-${serviceName}`,
+          type: 'group',
+          name: serviceName,
+          isSelected: false
+        })
+
+        // 添加该服务下的模型
+        serviceModels.forEach((apiModel) => {
+          const standardModel = convertToStandardModel(apiModel)
+          const modelId = getModelUniqId(standardModel)
+
+          items.push({
+            key: `aionly-${modelId}`,
+            type: 'model',
+            name: (
+              <ModelName>
+                <div className="flex min-w-0 flex-1 items-center gap-1.5">
+                  <span className="min-w-0 truncate">{apiModel.modelName}</span>
+                </div>
+              </ModelName>
+            ),
+            tags: null,
+            icon: (
+              <Avatar src={apiModel.modelFileUrl} size={24}>
+                {first(apiModel.modelName) || 'M'}
+              </Avatar>
+            ),
+            model: standardModel,
+            isPinned: false,
+            isSelected: modelId === currentModelId
+          })
+        })
+      })
+    }
+
+    /* 原来的 providers 数据加载逻辑已注释
     const duplicateNamesByProvider = new Map<string, Set<string>>(
       sortedProviders.map((provider) => [
         provider.id,
@@ -247,11 +314,14 @@ const SelectModelPopupView: React.FC<Props> = ({
         )
       )
     })
+    */
 
     // 获取可选择的模型项（过滤掉分组标题）
     const modelItems = items.filter((item) => item.type === 'model')
     return { listItems: items, modelItems }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    aiOnlyModels,
     pinnedModels,
     showPinnedModels,
     searchText.length,
@@ -261,7 +331,8 @@ const SelectModelPopupView: React.FC<Props> = ({
     createModelItem,
     t,
     searchFilter,
-    resolve
+    resolve,
+    currentModelId
   ])
 
   const listHeight = useMemo(() => {
@@ -466,14 +537,14 @@ const SelectModelPopupView: React.FC<Props> = ({
       closeIcon={null}
       footer={null}>
       {/* 搜索框 */}
-      <SelectModelSearchBar onSearch={setSearchText} />
-      <Divider style={{ margin: 0, marginTop: 4, borderBlockStartWidth: 0.5 }} />
+      {/*<SelectModelSearchBar onSearch={setSearchText} />*/}
+      {/*<Divider style={{ margin: 0, marginTop: 4, borderBlockStartWidth: 0.5 }} />
       {showTagFilter && (
         <>
           <TagFilterSection availableTags={availableTags} tagSelection={tagSelection} onToggleTag={toggleTag} />
           <Divider style={{ margin: 0, borderBlockStartWidth: 0.5 }} />
         </>
-      )}
+      )}*/}
 
       {listItems.length > 0 ? (
         <ListContainer onMouseMove={() => !isMouseOver && setIsMouseOver(true)}>
@@ -489,6 +560,9 @@ const SelectModelPopupView: React.FC<Props> = ({
             scrollerStyle={{ pointerEvents: isMouseOver ? 'auto' : 'none' }}>
             {rowRenderer}
           </DynamicVirtualList>
+          {modelsLoading && (
+            <div style={{ textAlign: 'center', padding: '10px', color: 'var(--color-text-3)' }}>加载中...</div>
+          )}
         </ListContainer>
       ) : (
         <EmptyState>

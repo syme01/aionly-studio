@@ -1,4 +1,5 @@
-import React, { CSSProperties, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react'
 
 import { reqCheck, reqGet } from '../api/index'
 import { aesEncrypt } from '../utils/ase'
@@ -97,10 +98,11 @@ const VerifySlide = ({ ref, ...props }: VerifySlideProps & { ref?: React.RefObje
 
   useEffect(() => {
     init()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type])
 
   const start = (e: React.MouseEvent | React.TouchEvent) => {
-    const event = e.nativeEvent as MouseEvent | TouchEvent
+    const event = e.nativeEvent
     const x = 'touches' in event ? event.touches[0].pageX : event.clientX
     const barAreaLeft = barAreaRef.current?.getBoundingClientRect().left || 0
     setStartLeft(Math.floor(x - barAreaLeft))

@@ -142,6 +142,7 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
               key={model.id}
               className={`item ${modelDisabled(model) ? 'disabled' : null} ${selectedModelIds.includes(model.id) ? 'selected' : ''}`}
               onClick={() => handleModelClick(model)}>
+              <img className="model-img" src={model.modelFileUrl} alt={model.modelName} />
               <span>{model.modelName}</span>
               {selectedModelIds.includes(model.id) && (
                 <img className="checked-img" src={checkedImg} alt={model.modelName} />

@@ -1580,6 +1580,7 @@
     "agent_one": "智能体",
     "agent_other": "智能体",
     "and": "和",
+    "auto_create": "自动生成",
     "assistant": "助手",
     "assistant_one": "助手",
     "assistant_other": "助手",
@@ -5348,7 +5349,8 @@
             "title": "API 密钥管理"
           },
           "new_key": {
-            "placeholder": "输入一个或多个密钥"
+            "placeholder": "输入一个或多个密钥",
+            "limit_over_tip": "密钥最多可创建200个，请删除部分密钥"
           }
         },
         "options": {

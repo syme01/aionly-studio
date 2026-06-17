@@ -140,7 +140,7 @@ export const EmailLogin = ({ ref, ...props }: EmailLoginProps) => {
     })
     try {
       await emailCaptchaApi({
-        emailForm: emailForm.email,
+        email: emailForm.email,
         loginUrl: window.location.href
       })
     } catch (e: any) {
