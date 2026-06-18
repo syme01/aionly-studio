@@ -8,9 +8,9 @@ import { convertToStandardModel, useAiOnlyModels } from '@renderer/hooks/useAiOn
 import { usePinnedModels } from '@renderer/hooks/usePinnedModels'
 import { getModelUniqId } from '@renderer/services/ModelService'
 import type { Model, Provider } from '@renderer/types'
-import { objectEntries } from '@renderer/types'
+// import { objectEntries } from '@renderer/types'
 import { classNames, filterModelsByKeywords, getFancyProviderName } from '@renderer/utils'
-import { getModelTags } from '@renderer/utils/model'
+// import { getModelTags } from '@renderer/utils/model'
 import { Avatar, Empty, Modal } from 'antd'
 import { first, sortBy } from 'lodash'
 import React, {
@@ -60,7 +60,7 @@ const SelectModelPopupView: React.FC<Props> = ({
   const isLoading = loading || (showPinnedModels && pinnedLoading)
   const [open, setOpen] = useState(true)
   const listRef = useRef<DynamicVirtualListRef>(null)
-  const [_searchText, setSearchText] = useState('')
+  const [_searchText, _setSearchText] = useState('')
   const searchText = useDeferredValue(_searchText)
 
   // 当前选中的模型ID
@@ -81,14 +81,14 @@ const SelectModelPopupView: React.FC<Props> = ({
   const {
     models: aiOnlyModels,
     loading: modelsLoading,
-    handleScroll: handleModelsScroll
+    handleScroll: _handleModelsScroll
   } = useAiOnlyModels({
     pageSize: 10,
     autoFetch: true,
     scrollThreshold: 50
   })
 
-  const { tagSelection, selectedTags, tagFilter, toggleTag } = useModelTagFilter()
+  const { tagSelection: _tagSelection, selectedTags, tagFilter, toggleTag: _toggleTag } = useModelTagFilter()
 
   // 把需要优先展示的服务商排到最前面
   const sortedProviders = useMemo(() => {
@@ -110,12 +110,12 @@ const SelectModelPopupView: React.FC<Props> = ({
   }, [providers, prioritizedProviderIds])
 
   // 计算要显示的可用标签列表
-  const availableTags = useMemo(() => {
+  /*const _availableTags = useMemo(() => {
     const models = sortedProviders.flatMap((provider) => provider.models)
     return objectEntries(getModelTags(models))
       .filter(([, state]) => state)
       .map(([tag]) => tag)
-  }, [sortedProviders])
+  }, [sortedProviders])*/
 
   // 根据输入的文本筛选模型
   const searchFilter = useCallback(
@@ -178,8 +178,8 @@ const SelectModelPopupView: React.FC<Props> = ({
   // 构建扁平化列表数据，并派生出可选择的模型项
   const { listItems, modelItems } = useMemo(() => {
     const items: FlatListItem[] = []
-    const pinnedModelIds = new Set(pinnedModels)
-    const finalModelFilter = (model: Model) => !showTagFilter || tagFilter(model)
+    // const _pinnedModelIds = new Set(pinnedModels)
+    // const _finalModelFilter = (model: Model) => !showTagFilter || tagFilter(model)
 
     // 如果有从 API 获取的模型数据，添加到列表顶部
     if (aiOnlyModels.length > 0) {

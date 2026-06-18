@@ -19,8 +19,8 @@ interface VerifyProps {
   vSpace?: number
   explain?: string
   imgSize?: ImgSize
-  blockSize?: Record<string, string>
-  barSize?: Record<string, string>
+  blockSize?: { width: string; height: string }
+  barSize?: { width: string; height: string }
   onSuccess?: (data: any) => void
   onError?: () => void
 }
@@ -41,7 +41,7 @@ const Verify = ({
   const [loading, setLoading] = useState(true)
   const [componentType, setComponentType] = useState<string>()
   const [verifyType, setVerifyType] = useState<string>()
-  const instanceRef = useRef<any>()
+  const instanceRef = useRef<any>(null)
 
   useEffect(() => {
     const uuid = () => {

@@ -3,7 +3,6 @@ import { PPIO_APP_SECRET, PPIO_CLIENT_ID, SILICON_CLIENT_ID, TOKENFLUX_HOST } fr
 import i18n, { getLanguageCode } from '@renderer/i18n'
 
 const logger = loggerService.withContext('Utils:oauth')
-
 export const oauthWithSiliconFlow = async (setKey) => {
   const authUrl = `https://account.siliconflow.cn/oauth?client_id=${SILICON_CLIENT_ID}`
 
@@ -327,7 +326,8 @@ export const providerCharge = async (provider: string) => {
     },
     aionly: {
       // url: `https://maas.aiionly.com/recharge`,
-      url: `http://localhost:7023/login?redirect=/recharge`,
+      // url: `http://localhost:7023/login?redirect=/recharge`
+      url: 'https://maas.aiionly.com/login?redirect=/recharge',
       width: 900,
       height: 700
     }
@@ -357,8 +357,9 @@ function handleWindowMessage({ win, provider, targetPath }) {
 
   // 定义监听函数，方便后续移除
   const handleChildMsg = (e: MessageEvent) => {
-    // 严格校验来源，只接收7023页面消息
-    if (e.origin !== 'http://localhost:7023') return
+    // 严格校验来源，只接收允许的源
+    const allowOrigin = ['http://localhost:7023', 'https://maas.aiionly.com', 'https://maas.aionly.com']
+    if (!allowOrigin.includes(e.origin)) return
     logger.info('父页面收到子页面消息', { data: e.data })
 
     if (e.data.type === 'user_ui_ready') {
@@ -369,7 +370,7 @@ function handleWindowMessage({ win, provider, targetPath }) {
         token,
         targetPath
       }
-      win.postMessage(sendData, 'http://localhost:7023')
+      win.postMessage(sendData, 'https://maas.aiionly.com')
     }
   }
 
@@ -416,7 +417,8 @@ export const providerBills = async (provider: string) => {
     aionly: {
       // url: `https://maas.aiionly.com/billManagement`,
       // url: `https://maas.aiionly.com/login?redirect=/billManagement`,
-      url: `http://localhost:7023/login?redirect=/billManagement`,
+      // url: `http://localhost:7023/login?redirect=/billManagement`,
+      url: `https://maas.aiionly.com/login?redirect=/billManagement`,
       width: 900,
       height: 700
     }

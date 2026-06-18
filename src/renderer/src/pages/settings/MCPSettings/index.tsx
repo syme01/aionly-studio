@@ -1,10 +1,10 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import Ai302ProviderLogo from '@renderer/assets/images/providers/302ai.webp'
-import BailianProviderLogo from '@renderer/assets/images/providers/bailian.png'
-import LanyunProviderLogo from '@renderer/assets/images/providers/lanyun.png'
-import MCPRouterProviderLogo from '@renderer/assets/images/providers/mcprouter.webp'
-import ModelScopeProviderLogo from '@renderer/assets/images/providers/modelscope.png'
-import TokenFluxProviderLogo from '@renderer/assets/images/providers/tokenflux.png'
+// import Ai302ProviderLogo from '@renderer/assets/images/providers/302ai.webp'
+// import BailianProviderLogo from '@renderer/assets/images/providers/bailian.png'
+// import LanyunProviderLogo from '@renderer/assets/images/providers/lanyun.png'
+// import MCPRouterProviderLogo from '@renderer/assets/images/providers/mcprouter.webp'
+// import ModelScopeProviderLogo from '@renderer/assets/images/providers/modelscope.png'
+// import TokenFluxProviderLogo from '@renderer/assets/images/providers/tokenflux.png'
 import DividerWithText from '@renderer/components/DividerWithText'
 import { McpLogo } from '@renderer/components/Icons'
 import ListItem from '@renderer/components/ListItem'
@@ -69,14 +69,14 @@ const MCPSettings: FC = () => {
   }
 
   // Provider icons map
-  const providerIcons: Record<string, React.ReactNode> = {
+  /*const _providerIcons: Record<string, React.ReactNode> = {
     modelscope: <ProviderIcon src={ModelScopeProviderLogo} alt="ModelScope" />,
     tokenflux: <ProviderIcon src={TokenFluxProviderLogo} alt="TokenFlux" />,
     lanyun: <ProviderIcon src={LanyunProviderLogo} alt="Lanyun" />,
     '302ai': <ProviderIcon src={Ai302ProviderLogo} alt="302AI" />,
     bailian: <ProviderIcon src={BailianProviderLogo} alt="Bailian" />,
     mcprouter: <ProviderIcon src={MCPRouterProviderLogo} alt="MCPRouter" />
-  }
+  }*/
 
   return (
     <Container>
@@ -205,13 +205,13 @@ const RightContainer = styled.div`
   position: relative;
 `
 
-const ProviderIcon = styled.img`
+/*const ProviderIcon = styled.img`
   width: 24px;
   height: 24px;
   object-fit: cover;
   border-radius: 50%;
   background-color: var(--color-background-soft);
-`
+`*/
 
 const ContentWrapper = styled.div`
   padding: 20px;

@@ -92,6 +92,12 @@ if (isLinux) {
   app.commandLine.appendSwitch('name', 'AiiOnly')
 }
 
+/**
+ * Ignore certificate errors for HTTPS API requests
+ * This allows the app to make requests to HTTPS endpoints with self-signed or untrusted certificates
+ */
+app.commandLine.appendSwitch('ignore-certificate-errors')
+
 // DocumentPolicyIncludeJSCallStacksInCrashReports: Enable features for unresponsive renderer js call stacks
 // EarlyEstablishGpuChannel,EstablishGpuChannelAsync: Enable features for early establish gpu channel
 // speed up the startup time
@@ -101,6 +107,15 @@ app.commandLine.appendSwitch(
   'DocumentPolicyIncludeJSCallStacksInCrashReports,EarlyEstablishGpuChannel,EstablishGpuChannelAsync'
 )
 app.on('web-contents-created', (_, webContents) => {
+  webContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
+    callback({
+      requestHeaders: {
+        ...details.requestHeaders,
+        Referer: 'http://localhost:5173'
+      }
+    })
+  })
+
   webContents.session.webRequest.onHeadersReceived((details, callback) => {
     callback({
       responseHeaders: {

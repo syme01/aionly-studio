@@ -7,7 +7,7 @@ import { memo, useMemo, useState } from 'react'
 
 interface CustomCollapseProps {
   label: React.ReactNode
-  extra: React.ReactNode
+  extra?: React.ReactNode
   children: React.ReactNode
   destroyInactivePanel?: boolean
   defaultActiveKey?: string[]

@@ -1,9 +1,12 @@
+import { loggerService } from '@logger'
 import { encryptBase64, encryptWithAes, generateAesKey } from '@renderer/utils/crypt/crypto'
 import { encrypt } from '@renderer/utils/crypt/jsencrypt'
 import { AxiosCanceler } from '@renderer/utils/helper/axiosCancel'
 import { checkStatus } from '@renderer/utils/helper/checkStatus'
 import { message } from 'antd'
 import axios from 'axios'
+
+const logger = loggerService.withContext('RequestHttp')
 
 const encryptHeader = 'encrypt-key'
 const config = {
@@ -35,6 +38,12 @@ class RequestHttp {
         // 重复请求不需要取消，在 api 服务中通过指定的第三个参数: { cancel: false } 来控制
         config.cancel = config.cancel ? config.cancel : true
         config.cancel && axiosCanceler.addPending(config)
+
+        if (config.url.includes('/userProfile/profile')) {
+          logger.debug('config.url', { url: config.url })
+          // config.headers['Referer'] = 'https://www.aionly.com'; // 伪装成来自官网
+          config.headers['Referer'] = 'http://localhost:5173/' // 先试试能不能骗过服务器
+        }
         // console.log("config.loading", config.loading);
         // 当前请求不需要显示 loading，在 api 服务中通过指定的第三个参数: { loading: false } 来控制
         // config.loading = config.loading === false ? config.loading : true;
@@ -47,15 +56,16 @@ class RequestHttp {
         if (token && !isToken) {
           // config.headers['Authorization'] = 'Bearer ' + useUserStore().getToken();// 让每个请求携带自定义token 请根据实际情况自行修改
           config.headers['Authorization'] = 'Bearer ' + token // 让每个请求携带自定义token 请根据实际情况自行修改
-          config.headers['clientid'] = import.meta.env.VITE_APP_CLIENT_ID
         }
+        // clientid 和 hostname 应该在所有请求中都携带
+        config.headers['clientid'] = import.meta.env.VITE_APP_CLIENT_ID
         config.headers['hostname'] = window.location.hostname
         if (import.meta.env.VITE_APP_ENCRYPT === 'true') {
           // 当开启参数加密
           if (isEncrypt && (config.method === 'post' || config.method === 'put')) {
             // 生成一个 AES 密钥
             const aesKey = generateAesKey()
-            console.log(encryptBase64(aesKey))
+            logger.debug('AES key encrypted', { key: encryptBase64(aesKey) })
             config.headers[encryptHeader] = encrypt(encryptBase64(aesKey))
             config.data =
               typeof config.data === 'object'

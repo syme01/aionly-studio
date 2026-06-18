@@ -2,6 +2,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import { loggerService } from '@logger'
 import { Sortable, useDndReorder } from '@renderer/components/dnd'
 import HorizontalScrollContainer from '@renderer/components/HorizontalScrollContainer'
+import UserAvatar from '@renderer/components/UserAvatar'
 import { isLinux, isMac } from '@renderer/config/constant'
 import { allMinApps } from '@renderer/config/minapps'
 import { useTheme } from '@renderer/context/ThemeProvider'
@@ -10,7 +11,7 @@ import { useMinappPopup } from '@renderer/hooks/useMinappPopup'
 import { useMinapps } from '@renderer/hooks/useMinapps'
 import { useSettings } from '@renderer/hooks/useSettings'
 import { getThemeModeLabel, getTitleLabel } from '@renderer/i18n/label'
-import UpdateAppButton from '@renderer/pages/home/components/UpdateAppButton'
+// import UpdateAppButton from '@renderer/pages/home/components/UpdateAppButton'
 import tabsService from '@renderer/services/TabsService'
 import { useAppDispatch, useAppSelector } from '@renderer/store'
 import type { Tab } from '@renderer/store/tabs'
@@ -59,7 +60,7 @@ const getTabIcon = (
 ): React.ReactNode | undefined => {
   // Check if it's a minapp tab (format: apps:appId)
   if (tabId.startsWith('apps:')) {
-    console.log('------------->>>>>>>>>>>>>>>>>>>00000')
+    logger.debug('Processing minapp tab icon', { tabId })
     const appId = tabId.replace('apps:', '')
     let app = [...allMinApps, ...minapps].find((app) => app.id === appId)
 
@@ -100,7 +101,7 @@ const getTabIcon = (
     case 'paintings':
       return <Palette size={14} />
     case 'apps':
-      console.log('------------->>>>>>>>>>>>>>>>>>>1111')
+      logger.debug('Rendering apps tab icon')
       return <LayoutGrid size={14} />
     case 'notes':
       return <NotepadText size={14} />
@@ -283,7 +284,8 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ children }) => {
           </AddTabButton>
         </HorizontalScrollContainer>
         <RightButtonsContainer style={{ paddingRight: isLinux && useSystemTitleBar ? '12px' : undefined }}>
-          <UpdateAppButton />
+          <UserAvatar />
+          {/* <UpdateAppButton />*/}
           <Tooltip
             title={t('settings.theme.title') + ': ' + getThemeModeLabel(settedTheme)}
             mouseEnterDelay={0.8}

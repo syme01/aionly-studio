@@ -33,12 +33,12 @@ const PROVIDER_LOGO_MAP = {
 
 const ProviderOAuth: FC<Props> = ({ providerId, fancyProviderName }) => {
   const { t } = useTranslation()
-  const { provider, updateProvider } = useProvider(providerId)
+  const { provider /*updateProvider*/ } = useProvider(providerId)
 
   // TODO: 这里需要更新ApiKey
-  const setApiKey = (newKey: string) => {
+  /*const _setApiKey = (newKey: string) => {
     updateProvider({ apiKey: newKey, enabled: true })
-  }
+  }*/
 
   let providerWebsite =
     PROVIDER_URLS[provider.id]?.api?.url.replace('https://', '').replace('api.', '') || provider.name

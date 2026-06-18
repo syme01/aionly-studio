@@ -5,12 +5,12 @@ import { useTheme } from '@renderer/context/ThemeProvider'
 import { useMinappPopup } from '@renderer/hooks/useMinappPopup'
 import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useSettings } from '@renderer/hooks/useSettings'
-import i18n from '@renderer/i18n'
+// import i18n from '@renderer/i18n'
 import { useAppDispatch } from '@renderer/store'
 import { setUpdateState } from '@renderer/store/runtime'
 import { ThemeMode } from '@renderer/types'
 import { runAsyncFunction } from '@renderer/utils'
-import { UpgradeChannel } from '@shared/config/constant'
+// import { UpgradeChannel } from '@shared/config/constant'
 import { Avatar, Button, Progress, Row, Switch, Tag } from 'antd'
 import { debounce } from 'lodash'
 import { ChevronRight, Clock4, Globe } from 'lucide-react'
@@ -26,7 +26,7 @@ const AboutSettings: FC = () => {
   const [version, setVersion] = useState('')
   const [isPortable, setIsPortable] = useState(false)
   const { t } = useTranslation()
-  const { autoCheckUpdate, setAutoCheckUpdate, testPlan, setTestPlan, testChannel, setTestChannel } = useSettings()
+  const { autoCheckUpdate, setAutoCheckUpdate /*testPlan, setTestPlan, testChannel, setTestChannel*/ } = useSettings()
   const { theme } = useTheme()
   const dispatch = useAppDispatch()
   const { update } = useRuntime()
@@ -63,23 +63,6 @@ const AboutSettings: FC = () => {
     void window.api.openWebsite(url)
   }
 
-  const mailto = async () => {
-    const email = 'support@cherry-ai.com'
-    const subject = `${APP_NAME} Feedback`
-    const version = (await window.api.getAppInfo()).version
-    const platform = window.electron.process.platform
-    const url = `mailto:${email}?subject=${subject}&body=%0A%0AVersion: ${version} | Platform: ${platform}`
-    onOpenWebsite(url)
-  }
-
-  const debug = async () => {
-    await window.api.devTools.toggle()
-  }
-
-  const showEnterprise = async () => {
-    onOpenWebsite('https://enterprise.cherry-ai.com')
-  }
-
   const showReleases = async () => {
     const { appPath } = await window.api.getAppInfo()
     openSmartMinapp({
@@ -90,70 +73,11 @@ const AboutSettings: FC = () => {
     })
   }
 
-  const currentChannelByVersion =
+  /*const currentChannelByVersion =
     [
       { pattern: `-${UpgradeChannel.BETA}.`, channel: UpgradeChannel.BETA },
       { pattern: `-${UpgradeChannel.RC}.`, channel: UpgradeChannel.RC }
-    ].find(({ pattern }) => version.includes(pattern))?.channel || UpgradeChannel.LATEST
-
-  const handleTestChannelChange = async (value: UpgradeChannel) => {
-    if (testPlan && currentChannelByVersion !== UpgradeChannel.LATEST && value !== currentChannelByVersion) {
-      window.toast.warning(t('settings.general.test_plan.version_channel_not_match'))
-    }
-    setTestChannel(value)
-    // Clear update info when switching upgrade channel
-    dispatch(
-      setUpdateState({
-        available: false,
-        info: null,
-        downloaded: false,
-        checking: false,
-        downloading: false,
-        downloadProgress: 0
-      })
-    )
-  }
-
-  // Get available test version options based on current version
-  const getAvailableTestChannels = () => {
-    return [
-      {
-        tooltip: t('settings.general.test_plan.rc_version_tooltip'),
-        label: t('settings.general.test_plan.rc_version'),
-        value: UpgradeChannel.RC
-      },
-      {
-        tooltip: t('settings.general.test_plan.beta_version_tooltip'),
-        label: t('settings.general.test_plan.beta_version'),
-        value: UpgradeChannel.BETA
-      }
-    ]
-  }
-
-  const handleSetTestPlan = (value: boolean) => {
-    setTestPlan(value)
-    dispatch(
-      setUpdateState({
-        available: false,
-        info: null,
-        downloaded: false,
-        checking: false,
-        downloading: false,
-        downloadProgress: 0
-      })
-    )
-
-    if (value === true) {
-      setTestChannel(getTestChannel())
-    }
-  }
-
-  const getTestChannel = () => {
-    if (testChannel === UpgradeChannel.LATEST) {
-      return UpgradeChannel.RC
-    }
-    return testChannel
-  }
+    ].find(({ pattern }) => version.includes(pattern))?.channel || UpgradeChannel.LATEST*/
 
   useEffect(() => {
     void runAsyncFunction(async () => {
@@ -163,11 +87,6 @@ const AboutSettings: FC = () => {
     })
     setAutoCheckUpdate(autoCheckUpdate)
   }, [autoCheckUpdate, setAutoCheckUpdate])
-
-  const onOpenDocs = () => {
-    const isChinese = i18n.language.startsWith('zh')
-    void window.api.openWebsite(isChinese ? 'https://docs.cherry-ai.com/' : 'https://docs.cherry-ai.com/docs/en-us')
-  }
 
   return (
     <SettingContainer theme={theme}>
@@ -409,7 +328,8 @@ export const SettingRowTitle = styled.div`
 const UpdateNotesWrapper = styled.div`
   padding: 12px 0;
   margin: 8px 0;
-  background-color: var(--color-bg-2);
+  //background-color: var(--color-bg-2);
+  background-color: var(--color-background);
   border-radius: 6px;
   color: var(--color-text-2);
   font-size: 14px;

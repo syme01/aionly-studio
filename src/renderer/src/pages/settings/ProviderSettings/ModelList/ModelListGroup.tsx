@@ -33,9 +33,9 @@ const ModelListGroup: React.FC<ModelListGroupProps> = ({
   disabled,
   onEditModel,
   onRemoveModel,
-  onRemoveGroup
+  onRemoveGroup: _onRemoveGroup
 }) => {
-  const { t } = useTranslation()
+  const { t: _t } = useTranslation()
   const listRef = useRef<DynamicVirtualListRef>(null)
 
   const handleCollapseChange = useCallback((activeKeys: string[] | string) => {

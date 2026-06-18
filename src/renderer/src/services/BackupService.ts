@@ -1,4 +1,5 @@
 import { loggerService } from '@logger'
+import { PERSIST_KEY } from '@renderer/config/env'
 import db from '@renderer/databases'
 import { upgradeToV7, upgradeToV8 } from '@renderer/databases/upgrades'
 import i18n from '@renderer/i18n'
@@ -906,14 +907,14 @@ export async function handleData(data: Record<string, any>) {
       }
     }
 
-    localStorage.setItem('persist:cherry-studio', data.localStorage['persist:cherry-studio'])
+    localStorage.setItem(`persist:${PERSIST_KEY}`, data.localStorage[`persist:${PERSIST_KEY}`])
     window.toast.success(i18n.t('message.restore.success'))
     setTimeout(() => window.api.relaunchApp(), 1000)
     return
   }
 
   if (data.version >= 2) {
-    localStorage.setItem('persist:cherry-studio', data.localStorage['persist:cherry-studio'])
+    localStorage.setItem(`persist:${PERSIST_KEY}`, data.localStorage[`persist:${PERSIST_KEY}`])
 
     // remove notes_tree from indexedDB
     if (data.indexedDB['notes_tree']) {

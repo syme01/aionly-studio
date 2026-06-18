@@ -34,11 +34,11 @@ const VerifyPoints = ({ ref, ...props }: VerifyPointsProps & { ref?: React.RefOb
 
   const [secretKey, setSecretKey] = useState('')
   const [checkNum] = useState(3)
-  const [fontPos, setFontPos] = useState<Point[]>([])
+  const [_fontPos, setFontPos] = useState<Point[]>([])
   const [checkPosArr, setCheckPosArr] = useState<Point[]>([])
   const [num, setNum] = useState(1)
   const [pointBackImgBase, setPointBackImgBase] = useState('')
-  const [poinTextList, setPoinTextList] = useState<string[]>([])
+  const [_poinTextList, setPoinTextList] = useState<string[]>([])
   const [backToken, setBackToken] = useState('')
   const [setSize, setSetSize] = useState({ imgHeight: '0', imgWidth: '0', barHeight: '0', barWidth: '0' })
   const [tempPoints, setTempPoints] = useState<Point[]>([])
@@ -89,6 +89,7 @@ const VerifyPoints = ({ ref, ...props }: VerifyPointsProps & { ref?: React.RefOb
 
   useEffect(() => {
     init()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const getMousePos = (e: React.MouseEvent): Point => {

@@ -19,7 +19,7 @@ const logger = loggerService.withContext('SMSLogin')
 
 interface LoginFormProps {
   ref?: React.Ref<SMSLoginRef>
-  onSubmit?: () => void
+  onSuccess?: () => void
   onFormChange?: (valid: boolean) => void
   verifyRef?: any
 }
@@ -62,7 +62,7 @@ export const SMSLogin = ({ ref, ...props }: LoginFormProps) => {
     const { data } = await loginApi(codeForm)
     if (data && data.access_token) {
       localStorage.setItem('token', data.access_token)
-      props.onSubmit?.()
+      props.onSuccess?.()
     }
   }
 

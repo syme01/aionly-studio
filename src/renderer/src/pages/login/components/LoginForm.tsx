@@ -1,12 +1,17 @@
+import { getFinanceInfo } from '@renderer/api/balance'
+import { getUserProfileApi } from '@renderer/api/login'
 import bgLoginF from '@renderer/assets/images/login/bg-login-f.jpg'
 import lwImg from '@renderer/assets/images/login/lw.png'
 import Verify from '@renderer/components/verifition/Verify'
 import i18n from '@renderer/i18n'
 import { Agreements } from '@renderer/pages/login/components/Agreements'
+import { useAppDispatch } from '@renderer/store'
+import { setMyBalance, setUserInfo } from '@renderer/store/user'
 import type { TabsProps } from 'antd'
 import { Button } from 'antd'
 import { Tabs } from 'antd'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { AccountLogin, type AccountLoginRef } from './AccountLogin'
@@ -123,24 +128,26 @@ interface LoginFormProps {
 }
 
 export const LoginForm = (props: LoginFormProps) => {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
   const [activeTabKey, setActiveTabKey] = useState('1')
   const [isAccept, setIsAccept] = useState(false)
   const [formValid, setFormValid] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [logoUrl, setLogoUrl] = useState('')
+  const [logoUrl] = useState<string>(() => {
+    try {
+      const agentInfoStr = localStorage.getItem('agentInfo')
+      return agentInfoStr ? JSON.parse(agentInfoStr).logoUrl || '' : ''
+    } catch {
+      return ''
+    }
+  })
 
   const verifyRef = useRef<any>(null)
   const smsLoginRef = useRef<SMSLoginRef | null>(null)
   const emailLoginRef = useRef<EmailLoginRef | null>(null)
   const accountLoginRef = useRef<AccountLoginRef | null>(null)
-
-  useEffect(() => {
-    const agentInfoStr = localStorage.getItem('agentInfo')
-    if (agentInfoStr) {
-      const agentInfo = JSON.parse(agentInfoStr)
-      setLogoUrl(agentInfo.logoUrl)
-    }
-  }, [])
 
   // 获取当前激活 tab 对应的子组件 ref
   const getActiveRef = () => {
@@ -160,19 +167,40 @@ export const LoginForm = (props: LoginFormProps) => {
     setFormValid(valid)
   }
 
+  // 查询并保存用户信息
+  const saveUserInfo = useCallback(async () => {
+    const res = await getUserProfileApi()
+    const data = res.data?.user
+    dispatch(setUserInfo(data))
+    const balance = await getFinanceInfo()
+    dispatch(setMyBalance(balance.data))
+  }, [dispatch])
+
+  /** 登录成功 **/
+  const handleLoginSuccess = () => {
+    saveUserInfo()
+    props.onComplete?.()
+    navigate('/')
+  }
+
   const tabList: TabsProps['items'] = [
     {
       key: '1',
       label: '短信登录',
       children: (
-        <SMSLogin ref={smsLoginRef} verifyRef={verifyRef} onFormChange={onFormChange} onSubmit={props.onComplete} />
+        <SMSLogin ref={smsLoginRef} verifyRef={verifyRef} onFormChange={onFormChange} onSuccess={handleLoginSuccess} />
       )
     },
     {
       key: '2',
       label: '邮箱登录',
       children: (
-        <EmailLogin ref={emailLoginRef} verifyRef={verifyRef} onFormChange={onFormChange} onSubmit={props.onComplete} />
+        <EmailLogin
+          ref={emailLoginRef}
+          verifyRef={verifyRef}
+          onFormChange={onFormChange}
+          onSuccess={handleLoginSuccess}
+        />
       )
     },
     {
@@ -183,7 +211,7 @@ export const LoginForm = (props: LoginFormProps) => {
           ref={accountLoginRef}
           verifyRef={verifyRef}
           onFormChange={onFormChange}
-          onSubmit={props.onComplete}
+          onSuccess={handleLoginSuccess}
         />
       )
     }
@@ -221,7 +249,7 @@ export const LoginForm = (props: LoginFormProps) => {
     <>
       <Container>
         <LeftPanel>
-          <LogoImage src={logoUrl} alt="logo" />
+          {logoUrl && <LogoImage src={logoUrl} alt="logo" />}
           <NewUserGiftWrap>
             <img className="w-8" src={lwImg} alt="lw" />
             {i18n.t('login.newUserGift')}

@@ -1,13 +1,16 @@
-import { useCallback, useState } from 'react'
+import { useAppSelector } from '@renderer/store'
+import { selectToken } from '@renderer/store/user'
+import { useCallback, useEffect, useState } from 'react'
+
 export function useLoginState() {
-  const [isLogin, setIsLogin] = useState(() => !!localStorage.getItem('token'))
+  const token = useAppSelector(selectToken)
+  const [isLogin, setIsLogin] = useState(() => !!token)
 
-  const completeLogin = useCallback(() => {
-    setIsLogin(true)
-  }, [])
+  useEffect(() => {
+    setIsLogin(!!token)
+  }, [token])
 
-  return {
-    isLogin,
-    completeLogin
-  }
+  const completeLogin = useCallback(() => setIsLogin(true), [])
+
+  return { isLogin, completeLogin }
 }

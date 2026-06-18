@@ -28,7 +28,7 @@ import type { PaintingAction, PaintingsState } from '@renderer/types'
 import type { FileMetadata } from '@renderer/types'
 import { getErrorMessage, uuid } from '@renderer/utils'
 import { isNewApiProvider } from '@renderer/utils/provider'
-import { Avatar, Button, Empty, InputNumber, Segmented, Select, Upload } from 'antd'
+import { Button, Empty, InputNumber, Segmented, Select, Upload } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import type { RcFile } from 'antd/es/upload'
 import type { UploadFile } from 'antd/es/upload/interface'
@@ -46,7 +46,7 @@ import { checkProviderEnabled, findPaintingByFiles } from './utils'
 
 const logger = loggerService.withContext('NewApiPage')
 
-const NewApiPage: FC<{ Options: string[] }> = ({ Options }) => {
+const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
   const [mode, setMode] = useState<keyof PaintingsState>('openai_image_generate')
   const { addPainting, removePainting, updatePainting, openai_image_generate, openai_image_edit } = usePaintings()
 
@@ -485,12 +485,12 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options }) => {
     }
   }
 
-  const handleProviderChange = (providerId: string) => {
+  /*const _handleProviderChange = (providerId: string) => {
     const routeName = location.pathname.split('/').pop()
     if (providerId !== routeName) {
       navigate('../' + providerId, { replace: true })
     }
-  }
+  }*/
 
   // 处理模式切换
   const handleModeChange = (value: string) => {
@@ -891,9 +891,9 @@ const ToolbarMenu = styled.div`
   gap: 6px;
 `
 
-const ProviderLogo = styled(Avatar)`
+/*const _ProviderLogo = styled(Avatar)`
   border: 0.5px solid var(--color-border);
-`
+`*/
 
 const ModeSegmentedContainer = styled.div`
   display: flex;
@@ -901,12 +901,12 @@ const ModeSegmentedContainer = styled.div`
   padding-top: 24px;
 `
 
-const ProviderTitleContainer = styled.div`
+/*const _ProviderTitleContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 5px;
-`
+`*/
 
 const ImageUploadButton = styled(Upload)`
   & .ant-upload.ant-upload-select {

@@ -1,5 +1,5 @@
 import AiOnlyApiKeyListPopup from '@renderer//components/Popups/ApiKeyListPopup/aionly/popup'
-import { adaptProvider } from '@renderer/aiCore/provider/providerConfig'
+// import { adaptProvider } from '@renderer/aiCore/provider/providerConfig'
 import { addApikey, getApikeyList } from '@renderer/api/apikey'
 import { getApikeyByUserId, getUserProfileApi } from '@renderer/api/login'
 import OpenAIAlert from '@renderer/components/Alert/OpenAIAlert'
@@ -12,7 +12,7 @@ import { HelpTooltip } from '@renderer/components/TooltipIcons'
 import { isRerankModel } from '@renderer/config/models'
 import { PROVIDER_URLS } from '@renderer/config/providers'
 import { useTheme } from '@renderer/context/ThemeProvider'
-import { useAllProviders, useProvider, useProviders } from '@renderer/hooks/useProvider'
+import { useProvider /*useProviders, useAllProviders*/ } from '@renderer/hooks/useProvider'
 import { useTimer } from '@renderer/hooks/useTimer'
 import AnthropicSettings from '@renderer/pages/settings/ProviderSettings/AnthropicSettings'
 import { ModelList } from '@renderer/pages/settings/ProviderSettings/ModelList'
@@ -27,7 +27,7 @@ import type { ApiKeyConnectivity } from '@renderer/types/healthCheck'
 import { HealthStatus } from '@renderer/types/healthCheck'
 import { formatApiHost, formatApiKeys, getFancyProviderName, validateApiHost } from '@renderer/utils'
 import { serializeHealthCheckError } from '@renderer/utils/error'
-import {
+/*import {
   isAIGatewayProvider,
   isAnthropicProvider,
   isAzureOpenAIProvider,
@@ -37,7 +37,8 @@ import {
   isOpenAICompatibleProvider,
   isOpenAIProvider,
   isVertexProvider
-} from '@renderer/utils/provider'
+} from '@renderer/utils/provider'*/
+import { isAzureOpenAIProvider, isNewApiProvider, isVertexProvider } from '@renderer/utils/provider'
 import { Button, Input, Select, Space, Tooltip, Typography } from 'antd'
 import { debounce, isEmpty } from 'lodash'
 import { Check, Settings2, TriangleAlert } from 'lucide-react'
@@ -45,8 +46,8 @@ import type { FC } from 'react'
 import { useEffect } from 'react'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
 
+// import styled from 'styled-components'
 import { SettingContainer, SettingHelpText, SettingHelpTextRow, SettingSubtitle } from '..'
 import AwsBedrockSettings from './AwsBedrockSettings'
 import CherryINOAuth from './CherryINOAuth'
@@ -61,7 +62,7 @@ import ProviderOAuth from './ProviderOAuth'
 import SelectProviderModelPopup from './SelectProviderModelPopup'
 import VertexAISettings from './VertexAISettings'
 
-const { Text, Title } = Typography
+const { Text } = Typography
 
 const logger = loggerService.withContext('ProviderSetting')
 
@@ -102,8 +103,8 @@ type HostField = 'apiHost' | 'anthropicApiHost'
 
 const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
   const { provider, updateProvider, models } = useProvider(providerId)
-  const allProviders = useAllProviders()
-  const { updateProviders } = useProviders()
+  // const allProviders = useAllProviders()
+  // const { updateProviders } = useProviders()
   const [apiHost, setApiHost] = useState(provider.apiHost)
   const [anthropicApiHost, setAnthropicHost] = useState<string | undefined>(provider.anthropicApiHost)
   const [apiVersion, setApiVersion] = useState(provider.apiVersion)
@@ -123,8 +124,8 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
   const hideApiKeyInput = noAPIKeyInputProviders.some((id) => id === provider.id)
 
   const providerConfig = PROVIDER_URLS[provider.id]
-  const officialWebsite = providerConfig?.websites?.official
-  const apiKeyWebsite = providerConfig?.websites?.apiKey
+  /*const officialWebsite = providerConfig?.websites?.official
+  const apiKeyWebsite = providerConfig?.websites?.apiKey*/
   const configuredApiHost = providerConfig?.api?.url
 
   const fancyProviderName = getFancyProviderName(provider)
@@ -255,7 +256,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
     return apiKeyConnectivity.status === 'success'
   }, [apiKeyConnectivity])
 
-  const moveProviderToTop = useCallback(
+  /*const moveProviderToTop = useCallback(
     (providerId: string) => {
       const reorderedProviders = [...allProviders]
       const index = reorderedProviders.findIndex((p) => p.id === providerId)
@@ -268,7 +269,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
       }
     },
     [allProviders, updateProviders]
-  )
+  )*/
 
   const onUpdateApiHost = () => {
     if (!validateApiHost(apiHost)) {
@@ -389,7 +390,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
     return !isEmpty(configuredApiHost) && apiHost !== configuredApiHost
   }, [configuredApiHost, apiHost])
 
-  const hostPreview = () => {
+  /*const hostPreview = () => {
     const formattedApiHost = adaptProvider({ provider: { ...provider, apiHost } }).apiHost
 
     if (isOllamaProvider(provider)) {
@@ -425,7 +426,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
       return formattedApiHost + '/language-model'
     }
     return formattedApiHost
-  }
+  }*/
 
   // API key 连通性检查状态指示器，目前仅在失败时显示
   const renderStatusIndicator = () => {
@@ -616,7 +617,12 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
 
                   {!localApiKey && (
                     <>
-                      <Button style={{ fontSize: 12, padding: 0 }} type="link" size="small" onClick={handleGetApiKey}>
+                      <Button
+                        style={{ fontSize: 12, padding: 0 }}
+                        type="link"
+                        size="small"
+                        loading={localApiKeyLoading}
+                        onClick={handleGetApiKey}>
                         {t('settings.provider.get_api_key')}
                       </Button>
                       <Text type="warning" style={{ fontSize: 12, padding: 0 }}>
@@ -745,10 +751,10 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
   )
 }
 
-const ProviderName = styled.span`
+/*const ProviderName = styled.span`
   font-size: 14px;
   font-weight: 500;
   margin-right: -2px;
-`
+`*/
 
 export default ProviderSetting

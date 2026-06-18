@@ -47,6 +47,14 @@ body,
   flex: 1;
 }
 
+body.light #root {
+  background: url('../images/bg-app.jpg');
+}
+
+body.dark #root {
+  background: var(--navbar-background);
+}
+
 body {
   display: flex;
   min-height: 100vh;

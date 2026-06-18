@@ -18,4 +18,5 @@ export const useLogin = (options: LoginOptions) => {
     const { data } = await loginApi(options.params)
     localStorage.setItem('token', data.access_token)
   }
+  return { login }
 }

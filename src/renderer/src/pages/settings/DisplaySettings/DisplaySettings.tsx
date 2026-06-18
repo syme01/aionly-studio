@@ -63,7 +63,7 @@ const DisplaySettings: FC = () => {
     clickAssistantToShowTopic,
     showTopicTime,
     pinTopicsToTop,
-    customCss,
+    customCss: _customCss,
     sidebarIcons,
     setTheme,
     assistantIconType,
@@ -499,12 +499,6 @@ const DisplaySettings: FC = () => {
   )
 }
 
-const TitleExtra = styled.div`
-  font-size: 12px;
-  cursor: pointer;
-  text-decoration: underline;
-  opacity: 0.7;
-`
 const ResetButtonWrapper = styled.div`
   display: flex;
   align-items: center;

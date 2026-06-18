@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 interface EmailLoginProps {
   ref?: React.Ref<EmailLoginRef>
-  onSubmit?: () => void
+  onSuccess?: () => void
   onFormChange?: (valid: boolean) => void
   verifyRef?: any
 }
@@ -61,7 +61,7 @@ export const EmailLogin = ({ ref, ...props }: EmailLoginProps) => {
     const { data } = await loginApi(emailForm)
     if (data && data.access_token) {
       localStorage.setItem('token', data.access_token)
-      props.onSubmit?.()
+      props.onSuccess?.()
     }
   }
 

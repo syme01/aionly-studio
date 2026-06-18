@@ -1,7 +1,7 @@
 import logo from '@renderer/assets/images/logo.png'
+import UserAvatar from '@renderer/components/UserAvatar'
 import { isMac } from '@renderer/config/constant'
 import { useTheme } from '@renderer/context/ThemeProvider'
-import useAvatar from '@renderer/hooks/useAvatar'
 import { useFullscreen } from '@renderer/hooks/useFullscreen'
 import { useMinappPopup } from '@renderer/hooks/useMinappPopup'
 import { useMinapps } from '@renderer/hooks/useMinapps'
@@ -33,7 +33,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { OpenClawSidebarIcon } from '../Icons/SVGIcon'
-import UserPopup from '../Popups/UserPopup'
 import { SidebarOpenedMinappTabs, SidebarPinnedApps } from './PinnedMinapps'
 
 const Sidebar: FC = () => {
@@ -46,10 +45,7 @@ const Sidebar: FC = () => {
   const navigate = useNavigate()
 
   const { theme, settedTheme, toggleTheme } = useTheme()
-  const avatar = useAvatar()
   const { t } = useTranslation()
-
-  const onEditUser = () => UserPopup.show()
 
   const backgroundColor = useNavBackgroundColor()
 
@@ -90,6 +86,7 @@ const Sidebar: FC = () => {
         )}
       </MainMenusContainer>
       <Menus>
+        <UserAvatar />
         <Tooltip title={t('settings.theme.title') + ': ' + getThemeModeLabel(settedTheme)} placement="right">
           <Icon theme={theme} onClick={toggleTheme}>
             {settedTheme === ThemeMode.dark ? (

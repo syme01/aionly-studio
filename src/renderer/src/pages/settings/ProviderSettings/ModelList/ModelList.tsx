@@ -7,13 +7,13 @@ import { getProviderLabel } from '@renderer/i18n/label'
 import { SettingHelpLink, SettingHelpText, SettingHelpTextRow, SettingSubtitle } from '@renderer/pages/settings'
 import EditModelPopup from '@renderer/pages/settings/ProviderSettings/EditModelPopup/EditModelPopup'
 // import AddModelPopup from '@renderer/pages/settings/ProviderSettings/ModelList/AddModelPopup'
-import DownloadOVMSModelPopup from '@renderer/pages/settings/ProviderSettings/ModelList/DownloadOVMSModelPopup'
+// import DownloadOVMSModelPopup from '@renderer/pages/settings/ProviderSettings/ModelList/DownloadOVMSModelPopup'
 // import ManageModelsPopup from '@renderer/pages/settings/ProviderSettings/ModelList/ManageModelsPopup'
-import NewApiAddModelPopup from '@renderer/pages/settings/ProviderSettings/ModelList/NewApiAddModelPopup'
+// import NewApiAddModelPopup from '@renderer/pages/settings/ProviderSettings/ModelList/NewApiAddModelPopup'
 import type { Model } from '@renderer/types'
 import { filterModelsByKeywords } from '@renderer/utils'
 import { getDuplicateModelNames } from '@renderer/utils/model'
-import { isNewApiProvider } from '@renderer/utils/provider'
+// import { isNewApiProvider } from '@renderer/utils/provider'
 import { Button, Empty, Flex, Space, Spin, Tabs } from 'antd'
 import { groupBy, isEmpty, sortBy, toPairs } from 'lodash'
 import { RefreshCw } from 'lucide-react'
@@ -48,14 +48,14 @@ interface ModelPageParams {
 type ModelGroups = Record<string, Model[]>
 const MODEL_COUNT_THRESHOLD = 10
 
-const FlexContainer = styled(Flex)`
-  /* body 有 light 类名时的样式 */
+/*const FlexContainer = styled(Flex)`
+  /!* body 有 light 类名时的样式 *!/
   body.light & {
     background: #f1f1f1;
     padding: 15px;
     border-radius: 8px;
   }
-`
+`*/
 
 const ModelListContainer = styled.div`
   display: flex;
@@ -176,7 +176,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
           })
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       throw new Error(e)
     } finally {
       setLoading(false)
@@ -213,7 +213,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
     return calculateModelGroups(models, '')
   })
 
-  const { isChecking: isHealthChecking, modelStatuses, runHealthCheck } = useHealthCheck(provider, models)
+  const { isChecking: isHealthChecking, modelStatuses /*runHealthCheck*/ } = useHealthCheck(provider, models)
   const duplicateModelNames = useMemo(() => getDuplicateModelNames(models), [models])
 
   // 将 modelStatuses 数组转换为 Map，实现 O(1) 查找
@@ -221,11 +221,11 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
     return new Map(modelStatuses.map((status) => [status.model.id, status]))
   }, [modelStatuses])
 
-  const setSearchText = useCallback((text: string) => {
+  /*const setSearchText = useCallback((text: string) => {
     startTransition(() => {
       _setSearchText(text)
     })
-  }, [])
+  }, [])*/
 
   useEffect(() => {
     if (models.length > MODEL_COUNT_THRESHOLD) {
@@ -237,9 +237,9 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
     }
   }, [models, searchText])
 
-  const modelCount = useMemo(() => {
+  /*const modelCount = useMemo(() => {
     return Object.values(displayedModelGroups ?? {}).reduce((acc, group) => acc + group.length, 0)
-  }, [displayedModelGroups])
+  }, [displayedModelGroups])*/
 
   const onManageModel = useCallback(async () => {
     // void ManageModelsPopup.show({ providerId: provider.id })
@@ -252,7 +252,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provider])
 
-  const onAddModel = useCallback(() => {
+  /*const onAddModel = useCallback(() => {
     if (isNewApiProvider(provider)) {
       void NewApiAddModelPopup.show({ title: t('settings.models.add.add_model'), provider })
     } else {
@@ -270,7 +270,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
 
   const groupKeys = useMemo(() => {
     return displayedModelGroups ? Object.keys(displayedModelGroups) : []
-  }, [displayedModelGroups])
+  }, [displayedModelGroups])*/
 
   const handleScroll = useCallback(
     (e: React.UIEvent<HTMLDivElement>) => {
@@ -278,7 +278,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
       // 距底部 50px 以内触发加载
       if (scrollHeight - scrollTop - clientHeight < 50) {
         if (loadingRef.current) return
-        const { pageNum, pageSize, total } = pageParamsRef.current
+        const { pageNum, /*pageSize,*/ total } = pageParamsRef.current
         if (models.length >= total) return
         loadingRef.current = true
         fetchModels(pageNum + 1)

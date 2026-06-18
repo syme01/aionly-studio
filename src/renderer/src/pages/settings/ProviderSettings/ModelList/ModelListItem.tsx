@@ -1,15 +1,15 @@
-import { showErrorDetailPopup } from '@renderer/components/ErrorDetailModal'
+// import { showErrorDetailPopup } from '@renderer/components/ErrorDetailModal'
 import { FreeTrialModelTag } from '@renderer/components/FreeTrialModelTag'
-import { type HealthResult } from '@renderer/components/HealthStatusIndicator'
+// import { type HealthResult } from '@renderer/components/HealthStatusIndicator'
 import { HStack } from '@renderer/components/Layout'
 import ModelIdWithTags from '@renderer/components/ModelIdWithTags'
 import type { Model } from '@renderer/types'
 import type { ModelWithStatus } from '@renderer/types/healthCheck'
-import { HealthStatus } from '@renderer/types/healthCheck'
-import { maskApiKey } from '@renderer/utils/api'
+// import { HealthStatus } from '@renderer/types/healthCheck'
+// import { maskApiKey } from '@renderer/utils/api'
 import { Avatar } from 'antd'
-import React, { memo, useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
+import React, { memo /*useCallback, useMemo*/ } from 'react'
+// import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 interface ModelListItemProps {
@@ -25,16 +25,16 @@ interface ModelListItemProps {
 const ModelListItem: React.FC<ModelListItemProps> = ({
   ref,
   model,
-  modelStatus,
-  showIdentifier = false,
+  showIdentifier = false
+  /*modelStatus,
   disabled,
   onEdit,
-  onRemove
+  onRemove*/
 }) => {
-  const { t } = useTranslation()
-  const isChecking = modelStatus?.checking === true
+  // const { t } = useTranslation()
+  // const isChecking = modelStatus?.checking === true
 
-  const healthResults = useMemo(
+  /*const healthResults = useMemo(
     () =>
       modelStatus?.keyResults?.map((kr) => ({
         status: kr.status,
@@ -43,9 +43,9 @@ const ModelListItem: React.FC<ModelListItemProps> = ({
         label: maskApiKey(kr.key)
       })) || [],
     [modelStatus?.keyResults]
-  )
+  )*/
 
-  const hasFailedResult = useMemo(() => healthResults.some((r) => r.status === HealthStatus.FAILED), [healthResults])
+  /*const hasFailedResult = useMemo(() => healthResults.some((r) => r.status === HealthStatus.FAILED), [healthResults])
 
   const handleErrorClick = useMemo(() => {
     if (!hasFailedResult) return undefined
@@ -62,13 +62,13 @@ const ModelListItem: React.FC<ModelListItemProps> = ({
 
   const handleRemove = useCallback(() => {
     onRemove(model)
-  }, [model, onRemove])
+  }, [model, onRemove])*/
 
   return (
     <>
       <ListItem ref={ref}>
         <HStack alignItems="center" gap={10} style={{ flex: 1 }}>
-          <Avatar src={model?.modelFileUrl} size={24}>
+          <Avatar src={(model as any)?.modelFileUrl} size={24}>
             {model?.name?.[0]?.toUpperCase()}
           </Avatar>
           <ModelIdWithTags

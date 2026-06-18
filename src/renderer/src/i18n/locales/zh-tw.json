@@ -2909,6 +2909,7 @@
     "title": "Ollama"
   },
   "onboarding": {
+    "newUserGift": "新用戶首次註冊即送新人禮>>",
     "privacy": {
       "accept_and_continue": "同意並繼續",
       "notice": "繼續即表示你已閱讀並同意",
@@ -2933,8 +2934,7 @@
       "setup_hint": "請至少設定一個提供者以獲得最佳體驗",
       "subtitle": "享受頂尖 AI 服務，盡在 CherryIN",
       "title": "歡迎來到 Cherry Studio"
-    },
-    "newUserGift": "新用戶首次註冊即送新人禮>>"
+    }
   },
   "openclaw": {
     "checking_installation": "正在檢查 OpenClaw 安裝狀態...",

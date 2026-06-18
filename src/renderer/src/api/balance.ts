@@ -13,7 +13,7 @@ export const returnUrl = (params) => {
   return http.post(`/money/recharge/returnUrl`, params, { cancel: false })
 }
 
-export const queryMoneyConfig = (params) => {
+export const queryMoneyConfig = (params = {}) => {
   return http.post(`/money/recharge/queryMoneyConfig`, params, { cancel: false })
 }
 
@@ -100,7 +100,7 @@ export const listByOrderNum = (orderNum) => {
 export const getGoldDown = (params) => {
   return http.get(`/bus/downloadRecord/getGoldDown`, params, { cancel: false, loading: false })
 }
-export const getFinanceInfo = (params) => {
+export const getFinanceInfo = (params = {}) => {
   return http.get(`/money/userBalance/getFinanceInfo`, params, { cancel: false, loading: false })
 }
 //获取用户购买的音色列表

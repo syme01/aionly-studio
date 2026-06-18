@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 interface AccountLoginProps {
   ref?: React.Ref<AccountLoginRef>
-  onSubmit?: () => void
+  onSuccess?: () => void
   onFormChange?: (valid: boolean) => void
   verifyRef?: any
 }
@@ -64,16 +64,16 @@ export const AccountLogin = ({ ref, ...props }: AccountLoginProps) => {
     loginUrl: window.location.href
   })
 
-  // 登录接口
+  // 登录接口（改为触发滑块验证）
   const login = async () => {
     // 先做表单验证
     await form.validateFields()
 
-    const { data } = await loginApi(accountForm)
-    if (data && data.access_token) {
-      localStorage.setItem('token', data.access_token)
-      props.onSubmit?.()
-    }
+    // 调试日志：查看请求参数
+    logger.debug('账号登录请求参数', { accountForm, clientId: import.meta.env.VITE_APP_CLIENT_ID })
+
+    // 触发滑块验证，验证成功后会调用 sendCode 方法
+    triggerVerify()
   }
 
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
@@ -109,19 +109,25 @@ export const AccountLogin = ({ ref, ...props }: AccountLoginProps) => {
     handleSendCode()
   }
 
-  // 发送验证码---真正走接口的地方
-  const sendCode = (verifyParams: any) => {
-    handleTokenApi(verifyParams)
-  }
+  // 发送验证码---真正走接口的地方（账号登录时，这里改为执行登录）
+  const sendCode = async (verifyParams: any) => {
+    // 更新滑块验证参数
+    const updatedForm = {
+      ...accountForm,
+      code: verifyParams.captchaVerification
+    }
+    setAccountForm(updatedForm)
 
-  // 校验邮箱接口
-  async function handleTokenApi(verifyParams: any) {
-    setAccountForm((prev) => {
-      return {
-        ...prev,
-        code: verifyParams.captchaVerification
+    // 直接执行登录
+    try {
+      const { data } = await loginApi(updatedForm)
+      if (data && data.access_token) {
+        localStorage.setItem('token', data.access_token)
+        props.onSuccess?.()
       }
-    })
+    } catch (error: any) {
+      logger.error('账号登录失败', error)
+    }
   }
 
   // 暴露给父组件

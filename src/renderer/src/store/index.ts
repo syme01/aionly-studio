@@ -16,6 +16,7 @@
  */
 import { loggerService } from '@logger'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { PERSIST_KEY } from '@renderer/config/env'
 import { IpcChannel } from '@shared/IpcChannel'
 import { useDispatch, useSelector, useStore } from 'react-redux'
 import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
@@ -49,6 +50,7 @@ import shortcuts from './shortcuts'
 import tabs from './tabs'
 import toolPermissions from './toolPermissions'
 import translate from './translate'
+import user from './user'
 import websearch from './websearch'
 
 const logger = loggerService.withContext('Store')
@@ -79,12 +81,13 @@ const rootReducer = combineReducers({
   translate,
   ocr,
   note,
-  toolPermissions
+  toolPermissions,
+  user
 })
 
 const persistedReducer = persistReducer(
   {
-    key: 'cherry-studio',
+    key: PERSIST_KEY,
     storage,
     version: 207,
     blacklist: ['runtime', 'messages', 'messageBlocks', 'tabs', 'toolPermissions'],

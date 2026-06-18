@@ -41,10 +41,10 @@ const ModelTagsWithLabel: FC<ModelTagsProps> = ({
   showToolsCalling = true,
   size = 12,
   showLabel = true,
-  showTooltip = true,
+  showTooltip: _showTooltip = true,
   style
 }) => {
-  const [shouldShowLabel, setShouldShowLabel] = useState(false)
+  const [_shouldShowLabel, setShouldShowLabel] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const resizeObserver = useRef<ResizeObserver | null>(null)
 

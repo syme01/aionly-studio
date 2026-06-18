@@ -6,6 +6,7 @@ import type { FC } from 'react'
 import { useMemo } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 
+import AuthRoute from './AuthRoute'
 import Sidebar from './components/app/Sidebar'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import TabsContainer from './components/Tab/TabContainer'
@@ -29,47 +30,52 @@ import AssistantPresetsPage from './pages/store/assistants/presets/AssistantPres
 import TranslatePage from './pages/translate/TranslatePage'
 
 const Router: FC = () => {
-  const { isLogin, completeLogin } = useLoginState()
+  const { completeLogin } = useLoginState()
 
   const { navbarPosition } = useNavbarPosition()
 
-  const routes = useMemo(() => {
-    return (
+  const protectedRoutes = useMemo(
+    () => (
       <ErrorBoundary>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/agents" element={<AgentPage />} />
-          <Route path="/store" element={<AssistantPresetsPage />} />
-          <Route path="/paintings/*" element={<PaintingsRoutePage />} />
-          <Route path="/translate" element={<TranslatePage />} />
-          <Route path="/files" element={<FilesPage />} />
-          <Route path="/notes" element={<NotesPage />} />
-          <Route path="/knowledge" element={<KnowledgePage />} />
-          <Route path="/apps/:appId" element={<MinAppPage />} />
-          <Route path="/apps" element={<MinAppsPage />} />
-          <Route path="/code" element={<CodeToolsPage />} />
-          <Route path="/openclaw" element={<OpenClawPage />} />
-          <Route path="/settings/*" element={<SettingsPage />} />
-          <Route path="/launchpad" element={<LaunchpadPage />} />
-        </Routes>
+        <AuthRoute>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/agents" element={<AgentPage />} />
+            <Route path="/store" element={<AssistantPresetsPage />} />
+            <Route path="/paintings/*" element={<PaintingsRoutePage />} />
+            <Route path="/translate" element={<TranslatePage />} />
+            <Route path="/files" element={<FilesPage />} />
+            <Route path="/notes" element={<NotesPage />} />
+            <Route path="/knowledge" element={<KnowledgePage />} />
+            <Route path="/apps/:appId" element={<MinAppPage />} />
+            <Route path="/apps" element={<MinAppsPage />} />
+            <Route path="/code" element={<CodeToolsPage />} />
+            <Route path="/openclaw" element={<OpenClawPage />} />
+            <Route path="/settings/*" element={<SettingsPage />} />
+            <Route path="/launchpad" element={<LaunchpadPage />} />
+          </Routes>
+        </AuthRoute>
       </ErrorBoundary>
-    )
-  }, [])
-
-  /*if (!onboardingCompleted) {
-    return <OnboardingPage onComplete={completeOnboarding} />
-  }*/
-
-  if (!isLogin) {
-    return <LoginPage onComplete={completeLogin} />
-  }
+    ),
+    []
+  )
 
   if (navbarPosition === 'left') {
     return (
       <HashRouter>
-        <Sidebar />
-        {routes}
         <NavigationHandler />
+        <Routes>
+          <Route path="/login" element={<LoginPage onComplete={completeLogin} />} />
+          <Route
+            path="/*"
+            element={
+              <>
+                <Sidebar />
+                {protectedRoutes}
+              </>
+            }
+          />
+        </Routes>
       </HashRouter>
     )
   }
@@ -77,7 +83,10 @@ const Router: FC = () => {
   return (
     <HashRouter>
       <NavigationHandler />
-      <TabsContainer>{routes}</TabsContainer>
+      <Routes>
+        <Route path="/login" element={<LoginPage onComplete={completeLogin} />} />
+        <Route path="/*" element={<TabsContainer>{protectedRoutes}</TabsContainer>} />
+      </Routes>
     </HashRouter>
   )
 }

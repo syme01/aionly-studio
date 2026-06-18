@@ -14,7 +14,7 @@ interface Props {
 const ModelAvatar: FC<Props> = ({ model, size, props, className }) => {
   return (
     <Avatar
-      src={model?.modelFileUrl}
+      src={(model as any)?.modelFileUrl}
       style={{
         width: size,
         height: size,

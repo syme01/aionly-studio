@@ -7,7 +7,7 @@ type WebSearchProviderConfig = {
   }
 }
 
-export const WEB_SEARCH_PROVIDER_CONFIG: Record<WebSearchProviderId, WebSearchProviderConfig> = {
+export const WEB_SEARCH_PROVIDER_CONFIG: Partial<Record<WebSearchProviderId, WebSearchProviderConfig>> = {
   /*zhipu: {
     websites: {
       official: 'https://docs.bigmodel.cn/cn/guide/tools/web-search',

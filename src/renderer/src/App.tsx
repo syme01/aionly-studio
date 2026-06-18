@@ -17,15 +17,15 @@ import Router from './Router'
 
 const logger = loggerService.withContext('App.tsx')
 
-// 供应商 信息设置(网页tab,logo,网页title)
-getServiceApi(window.location.hostname)
-  .then((res: any) => {
+const fetchService = () => {
+  // 供应商 信息设置(网页tab,logo,网页title)
+  getServiceApi(window.location.hostname).then((res: any) => {
     const agentInfo = res.data
     localStorage.setItem('agentInfo', JSON.stringify(agentInfo))
   })
-  .catch((err) => {
-    logger.error('获取供应商信息失败', err as Error)
-  })
+}
+
+fetchService()
 
 // 创建 React Query 客户端
 const queryClient = new QueryClient({

@@ -1,33 +1,33 @@
-import type { DropResult } from '@hello-pangea/dnd'
+// import type { DropResult } from '@hello-pangea/dnd'
 import { loggerService } from '@logger'
-import { type DraggableVirtualListRef, useDraggableReorder } from '@renderer/components/DraggableList'
-import { DeleteIcon, EditIcon } from '@renderer/components/Icons'
+import { type DraggableVirtualListRef /*useDraggableReorder*/ } from '@renderer/components/DraggableList'
+// import { DeleteIcon, EditIcon } from '@renderer/components/Icons'
 import { useAllProviders, useProviders } from '@renderer/hooks/useProvider'
 import { useTimer } from '@renderer/hooks/useTimer'
 import ImageStorage from '@renderer/services/ImageStorage'
 import type { Provider, ProviderType } from '@renderer/types'
-import { isSystemProvider } from '@renderer/types'
-import { matchKeywordsInModel, matchKeywordsInProvider, uuid } from '@renderer/utils'
-import { isAnthropicSupportedProvider } from '@renderer/utils/provider'
-import type { MenuProps } from 'antd'
-import { UserPen } from 'lucide-react'
+// import { isSystemProvider } from '@renderer/types'
+// import { matchKeywordsInModel, matchKeywordsInProvider, uuid } from '@renderer/utils'
+// import { isAnthropicSupportedProvider } from '@renderer/utils/provider'
+// import type { MenuProps } from 'antd'
+// import { UserPen } from 'lucide-react'
 import type { FC } from 'react'
 import { startTransition, useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
-import useSWRImmutable from 'swr/immutable'
 
-import AddProviderPopup from './AddProviderPopup'
-import ModelNotesPopup from './ModelNotesPopup'
+// import useSWRImmutable from 'swr/immutable'
+// import AddProviderPopup from './AddProviderPopup'
+// import ModelNotesPopup from './ModelNotesPopup'
 import ProviderSetting from './ProviderSetting'
 import UrlSchemaInfoPopup from './UrlSchemaInfoPopup'
 
 const logger = loggerService.withContext('ProviderList')
 
-const BUTTON_WRAPPER_HEIGHT = 50
+// const BUTTON_WRAPPER_HEIGHT = 50
 
-const getIsOvmsSupported = async (): Promise<boolean> => {
+/*const getIsOvmsSupported = async (): Promise<boolean> => {
   try {
     const result = await window.api.ovms.isSupported()
     return result
@@ -35,7 +35,7 @@ const getIsOvmsSupported = async (): Promise<boolean> => {
     logger.warn('Fetching isOvmsSupported failed. Fallback to false.', e as Error)
     return false
   }
-}
+}*/
 
 interface ProviderListProps {
   /** Whether in onboarding mode for new users */
@@ -45,19 +45,21 @@ interface ProviderListProps {
 const ProviderList: FC<ProviderListProps> = ({ isOnboarding = false }) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const providers = useAllProviders()
-  const { updateProviders, addProvider, removeProvider, updateProvider } = useProviders()
+  const { addProvider, updateProvider /*removeProvider, updateProviders,*/ } = useProviders()
   const { setTimeoutTimer } = useTimer()
   const [selectedProvider, _setSelectedProvider] = useState<Provider>(
     providers.find((x) => x.id === 'aionly') || providers[0]
   )
   const { t } = useTranslation()
-  const [searchText, setSearchText] = useState<string>('')
-  const [dragging, setDragging] = useState(false)
-  const [agentFilterEnabled, setAgentFilterEnabled] = useState(false)
-  const [providerLogos, setProviderLogos] = useState<Record<string, string>>({})
+  // const [searchText, setSearchText] = useState<string>('')
+  // const [dragging, setDragging] = useState(false)
+  // const [agentFilterEnabled, setAgentFilterEnabled] = useState(false)
+  const [_agentFilterEnabled, setAgentFilterEnabled] = useState(false)
+  // const [providerLogos, setProviderLogos] = useState<Record<string, string>>({})
+  const [_providerLogos, setProviderLogos] = useState<Record<string, string>>({})
   const listRef = useRef<DraggableVirtualListRef>(null)
 
-  const { data: isOvmsSupported } = useSWRImmutable('ovms/isSupported', getIsOvmsSupported)
+  // const { data: isOvmsSupported } = useSWRImmutable('ovms/isSupported', getIsOvmsSupported)
 
   const setSelectedProvider = useCallback((provider: Provider) => {
     startTransition(() => _setSelectedProvider(provider))
@@ -170,7 +172,7 @@ const ProviderList: FC<ProviderListProps> = ({ isOnboarding = false }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
 
-  const onAddProvider = async () => {
+  /*const onAddProvider = async () => {
     const { name: providerName, type, logo } = await AddProviderPopup.show()
 
     if (!providerName.trim()) {
@@ -205,9 +207,9 @@ const ProviderList: FC<ProviderListProps> = ({ isOnboarding = false }) => {
 
     addProvider(provider)
     setSelectedProvider(provider)
-  }
+  }*/
 
-  const getDropdownMenus = (provider: Provider): MenuProps['items'] => {
+  /*const getDropdownMenus = (provider: Provider): MenuProps['items'] => {
     const noteMenu = {
       label: t('settings.provider.notes.title'),
       key: 'notes',
@@ -302,9 +304,9 @@ const ProviderList: FC<ProviderListProps> = ({ isOnboarding = false }) => {
     } else {
       return menus
     }
-  }
+  }*/
 
-  const filteredProviders = providers.filter((provider) => {
+  /*const filteredProviders = providers.filter((provider) => {
     // 屏蔽aionly以外的所有厂商
     if (provider.id !== 'aionly') {
       return false
@@ -324,16 +326,16 @@ const ProviderList: FC<ProviderListProps> = ({ isOnboarding = false }) => {
     const isProviderMatch = matchKeywordsInProvider(keywords, provider)
     const isModelMatch = provider.models.some((model) => matchKeywordsInModel(keywords, model))
     return isProviderMatch || isModelMatch
-  })
+  })*/
 
-  const { onDragEnd: handleReorder, itemKey } = useDraggableReorder({
+  /*const { onDragEnd: handleReorder, itemKey } = useDraggableReorder({
     originalList: providers,
     filteredList: filteredProviders,
     onUpdate: updateProviders,
     itemKey: 'id'
-  })
+  })*/
 
-  const handleDragStart = useCallback(() => {
+  /*const handleDragStart = useCallback(() => {
     setDragging(true)
   }, [])
 
@@ -343,7 +345,7 @@ const ProviderList: FC<ProviderListProps> = ({ isOnboarding = false }) => {
       handleReorder(result)
     },
     [handleReorder]
-  )
+  )*/
 
   return (
     <Container className="selectable">
@@ -458,15 +460,15 @@ const Container = styled.div`
   justify-content: space-between;
 `
 
-const ProviderListContainer = styled.div`
+/*const ProviderListContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-width: calc(var(--settings-width) + 10px);
   padding-bottom: 5px;
   border-right: 0.5px solid var(--color-border);
-`
+`*/
 
-const ProviderListItem = styled.div`
+/*const ProviderListItem = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -486,9 +488,9 @@ const ProviderListItem = styled.div`
     border: 0.5px solid var(--color-border);
     font-weight: bold !important;
   }
-`
+`*/
 
-const DragHandle = styled.div`
+/*const DragHandle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -535,6 +537,6 @@ const CheckPlaceholder = styled.span`
   display: inline-block;
   width: 14px;
   height: 14px;
-`
+`*/
 
 export default ProviderList

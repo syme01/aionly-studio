@@ -2909,6 +2909,7 @@
     "title": "Ollama"
   },
   "onboarding": {
+    "newUserGift": "New users will receive a welcome gift upon their first registration>>",
     "privacy": {
       "accept_and_continue": "Accept and Continue",
       "notice": "By continuing, you confirm that you have read and agree to the",
@@ -2933,8 +2934,7 @@
       "setup_hint": "Please configure at least one provider for the best experience",
       "subtitle": "Enjoy top-tier AI services with CherryIN",
       "title": "Welcome to Cherry Studio"
-    },
-    "newUserGift": "New users will receive a welcome gift upon their first registration>>"
+    }
   },
   "openclaw": {
     "checking_installation": "Checking OpenClaw installation...",
