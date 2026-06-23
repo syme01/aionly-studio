@@ -111,7 +111,8 @@ app.on('web-contents-created', (_, webContents) => {
     callback({
       requestHeaders: {
         ...details.requestHeaders,
-        Referer: 'http://localhost:5173'
+        Referer: 'http://localhost:5173',
+        hostname: 'localhost:5173'
       }
     })
   })
