@@ -326,7 +326,7 @@ export const providerCharge = async (provider: string) => {
     },
     aionly: {
       // url: `https://maas.aiionly.com/recharge`,
-      // url: `http://localhost:7023/login?redirect=/recharge`
+      // url: `http://localhost:7023/login?redirect=/recharge`,
       url: 'https://maas.aiionly.com/login?redirect=/recharge',
       width: 900,
       height: 700
@@ -371,6 +371,7 @@ function handleWindowMessage({ win, provider, targetPath }) {
         targetPath
       }
       win.postMessage(sendData, 'https://maas.aiionly.com')
+      // win.postMessage(sendData, 'http://localhost:7023')
     }
   }
 

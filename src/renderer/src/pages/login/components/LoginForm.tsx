@@ -252,7 +252,7 @@ export const LoginForm = (props: LoginFormProps) => {
           {logoUrl && <LogoImage src={logoUrl} alt="logo" />}
           <NewUserGiftWrap>
             <img className="w-8" src={lwImg} alt="lw" />
-            {i18n.t('login.newUserGift')}
+            {i18n.t('login.new_user_gift')}
           </NewUserGiftWrap>
         </LeftPanel>
         <RightPanel>
@@ -278,11 +278,11 @@ export const LoginForm = (props: LoginFormProps) => {
               loading={loading}
               onClick={handleLoginSubmit}
               style={{ marginTop: 12 }}>
-              {i18n.t('login.login_register')}
+              {i18n.t('login.login_btn_text')}
             </LoginButton>
 
             <BottomPanel>
-              <Button type="link">{i18n.t('login.sub_account')}</Button>
+              <Button type="link">{i18n.t('login.sub_account.btn_text')}</Button>
               <Button type="link">{i18n.t('login.forget_password')}</Button>
             </BottomPanel>
           </div>

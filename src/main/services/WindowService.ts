@@ -87,8 +87,8 @@ export class WindowService {
           }
         : {
             // On Linux, allow using system title bar if setting is enabled
-            // frame: isLinux && configManager.getUseSystemTitleBar() ? true : false
-            frame: true
+            frame: isLinux && configManager.getUseSystemTitleBar() ? true : false
+            // frame: true
           }),
       //...(windowsBackgroundMaterial ? { backgroundMaterial: windowsBackgroundMaterial } : {}),
       //...(mainWindowBackgroundColor ? { backgroundColor: mainWindowBackgroundColor } : {}),

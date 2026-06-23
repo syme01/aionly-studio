@@ -35,7 +35,7 @@ export const Agreements = (props: AgreementsProps) => {
 
   return (
     <div className="flex justify-center">
-      <ACheckbox onChange={onChange}>{i18n.t('login.agreements.accept')}</ACheckbox>
+      <ACheckbox onChange={onChange}>{i18n.t('login.agreements.agree')}</ACheckbox>
       <LinkButton type="link" size="small">
         {i18n.t('login.agreements.user')}{' '}
       </LinkButton>
