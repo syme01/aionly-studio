@@ -3,13 +3,15 @@ import { loggerService } from '@logger'
 import { AiProvider } from '@renderer/aiCore'
 import IcImageUp from '@renderer/assets/images/paintings/ic_ImageUp.svg'
 import { Navbar, NavbarCenter, NavbarRight } from '@renderer/components/app/Navbar'
+import ModelAvatar from '@renderer/components/Avatar/ModelAvatar'
 import Scrollbar from '@renderer/components/Scrollbar'
 import TranslateButton from '@renderer/components/TranslateButton'
 import { isMac } from '@renderer/config/constant'
 import { LanguagesEnum } from '@renderer/config/translate'
 import { useTheme } from '@renderer/context/ThemeProvider'
+import { useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels'
 import { usePaintings } from '@renderer/hooks/usePaintings'
-import { useAllProviders } from '@renderer/hooks/useProvider'
+import { ModelAttribute, useAllProviders } from '@renderer/hooks/useProvider'
 import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useSettings } from '@renderer/hooks/useSettings'
 import {
@@ -28,7 +30,7 @@ import type { PaintingAction, PaintingsState } from '@renderer/types'
 import type { FileMetadata } from '@renderer/types'
 import { getErrorMessage, uuid } from '@renderer/utils'
 import { isNewApiProvider } from '@renderer/utils/provider'
-import { Button, Empty, InputNumber, Segmented, Select, Upload } from 'antd'
+import { Button, Empty, Flex, InputNumber, Segmented, Select, Spin, Upload } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import type { RcFile } from 'antd/es/upload'
 import type { UploadFile } from 'antd/es/upload/interface'
@@ -154,7 +156,52 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
   // ---------------- Model Related Configurations ----------------
   // const modelOptions = MODELS.map((m) => ({ label: m.name, value: m.name }))
 
+  /** 从接口查询图片模型 **/
+  const { models, loading, fetchNextPage, hasMore } = useAiOnlyModels({
+    type: '3',
+    modelAttribute: ModelAttribute.ImageModel,
+    pageSize: 10,
+    autoFetch: true
+  })
+
+  /** 滚动加载分页数据 **/
+  const handleModelScroll = useCallback(
+    (e: React.UIEvent<HTMLElement>) => {
+      e = e || window.event
+      const target = e.target as HTMLElement
+      const scrollTop = target.scrollTop
+      const scrollHeight = target.scrollHeight
+      const clientHeight = target.clientHeight
+      const isBottom = scrollHeight - scrollTop - clientHeight < 50 && !loading
+      if (isBottom && hasMore) {
+        fetchNextPage()
+      }
+    },
+    [fetchNextPage, hasMore, loading]
+  )
+
   const modelOptions = useMemo(() => {
+    const customModels = models
+      .filter((m) => m.packageNum === '先用后付')
+      .map((m) => ({
+        label: m.modelName,
+        value: m.model,
+        custom: !SUPPORTED_MODELS.includes(m.model),
+        group: m.serviceName,
+        modelFileUrl: m.modelFileUrl
+      }))
+
+    // 去重：同一 (id, serviceName) 只保留第一条
+    const seen = new Set<string>()
+    const filterModels = customModels.filter((m: any) => {
+      const k = m.value
+      return seen.has(k) ? false : (seen.add(k), true)
+    })
+
+    return [...filterModels]
+  }, [models])
+
+  /*const modelOptions = useMemo(() => {
     const customModels = newApiProvider.models
       .filter((m) => m.endpoint_type && m.endpoint_type === 'image-generation')
       .map((m) => ({
@@ -164,7 +211,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
         group: m.group
       }))
     return [...customModels]
-  }, [newApiProvider.models])
+  }, [newApiProvider.models])*/
 
   // 根据 group 将模型进行分组，便于在下拉列表中分组渲染
   const groupedModelOptions = useMemo(() => {
@@ -485,7 +532,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
     }
   }
 
-  /*const _handleProviderChange = (providerId: string) => {
+  /*const handleProviderChange = (providerId: string) => {
     const routeName = location.pathname.split('/').pop()
     if (providerId !== routeName) {
       navigate('../' + providerId, { replace: true })
@@ -662,12 +709,32 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
 
               {/* Model Selector */}
               <SettingTitle style={{ marginTop: 20 }}>{t('paintings.model')}</SettingTitle>
-              <Select value={painting.model} onChange={handleModelChange} style={{ width: '100%', marginBottom: 15 }}>
+              <Select
+                value={painting.model}
+                onChange={handleModelChange}
+                style={{ width: '100%', marginBottom: 15 }}
+                virtual={true}
+                onPopupScroll={handleModelScroll}
+                popupRender={(menu) => (
+                  <>
+                    {menu}
+                    {loading && (
+                      <Flex justify="center" style={{ padding: '8px 0' }}>
+                        <Spin size="small" spinning={true} />
+                      </Flex>
+                    )}
+                  </>
+                )}>
                 {Object.entries(groupedModelOptions).map(([groupName, options]) => (
                   <Select.OptGroup label={groupName} key={groupName}>
                     {options.map((m) => (
                       <Select.Option value={m.value} key={m.value}>
-                        {m.label}
+                        <Flex align="center" gap={5}>
+                          <ModelAvatar model={m} size={18} />
+                          <span className="text-overflow" title={m.label}>
+                            {m.label}
+                          </span>
+                        </Flex>
                       </Select.Option>
                     ))}
                   </Select.OptGroup>
@@ -822,6 +889,10 @@ const Container = styled.div`
   flex: 1;
   flex-direction: column;
   height: 100%;
+  .text-overflow{
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `
 
 const ContentContainer = styled.div`
