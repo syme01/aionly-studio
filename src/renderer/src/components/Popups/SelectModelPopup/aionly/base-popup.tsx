@@ -1,5 +1,6 @@
 import { TopView } from '@renderer/components/TopView'
 import { DynamicVirtualList, type DynamicVirtualListRef } from '@renderer/components/VirtualList'
+import { isNotSupportTextDeltaModel } from '@renderer/config/models'
 import { useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels'
 import { getModelUniqId } from '@renderer/services/ModelService'
 import type { Model, Provider } from '@renderer/types'
@@ -106,13 +107,16 @@ const SelectModelPopupView: React.FC<Props> = ({ model, modelFilter, fromType, r
     if (modelFilter) {
       filterModels = filterModels
         .map((x: any) => {
+          const baseItem = {
+            origin_id: x.id,
+            id: x.baseId,
+            name: x.modelName,
+            provider: 'aionly'
+          }
           if (fromType === 'agent') {
             return {
               ...x,
-              origin_id: x.id,
-              id: x.baseId,
-              name: x.modelName,
-              provider: 'aionly',
+              ...baseItem,
               origin: {
                 id: `aionly:${x.baseId}`,
                 object: 'model',
@@ -134,10 +138,8 @@ const SelectModelPopupView: React.FC<Props> = ({ model, modelFilter, fromType, r
 
           return {
             ...x,
-            origin_id: x.id,
-            id: x.baseId,
-            name: x.modelName,
-            provider: 'aionly'
+            ...baseItem,
+            supported_text_delta: !isNotSupportTextDeltaModel(x)
           }
         })
         .filter(modelFilter)
@@ -196,7 +198,7 @@ const SelectModelPopupView: React.FC<Props> = ({ model, modelFilter, fromType, r
 
   const handleItemClick = useCallback(
     (item: FlatListItem) => {
-      console.log('handleItemClick', item)
+      // console.log('handleItemClick', item)
       if (item.type === 'model') {
         resolve(item.model)
         setOpen(false)
