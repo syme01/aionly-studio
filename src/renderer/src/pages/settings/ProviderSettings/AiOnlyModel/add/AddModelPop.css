@@ -32,7 +32,6 @@ body.light .model-wrapper {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
-  justify-content: space-between;
   margin-top: 15px;
   max-height: 40vh;
   overflow-y: auto;

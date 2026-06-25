@@ -42,6 +42,14 @@ export interface UseAiOnlyModelsOptions {
   pageSize?: number
   /** 模型属性类型，默认 TextModel */
   modelAttribute?: ModelAttribute
+  /** 类型，默认 '1' */
+  type?: string
+  /** 排序状态，默认 1（先有效再停用再失效/下架） */
+  orderByStatus?: number
+  /** 排序时间，默认 'desc'（有效组内按时间倒序） */
+  orderByTime?: string
+  /** 域名，默认 window.location.hostname */
+  domain?: string
   /** 是否自动加载第一页，默认 true */
   autoFetch?: boolean
   /** 滚动加载触发距离（距离底部多少像素时触发），默认 50 */
@@ -145,6 +153,10 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): UseAiOnly
     initialPageNum = 1,
     pageSize = 10,
     modelAttribute = ModelAttribute.TextModel,
+    type = '1',
+    orderByStatus = 1,
+    orderByTime = 'desc',
+    domain = window.location.hostname || 'localhost:5173',
     autoFetch = true,
     scrollThreshold = 50
   } = options
@@ -155,14 +167,14 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): UseAiOnly
   const initializedRef = useRef(false) // 防止重复初始化
 
   const pageParamsRef = useRef<ModelPageParams>({
-    type: '1',
+    type,
     modelAttribute,
     pageNum: initialPageNum,
     pageSize,
     total: 0,
-    orderByStatus: 1,
-    orderByTime: 'desc',
-    domain: window.location.hostname
+    orderByStatus,
+    orderByTime,
+    domain
   })
 
   const [pageParams, setPageParams] = useState<ModelPageParams>(pageParamsRef.current)
