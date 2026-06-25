@@ -33,6 +33,21 @@ export async function getAvailableProviders(): Promise<Provider[]> {
     const supportedTypes: ProviderType[] = ['openai', 'anthropic', 'ollama', 'new-api']
     const supportedProviders = providers.filter((p: Provider) => p.enabled && supportedTypes.includes(p.type))
 
+    // Add virtual 'aionly' provider if not already present
+    // This allows frontend to display aionly models without storing them in Redux
+    const hasAiOnly = supportedProviders.some((p: Provider) => p.id === 'aionly')
+    if (!hasAiOnly) {
+      supportedProviders.push({
+        id: 'aionly',
+        name: 'AiOnly',
+        type: 'openai',
+        apiKey: 'aionly',
+        apiHost: '',
+        models: [],
+        enabled: true
+      })
+    }
+
     // Format provider apiHost according to their type
     const results = await Promise.allSettled(supportedProviders.map((p: Provider) => formatProviderApiHost(p)))
     const formattedProviders: Provider[] = []
@@ -168,6 +183,27 @@ export async function validateModelId(model: string): Promise<{
 
     const providerId = modelInfo[0]
     const modelId = getRealProviderModel(model)
+
+    // Special handling for 'aionly' provider
+    // AiOnly models are fetched dynamically from external API, not stored in Redux
+    // Skip validation for aionly provider to avoid localStorage bloat
+    if (providerId === 'aionly') {
+      logger.debug('Skipping model validation for aionly provider (external API)', { modelId })
+      return {
+        valid: true,
+        provider: {
+          id: 'aionly',
+          name: 'AiOnly',
+          type: 'openai',
+          apiKey: 'aionly', // Set placeholder API key for validation
+          apiHost: '',
+          models: [],
+          enabled: true
+        },
+        modelId
+      }
+    }
+
     const provider = await getProviderByModel(model)
 
     if (!provider) {

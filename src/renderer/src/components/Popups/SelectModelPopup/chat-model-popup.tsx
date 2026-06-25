@@ -3,7 +3,7 @@ import type { Model, Provider } from '@renderer/types'
 import { sortBy } from 'lodash'
 import React, { useMemo } from 'react'
 
-import SelectModelPopupView, { createModelPopup } from './base-popup'
+import SelectModelPopupView, { createModelPopup } from './aionly/base-popup'
 
 interface PopupParams {
   model?: Model
@@ -34,6 +34,7 @@ const PopupContainer: React.FC<Props> = ({ model, filter, showTagFilter = true, 
     <SelectModelPopupView
       providers={filteredProviders}
       model={model}
+      modelFilter={filter}
       showTagFilter={showTagFilter}
       showPinnedModels={true}
       resolve={resolve}

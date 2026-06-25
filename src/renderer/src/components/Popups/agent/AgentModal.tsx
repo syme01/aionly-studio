@@ -1,5 +1,4 @@
 import { loggerService } from '@logger'
-import AnthropicProviderListPopover from '@renderer/components/AnthropicProviderListPopover'
 import { ErrorBoundary } from '@renderer/components/ErrorBoundary'
 import Scrollbar from '@renderer/components/Scrollbar'
 import { HelpTooltip } from '@renderer/components/TooltipIcons'
@@ -19,8 +18,8 @@ import type {
   UpdateAgentForm
 } from '@renderer/types'
 import { AgentConfigurationSchema, isAgentType } from '@renderer/types'
+import { cacheAiOnlyModel } from '@renderer/utils/aionly-model-cache'
 import { parseKeyValueString, serializeKeyValueString } from '@renderer/utils/env'
-import { getAnthropicSupportedProviders } from '@renderer/utils/provider'
 import type { GitBashPathInfo } from '@shared/config/constant'
 import { Button, Input, Modal, Select, Switch, Tooltip } from 'antd'
 import { Info } from 'lucide-react'
@@ -63,6 +62,7 @@ const PopupContainer: React.FC<Props> = ({ agent, afterSubmit, resolve }) => {
   const { addAgent } = useAgents()
   const { updateAgent } = useUpdateAgent()
   const isEditing = (agent?: AgentWithTools) => agent !== undefined
+  const [selectedModel, setSelectedModel] = useState<ApiModel | null>(null)
 
   const [form, setForm] = useState<BaseAgentForm>(() => buildAgentForm(agent))
   const [gitBashPathInfo, setGitBashPathInfo] = useState<GitBashPathInfo>({ path: null, source: null })
@@ -245,8 +245,8 @@ const PopupContainer: React.FC<Props> = ({ agent, afterSubmit, resolve }) => {
   }, [])
 
   // Create a temporary agentBase object for SelectAgentBaseModelButton
-  const tempAgentBase: AgentEntity = useMemo(
-    () => ({
+  const tempAgentBase: AgentEntity = useMemo(() => {
+    return {
       id: agent?.id ?? 'temp-creating',
       type: form.type,
       name: form.name,
@@ -258,11 +258,18 @@ const PopupContainer: React.FC<Props> = ({ agent, afterSubmit, resolve }) => {
       configuration: form.configuration,
       created_at: agent?.created_at ?? new Date().toISOString(),
       updated_at: agent?.updated_at ?? new Date().toISOString()
-    }),
-    [form, agent?.id, agent?.created_at, agent?.updated_at]
-  )
+    }
+  }, [form, agent?.id, agent?.created_at, agent?.updated_at])
 
   const handleModelSelect = useCallback(async (model: ApiModel) => {
+    setSelectedModel(model)
+
+    // 如果是 AiOnly 模型，缓存到 localStorage 以便后续显示
+    if (model.provider === 'aionly' || model.id?.startsWith('aionly:')) {
+      cacheAiOnlyModel(model)
+      logger.info('AiOnly model cached to localStorage', { modelId: model.id })
+    }
+
     setForm((prev) => ({ ...prev, model: model.id }))
   }, [])
 
@@ -394,17 +401,18 @@ const PopupContainer: React.FC<Props> = ({ agent, afterSubmit, resolve }) => {
                 <Label>
                   {t('common.model')} <RequiredMark>*</RequiredMark>
                 </Label>
-                <AnthropicProviderListPopover
+                {/*<AnthropicProviderListPopover
                   useWindowNavigate
                   filterProviders={getAnthropicSupportedProviders}
                   onProviderClick={() => {
                     setOpen(false)
                     resolve(undefined)
                   }}
-                />
+                />*/}
               </div>
               <SelectAgentBaseModelButton
                 agentBase={tempAgentBase}
+                selectedModel={selectedModel}
                 onSelect={handleModelSelect}
                 fontSize={14}
                 avatarSize={24}

@@ -5,7 +5,7 @@ import { first } from 'lodash'
 import type { FC } from 'react'
 
 interface Props {
-  model?: Model
+  model?: Model | any
   size: number
   props?: AvatarProps
   className?: string
@@ -14,7 +14,7 @@ interface Props {
 const ModelAvatar: FC<Props> = ({ model, size, props, className }) => {
   return (
     <Avatar
-      src={(model as any)?.modelFileUrl}
+      src={model?.modelFileUrl}
       style={{
         width: size,
         height: size,

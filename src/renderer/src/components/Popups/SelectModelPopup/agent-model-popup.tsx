@@ -5,7 +5,8 @@ import { apiModelAdapter } from '@renderer/utils/model'
 import { groupBy, sortBy } from 'lodash'
 import React, { useMemo } from 'react'
 
-import SelectModelPopupView, { createModelPopup } from './base-popup'
+// import SelectModelPopupView, { createModelPopup } from './base-popup'
+import SelectModelPopupView, { createModelPopup } from './aionly/base-popup'
 
 interface PopupParams {
   model?: ApiModel
@@ -50,6 +51,7 @@ const PopupContainer: React.FC<Props> = ({ model, apiFilter, modelFilter, showTa
     const adaptedModels = models
       .map((item) => apiModelAdapter(item))
       .filter((item) => (modelFilter ? modelFilter(item) : true))
+
     const groupedModels = groupBy(adaptedModels, (item) => item.provider)
 
     // 按照 provider 配置顺序排序 group keys
@@ -78,21 +80,26 @@ const PopupContainer: React.FC<Props> = ({ model, apiFilter, modelFilter, showTa
   const selectedModel = useMemo(() => (model ? apiModelAdapter(model) : undefined), [model])
 
   return (
-    <SelectModelPopupView
-      providers={providers}
-      model={selectedModel}
-      loading={isLoading}
-      showTagFilter={showTagFilter}
-      showPinnedModels={false}
-      prioritizedProviderIds={['cherryin']}
-      resolve={(value) => {
-        if (value && isAdaptedApiModel(value)) {
-          resolve(value.origin)
-        } else {
-          resolve(undefined)
-        }
-      }}
-    />
+    <>
+      <SelectModelPopupView
+        providers={providers}
+        model={selectedModel}
+        modelFilter={modelFilter}
+        apiFilter={apiFilter}
+        fromType="agent"
+        loading={isLoading}
+        showTagFilter={showTagFilter}
+        showPinnedModels={false}
+        prioritizedProviderIds={['cherryin']}
+        resolve={(value) => {
+          if (value && isAdaptedApiModel(value)) {
+            resolve(value.origin)
+          } else {
+            resolve(undefined)
+          }
+        }}
+      />
+    </>
   )
 }
 

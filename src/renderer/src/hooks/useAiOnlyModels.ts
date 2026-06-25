@@ -1,6 +1,8 @@
 import { loggerService } from '@logger'
 import { pageListApi } from '@renderer/api/openManagement'
-import type { Model } from '@renderer/types'
+import { isNotSupportTextDeltaModel } from '@renderer/config/models'
+import type { ApiModel, Model, Provider } from '@renderer/types'
+import { isNewApiProvider } from '@renderer/utils/provider'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 const logger = loggerService.withContext('useAiOnlyModels')
@@ -22,7 +24,10 @@ export interface ModelPageParams {
 }
 
 export interface AiOnlyModel {
+  id: string
   modelName: string
+  name?: string
+  object?: 'model'
   serviceName: string
   modelFileUrl?: string
   provider: string
@@ -60,6 +65,61 @@ export interface UseAiOnlyModelsResult {
   hasMore: boolean
   /** 滚动事件处理器，用于无限滚动加载 */
   handleScroll: (e: React.UIEvent<HTMLDivElement>) => void
+}
+
+// 完整复制 handleAddModel 的处理逻辑
+export function processModelLikeAddModel(model: Model, provider: Provider): Model {
+  // 1. 设置 supported_text_delta
+  let processedModel = {
+    ...model,
+    supported_text_delta: !isNotSupportTextDeltaModel(model)
+  }
+
+  // 2. 如果是 newApi provider，设置 endpoint_type
+  if (isNewApiProvider(provider)) {
+    const endpointTypes = model.supported_endpoint_types
+    if (endpointTypes && endpointTypes.length > 0) {
+      processedModel = {
+        ...processedModel,
+        endpoint_type: endpointTypes.includes('image-generation') ? 'image-generation' : endpointTypes[0]
+      }
+    }
+  }
+
+  return processedModel
+}
+
+// 把的接口数据转成 Model 格式
+export function transformToModel(item: any, provider: Provider): Model {
+  return {
+    id: item.id,
+    provider: provider.id,
+    name: item.name || item.id,
+    group: item.group || provider.id,
+    owned_by: item.owned_by,
+    description: item.description,
+    capabilities: item.capabilities,
+    type: item.type,
+    pricing: item.pricing,
+    endpoint_type: item.endpoint_type,
+    supported_endpoint_types: item.supported_endpoint_types
+    // supported_text_delta 会在 processModelLikeAddModel 里设置
+  }
+}
+
+// Model → ApiModel
+export function modelToApiModel(model: Model): ApiModel {
+  return {
+    id: `aionly:${model.id}`,
+    object: 'model',
+    created: Math.floor(Date.now() / 1000),
+    name: model.name,
+    owned_by: 'AiOnly',
+    provider: 'aionly',
+    provider_name: 'aionly',
+    provider_type: 'openai',
+    provider_model_id: model.id
+  }
 }
 
 /**
@@ -115,10 +175,7 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): UseAiOnly
 
     try {
       const params = { ...pageParamsRef.current, pageNum }
-      logger.info('Fetching models with params', { params })
       const res: any = await pageListApi(params)
-      logger.info('API response', { code: res?.code, rowsCount: res?.rows?.length })
-
       if (res?.code === 200) {
         const data = res.rows || []
         logger.info('Data rows count', { count: data.length })
@@ -145,13 +202,17 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): UseAiOnly
           }
           pageParamsRef.current = newParams
           setPageParams(newParams)
+          // pageNum 已提交后再解锁，防止窗口期内重复触发同一页加载
+          setLoading(false)
+          loadingRef.current = false
         })
       } else {
         logger.warn('API returned non-200 code', { code: res?.code })
+        setLoading(false)
+        loadingRef.current = false
       }
     } catch (e: any) {
       logger.error('Failed to fetch models', { error: e })
-    } finally {
       setLoading(false)
       loadingRef.current = false
     }
@@ -214,11 +275,28 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): UseAiOnly
 /**
  * 将 AiOnlyModel 转换为标准 Model 类型
  */
-export function convertToStandardModel(aiOnlyModel: AiOnlyModel): Model {
+export function convertToStandardModel(aiOnlyModel: AiOnlyModel): {
+  id: string
+  name: string
+  provider: string
+  group: string
+  origin: Record<string, any>
+} {
   return {
-    id: aiOnlyModel.modelName,
+    id: `agent/${aiOnlyModel.baseId}`,
     name: aiOnlyModel.modelName,
     provider: aiOnlyModel.provider,
-    group: aiOnlyModel.serviceName || aiOnlyModel.group
+    group: aiOnlyModel.serviceName || aiOnlyModel.group,
+    origin: {
+      ...aiOnlyModel,
+      id: `aionly:${aiOnlyModel.baseId}`,
+      name: aiOnlyModel.modelName,
+      object: 'model',
+      owned_by: 'AIOnly',
+      provider: 'aionly',
+      provider_model_id: aiOnlyModel.baseId,
+      provider_name: 'aionly',
+      provider_type: 'openai'
+    }
   }
 }

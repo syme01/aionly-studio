@@ -2,12 +2,10 @@ import ModelAvatar from '@renderer/components/Avatar/ModelAvatar'
 import { SelectAgentModelPopup } from '@renderer/components/Popups/SelectModelPopup'
 import { agentModelFilter } from '@renderer/config/models'
 import { useApiModel } from '@renderer/hooks/agents/useModel'
-import { getProviderNameById } from '@renderer/services/ProviderService'
 import type { AgentBaseWithId, ApiModel } from '@renderer/types'
 import { isAgentSessionEntity } from '@renderer/types'
 import { isAgentEntity } from '@renderer/types'
 import { getModelFilterByAgentType } from '@renderer/utils/agentSession'
-import { apiModelAdapter } from '@renderer/utils/model'
 import type { ButtonProps } from 'antd'
 import { Button } from 'antd'
 import { ChevronsUpDown } from 'lucide-react'
@@ -32,6 +30,7 @@ interface Props {
   iconSize?: number
   /** Custom className for the inner container (e.g., for justify-between) */
   containerClassName?: string
+  selectedModel?: ApiModel | any
 }
 
 const SelectAgentBaseModelButton = ({
@@ -44,10 +43,18 @@ const SelectAgentBaseModelButton = ({
   avatarSize = 20,
   fontSize = 12,
   iconSize = 14,
-  containerClassName
+  containerClassName,
+  selectedModel
 }: Props) => {
   const { t } = useTranslation()
-  const model = useApiModel({ id: agent?.model })
+
+  // 如果传入了 selectedModel，使用它；否则从 API 获取
+  const apiModel = useApiModel({ id: agent?.model })
+  const model = selectedModel || apiModel
+
+  // console.log('selectedModel', selectedModel)
+  // console.log('apiModel', apiModel)
+  // console.log('final model', model)
 
   const apiFilter = isAgentEntity(agent)
     ? getModelFilterByAgentType(agent.type)
@@ -63,12 +70,15 @@ const SelectAgentBaseModelButton = ({
       apiFilter: apiFilter,
       modelFilter: agentModelFilter
     })
+
+    // console.log('selectedModel', selectedModel)
+    // console.log('agent.model', agent.model)
     if (selectedModel && selectedModel.id !== agent.model) {
       void onSelect(selectedModel)
     }
   }
 
-  const providerName = model?.provider ? getProviderNameById(model.provider) : model?.provider_name
+  // const providerName = model?.provider ? getProviderNameById(model.provider) : model?.provider_name
 
   // Merge default styles with custom styles
   const mergedStyle: CSSProperties = {
@@ -88,9 +98,10 @@ const SelectAgentBaseModelButton = ({
       disabled={isDisabled}>
       <div className={containerClassName || 'flex w-full items-center gap-1.5'}>
         <div className="flex flex-1 items-center gap-1.5 overflow-x-hidden">
-          <ModelAvatar model={model ? apiModelAdapter(model) : undefined} size={avatarSize} />
+          {model && <ModelAvatar model={model} size={avatarSize} />}
           <span className="truncate text-(--color-text)">
-            {model ? model.name : t('button.select_model')} {providerName ? ' | ' + providerName : ''}
+            {model ? model.modelName || model.name : t('button.select_model')}
+            {model?.serviceName && <span className="text-xs text-gray-500"> | {model?.serviceName}</span>}
           </span>
         </div>
         <ChevronsUpDown size={iconSize} color="var(--color-icon)" />
