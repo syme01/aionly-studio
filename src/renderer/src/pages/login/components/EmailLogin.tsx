@@ -209,13 +209,17 @@ export const EmailLogin = ({ ref, ...props }: EmailLoginProps) => {
         <Form.Item<FieldType>
           name="email"
           rules={[{ required: true, message: i18n.t('login.email_login.email_required') }]}>
-          <StyleInput onChange={handleChangeEmail} placeholder={i18n.t('login.email_login.email_required')} />
+          <StyleInput
+            onChange={handleChangeEmail}
+            onPressEnter={login}
+            placeholder={i18n.t('login.email_login.email_required')}
+          />
         </Form.Item>
 
         <Form.Item<FieldType>
           name="emailCode"
           rules={[{ required: true, message: i18n.t('login.email_login.code_required') }]}>
-          <StyleInput suffix={suffix} placeholder={i18n.t('login.email_login.code_required')} />
+          <StyleInput suffix={suffix} onPressEnter={login} placeholder={i18n.t('login.email_login.code_required')} />
         </Form.Item>
       </Form>
     </Container>

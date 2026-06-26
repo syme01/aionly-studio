@@ -2,11 +2,13 @@ import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons'
 import { loggerService } from '@logger'
 import { captchaEnabledApi, loginApi } from '@renderer/api/login'
 import i18n from '@renderer/i18n'
-import { Form, type FormProps, Input } from 'antd'
+import { Button, Flex, Form, type FormProps, Input } from 'antd'
 import { useEffect, useImperativeHandle, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-interface AccountLoginProps {
+import { LoginSceneType, useLoginContext } from '../contexts/LoginContext'
+
+interface SubAccountLoginProps {
   ref?: React.Ref<AccountLoginRef>
   onSuccess?: () => void
   onFormChange?: (valid: boolean) => void
@@ -22,19 +24,49 @@ export interface AccountLoginRef {
 const Container = styled.div`
   background: #fff;
   padding-top: 12px;
+  .ant-form-item{
+    margin-bottom: 10px;
+  }
+  .ant-form-item-vertical {
+    .ant-form-item-label{
+      padding: 0;
+    }
+  }
 `
 
 const StyleInput = styled(Input)`
   height: 46px;
 `
+
 const PwdInput = styled(Input.Password)`
   height: 46px;
 `
 
-const logger = loggerService.withContext('AccountLogin')
+const LoginTitle = styled.div`
+  font-family: Alimama ShuHeiTi;
+  font-weight: 700;
+  color: #060a26;
+  font-size: 30px;
+  margin: 0 auto 15px;
+  text-align: center;
+`
 
-export const AccountLogin = ({ ref, ...props }: AccountLoginProps) => {
+const LoginButton = styled(Button)`
+  width: 100%;
+  height: 46px;
+  background: rgba(6, 10, 38, 1);
+  border-radius: 8px;
+
+  &:not(:disabled):hover {
+    background: rgba(6, 10, 38, 0.8) !important;
+  }
+`
+
+const logger = loggerService.withContext('SubAccountLogin')
+
+export const SubAccountLogin = ({ ref, ...props }: SubAccountLoginProps) => {
   type FieldType = {
+    phoneNumber?: string
     username?: string
     password?: string
   }
@@ -59,14 +91,13 @@ export const AccountLogin = ({ ref, ...props }: AccountLoginProps) => {
     password: '',
     userType: 'web_user',
     clientId: import.meta.env.VITE_APP_CLIENT_ID,
+    phoneNumber: '',
     grantType: 'password',
     smsCode: '',
-    code: '',
-    inviteAccountId: undefined,
-    inviteCode: undefined,
-    inviteSuffix: undefined,
-    loginUrl: window.location.href
+    code: ''
   })
+
+  const { setScene } = useLoginContext()
 
   // 登录接口（改为触发滑块验证）
   const login = async () => {
@@ -181,39 +212,72 @@ export const AccountLogin = ({ ref, ...props }: AccountLoginProps) => {
 
   return (
     <Container>
-      <Form form={form} size="large" onFinish={onFinish} onValuesChange={onValuesChange} autoComplete="off">
+      <LoginTitle>{i18n.t('login.sub_account.title')}</LoginTitle>
+      <Form
+        layout="vertical"
+        form={form}
+        size="large"
+        onFinish={onFinish}
+        onValuesChange={onValuesChange}
+        autoComplete="off">
         <Form.Item<FieldType>
+          label={i18n.t('login.sub_account.phone_email_label')}
+          name="phoneNumber"
+          rules={[
+            {
+              required: true,
+              message: i18n.t('login.sub_account.phone_email_required')
+            },
+            {
+              pattern: userNamePattern,
+              message: i18n.t('login.sub_account.phone_email_invalid')
+            }
+          ]}>
+          <StyleInput onPressEnter={login} placeholder={i18n.t('login.sub_account.phone_email_required')} />
+        </Form.Item>
+
+        <Form.Item<FieldType>
+          label={i18n.t('login.sub_account.username_label')}
           name="username"
           rules={[
             {
               required: true,
-              message: i18n.t('login.account_login.username_required')
-            },
-            {
-              pattern: userNamePattern,
-              message: i18n.t('login.account_login.username_invalid')
+              message: i18n.t('login.sub_account.username_required')
             }
           ]}>
-          <StyleInput onPressEnter={login} placeholder={i18n.t('login.account_login.username_required')} />
+          <StyleInput onPressEnter={login} placeholder={i18n.t('login.sub_account.username_required')} />
         </Form.Item>
 
         <Form.Item<FieldType>
+          label={i18n.t('login.sub_account.password_label')}
           name="password"
           rules={[
             {
               required: true,
-              message: i18n.t('login.account_login.password_required')
+              message: i18n.t('login.sub_account.password_required')
             },
             {
               pattern: passwordPattern,
-              message: i18n.t('login.account_login.password_invalid')
+              message: i18n.t('login.sub_account.password_invalid')
             }
           ]}>
           <PwdInput
-            iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
             onPressEnter={login}
-            placeholder={i18n.t('login.account_login.password_required')}
+            placeholder={i18n.t('login.sub_account.password_required')}
+            iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
           />
+        </Form.Item>
+        <Form.Item style={{ marginTop: 30, marginBottom: 5 }}>
+          <LoginButton type="primary" htmlType="submit" block>
+            {i18n.t('login.sub_account.login')}
+          </LoginButton>
+        </Form.Item>
+        <Form.Item>
+          <Flex justify="flex-end">
+            <Button type="link" size="small" onClick={() => setScene(LoginSceneType.MainAccount)}>
+              {i18n.t('login.sub_account.back_main_login')}
+            </Button>
+          </Flex>
         </Form.Item>
       </Form>
     </Container>

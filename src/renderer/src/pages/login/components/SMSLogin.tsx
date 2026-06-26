@@ -223,6 +223,7 @@ export const SMSLogin = ({ ref, ...props }: LoginFormProps) => {
             <StyleInput
               style={{ width: '80%' }}
               onChange={handleChangePhone}
+              onPressEnter={login}
               placeholder={i18n.t('login.sms_login.phone_required')}
             />
           </Space.Compact>
@@ -231,7 +232,7 @@ export const SMSLogin = ({ ref, ...props }: LoginFormProps) => {
         <Form.Item<FieldType>
           name="smsCode"
           rules={[{ required: true, message: i18n.t('login.sms_login.code_required') }]}>
-          <StyleInput suffix={suffix} placeholder={i18n.t('login.sms_login.code_required')} />
+          <StyleInput suffix={suffix} placeholder={i18n.t('login.sms_login.code_required')} onPressEnter={login} />
         </Form.Item>
       </Form>
     </Container>
