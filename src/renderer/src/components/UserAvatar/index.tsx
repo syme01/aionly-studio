@@ -91,7 +91,7 @@ const UserAvatar: React.FC<Props> = () => {
     <Container className="user-avatar">
       <Popover content={UserInfoPanel} title={userInfo?.nickName} placement={'top'} trigger="hover">
         <Avatar
-          src={userInfo?.avatar}
+          src={userInfo?.avatarUrl}
           style={{ backgroundColor: 'var(--color-inline-code-text)', verticalAlign: 'middle' }}
           size={26}>
           {userInfo?.nickName}

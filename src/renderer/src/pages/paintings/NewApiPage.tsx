@@ -157,39 +157,21 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
   // const modelOptions = MODELS.map((m) => ({ label: m.name, value: m.name }))
 
   /** 从接口查询图片模型 **/
-  const { models, loading, fetchNextPage, hasMore } = useAiOnlyModels({
+  const { loading, getFilteredModels, handleScroll } = useAiOnlyModels({
     type: '3',
     modelAttribute: ModelAttribute.ImageModel,
     pageSize: 10,
     autoFetch: true
   })
 
-  /** 滚动加载分页数据 **/
-  const handleModelScroll = useCallback(
-    (e: React.UIEvent<HTMLElement>) => {
-      e = e || window.event
-      const target = e.target as HTMLElement
-      const scrollTop = target.scrollTop
-      const scrollHeight = target.scrollHeight
-      const clientHeight = target.clientHeight
-      const isBottom = scrollHeight - scrollTop - clientHeight < 50 && !loading
-      if (isBottom && hasMore) {
-        fetchNextPage()
-      }
-    },
-    [fetchNextPage, hasMore, loading]
-  )
-
   const modelOptions = useMemo(() => {
-    const customModels = models
-      .filter((m) => m.packageNum === '先用后付')
-      .map((m) => ({
-        label: m.modelName,
-        value: m.model,
-        custom: !SUPPORTED_MODELS.includes(m.model),
-        group: m.serviceName,
-        modelFileUrl: m.modelFileUrl
-      }))
+    const customModels = getFilteredModels().map((m) => ({
+      label: m.modelName,
+      value: m.model,
+      custom: !SUPPORTED_MODELS.includes(m.model),
+      group: m.serviceName,
+      modelFileUrl: m.modelFileUrl
+    }))
 
     // 去重：同一 (id, serviceName) 只保留第一条
     const seen = new Set<string>()
@@ -199,7 +181,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
     })
 
     return [...filterModels]
-  }, [models])
+  }, [getFilteredModels])
 
   /*const modelOptions = useMemo(() => {
     const customModels = newApiProvider.models
@@ -714,17 +696,8 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
                 onChange={handleModelChange}
                 style={{ width: '100%', marginBottom: 15 }}
                 virtual={true}
-                onPopupScroll={handleModelScroll}
-                popupRender={(menu) => (
-                  <>
-                    {menu}
-                    {loading && (
-                      <Flex justify="center" style={{ padding: '8px 0' }}>
-                        <Spin size="small" spinning={true} />
-                      </Flex>
-                    )}
-                  </>
-                )}>
+                onPopupScroll={handleScroll}
+                popupRender={(menu) => <Spin spinning={loading}>{menu}</Spin>}>
                 {Object.entries(groupedModelOptions).map(([groupName, options]) => (
                   <Select.OptGroup label={groupName} key={groupName}>
                     {options.map((m) => (

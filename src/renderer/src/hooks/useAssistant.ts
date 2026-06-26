@@ -79,7 +79,12 @@ export function useAssistant(id: string) {
   const { defaultModel } = useDefaultModel()
 
   const model = useMemo(() => assistant?.model ?? assistant?.defaultModel ?? defaultModel, [assistant, defaultModel])
-  if (!model) {
+  // 只有当 assistant 在 Redux 中存在但未配置模型时才抛出
+  // agent 会话的 assistantStub 不在 Redux store，跳过检查避免崩溃
+  // if (!model) {
+  //   throw new Error(`Assistant model is not set for assistant with name: ${assistant?.name ?? 'unknown'}`)
+  // }
+  if (!model && assistant) {
     throw new Error(`Assistant model is not set for assistant with name: ${assistant?.name ?? 'unknown'}`)
   }
 

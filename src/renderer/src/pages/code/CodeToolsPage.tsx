@@ -1,5 +1,5 @@
 import { AiProvider } from '@renderer/aiCore'
-import AnthropicProviderListPopover from '@renderer/components/AnthropicProviderListPopover'
+// import AnthropicProviderListPopover from '@renderer/components/AnthropicProviderListPopover'
 import { Navbar, NavbarCenter } from '@renderer/components/app/Navbar'
 import ModelSelector from '@renderer/components/ModelSelector'
 import { isMac, isWin } from '@renderer/config/constant'
@@ -411,7 +411,7 @@ const CodeToolsPage: FC = () => {
               <SettingsItem>
                 <div className="settings-label">
                   {t('code.model')}
-                  {selectedCliTool === 'claude-code' && <AnthropicProviderListPopover />}
+                  {/*{selectedCliTool === 'claude-code' && <AnthropicProviderListPopover />}*/}
                 </div>
                 <ModelSelector
                   providers={availableProviders}
