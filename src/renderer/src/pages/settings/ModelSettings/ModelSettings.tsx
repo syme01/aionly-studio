@@ -5,6 +5,7 @@ import { InfoTooltip } from '@renderer/components/TooltipIcons'
 import { isEmbeddingModel, isRerankModel, isTextToImageModel } from '@renderer/config/models'
 import { TRANSLATE_PROMPT } from '@renderer/config/prompts'
 import { useTheme } from '@renderer/context/ThemeProvider'
+import { ModelAttribute, useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels'
 import { useDefaultModel } from '@renderer/hooks/useAssistant'
 import { useProviders } from '@renderer/hooks/useProvider'
 import { useSettings } from '@renderer/hooks/useSettings'
@@ -70,6 +71,17 @@ const ModelSettings: FC<ModelSettingsProps> = ({
   const containerStyle = compact ? { padding: 0, background: 'transparent' } : undefined
   const groupStyle = compact ? { padding: 0, border: 'none', background: 'transparent' } : undefined
 
+  const { getFilteredModels, loading, handleScroll } = useAiOnlyModels({
+    pageSize: 10,
+    autoFetch: true,
+    type: '1',
+    modelAttribute: ModelAttribute.TextModel
+  })
+
+  const aiOnlyApiModels = useMemo(() => {
+    return getFilteredModels()
+  }, [getFilteredModels])
+
   return (
     <SettingContainer theme={theme} style={containerStyle}>
       <SettingGroup theme={theme} style={groupStyle}>
@@ -85,6 +97,10 @@ const ModelSettings: FC<ModelSettingsProps> = ({
             predicate={modelPredicate}
             value={defaultModelValue}
             defaultValue={defaultModelValue}
+            apiModels={aiOnlyApiModels}
+            autoFetch={false}
+            loading={loading}
+            onPopupScroll={handleScroll}
             style={{ width: compact ? '100%' : 360 }}
             size={compact ? 'large' : 'middle'}
             onChange={(value) => setDefaultModel(find(allModels, JSON.parse(value)) as Model)}
@@ -114,6 +130,10 @@ const ModelSettings: FC<ModelSettingsProps> = ({
             defaultValue={defaultQuickModel}
             style={{ width: compact ? '100%' : 360 }}
             size={compact ? 'large' : 'middle'}
+            autoFetch={false}
+            apiModels={aiOnlyApiModels}
+            loading={loading}
+            onPopupScroll={handleScroll}
             onChange={(value) => setQuickModel(find(allModels, JSON.parse(value)) as Model)}
             placeholder={t('settings.models.empty')}
           />
@@ -136,6 +156,10 @@ const ModelSettings: FC<ModelSettingsProps> = ({
             predicate={modelPredicate}
             value={defaultTranslateModel}
             defaultValue={defaultTranslateModel}
+            apiModels={aiOnlyApiModels}
+            autoFetch={false}
+            loading={loading}
+            onPopupScroll={handleScroll}
             style={{ width: compact ? '100%' : 360 }}
             size={compact ? 'large' : 'middle'}
             onChange={(value) => setTranslateModel(find(allModels, JSON.parse(value)) as Model)}

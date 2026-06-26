@@ -7,6 +7,9 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 const logger = loggerService.withContext('useAiOnlyModels')
 
+// 默认模型过滤器：只保留"先用后付"套餐的模型
+const DEFAULT_MODEL_FILTER = (model: AiOnlyModel) => model.packageNum === '先用后付'
+
 export enum ModelAttribute {
   TextModel = 'text_model',
   ImageModel = 'image_generation'
@@ -98,20 +101,20 @@ export function processModelLikeAddModel(model: Model, provider: Provider): Mode
 }
 
 // 把的接口数据转成 Model 格式
-export function transformToModel(item: any, provider: Provider): Model {
+export function transformToModel(item: any, provider?: Provider): Model {
   return {
-    id: item.id,
-    provider: provider.id,
-    name: item.name || item.id,
-    group: item.group || provider.id,
-    owned_by: item.owned_by,
-    description: item.description,
-    capabilities: item.capabilities,
+    id: item.baseId || item.model,
+    provider: provider?.id || 'aionly',
+    name: item.modelName,
+    group: item.group || item.serviceName,
+    owned_by: item.owned_by || 'AiOnly',
+    description: item.description || '',
+    capabilities: item.capabilities || [],
     type: item.type,
     pricing: item.pricing,
     endpoint_type: item.endpoint_type,
-    supported_endpoint_types: item.supported_endpoint_types
-    // supported_text_delta 会在 processModelLikeAddModel 里设置
+    supported_endpoint_types: item.supported_endpoint_types,
+    supported_text_delta: !isNotSupportTextDeltaModel(item)
   }
 }
 
@@ -148,7 +151,17 @@ export function modelToApiModel(model: Model): ApiModel {
  * )
  * ```
  */
-export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): UseAiOnlyModelsResult {
+export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): {
+  models: AiOnlyModel[]
+  loading: boolean
+  pageParams: ModelPageParams
+  fetchModels: (pageNum: number) => Promise<void>
+  fetchNextPage: () => Promise<void>
+  hasMore: boolean
+  reset: () => void
+  getFilteredModels: (filter?: (model: AiOnlyModel) => boolean) => AiOnlyModel[]
+  handleScroll: (e: React.UIEvent<HTMLDivElement>) => void
+} {
   const {
     initialPageNum = 1,
     pageSize = 10,
@@ -215,8 +228,8 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): UseAiOnly
           pageParamsRef.current = newParams
           setPageParams(newParams)
           // pageNum 已提交后再解锁，防止窗口期内重复触发同一页加载
-          setLoading(false)
-          loadingRef.current = false
+          /*setLoading(false)
+          loadingRef.current = false*/
         })
       } else {
         logger.warn('API returned non-200 code', { code: res?.code })
@@ -225,6 +238,9 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): UseAiOnly
       }
     } catch (e: any) {
       logger.error('Failed to fetch models', { error: e })
+      setLoading(false)
+      loadingRef.current = false
+    } finally {
       setLoading(false)
       loadingRef.current = false
     }
@@ -251,9 +267,8 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): UseAiOnly
   // 滚动事件处理器，用于无限滚动加载
   const handleScroll = useCallback(
     (e: React.UIEvent<HTMLDivElement>) => {
-      logger.info('handleScroll', { scrollEvent: e.type })
+      // logger.info('handleScroll', { scrollEvent: e.type })
       if (loadingRef.current || !hasMore) return
-
       const { scrollTop, scrollHeight, clientHeight } = e.currentTarget
       // 距底部 scrollThreshold 像素以内触发加载
       if (scrollHeight - scrollTop - clientHeight < scrollThreshold) {
@@ -263,12 +278,23 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): UseAiOnly
     [hasMore, scrollThreshold, fetchNextPage]
   )
 
+  // 获取过滤后的模型列表数据
+  const getFilteredModels = useCallback(
+    (filter: (model: AiOnlyModel) => boolean = DEFAULT_MODEL_FILTER) => {
+      return models.filter(filter)
+    },
+    [models]
+  )
+
   // 自动加载第一页
   useEffect(() => {
     if (autoFetch && !initializedRef.current) {
       initializedRef.current = true
       logger.info('Auto-fetching first page')
       void fetchModels(initialPageNum)
+    }
+    return () => {
+      initializedRef.current = false
     }
   }, [autoFetch, fetchModels, initialPageNum])
 
@@ -280,6 +306,7 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): UseAiOnly
     fetchNextPage,
     hasMore,
     reset,
+    getFilteredModels,
     handleScroll
   }
 }
