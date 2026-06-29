@@ -4,16 +4,19 @@ import Verify from '@renderer/components/verifition/Verify'
 import { SubAccountLoginProvider } from '@renderer/pages/login/contexts/SubAccountContext'
 import { useAppDispatch } from '@renderer/store'
 import { setUserInfo } from '@renderer/store/user'
-import { Button, Flex, FormInstance, Modal, TabsProps } from 'antd'
+import type { FormInstance, TabsProps } from 'antd'
+import { Button, Flex, Modal } from 'antd'
 import { Tabs } from 'antd'
 import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
-import EmailBind, { EmailBindRef } from './EmailBind'
-import PhoneBind, { PhoneBindRef } from './PhoneBind'
-import { SubAccountLoginFieldType } from './SubAccountLogin'
+import type { EmailBindRef } from './EmailBind'
+import EmailBind from './EmailBind'
+import type { PhoneBindRef } from './PhoneBind'
+import PhoneBind from './PhoneBind'
+import type { SubAccountLoginFieldType } from './SubAccountLogin'
 
 interface Props {
   resolve?: (data: any) => void

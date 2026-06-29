@@ -1,0 +1,330 @@
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons'
+import { loggerService } from '@logger'
+import { getUserProfileApi, loginApi } from '@renderer/api/login'
+import { queryPhoneByName } from '@renderer/api/user'
+import Verify from '@renderer/components/verifition/Verify'
+import i18n from '@renderer/i18n'
+import { useAppDispatch } from '@renderer/store'
+import { setUserInfo } from '@renderer/store/user'
+import { Button, Flex, Form, type FormProps, Input } from 'antd'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
+
+import { LoginSceneType, useLoginContext } from '../../contexts/LoginContext'
+import BindPhoneEmailModal from './BindPhoneEmail'
+
+interface SubAccountLoginProps {
+  onComplete?: () => void
+}
+
+export type SubAccountLoginFieldType = {
+  phoneNumber?: string
+  username?: string
+  password?: string
+}
+
+const Container = styled.div`
+  background: #fff;
+  padding-top: 12px;
+
+  .ant-form-item {
+    margin-bottom: 10px;
+  }
+
+  .ant-form-item-vertical {
+    .ant-form-item-label {
+      padding: 0;
+    }
+  }
+`
+
+const StyleInput = styled(Input)`
+  height: 46px;
+`
+
+const PwdInput = styled(Input.Password)`
+  height: 46px;
+`
+
+const LoginTitle = styled.div`
+  font-family: Alimama ShuHeiTi;
+  font-weight: 700;
+  color: #060a26;
+  font-size: 30px;
+  margin: 0 auto 15px;
+  text-align: center;
+`
+
+const LoginButton = styled(Button)`
+  width: 100%;
+  height: 46px;
+  background: rgba(6, 10, 38, 1);
+  border-radius: 8px;
+
+  &:not(:disabled):hover {
+    background: rgba(6, 10, 38, 0.8) !important;
+  }
+`
+
+const logger = loggerService.withContext('SubAccountLogin')
+
+export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
+  // 手机号正则
+  const phoneRegexp =
+    /^(((13[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[3-8]{1})|(18[0-9]{1})|(19[0-9]{1})|(14[5-7]{1}))+\d{8})$/
+  // 邮箱正则
+  const emailRegexp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  // 合并正则（手机号或邮箱）
+  const userNamePattern = new RegExp(`(${phoneRegexp.source})|(${emailRegexp.source})`)
+  // 密码正则
+  const passwordPattern = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$)([^\u4e00-\u9fa5\s]){6,20}$/
+
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const verifyRef = useRef<any>(null)
+
+  const verifyType = useRef('')
+
+  const [form] = Form.useForm<SubAccountLoginFieldType>()
+
+  const [accountForm, setAccountForm] = useState({
+    tenantId: '000001',
+    username: '',
+    password: '',
+    userType: 'web_user',
+    clientId: import.meta.env.VITE_APP_CLIENT_ID,
+    phoneNumber: '',
+    grantType: 'password',
+    smsCode: '',
+    code: ''
+  })
+
+  const { setScene } = useLoginContext()
+
+  // 登录接口（改为触发滑块验证）
+  const login = async () => {
+    // 先做表单验证
+    await form.validateFields()
+
+    // 调试日志：查看请求参数
+    logger.debug('账号登录请求参数', accountForm)
+
+    // 触发滑块验证，验证成功后会调用 sendCode 方法
+    triggerVerify()
+  }
+
+  const onFinish: FormProps<SubAccountLoginFieldType>['onFinish'] = (values) => {
+    logger.debug('登录表单提交成功', values)
+    login()
+  }
+
+  const onValuesChange = (_changedValues: any, allValues: any) => {
+    // const valid = !!allValues.phoneNumber && !!allValues.username && !!allValues.password
+    // props.onFormChange?.(valid)
+    setAccountForm((prev) => {
+      return {
+        ...prev,
+        phoneNumber: allValues.phoneNumber,
+        username: allValues.username,
+        password: allValues.password
+      }
+    })
+  }
+
+  // 触发滑块验证码（供父组件调用）
+  const triggerVerify = () => {
+    verifyRef.current?.show()
+  }
+
+  /** 显示绑定手机/邮箱弹窗 **/
+  const showBindPhoneEmail = useCallback(() => {
+    void BindPhoneEmailModal.show({ parentForm: form })
+  }, [form])
+
+  showBindPhoneEmail()
+
+  /** 查询并保存用户信息 **/
+  const saveUserInfo = useCallback(async () => {
+    const res = await getUserProfileApi()
+    const data = res.data?.user
+    dispatch(setUserInfo(data))
+    // const balance = await getFinanceInfo()
+    // dispatch(setMyBalance(balance.data))
+  }, [dispatch])
+
+  /** 登录成功 **/
+  const handleLoginSuccess = () => {
+    saveUserInfo().then()
+    setScene(LoginSceneType.MainAccount)
+    props.onComplete?.()
+    navigate('/')
+  }
+
+  /** 接口校验 **/
+  const checkByApi = async (params: any) => {
+    if (verifyType.current !== 'bind') {
+      // 直接执行登录
+      try {
+        const userName = params.username
+        const phoneNumber = params.phoneNumber
+        // 查询用户信息
+        const user_res: any = await queryPhoneByName(userName, phoneNumber)
+        if (user_res?.data) {
+          // 调用登录接口
+          const login_res: any = await loginApi(params)
+          const data = login_res?.data
+          if (data && data.access_token) {
+            localStorage.setItem('token', data.access_token)
+            handleLoginSuccess()
+          }
+        } else {
+          verifyType.current = 'bind'
+          showBindPhoneEmail()
+        }
+      } catch (error: any) {
+        logger.error('账号登录失败', error)
+      }
+    }
+  }
+
+  // 发送验证码---真正走接口的地方（账号登录时，这里改为执行登录）
+  const sendCode = async (verifyParams: any) => {
+    // 更新滑块验证参数
+    const updatedForm = {
+      ...accountForm,
+      code: verifyParams.captchaVerification
+    }
+    setAccountForm(updatedForm)
+    await checkByApi(updatedForm)
+  }
+
+  // 滑块验证码成功回调
+  const verifyOnSuccess = async (params: any) => {
+    await sendCode(params)
+    verifyRef.current?.closeBox()
+  }
+
+  useEffect(() => {
+    const timer = timerRef.current
+    return () => {
+      if (timer) clearTimeout(timer)
+    }
+  }, [])
+
+  useEffect(() => {
+    // 获取动态路由参数中的邀请码
+    const inviteCode: any = sessionStorage.getItem('inviteCode')
+    const inviteLinkCode: any = sessionStorage.getItem('inviteLinkCode')
+    const suffix: any = sessionStorage.getItem('suffix')
+
+    if (inviteCode) {
+      setAccountForm((prev) => ({
+        ...prev,
+        inviteAccountId: inviteCode,
+        inviteCode: undefined,
+        inviteSuffix: undefined
+      }))
+      sessionStorage.removeItem('inviteCode')
+    } else if (inviteLinkCode && suffix) {
+      setAccountForm((a) => ({
+        ...a,
+        inviteAccountId: undefined,
+        inviteCode: inviteLinkCode,
+        inviteSuffix: suffix
+      }))
+    } else {
+      setAccountForm((a) => ({
+        ...a,
+        inviteAccountId: undefined,
+        inviteCode: undefined,
+        inviteSuffix: undefined
+      }))
+    }
+  }, [])
+
+  return (
+    <>
+      <Container>
+        <LoginTitle>{i18n.t('login.sub_account.title')}</LoginTitle>
+        <Form
+          layout="vertical"
+          form={form}
+          size="large"
+          onFinish={onFinish}
+          onValuesChange={onValuesChange}
+          autoComplete="off">
+          <Form.Item<SubAccountLoginFieldType>
+            label={i18n.t('login.sub_account.phone_email_label')}
+            name="phoneNumber"
+            rules={[
+              {
+                required: true,
+                message: i18n.t('login.sub_account.phone_email_required')
+              },
+              {
+                pattern: userNamePattern,
+                message: i18n.t('login.sub_account.phone_email_invalid')
+              }
+            ]}>
+            <StyleInput onPressEnter={login} placeholder={i18n.t('login.sub_account.phone_email_required')} />
+          </Form.Item>
+
+          <Form.Item<SubAccountLoginFieldType>
+            label={i18n.t('login.sub_account.username_label')}
+            name="username"
+            rules={[
+              {
+                required: true,
+                message: i18n.t('login.sub_account.username_required')
+              }
+            ]}>
+            <StyleInput onPressEnter={login} placeholder={i18n.t('login.sub_account.username_required')} />
+          </Form.Item>
+
+          <Form.Item<SubAccountLoginFieldType>
+            label={i18n.t('login.sub_account.password_label')}
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: i18n.t('login.sub_account.password_required')
+              },
+              {
+                pattern: passwordPattern,
+                message: i18n.t('login.sub_account.password_invalid')
+              }
+            ]}>
+            <PwdInput
+              onPressEnter={login}
+              placeholder={i18n.t('login.sub_account.password_required')}
+              iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+            />
+          </Form.Item>
+          <Form.Item style={{ marginTop: 30, marginBottom: 5 }}>
+            <LoginButton type="primary" htmlType="submit" block>
+              {i18n.t('login.sub_account.login')}
+            </LoginButton>
+          </Form.Item>
+          <Form.Item>
+            <Flex justify="flex-end">
+              <Button type="link" size="small" onClick={() => setScene(LoginSceneType.MainAccount)}>
+                {i18n.t('login.sub_account.back_main_login')}
+              </Button>
+            </Flex>
+          </Form.Item>
+        </Form>
+      </Container>
+
+      <Verify
+        ref={verifyRef}
+        captchaType={'blockPuzzle'}
+        mode={'pop'}
+        imgSize={{ width: '400px', height: '200px' }}
+        onSuccess={verifyOnSuccess}
+      />
+    </>
+  )
+}

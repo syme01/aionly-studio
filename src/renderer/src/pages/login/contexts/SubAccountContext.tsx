@@ -1,7 +1,7 @@
-import { FormInstance } from 'antd'
+import type { FormInstance } from 'antd'
 import { createContext, type ReactNode, use } from 'react'
 
-import { SubAccountLoginFieldType } from '../components/subAccount/SubAccountLogin'
+import type { SubAccountLoginFieldType } from '../components/subAccount/SubAccountLogin'
 
 interface SubAccountContextType {
   parentForm?: FormInstance<SubAccountLoginFieldType>
