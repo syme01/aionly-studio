@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 import Layout from './components/Layout'
 import { LoginForm } from './components/LoginForm'
-import { SubAccountLogin } from './components/SubAccountLogin'
+import { SubAccountLogin } from './components/subAccount/SubAccountLogin'
 import { LoginProvider, LoginSceneType } from './contexts/LoginContext'
 
 interface LoginPageProps {
@@ -21,7 +21,7 @@ const LoginPage = (props: LoginPageProps) => {
   const renderLoginComponent = () => {
     const scene_map: SceneMap = {
       [LoginSceneType.MainAccount]: <LoginForm onComplete={props.onComplete} />,
-      [LoginSceneType.SubAccount]: <SubAccountLogin />,
+      [LoginSceneType.SubAccount]: <SubAccountLogin onComplete={props.onComplete} />,
       [LoginSceneType.ForgotPassword]: <div>忘记密码组件（待实现）</div>,
       [LoginSceneType.Register]: <div>注册组件（待实现）</div>
     }

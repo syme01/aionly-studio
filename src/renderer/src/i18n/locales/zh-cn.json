@@ -2165,7 +2165,34 @@
       "password_invalid": "请输入6-20位英文字母、数字或者符号（除空格），且字母、数字和标点符号至少包含两种",
       "username_label": "用户名",
       "username_required": "请输入子用户名",
-      "back_main_login": "返回主账号登录"
+      "back_main_login": "返回主账号登录",
+      "bind_phone_email": {
+        "title": "绑定手机号/邮箱",
+        "bind_btn_text": "绑定",
+        "bind_success": "绑定成功",
+        "phone": {
+          "title": "绑定手机号",
+          "phone_label": "手机号",
+          "required": "请输入手机号",
+          "invalid": "手机号格式错误",
+          "code_label": "验证码",
+          "send_code": "获取验证码",
+          "code_required": "请输入验证码",
+          "duplicate_phone_message": "手机号已被其他账号绑定，请重新输入",
+          "fail": "校验手机号失败，请重试"
+        },
+        "email": {
+          "code_label": "验证码",
+          "title": "绑定邮箱",
+          "email_label": "邮箱",
+          "required": "请输入邮箱",
+          "invalid": "邮箱格式错误",
+          "code_required": "请输入验证码",
+          "send_code": "获取验证码",
+          "duplicate_email_message": "邮箱已被其他账号绑定，请重新输入",
+          "fail": "校验邮箱失败，请重试"
+        }
+      }
     }
   },
   "lmstudio": {
