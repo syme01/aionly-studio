@@ -4,57 +4,57 @@ import { isMac } from '@renderer/config/constant'
 import { useTheme } from '@renderer/context/ThemeProvider'
 import { useFullscreen } from '@renderer/hooks/useFullscreen'
 import { useMinappPopup } from '@renderer/hooks/useMinappPopup'
-import { useMinapps } from '@renderer/hooks/useMinapps'
+// import { useMinapps } from '@renderer/hooks/useMinapps'
 import useNavBackgroundColor from '@renderer/hooks/useNavBackgroundColor'
 import { modelGenerating, useRuntime } from '@renderer/hooks/useRuntime'
 import { useSettings } from '@renderer/hooks/useSettings'
-import { getSidebarIconLabel, getThemeModeLabel } from '@renderer/i18n/label'
-import { ThemeMode } from '@renderer/types'
-import { Avatar, Tooltip } from 'antd'
-import {
+import { getSidebarIconLabel /*getThemeModeLabel*/ } from '@renderer/i18n/label'
+// import { ThemeMode } from '@renderer/types'
+import { Avatar /*Tooltip*/ } from 'antd'
+/*import {
   Code,
   FileSearch,
   Folder,
   Languages,
   LayoutGrid,
   MessageSquare,
-  Monitor,
-  Moon,
+  // Monitor,
+  // Moon,
   MousePointerClick,
   NotepadText,
   Palette,
   Settings,
   Sparkle,
-  Sun
-} from 'lucide-react'
+  // Sun
+} from 'lucide-react'*/
 import type { FC } from 'react'
-import { useTranslation } from 'react-i18next'
+// import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { OpenClawSidebarIcon } from '../Icons/SVGIcon'
-import { SidebarOpenedMinappTabs, SidebarPinnedApps } from './PinnedMinapps'
+// import { OpenClawSidebarIcon } from '../Icons/SVGIcon'
+// import { SidebarOpenedMinappTabs, SidebarPinnedApps } from './PinnedMinapps'
 
 const Sidebar: FC = () => {
   const { hideMinappPopup } = useMinappPopup()
   const { minappShow } = useRuntime()
-  const { sidebarIcons } = useSettings()
-  const { pinned } = useMinapps()
+  // const { sidebarIcons } = useSettings()
+  // const { pinned } = useMinapps()
 
-  const { pathname } = useLocation()
-  const navigate = useNavigate()
-
-  const { theme, settedTheme, toggleTheme } = useTheme()
-  const { t } = useTranslation()
+  // const { pathname } = useLocation()
+  // const navigate = useNavigate()
+  //
+  // const { theme, settedTheme, toggleTheme } = useTheme()
+  // const { t } = useTranslation()
 
   const backgroundColor = useNavBackgroundColor()
 
-  const showPinnedApps = pinned.length > 0 && sidebarIcons.visible.includes('minapp')
+  // const showPinnedApps = pinned.length > 0 && sidebarIcons.visible.includes('minapp')
 
-  const to = async (path: string) => {
-    await modelGenerating()
-    navigate(path)
-  }
+  // const to = async (path: string) => {
+  //   await modelGenerating()
+  //   navigate(path)
+  // }
 
   const isFullscreen = useFullscreen()
 
@@ -75,7 +75,7 @@ const Sidebar: FC = () => {
         <Menus onClick={hideMinappPopup}>
           <MainMenus />
         </Menus>
-        <SidebarOpenedMinappTabs />
+        {/*<SidebarOpenedMinappTabs />
         {showPinnedApps && (
           <AppsContainer>
             <Divider />
@@ -83,11 +83,11 @@ const Sidebar: FC = () => {
               <SidebarPinnedApps />
             </Menus>
           </AppsContainer>
-        )}
+        )}*/}
       </MainMenusContainer>
       <Menus>
         <UserAvatar />
-        <Tooltip title={t('settings.theme.title') + ': ' + getThemeModeLabel(settedTheme)} placement="right">
+        {/*<Tooltip title={t('settings.theme.title') + ': ' + getThemeModeLabel(settedTheme)} placement="right">
           <Icon theme={theme} onClick={toggleTheme}>
             {settedTheme === ThemeMode.dark ? (
               <Moon size={20} className="icon" />
@@ -97,8 +97,8 @@ const Sidebar: FC = () => {
               <Monitor size={20} className="icon" />
             )}
           </Icon>
-        </Tooltip>
-        <Tooltip title={t('settings.title')} mouseEnterDelay={0.8} placement="right">
+        </Tooltip>*/}
+        {/*<Tooltip title={t('settings.title')} mouseEnterDelay={0.8} placement="right">
           <StyledLink
             onClick={async () => {
               hideMinappPopup()
@@ -108,7 +108,7 @@ const Sidebar: FC = () => {
               <Settings size={20} className="icon" />
             </Icon>
           </StyledLink>
-        </Tooltip>
+        </Tooltip>*/}
       </Menus>
     </Container>
   )
@@ -117,7 +117,7 @@ const Sidebar: FC = () => {
 const MainMenus: FC = () => {
   const { hideMinappPopup } = useMinappPopup()
   const { pathname } = useLocation()
-  const { sidebarIcons, defaultPaintingProvider } = useSettings()
+  const { /*sidebarIcons,*/ defaultPaintingProvider } = useSettings()
   const { minappShow } = useRuntime()
   const navigate = useNavigate()
   const { theme } = useTheme()
@@ -125,7 +125,7 @@ const MainMenus: FC = () => {
   const isRoute = (path: string): string => (pathname === path && !minappShow ? 'active' : '')
   const isRoutes = (path: string): string => (pathname.startsWith(path) && path !== '/' && !minappShow ? 'active' : '')
 
-  const iconMap = {
+  /*const iconMap = {
     assistants: <MessageSquare size={18} className="icon" />,
     agents: <MousePointerClick size={18} className="icon" />,
     store: <Sparkle size={18} className="icon" />,
@@ -151,25 +151,69 @@ const MainMenus: FC = () => {
     code_tools: '/code',
     notes: '/notes',
     openclaw: '/openclaw'
-  }
+  }*/
 
-  return sidebarIcons.visible.map((icon) => {
-    const path = pathMap[icon]
+  // 显示在左侧的菜单
+  const showInLeftMenus = [
+    {
+      path: '/',
+      name: 'assistants',
+      icon: 'icon-duihuamoren',
+      iconActive: 'icon-duihuaxuanzhong'
+    },
+    {
+      path: '/agents',
+      name: 'agents',
+      icon: 'icon-zhinengtimoren',
+      iconActive: 'icon-zhinengtixuanzhong'
+    },
+    {
+      path: `/paintings/${defaultPaintingProvider}`,
+      name: 'paintings',
+      icon: 'icon-huihuamoren',
+      iconActive: 'icon-huihuaxuanzhong'
+    },
+    {
+      path: '/translate',
+      name: 'translate',
+      icon: 'icon-fanyimoren',
+      iconActive: 'icon-fanyixuanzhong'
+    },
+    {
+      path: '/apps',
+      name: 'minapp',
+      icon: 'icon-xiaochengxumoren',
+      iconActive: 'icon-xiaochengxuxuanzhong'
+    }
+  ]
+
+  // console.log('sidebarIcons', sidebarIcons)
+
+  /**
+   * 原来是sidebarIcons.visible.map
+   * 现改成showInLeftMenus--表示在左侧显示的菜单
+   *
+   **/
+  return showInLeftMenus.map((menu) => {
+    // console.log('menu', menu)
+    // const path = pathMap[icon]
+    const path = menu.path
     const isActive = path === '/' ? isRoute(path) : isRoutes(path)
 
     return (
-      <Tooltip key={icon} title={getSidebarIconLabel(icon)} mouseEnterDelay={0.8} placement="right">
-        <StyledLink
-          onClick={async () => {
-            hideMinappPopup()
-            await modelGenerating()
-            navigate(path)
-          }}>
-          <Icon theme={theme} className={isActive}>
-            {iconMap[icon]}
-          </Icon>
-        </StyledLink>
-      </Tooltip>
+      <StyledLink
+        key={menu.path}
+        onClick={async () => {
+          hideMinappPopup()
+          await modelGenerating()
+          navigate(path)
+        }}>
+        <Icon theme={theme} className={isActive}>
+          {/*{iconMap[menu.name]}*/}
+          <i className={`iconfont icon ${isActive ? menu.iconActive : menu.icon}`}></i>
+          <div className="name">{getSidebarIconLabel(menu.name)}</div>
+        </Icon>
+      </StyledLink>
     )
   })
 }
@@ -178,8 +222,7 @@ const Container = styled.div<{ $isFullscreen: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 8px 0;
-  padding-bottom: 12px;
+  padding: 8px 0 12px;
   width: var(--sidebar-width);
   min-width: var(--sidebar-width);
   height: ${({ $isFullscreen }) => (isMac && !$isFullscreen ? 'calc(100vh - var(--navbar-height))' : '100vh')};
@@ -194,9 +237,9 @@ const Container = styled.div<{ $isFullscreen: boolean }>`
 `
 
 const AvatarImg = styled(Avatar)`
-  width: 31px;
-  height: 31px;
-  background-color: var(--color-background-soft);
+  width: 40px;
+  height: 40px;
+  // background-color: var(--color-background-soft);
   margin-bottom: ${isMac ? '12px' : '12px'};
   margin-top: ${isMac ? '0px' : '2px'};
   border: none;
@@ -208,6 +251,8 @@ const MainMenusContainer = styled.div`
   flex: 1;
   flex-direction: column;
   overflow: hidden;
+  width: 100%;
+  padding: 0 5px;
 `
 
 const Menus = styled.div`
@@ -218,17 +263,19 @@ const Menus = styled.div`
 `
 
 const Icon = styled.div<{ theme: string }>`
-  width: 35px;
-  height: 35px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
   box-sizing: border-box;
   -webkit-app-region: none;
-  border: 0.5px solid transparent;
+  border-radius: 8px;
+  padding: 5px 0;
   .icon {
     color: var(--color-icon);
+  }
+  .name{
+    font-size: 10px;
   }
   &:hover {
     background-color: ${({ theme }) => (theme === 'dark' ? 'var(--color-black)' : 'var(--color-white)')};
@@ -244,6 +291,7 @@ const Icon = styled.div<{ theme: string }>`
     .icon {
       color: var(--color-primary);
     }
+    color: var(--color-primary);
   }
 
   @keyframes borderBreath {
@@ -275,6 +323,7 @@ const Icon = styled.div<{ theme: string }>`
 `
 
 const StyledLink = styled.div`
+  width: 100%;
   text-decoration: none;
   -webkit-app-region: none;
   &* {
@@ -282,7 +331,7 @@ const StyledLink = styled.div`
   }
 `
 
-const AppsContainer = styled.div`
+/*const AppsContainer = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -300,6 +349,6 @@ const Divider = styled.div`
   width: 50%;
   margin: 8px 0;
   border-bottom: 0.5px solid var(--color-border);
-`
+`*/
 
 export default Sidebar

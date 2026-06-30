@@ -10,7 +10,8 @@ function useNavBackgroundColor() {
   if (macTransparentWindow) {
     return 'transparent'
   }
-  return 'var(--navbar-background)'
+  return 'transparent'
+  // return 'var(--navbar-background)'
 }
 
 export default useNavBackgroundColor

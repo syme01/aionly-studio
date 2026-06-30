@@ -10,6 +10,8 @@
 @import '../fonts/icon-fonts/iconfont.css';
 @import '../fonts/ubuntu/ubuntu.css';
 @import '../fonts/country-flag-fonts/flag.css';
+@import '../fonts/icon-fonts/iconfont.css';
+@import '../fonts/iconfont/iconfont.css';
 
 @layer base {
   *,
@@ -48,7 +50,15 @@ body,
 }
 
 body.light #root {
-  background: url('../images/bg-app.jpg');
+  background: url('../images/bg-app.jpg') center center / 100% 100% no-repeat !important;
+}
+
+/*body.light #app-sidebar{
+  background: linear-gradient(180deg, #E7F2FC 0%, #CEE7FC 100%) !important;
+}*/
+
+body.light #app-sidebar {
+  background: linear-gradient(180deg, #e7f2fc 0%, #ecf4fc 80%, #bee0fc 100%) !important;
 }
 
 body.dark #root {
