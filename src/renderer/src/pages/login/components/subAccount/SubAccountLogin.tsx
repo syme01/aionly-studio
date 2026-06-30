@@ -88,6 +88,7 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
 
   const verifyType = useRef('')
 
+  const [loading, setLoading] = useState(false)
   const [form] = Form.useForm<SubAccountLoginFieldType>()
 
   const [accountForm, setAccountForm] = useState({
@@ -141,10 +142,8 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
 
   /** 显示绑定手机/邮箱弹窗 **/
   const showBindPhoneEmail = useCallback(() => {
-    void BindPhoneEmailModal.show({ parentForm: form })
-  }, [form])
-
-  showBindPhoneEmail()
+    void BindPhoneEmailModal.show({ parentForm: form, navigate })
+  }, [form, navigate])
 
   /** 查询并保存用户信息 **/
   const saveUserInfo = useCallback(async () => {
@@ -168,6 +167,7 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
     if (verifyType.current !== 'bind') {
       // 直接执行登录
       try {
+        setLoading(true)
         const userName = params.username
         const phoneNumber = params.phoneNumber
         // 查询用户信息
@@ -185,7 +185,10 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
           showBindPhoneEmail()
         }
       } catch (error: any) {
+        setLoading(false)
         logger.error('账号登录失败', error)
+      } finally {
+        setLoading(false)
       }
     }
   }
@@ -304,7 +307,7 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
             />
           </Form.Item>
           <Form.Item style={{ marginTop: 30, marginBottom: 5 }}>
-            <LoginButton type="primary" htmlType="submit" block>
+            <LoginButton type="primary" htmlType="submit" block loading={loading}>
               {i18n.t('login.sub_account.login')}
             </LoginButton>
           </Form.Item>

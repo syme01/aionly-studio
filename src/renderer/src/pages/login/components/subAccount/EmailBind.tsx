@@ -3,7 +3,7 @@ import { emailCaptchaApi, loginApi } from '@renderer/api/login'
 import { checkBindTargetExists, editUserInfo } from '@renderer/api/user'
 import i18n from '@renderer/i18n'
 import type { FormProps } from 'antd'
-import { Button, Form, Input, message, Space } from 'antd'
+import { Button, Form, Input, message } from 'antd'
 import React, { useImperativeHandle, useRef, useState } from 'react'
 import styled from 'styled-components'
 
@@ -234,15 +234,11 @@ const EmailBind: React.FC<Props> = ({ ref, verifyRef, onSuccess, onFormChange })
               message: i18n.t('login.sub_account.bind_phone_email.email.invalid')
             }
           ]}>
-          <Space.Compact style={{ width: '100%' }}>
-            <StyleInput style={{ width: '20%' }} value={'+86'} readOnly={true} />
-            <StyleInput
-              style={{ width: '80%' }}
-              onChange={handleChangePhone}
-              onPressEnter={login}
-              placeholder={i18n.t('login.sub_account.bind_phone_email.email.required')}
-            />
-          </Space.Compact>
+          <StyleInput
+            onChange={handleChangePhone}
+            onPressEnter={login}
+            placeholder={i18n.t('login.sub_account.bind_phone_email.email.required')}
+          />
         </Form.Item>
 
         <Form.Item<FieldType>

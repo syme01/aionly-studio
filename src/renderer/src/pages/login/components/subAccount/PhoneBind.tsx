@@ -89,6 +89,8 @@ const PhoneBind: React.FC<Props> = ({ ref, verifyRef, onSuccess, onFormChange })
     const user_res = await editUserInfo(userInfoParams)
     if (user_res.code == 200) {
       window.toast.success(i18n.t('login.sub_account.bind_success'))
+    } else {
+      window.toast.error(i18n.t('login.sub_account.bind_phone_email.phone.fail'))
     }
     const loginParams = getLoginFormData()
     const { data } = await loginApi(loginParams)

@@ -9,7 +9,7 @@ import { Button, Flex, Modal } from 'antd'
 import { Tabs } from 'antd'
 import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import type { NavigateFunction } from 'react-router-dom'
 import styled from 'styled-components'
 
 import type { EmailBindRef } from './EmailBind'
@@ -21,17 +21,18 @@ import type { SubAccountLoginFieldType } from './SubAccountLogin'
 interface Props {
   resolve?: (data: any) => void
   parentForm?: FormInstance<SubAccountLoginFieldType>
+  navigate?: NavigateFunction
 }
 
 interface showParamsType {
   parentForm?: FormInstance<SubAccountLoginFieldType>
+  navigate?: NavigateFunction
 }
 
-const BindPhoneEmail: React.FC<Props> = ({ resolve, parentForm }) => {
+const BindPhoneEmail: React.FC<Props> = ({ resolve, parentForm, navigate }) => {
   const { t } = useTranslation()
 
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
 
   const [open, setOpen] = useState(true)
   const verifyRef = useRef<any>(null)
@@ -50,7 +51,7 @@ const BindPhoneEmail: React.FC<Props> = ({ resolve, parentForm }) => {
   /** 登录成功 **/
   const handleLoginSuccess = () => {
     saveUserInfo().then()
-    navigate('/')
+    navigate?.('/')
   }
 
   const tabList: TabsProps['items'] = [
@@ -160,11 +161,12 @@ export default class BindPhoneEmailModal {
   static hide() {
     TopView.hide(TopViewKey)
   }
-  static show({ parentForm }: showParamsType) {
+  static show({ parentForm, navigate }: showParamsType) {
     return new Promise<any>((resolve) => {
       TopView.show(
         <BindPhoneEmail
           parentForm={parentForm}
+          navigate={navigate}
           resolve={(v) => {
             resolve(v)
             TopView.hide(TopViewKey)
