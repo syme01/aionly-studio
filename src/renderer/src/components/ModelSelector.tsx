@@ -134,7 +134,12 @@ const ModelSelector = ({
   const getAiOnlyModelOption = useCallback(
     (m: any, serviceName: string) => {
       // 构造符合 getModelUniqId 格式的 value
-      const modelValue = JSON.stringify({ id: m.model || m.baseId, provider: 'aionly' })
+      const modelValue = JSON.stringify({
+        id: m.model || m.baseId,
+        provider: 'aionly',
+        group: serviceName,
+        name: m.modelName
+      })
       return {
         label: (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
