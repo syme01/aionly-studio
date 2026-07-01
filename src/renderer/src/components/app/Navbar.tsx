@@ -1,3 +1,5 @@
+import { queryMoneyConfig } from '@renderer/api/balance'
+import bullionImage from '@renderer/assets/images/home/bullion.png'
 import { isLinux, isMac, isWin } from '@renderer/config/constant'
 import { useTheme } from '@renderer/context/ThemeProvider'
 import { useFullscreen } from '@renderer/hooks/useFullscreen'
@@ -6,10 +8,11 @@ import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useNavbarPosition } from '@renderer/hooks/useSettings'
 import { getThemeModeLabel } from '@renderer/i18n/label'
 import { ThemeMode } from '@renderer/types'
-import { Tooltip } from 'antd'
-import { Monitor, Moon, Sun } from 'lucide-react'
-import type { FC, PropsWithChildren } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { Divider, Tooltip } from 'antd'
+import { Monitor } from 'lucide-react'
 import type { HTMLAttributes } from 'react'
+import { FC, PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
@@ -26,6 +29,22 @@ export const Navbar: FC<Props> = ({ children, ...props }) => {
   const { isTopNavbar } = useNavbarPosition()
   const { minappShow } = useRuntime()
 
+  // 使用 React Query 获取余额，自动处理缓存和重复请求
+  const { data: balanceData } = useQuery({
+    queryKey: ['moneyConfig'],
+    queryFn: async () => {
+      const res = await queryMoneyConfig()
+      return res?.data
+    },
+    enabled: !isTopNavbar && !minappShow, // 只在需要显示余额时才请求
+    staleTime: 5 * 60 * 1000, // 5分钟内认为数据是新鲜的，不会重新请求
+    gcTime: 10 * 60 * 1000, // 缓存保留10分钟
+    refetchOnMount: false, // 组件挂载时不自动重新请求
+    refetchOnWindowFocus: false // 窗口聚焦时不自动重新请求
+  })
+
+  const hzBalance = balanceData?.hzBalance ? Number(balanceData.hzBalance) : 0
+
   if (isTopNavbar) {
     return null
   }
@@ -33,17 +52,29 @@ export const Navbar: FC<Props> = ({ children, ...props }) => {
   return (
     <NavbarContainer {...props} style={{ backgroundColor }} $isFullScreen={isFullscreen}>
       {children}
-      <Tooltip title={t('settings.theme.title') + ': ' + getThemeModeLabel(settedTheme)} placement="right">
-        <Icon theme={theme} onClick={toggleTheme}>
-          {settedTheme === ThemeMode.dark ? (
-            <Moon size={20} className="icon" />
-          ) : settedTheme === ThemeMode.light ? (
-            <Sun size={20} className="icon" />
-          ) : (
-            <Monitor size={20} className="icon" />
-          )}
-        </Icon>
-      </Tooltip>
+      {!minappShow && (
+        <>
+          <RechargeContainer>
+            <img className="img-bullion" src={bullionImage} alt="" />
+            <span className="money">{hzBalance.toFixed(2)}</span>
+            <Divider type="vertical" style={{ margin: '0 2px' }} />
+            <span className="pay">充值</span>
+          </RechargeContainer>
+          <Tooltip title={t('settings.theme.title') + ': ' + getThemeModeLabel(settedTheme)} placement="bottom">
+            <Icon theme={theme} onClick={toggleTheme}>
+              {settedTheme === ThemeMode.dark ? (
+                /*<Moon size={20} className="icon" />*/
+                <i className="icon iconfont icon-yueliang"></i>
+              ) : settedTheme === ThemeMode.light ? (
+                /* <Sun size={20} className="icon" />*/
+                <i className="icon iconfont icon-ai250"></i>
+              ) : (
+                <Monitor size={20} className="icon" />
+              )}
+            </Icon>
+          </Tooltip>
+        </>
+      )}
       {!minappShow && <WindowControls />}
     </NavbarContainer>
   )
@@ -83,6 +114,7 @@ const NavbarContainer = styled.div<{ $isFullScreen: boolean }>`
   min-width: 100%;
   display: flex;
   flex-direction: row;
+  align-items: center;
   min-height: ${({ $isFullScreen }) => (!$isFullScreen && isMac ? 'env(titlebar-area-height)' : 'var(--navbar-height)')};
   max-height: var(--navbar-height);
   margin-left: ${isMac ? 'calc(var(--sidebar-width) * -1 + 2px)' : 0};
@@ -146,8 +178,8 @@ const NavbarHeaderContent = styled.div`
 `
 
 const Icon = styled.div<{ theme: string }>`
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -157,6 +189,9 @@ const Icon = styled.div<{ theme: string }>`
   border: 0.5px solid transparent;
   .icon {
     color: var(--color-icon);
+    &.icon-ai250{
+      font-size: 18px;
+    }
   }
   &:hover {
     background-color: ${({ theme }) => (theme === 'dark' ? 'var(--color-black)' : 'var(--color-white)')};
@@ -184,5 +219,30 @@ const Icon = styled.div<{ theme: string }>`
     100% {
       opacity: 0.1;
     }
+  }
+`
+const RechargeContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 4px 12px;
+  max-height: var(--navbar-height);
+  border-color: rgba(255, 255, 255, 0);
+  border-radius: 6px;
+  box-shadow: 0 0 6px var(--color-white) inset;
+  color: #ff6000;
+  font-weight: 600;
+  margin: 1px 10px 0 0;
+  cursor: pointer;
+  -webkit-app-region: none;
+
+  &:hover {
+    color: #f00;
+  }
+
+  .img-bullion {
+    width: 18px;
+    height: 18px;
   }
 `

@@ -14,7 +14,7 @@ interface ThemeContextType {
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-  theme: ThemeMode.system,
+  theme: ThemeMode.light,
   settedTheme: ThemeMode.dark,
   toggleTheme: () => {},
   setTheme: () => {}
@@ -40,12 +40,18 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const { navbarPosition } = useNavbarPosition()
 
   const toggleTheme = () => {
-    const nextTheme = {
+    /*const nextTheme = {
       [ThemeMode.light]: ThemeMode.dark,
       [ThemeMode.dark]: ThemeMode.system,
       [ThemeMode.system]: ThemeMode.light
     }[settedTheme]
-    setSettedTheme(nextTheme || ThemeMode.system)
+    setSettedTheme(nextTheme || ThemeMode.system)*/
+
+    const nextTheme = {
+      [ThemeMode.light]: ThemeMode.dark,
+      [ThemeMode.dark]: ThemeMode.light
+    }[settedTheme]
+    setSettedTheme(nextTheme || ThemeMode.light)
   }
 
   useEffect(() => {

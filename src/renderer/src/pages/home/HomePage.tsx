@@ -118,7 +118,7 @@ const HomePage: FC = () => {
   }, [showAssistants, showTopics, topicPosition])
 
   return (
-    <Container id="home-page">
+    <Container id="home-page" className="page-container">
       {isLeftNavbar && (
         <Navbar
           activeAssistant={activeAssistant}

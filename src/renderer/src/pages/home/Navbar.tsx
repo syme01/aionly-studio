@@ -1,23 +1,23 @@
 import { Navbar, NavbarCenter, NavbarLeft, NavbarRight } from '@renderer/components/app/Navbar'
-import { HStack } from '@renderer/components/Layout'
+// import { HStack } from '@renderer/components/Layout'
 import SearchPopup from '@renderer/components/Popups/SearchPopup'
-import { modelGenerating } from '@renderer/hooks/useRuntime'
-import { useSettings } from '@renderer/hooks/useSettings'
+// import { modelGenerating } from '@renderer/hooks/useRuntime'
+// import { useSettings } from '@renderer/hooks/useSettings'
 import { useShortcut } from '@renderer/hooks/useShortcuts'
-import { useShowAssistants, useShowTopics } from '@renderer/hooks/useStore'
-import { useAppDispatch } from '@renderer/store'
-import { setNarrowMode } from '@renderer/store/settings'
+import { useShowAssistants /*useShowTopics*/ } from '@renderer/hooks/useStore'
+// import { useAppDispatch } from '@renderer/store'
+// import { setNarrowMode } from '@renderer/store/settings'
 import type { Assistant, Topic } from '@renderer/types'
 import { Tooltip } from 'antd'
 import { t } from 'i18next'
-import { Menu, PanelLeftClose, PanelRightClose, Search } from 'lucide-react'
+import { Menu, /*PanelLeftClose,*/ PanelRightClose /*Search*/ } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import type { FC } from 'react'
-import styled from 'styled-components'
 
+// import styled from 'styled-components'
 import NavbarIcon from '../../components/NavbarIcon'
 import AssistantsDrawer from './components/AssistantsDrawer'
-import UpdateAppButton from './components/UpdateAppButton'
+// import UpdateAppButton from './components/UpdateAppButton'
 
 interface Props {
   activeAssistant: Assistant
@@ -29,18 +29,18 @@ interface Props {
 
 const HeaderNavbar: FC<Props> = ({ activeAssistant, setActiveAssistant, activeTopic, setActiveTopic }) => {
   const { showAssistants, toggleShowAssistants } = useShowAssistants()
-  const { topicPosition, narrowMode } = useSettings()
-  const { showTopics, toggleShowTopics } = useShowTopics()
-  const dispatch = useAppDispatch()
+  // const { topicPosition, narrowMode } = useSettings()
+  // const { showTopics, toggleShowTopics } = useShowTopics()
+  // const dispatch = useAppDispatch()
 
   useShortcut('search_message', () => {
     void SearchPopup.show()
   })
 
-  const handleNarrowModeToggle = async () => {
+  /*const handleNarrowModeToggle = async () => {
     await modelGenerating()
     dispatch(setNarrowMode(!narrowMode))
-  }
+  }*/
 
   const onShowAssistantsDrawer = () => {
     void AssistantsDrawer.show({
@@ -53,7 +53,7 @@ const HeaderNavbar: FC<Props> = ({ activeAssistant, setActiveAssistant, activeTo
 
   return (
     <Navbar className="home-navbar">
-      <AnimatePresence initial={false}>
+      {/*<AnimatePresence initial={false}>
         {showAssistants && (
           <motion.div
             initial={{ width: 0, opacity: 0 }}
@@ -70,7 +70,7 @@ const HeaderNavbar: FC<Props> = ({ activeAssistant, setActiveAssistant, activeTo
             </NavbarLeft>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>*/}
       {!showAssistants && (
         <NavbarLeft
           style={{
@@ -99,7 +99,7 @@ const HeaderNavbar: FC<Props> = ({ activeAssistant, setActiveAssistant, activeTo
           </AnimatePresence>
         </NavbarLeft>
       )}
-      <NavbarCenter></NavbarCenter>
+      <NavbarCenter>{t('assistants.title')}</NavbarCenter>
       <NavbarRight
         style={{
           justifyContent: 'flex-end',
@@ -108,7 +108,7 @@ const HeaderNavbar: FC<Props> = ({ activeAssistant, setActiveAssistant, activeTo
           paddingRight: '15px'
         }}
         className="home-navbar-right">
-        <HStack alignItems="center" gap={6}>
+        {/*<HStack alignItems="center" gap={6}>
           <UpdateAppButton />
           <Tooltip title={t('chat.assistant.search.placeholder')} mouseEnterDelay={0.8}>
             <NarrowIcon onClick={() => SearchPopup.show()}>
@@ -134,16 +134,16 @@ const HeaderNavbar: FC<Props> = ({ activeAssistant, setActiveAssistant, activeTo
               </NavbarIcon>
             </Tooltip>
           )}
-        </HStack>
+        </HStack>*/}
       </NavbarRight>
     </Navbar>
   )
 }
 
-const NarrowIcon = styled(NavbarIcon)`
+/*const NarrowIcon = styled(NavbarIcon)`
   @media (max-width: 1000px) {
     display: none;
   }
-`
+`*/
 
 export default HeaderNavbar
