@@ -71,7 +71,12 @@ const PopupContainer: React.FC<Props> = ({ provider, resolve, reject }) => {
         placeholder={i18n.t('settings.models.empty')}
         style={{ width: '100%' }}
         onChange={(value) => {
-          setModel(models.find((m) => value === getModelUniqId(m)))
+          // console.log('value', value)
+          // console.log('models', models)
+          const model =
+            typeof value === 'string' && value.startsWith('{') && value.endsWith('}') ? JSON.parse(value) : value
+          setModel(model)
+          // setModel(models.find((m) => value === getModelUniqId(m)))
         }}
       />
     </Modal>
