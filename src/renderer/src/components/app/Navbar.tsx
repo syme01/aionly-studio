@@ -45,6 +45,9 @@ export const Navbar: FC<Props> = ({ children, ...props }) => {
 
   const hzBalance = balanceData?.hzBalance ? Number(balanceData.hzBalance) : 0
 
+  // TODO: 余额充值
+  const handleToRecharge = () => {}
+
   if (isTopNavbar) {
     return null
   }
@@ -54,11 +57,11 @@ export const Navbar: FC<Props> = ({ children, ...props }) => {
       {children}
       {!minappShow && (
         <>
-          <RechargeContainer>
+          <RechargeContainer onClick={handleToRecharge}>
             <img className="img-bullion" src={bullionImage} alt="" />
             <span className="money">{hzBalance.toFixed(2)}</span>
             <Divider type="vertical" style={{ margin: '0 2px' }} />
-            <span className="pay">充值</span>
+            <span className="pay">{t('settings.provider.oauth.topup')}</span>
           </RechargeContainer>
           <Tooltip title={t('settings.theme.title') + ': ' + getThemeModeLabel(settedTheme)} placement="bottom">
             <Icon theme={theme} onClick={toggleTheme}>

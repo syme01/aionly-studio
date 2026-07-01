@@ -5,14 +5,15 @@ import type { FC } from 'react'
 import styled from 'styled-components'
 
 const StyledButton = styled(Button)`
-  height: 36px;
-  min-height: 36px;
-  width: calc(var(--assistants-width) - 20px);
+  height: 32px;
+  min-height: 32px;
+  //width: calc(var(--assistants-width) - 20px);
   justify-content: flex-start;
-  border-radius: var(--list-item-border-radius);
+  border-radius: var(--base-border-radius);
   padding: 0 12px;
   font-size: 13px;
-  color: var(--color-text-2);
+  color: var(--color-text-1);
+  background-color: var(--color-list-item);
 
   &:hover {
     background-color: var(--color-list-item);

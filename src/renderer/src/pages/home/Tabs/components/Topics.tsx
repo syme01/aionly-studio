@@ -1,4 +1,4 @@
-import AddButton from '@renderer/components/AddButton'
+// import AddButton from '@renderer/components/AddButton'
 import AssistantAvatar from '@renderer/components/Avatar/AssistantAvatar'
 import type { DraggableVirtualListRef } from '@renderer/components/DraggableList'
 import { DraggableVirtualList } from '@renderer/components/DraggableList'
@@ -43,7 +43,7 @@ import {
   CheckSquare,
   FolderOpen,
   HelpCircle,
-  ListChecks,
+  // ListChecks,
   MenuIcon,
   NotebookPen,
   PackagePlus,
@@ -81,7 +81,7 @@ export const Topics: React.FC<Props> = ({ assistant: _assistant, activeTopic, se
   const topicFulfilledQuery = useSelector((state: RootState) => state.messages.fulfilledByTopic)
   const newlyRenamedTopics = useSelector((state: RootState) => state.runtime.chat.newlyRenamedTopics)
 
-  const borderRadius = showTopicTime ? 12 : 'var(--list-item-border-radius)'
+  const borderRadius = showTopicTime ? 12 : 'var(--base-border-radius)'
 
   const [deletingTopicId, setDeletingTopicId] = useState<string | null>(null)
   const deleteTimerRef = useRef<NodeJS.Timeout>(null)
@@ -90,7 +90,7 @@ export const Topics: React.FC<Props> = ({ assistant: _assistant, activeTopic, se
 
   // 管理模式状态
   const manageState = useTopicManageMode()
-  const { isManageMode, selectedIds, searchText, enterManageMode, exitManageMode, toggleSelectTopic } = manageState
+  const { isManageMode, selectedIds, searchText, /*enterManageMode, exitManageMode,*/ toggleSelectTopic } = manageState
 
   const { startEdit, isEditing, inputProps } = useInPlaceEdit({
     onSave: (name: string) => {
@@ -570,7 +570,7 @@ export const Topics: React.FC<Props> = ({ assistant: _assistant, activeTopic, se
         itemContainerStyle={{ paddingBottom: '8px' }}
         header={
           <HeaderRow>
-            <AddButton onClick={() => EventEmitter.emit(EVENT_NAMES.ADD_NEW_TOPIC)}>
+            {/*<AddButton onClick={() => EventEmitter.emit(EVENT_NAMES.ADD_NEW_TOPIC)}>
               {t('chat.add.topic.title')}
             </AddButton>
             <Tooltip title={t('chat.topics.manage.title')} mouseEnterDelay={0.5}>
@@ -579,7 +579,7 @@ export const Topics: React.FC<Props> = ({ assistant: _assistant, activeTopic, se
                 className={isManageMode ? 'active' : ''}>
                 <ListChecks size={14} />
               </HeaderIconButton>
-            </Tooltip>
+            </Tooltip>*/}
           </HeaderRow>
         }
         disabled={isManageMode}>
@@ -722,7 +722,7 @@ export const Topics: React.FC<Props> = ({ assistant: _assistant, activeTopic, se
 
 const TopicListItem = styled.div`
   padding: 7px 12px;
-  border-radius: var(--list-item-border-radius);
+  border-radius: var(--base-border-radius);
   font-size: 13px;
   display: flex;
   flex-direction: column;
@@ -747,6 +747,7 @@ const TopicListItem = styled.div`
   &.active {
     background-color: var(--color-list-item);
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    color: var(--color-primary);
     .menu {
       opacity: 1;
 
@@ -876,7 +877,7 @@ const HeaderRow = styled.div`
   margin-top: 2px;
 `
 
-const HeaderIconButton = styled.div`
+/*const HeaderIconButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -901,7 +902,7 @@ const HeaderIconButton = styled.div`
       background-color: var(--color-background-mute);
     }
   }
-`
+`*/
 
 const SelectIcon = styled.div`
   display: flex;

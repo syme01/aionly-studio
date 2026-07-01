@@ -7,8 +7,10 @@ import type { FC } from 'react'
 import { useMemo } from 'react'
 
 import ModelAvatar from './ModelAvatar'
+// import {cn} from "@renderer/utils";
 
 interface AssistantAvatarProps {
+  isActive?: boolean
   assistant: Assistant
   size?: number
   className?: string
@@ -25,6 +27,7 @@ const AssistantAvatar: FC<AssistantAvatarProps> = ({ assistant, size = 24, class
   }
 
   if (assistantIconType === 'emoji') {
+    // return <i className={cn('iconfont icon-a-yunguanzhinengzhushou2x', isActive && 'text-(--color-primary)', className)}></i>
     return <EmojiIcon emoji={assistant.emoji || getLeadingEmoji(assistantName)} size={size} className={className} />
   }
 

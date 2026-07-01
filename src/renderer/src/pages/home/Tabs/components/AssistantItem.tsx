@@ -161,11 +161,14 @@ const AssistantItem: FC<AssistantItemProps> = ({
         onMouseLeave={() => setIsHovered(false)}>
         <AssistantNameRow className="name" title={fullAssistantName}>
           <AssistantAvatar
+            isActive={isActive}
             assistant={assistant}
             size={24}
             className={isPending && !isActive ? 'animation-pulse' : ''}
           />
-          <AssistantName className="text-nowrap">{assistantName}</AssistantName>
+          <AssistantName className={isActive ? 'text-nowrap text-(--color-primary)' : 'text-nowrap'}>
+            {assistantName}
+          </AssistantName>
         </AssistantNameRow>
         {(isActive || isHovered) && (
           <Dropdown
@@ -173,7 +176,10 @@ const AssistantItem: FC<AssistantItemProps> = ({
             trigger={['click']}
             popupRender={(menu) => <div onPointerDown={(e) => e.stopPropagation()}>{menu}</div>}>
             <MenuButton onClick={handleMenuButtonClick}>
-              <MoreVertical size={14} className="text-(--color-text-secondary)" />
+              <MoreVertical
+                size={14}
+                className={isActive ? 'text-(--color-primary)' : 'text-(--color-text-secondary)'}
+              />
             </MenuButton>
           </Dropdown>
         )}
@@ -398,7 +404,7 @@ const Container = ({
   <div
     {...props}
     className={cn(
-      'relative flex h-9.25 w-[calc(var(--assistants-width)-20px)] cursor-pointer flex-row justify-between rounded-(--list-item-border-radius) border-[0.5px] border-transparent px-2',
+      'relative flex h-9.25 w-[calc(var(--assistants-width)-20px)] cursor-pointer flex-row justify-between rounded-(--base-border-radius) border-[0.5px] border-transparent px-2',
       !isActive && 'hover:bg-(--color-list-item-hover)',
       isActive && 'bg-(--color-list-item) shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]',
       className
@@ -439,7 +445,7 @@ const MenuButton = ({
   <div
     {...props}
     className={cn(
-      'absolute top-1.5 right-2.25 flex h-5.5 min-h-5.5 min-w-5.5 flex-row items-center justify-center rounded-[11px] border-(--color-border) border-[0.5px] bg-(--color-background) px-1.25',
+      'absolute top-1.5 right-2.25 flex h-5.5 min-h-5.5 min-w-5.5 flex-row items-center justify-center px-1.25',
       className
     )}>
     {children}

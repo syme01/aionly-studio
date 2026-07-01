@@ -273,7 +273,7 @@ export const initialState: SettingsState = {
   launchToTray: false,
   trayOnClose: true,
   tray: true,
-  theme: ThemeMode.system,
+  theme: ThemeMode.light,
   userTheme: {
     colorPrimary: '#1677ff',
     userFontFamily: '',

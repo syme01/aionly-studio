@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import * as tinyPinyin from 'tiny-pinyin'
 
-import AssistantAddButton from './components/AssistantAddButton'
+// import AssistantAddButton from './components/AssistantAddButton'
 import { AssistantList } from './components/AssistantList'
 import { AssistantTagGroups } from './components/AssistantTagGroups'
 
@@ -30,7 +30,7 @@ const selectTagsOrder = createSelector(
 )
 
 const AssistantsTab: FC<AssistantsTabProps> = (props) => {
-  const { activeAssistant, setActiveAssistant, onCreateAssistant, onCreateDefaultAssistant } = props
+  const { activeAssistant, setActiveAssistant, /*onCreateAssistant, */ onCreateDefaultAssistant } = props
   const containerRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation()
 
@@ -134,7 +134,7 @@ const AssistantsTab: FC<AssistantsTabProps> = (props) => {
 
   return (
     <Container className="assistants-tab" ref={containerRef}>
-      <AssistantAddButton onCreateAssistant={onCreateAssistant} />
+      {/*<AssistantAddButton onCreateAssistant={onCreateAssistant} />*/}
 
       {assistantsTabSortType === 'tags' ? (
         <AssistantTagGroups

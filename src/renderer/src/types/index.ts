@@ -544,6 +544,7 @@ export enum ThemeMode {
 /** 有限的UI语言 */
 export type LanguageVarious =
   | 'zh-CN'
+  | 'zh-HK'
   | 'zh-TW'
   | 'de-DE'
   | 'el-GR'

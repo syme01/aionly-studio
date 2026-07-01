@@ -167,13 +167,6 @@ const Chat: FC<Props> = (props) => {
             justify="space-between"
             style={{ height: mainHeight, width: '100%' }}>
             <QuickPanelProvider>
-              <ChatNavbar
-                activeAssistant={props.assistant}
-                activeTopic={props.activeTopic}
-                setActiveTopic={props.setActiveTopic}
-                setActiveAssistant={props.setActiveAssistant}
-                position="left"
-              />
               <div
                 className="flex flex-1 flex-col justify-between"
                 style={{ height: `calc(${mainHeight} - var(--navbar-height))` }}>
@@ -193,7 +186,16 @@ const Chat: FC<Props> = (props) => {
                   onIncludeUserChange={userOutlinedItemClickHandler}
                 />
                 {messageNavigation === 'buttons' && <ChatNavigation containerId="messages" />}
-                <Inputbar assistant={assistant} setActiveTopic={props.setActiveTopic} topic={props.activeTopic} />
+                <BottomFixedArea>
+                  <ChatNavbar
+                    activeAssistant={props.assistant}
+                    activeTopic={props.activeTopic}
+                    setActiveTopic={props.setActiveTopic}
+                    setActiveAssistant={props.setActiveAssistant}
+                    position="left"
+                  />
+                  <Inputbar assistant={assistant} setActiveTopic={props.setActiveTopic} topic={props.activeTopic} />
+                </BottomFixedArea>
                 {isMultiSelectMode && <MultiSelectActionPopup topic={props.activeTopic} />}
               </div>
             </QuickPanelProvider>
@@ -228,9 +230,11 @@ const Chat: FC<Props> = (props) => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100vh - var(--navbar-height));
+  height: calc(100vh - var(--navbar-height) - 10px);
   flex: 1;
   overflow: hidden;
+  background-color: var(--color-background);
+  border-radius: var(--base-border-radius);
   [navbar-position='top'] & {
     height: calc(100vh - var(--navbar-height) - 6px);
     background-color: var(--color-background);
@@ -245,6 +249,13 @@ const Main = styled(Flex)`
   }
   transform: translateZ(0);
   position: relative;
+`
+
+const BottomFixedArea = styled.div`
+  flex-shrink: 0;  // 不会被压缩
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
 `
 
 export default Chat

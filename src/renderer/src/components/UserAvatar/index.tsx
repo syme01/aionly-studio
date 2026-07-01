@@ -6,7 +6,7 @@ import { modelGenerating, useRuntime } from '@renderer/hooks/useRuntime'
 import { getSidebarIconLabel } from '@renderer/i18n/label'
 import { useAppDispatch, useAppSelector } from '@renderer/store'
 import { clearToken, selectUserInfo } from '@renderer/store/user'
-import { Avatar, Modal, Popover } from 'antd'
+import { Avatar, Popover } from 'antd'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -86,32 +86,14 @@ const UserAvatar: React.FC<Props> = () => {
   const { pathname } = useLocation()
   const { minappShow } = useRuntime()
 
-  // const [hzBalance, setHzBalance] = useState(0)
-
   const menus = SHOW_IN_USER_MENUS
-
-  /*const to = async (path: string) => {
-    await modelGenerating()
-    navigate(path)
-  }*/
-
-  /*const fetchMoneyConfig = useCallback(async () => {
-    const res = await queryMoneyConfig()
-    const data = res?.data
-    const hzBalance = data?.hzBalance ? Number(data.hzBalance) : 0
-    setHzBalance(hzBalance)
-  }, [])
-
-  useEffect(() => {
-    fetchMoneyConfig()
-  }, [fetchMoneyConfig])*/
 
   const handleLogout = (module: string) => {
     const title = `${module}.tip`
     const content = `${module}.confirm`
     const okText = `${module}.ok`
     const cancelText = `${module}.cancel`
-    Modal.confirm({
+    window.modal.confirm({
       centered: true,
       title: t(title),
       content: t(content),

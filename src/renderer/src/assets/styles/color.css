@@ -25,6 +25,7 @@
   --color-primary: #1677ff;
   --color-primary-soft: #1677ff99;
   --color-primary-mute: #1677ff33;
+  --color-primary-plain: #e5eeff;
 
   --color-text: var(--color-text-1);
   --color-text-secondary: rgba(235, 235, 245, 0.7);
@@ -140,7 +141,7 @@
 }
 
 [navbar-position='left'][theme-mode='light'] {
-  --color-list-item: #eee;
+  --color-list-item: #e5eeff;
   --color-list-item-hover: #f5f5f5;
 }
 

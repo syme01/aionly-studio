@@ -18,7 +18,8 @@ import styled from 'styled-components'
 
 import Chat from './Chat'
 import Navbar from './Navbar'
-import HomeTabs from './Tabs'
+// import HomeTabs from './Tabs'
+import HomePanel from './Panel'
 
 let _activeAssistant: Assistant
 
@@ -138,7 +139,15 @@ const HomePage: FC = () => {
                 exit={{ width: 0, opacity: 0 }}
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                 style={{ overflow: 'hidden' }}>
-                <HomeTabs
+                {/*<HomeTabs
+                  activeAssistant={activeAssistant}
+                  activeTopic={activeTopic}
+                  setActiveAssistant={setActiveAssistant}
+                  setActiveTopic={setActiveTopic}
+                  position="left"
+                />*/}
+
+                <HomePanel
                   activeAssistant={activeAssistant}
                   activeTopic={activeTopic}
                   setActiveAssistant={setActiveAssistant}
@@ -178,6 +187,7 @@ const ContentContainer = styled.div`
   display: flex;
   flex: 1;
   flex-direction: row;
+  gap: 8px;
   overflow: hidden;
 
   [navbar-position='top'] & {

@@ -11,6 +11,7 @@ import { useShortcut } from '@renderer/hooks/useShortcuts'
 import { useTimer } from '@renderer/hooks/useTimer'
 import { autoRenameTopic } from '@renderer/hooks/useTopic'
 import SelectionBox from '@renderer/pages/home/Messages/SelectionBox'
+import Welcome from '@renderer/pages/home/Messages/Welcome'
 import { getDefaultTopic } from '@renderer/services/AssistantService'
 import { EVENT_NAMES, EventEmitter } from '@renderer/services/EventService'
 import { getContextCount, getGroupedMessages, getUserMessage } from '@renderer/services/MessagesService'
@@ -40,7 +41,7 @@ import styled from 'styled-components'
 import MessageAnchorLine from './MessageAnchorLine'
 import MessageGroup from './MessageGroup'
 import NarrowLayout from './NarrowLayout'
-import Prompt from './Prompt'
+// import Prompt from './Prompt'
 import { MessagesContainer, ScrollContainer } from './shared'
 
 interface MessagesProps {
@@ -63,7 +64,7 @@ const Messages: React.FC<MessagesProps> = ({ assistant, topic, setActiveTopic, o
   const [isProcessingContext, setIsProcessingContext] = useState(false)
 
   const { addTopic } = useAssistant(assistant.id)
-  const { showPrompt, messageNavigation } = useSettings()
+  const { /*showPrompt,*/ messageNavigation } = useSettings()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const messages = useTopicMessages(topic.id)
@@ -335,8 +336,9 @@ const Messages: React.FC<MessagesProps> = ({ assistant, topic, setActiveTopic, o
           </ContextMenu>
         </InfiniteScroll>
 
-        {showPrompt && <Prompt assistant={assistant} key={assistant.prompt} topic={topic} />}
+        {/*{showPrompt && <Prompt assistant={assistant} key={assistant.prompt} topic={topic} />}*/}
       </NarrowLayout>
+      {displayMessages.length === 0 && <Welcome />}
       {messageNavigation === 'anchor' && <MessageAnchorLine messages={displayMessages} />}
       <SelectionBox
         isMultiSelectMode={isMultiSelectMode}
