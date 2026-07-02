@@ -118,7 +118,8 @@ const KnowledgeBaseButton: FC<Props> = ({ quickPanel, selectedBases, onSelect, d
         active={selectedBases && selectedBases.length > 0}
         disabled={disabled}
         aria-label={t('chat.input.knowledge_base')}>
-        <FileSearch size={18} />
+        {/*<FileSearch size={18} />*/}
+        <i className="iconfont icon-zhishiku" style={{ fontSize: '18px' }}></i>
       </ActionIconButton>
     </Tooltip>
   )

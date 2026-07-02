@@ -1,24 +1,24 @@
-import { CheckOutlined } from '@ant-design/icons'
-import { loggerService } from '@logger'
+// import { CheckOutlined } from '@ant-design/icons'
+// import { loggerService } from '@logger'
 import ThinkingEffect from '@renderer/components/ThinkingEffect'
 import { useSettings } from '@renderer/hooks/useSettings'
-import { useTemporaryValue } from '@renderer/hooks/useTemporaryValue'
+// import { useTemporaryValue } from '@renderer/hooks/useTemporaryValue'
 import { MessageBlockStatus, type ThinkingMessageBlock } from '@renderer/types/newMessage'
-import { Collapse, Tooltip } from 'antd'
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Collapse /*Tooltip*/ } from 'antd'
+import { memo, /*useCallback,*/ useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import Markdown from '../../Markdown/Markdown'
 
-const logger = loggerService.withContext('ThinkingBlock')
+// const logger = loggerService.withContext('ThinkingBlock')
 interface Props {
   block: ThinkingMessageBlock
 }
 
 const ThinkingBlock: React.FC<Props> = ({ block }) => {
-  const [copied, setCopied] = useTemporaryValue(false, 2000)
-  const { t } = useTranslation()
+  // const [copied, setCopied] = useTemporaryValue(false, 2000)
+  // const { t } = useTranslation()
   const { messageFont, fontSize, thoughtAutoCollapse } = useSettings()
   const [activeKey, setActiveKey] = useState<'thought' | ''>(thoughtAutoCollapse ? '' : 'thought')
 
@@ -32,7 +32,7 @@ const ThinkingBlock: React.FC<Props> = ({ block }) => {
     }
   }, [isThinking, thoughtAutoCollapse])
 
-  const copyThought = useCallback(() => {
+  /*const copyThought = useCallback(() => {
     if (block.content) {
       navigator.clipboard
         .writeText(block.content)
@@ -45,7 +45,7 @@ const ThinkingBlock: React.FC<Props> = ({ block }) => {
           window.toast.error({ title: t('message.copy.failed'), key: 'copy-message-error' })
         })
     }
-  }, [block.content, setCopied, t])
+  }, [block.content, setCopied, t])*/
 
   if (!block.content) {
     return null
@@ -78,7 +78,7 @@ const ThinkingBlock: React.FC<Props> = ({ block }) => {
                 fontFamily: messageFont === 'serif' ? 'var(--font-family-serif)' : 'var(--font-family)',
                 fontSize
               }}>
-              {!isThinking && (
+              {/*{!isThinking && (
                 <Tooltip title={t('common.copy')} mouseEnterDelay={0.8}>
                   <ActionButton
                     className="message-action-button"
@@ -91,7 +91,7 @@ const ThinkingBlock: React.FC<Props> = ({ block }) => {
                     {copied && <CheckOutlined style={{ color: 'var(--color-primary)' }} />}
                   </ActionButton>
                 </Tooltip>
-              )}
+              )}*/}
               <Markdown block={block} />
             </ThinkingContent>
           ),
@@ -170,24 +170,27 @@ const ThinkingTimeSeconds = memo(
 )
 
 const CollapseContainer = styled(Collapse)`
-  margin-bottom: 15px;
+  // margin-bottom: 15px;
   .ant-collapse-header {
     padding: 0 !important;
+    color: red;
   }
   .ant-collapse-content-box {
-    padding: 16px !important;
-    border-width: 0 0.5px 0.5px 0.5px;
-    border-style: solid;
-    border-color: var(--color-border);
-    border-radius: 0 0 12px 12px;
+    padding: 0 0 0 10px !important;
+    // border-width: 0 0.5px 0.5px 0.5px;
+    border-left: 1px solid var(--color-border);
   }
 `
 
 const ThinkingContent = styled.div`
   position: relative;
+  .markdown{
+    color: var(--color-text-3);
+    font-size: 12px;
+  }
 `
 
-const ActionButton = styled.button`
+/*const ActionButton = styled.button`
   background: none;
   border: none;
   color: var(--color-text-2);
@@ -216,6 +219,6 @@ const ActionButton = styled.button`
   .iconfont {
     font-size: 14px;
   }
-`
+`*/
 
 export default memo(ThinkingBlock)

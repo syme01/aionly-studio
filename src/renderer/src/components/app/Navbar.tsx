@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Divider, Tooltip } from 'antd'
 import { Monitor } from 'lucide-react'
 import type { HTMLAttributes } from 'react'
-import { FC, PropsWithChildren } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 

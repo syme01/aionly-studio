@@ -2,6 +2,7 @@ import { cn } from '@renderer/utils'
 import type { ButtonProps } from 'antd'
 import { Button } from 'antd'
 import React, { memo } from 'react'
+import styled from 'styled-components'
 
 interface ActionIconButtonProps extends ButtonProps {
   children: React.ReactNode
@@ -13,7 +14,7 @@ interface ActionIconButtonProps extends ButtonProps {
  */
 const ActionIconButton: React.FC<ActionIconButtonProps> = ({ children, active, className, ...props }) => {
   return (
-    <Button
+    <StyleButton
       type="text"
       shape="circle"
       className={cn(
@@ -24,8 +25,13 @@ const ActionIconButton: React.FC<ActionIconButtonProps> = ({ children, active, c
       )}
       {...props}>
       {children}
-    </Button>
+    </StyleButton>
   )
 }
+
+const StyleButton = styled(Button)`
+  background-color: var(--color-gray-5);
+  border-radius: var(--base-border-radius) !important;
+`
 
 export default memo(ActionIconButton)

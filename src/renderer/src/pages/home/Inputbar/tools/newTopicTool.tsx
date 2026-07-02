@@ -2,7 +2,7 @@ import { ActionIconButton } from '@renderer/components/Buttons'
 import { useShortcutDisplay } from '@renderer/hooks/useShortcuts'
 import { defineTool, registerTool, TopicType } from '@renderer/pages/home/Inputbar/types'
 import { Tooltip } from 'antd'
-import { MessageSquareDiff } from 'lucide-react'
+// import { MessageSquareDiff } from 'lucide-react'
 
 const newTopicTool = defineTool({
   key: 'new_topic',
@@ -25,7 +25,8 @@ const newTopicTool = defineTool({
         mouseLeaveDelay={0}
         arrow>
         <ActionIconButton onClick={actions.addNewTopic}>
-          <MessageSquareDiff size={19} />
+          <i className="iconfont icon-xinhuati" style={{ fontSize: '19px' }}></i>
+          {/*<MessageSquareDiff size={19} />*/}
         </ActionIconButton>
       </Tooltip>
     )

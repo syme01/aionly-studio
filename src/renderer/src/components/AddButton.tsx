@@ -13,7 +13,7 @@ const StyledButton = styled(Button)`
   padding: 0 12px;
   font-size: 13px;
   color: var(--color-text-1);
-  background-color: var(--color-list-item);
+  background-color: var(--color-gray-4);
 
   &:hover {
     background-color: var(--color-list-item);

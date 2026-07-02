@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'iconfont'; /* Project id 5193624 */
   src:
-    url('iconfont.woff2?t=1782801751068') format('woff2'),
-    url('iconfont.woff?t=1782801751068') format('woff'),
-    url('iconfont.ttf?t=1782801751068') format('truetype');
+    url('iconfont.woff2?t=1782960114446') format('woff2'),
+    url('iconfont.woff?t=1782960114446') format('woff'),
+    url('iconfont.ttf?t=1782960114446') format('truetype');
 }
 
 .iconfont {
@@ -12,6 +12,14 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-fasongguanli:before {
+  content: '\e614';
+}
+
+.icon-MCPbushu:before {
+  content: '\e799';
 }
 
 .icon-daima:before {

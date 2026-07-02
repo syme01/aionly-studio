@@ -220,13 +220,17 @@ const InputbarTools = ({ scope, assistant, model, session }: InputbarToolsNewPro
       .filter(Boolean) as ToolConfig[]
   }, [toolMetadata, toolOrder.hidden])
 
-  const showDivider = useMemo(() => {
+  /*const showDivider = useMemo(() => {
     return hiddenTools.length > 0 && visibleTools.length > 0
-  }, [hiddenTools, visibleTools])
+  }, [hiddenTools, visibleTools])*/
 
-  const showCollapseButton = useMemo(() => {
+  const showDivider = false
+
+  /*const showCollapseButton = useMemo(() => {
     return hiddenTools.length > 0
-  }, [hiddenTools])
+  }, [hiddenTools])*/
+
+  const showCollapseButton = false
 
   const toggleToolVisibility = useCallback(
     (toolKey: InputBarToolType, isVisible: boolean | undefined) => {

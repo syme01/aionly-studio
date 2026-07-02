@@ -251,7 +251,8 @@ const QuickPhrasesButton = ({ quickPanel, setInputValue, resizeTextArea, assista
     <>
       <Tooltip placement="top" title={t('settings.quickPhrase.title')} mouseLeaveDelay={0} arrow>
         <ActionIconButton onClick={handleOpenQuickPanel} aria-label={t('settings.quickPhrase.title')}>
-          <Zap size={18} />
+          {/*<Zap size={18} />*/}
+          <i className="iconfont icon-kuaijieduanyu" style={{ fontSize: '18px' }}></i>
         </ActionIconButton>
       </Tooltip>
 

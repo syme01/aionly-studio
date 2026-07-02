@@ -3,7 +3,7 @@ import { loggerService } from '@logger'
 import { ActionIconButton } from '@renderer/components/Buttons'
 import type { QuickPanelTriggerInfo } from '@renderer/components/QuickPanel'
 import { QuickPanelReservedSymbol, QuickPanelView, useQuickPanel } from '@renderer/components/QuickPanel'
-import TranslateButton from '@renderer/components/TranslateButton'
+// import TranslateButton from '@renderer/components/TranslateButton'
 import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useSettings } from '@renderer/hooks/useSettings'
 import { useTimer } from '@renderer/hooks/useTimer'
@@ -452,13 +452,13 @@ export const InputbarCore: FC<InputbarCoreProps> = ({
     [setText, textareaRef, quickPanelTriggersEnabled, config.enableQuickPanel, quickPanel, triggers]
   )
 
-  const onTranslated = useCallback(
+  /*const onTranslated = useCallback(
     (translatedText: string) => {
       setText(translatedText)
       setTimeoutTimer('onTranslated', () => resizeTextArea(), 0)
     },
     [resizeTextArea, setText, setTimeoutTimer]
-  )
+  )*/
 
   const appendTxtContentToInput = useCallback(
     async (file: FileMetadata, event: React.MouseEvent<HTMLDivElement>) => {
@@ -606,7 +606,7 @@ export const InputbarCore: FC<InputbarCoreProps> = ({
 
   const rightSectionExtras = useMemo(() => {
     const extras: React.ReactNode[] = []
-    extras.push(
+    /*    extras.push(
       <TranslateButton
         key="translate"
         text={text}
@@ -614,7 +614,7 @@ export const InputbarCore: FC<InputbarCoreProps> = ({
         onTranslated={onTranslated}
         isLoading={isTranslating}
       />
-    )
+    )*/
     extras.push(<SendMessageButton key="send-message" sendMessage={handleSendMessage} disabled={isSendDisabled} />)
 
     if (isLoading) {
@@ -628,7 +628,9 @@ export const InputbarCore: FC<InputbarCoreProps> = ({
     }
 
     return <>{extras}</>
-  }, [text, onTranslated, isTranslating, handleSendMessage, isSendDisabled, isLoading, t, onPause])
+    // Note: text, onTranslated, isTranslating are excluded because TranslateButton is commented out
+    // Original deps when TranslateButton is enabled: [text, onTranslated, isTranslating, handleSendMessage, isSendDisabled, isLoading, t, onPause]
+  }, [handleSendMessage, isSendDisabled, isLoading, t, onPause])
 
   const quickPanelElement = config.enableQuickPanel ? <QuickPanelView setInputText={setText} /> : null
 
@@ -681,13 +683,16 @@ export const InputbarCore: FC<InputbarCoreProps> = ({
           />
 
           <BottomBar>
-            <LeftSection>{leftToolbar}</LeftSection>
+            <div></div>
             <RightSection>
               {rightToolbar}
               {rightSectionExtras}
             </RightSection>
           </BottomBar>
         </InputBarContainer>
+        <ToolBar>
+          <LeftSection>{leftToolbar}</LeftSection>
+        </ToolBar>
       </Container>
     </NarrowLayout>
   )
@@ -731,10 +736,11 @@ const Container = styled.div`
 `
 
 const InputBarContainer = styled.div`
+  display: flex;
   border: 0.5px solid var(--color-border);
   transition: all 0.2s ease;
   position: relative;
-  border-radius: 17px;
+  border-radius: 8px;
   padding-top: 8px;
   background-color: var(--color-background-opacity);
 
@@ -788,7 +794,7 @@ const BottomBar = styled.div`
 const LeftSection = styled.div`
   display: flex;
   align-items: center;
-  flex: 1;
+  // flex: 1;
   min-width: 0;
 `
 
@@ -797,4 +803,16 @@ const RightSection = styled.div`
   flex-direction: row;
   align-items: center;
   gap: 6px;
+`
+
+const ToolBar = styled.div`
+  padding: 8px 20px;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  margin: 10px auto 0;
 `

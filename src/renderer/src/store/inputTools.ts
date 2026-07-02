@@ -64,7 +64,7 @@ type InputToolsState = {
 const initialState: InputToolsState = {
   toolOrder: DEFAULT_TOOL_ORDER,
   sessionToolOrder: DEFAULT_TOOL_ORDER_BY_SCOPE[TopicType.Session],
-  isCollapsed: true
+  isCollapsed: false
 }
 
 const inputToolsSlice = createSlice({

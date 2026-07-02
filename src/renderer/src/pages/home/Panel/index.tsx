@@ -12,6 +12,7 @@ import { Button } from 'antd'
 import type { FC } from 'react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import Assistants from '../Tabs/AssistantsTab'
@@ -44,6 +45,7 @@ const HomePanel: FC<Props> = ({
   const { defaultAssistant } = useDefaultAssistant()
   const { toggleShowTopics } = useShowTopics()
   // const { isLeftNavbar } = useNavbarPosition()
+  const navigate = useNavigate()
   const { t } = useTranslation()
 
   const { theme } = useTheme()
@@ -72,6 +74,11 @@ const HomePanel: FC<Props> = ({
     const assistant = { ...defaultAssistant, id: uuid() }
     addAssistant(assistant)
     setActiveAssistant(assistant)
+  }
+
+  // TODO: 跳转角色管理
+  const handleToRole = () => {
+    navigate('/store')
   }
 
   useEffect(() => {
@@ -130,7 +137,12 @@ const HomePanel: FC<Props> = ({
           />
         </div>
         <div className="footer">
-          <PlainButton theme={theme} type="primary" block={true} icon={<i className="iconfont icon-jiaoseguanli"></i>}>
+          <PlainButton
+            theme={theme}
+            type="primary"
+            block={true}
+            icon={<i className="iconfont icon-jiaoseguanli"></i>}
+            onClick={handleToRole}>
             {t('assistants.presets.title')}
           </PlainButton>
         </div>

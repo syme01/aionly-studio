@@ -1,7 +1,7 @@
 import type { Assistant } from '@renderer/types'
 import { Drawer, Tooltip } from 'antd'
 import { t } from 'i18next'
-import { Settings2 } from 'lucide-react'
+// import { Settings2 } from 'lucide-react'
 import type { FC } from 'react'
 import { useState } from 'react'
 
@@ -19,7 +19,8 @@ const SettingsButton: FC<Props> = ({ assistant }) => {
     <>
       <Tooltip title={t('settings.title')} mouseEnterDelay={0.8}>
         <NavbarIcon onClick={() => setSettingsOpen(true)}>
-          <Settings2 size={18} />
+          {/*<Settings2 size={18} />*/}
+          <i className="iconfont icon-shezhi1"></i>
         </NavbarIcon>
       </Tooltip>
       <Drawer

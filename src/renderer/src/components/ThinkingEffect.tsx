@@ -1,5 +1,5 @@
-import { lightbulbVariants } from '@renderer/utils/motionVariants'
-import { ChevronRight, Lightbulb } from 'lucide-react'
+// import { lightbulbVariants } from '@renderer/utils/motionVariants'
+import { ChevronRight /*Lightbulb*/ } from 'lucide-react'
 import { motion } from 'motion/react'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
@@ -31,11 +31,11 @@ const ThinkingEffect: React.FC<Props> = ({ isThinking, thinkingTimeText, content
 
   return (
     <ThinkingContainer style={{ height: containerHeight }} className={expanded ? 'expanded' : ''}>
-      <LoadingContainer>
+      {/*<LoadingContainer>
         <motion.div variants={lightbulbVariants} animate={isThinking ? 'active' : 'idle'} initial="idle">
           <Lightbulb size={14} style={{ transition: 'width,height, 150ms' }} />
         </motion.div>
-      </LoadingContainer>
+      </LoadingContainer>*/}
 
       <TextContainer>
         <Title className={!showThinking || !messages.length ? 'showThinking' : ''}>{thinkingTimeText}</Title>
@@ -79,10 +79,11 @@ const ThinkingContainer = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  border: 0.5px solid var(--color-border);
+  //border: 0.5px solid var(--color-border);
   transition: height, border-radius, 150ms;
   pointer-events: none;
   user-select: none;
+  color: var(--color-text-3);
   &.expanded {
     border-radius: 10px 10px 0 0;
   }
@@ -115,7 +116,7 @@ const Title = styled.div`
   }
 `
 
-const LoadingContainer = styled.div`
+/*const LoadingContainer = styled.div`
   width: 34px;
   display: flex;
   justify-content: center;
@@ -129,7 +130,7 @@ const LoadingContainer = styled.div`
     justify-content: center;
     align-items: center;
   }
-`
+`*/
 
 const TextContainer = styled.div`
   flex: 1;

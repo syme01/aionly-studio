@@ -7,7 +7,7 @@ import { useProvider } from '@renderer/hooks/useProvider'
 import { getProviderName } from '@renderer/services/ProviderService'
 import type { Assistant, Model } from '@renderer/types'
 import { Button, Tag } from 'antd'
-import { ChevronsUpDown } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import type { FC } from 'react'
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -61,7 +61,7 @@ const SelectModelButton: FC<Props> = ({ assistant }) => {
           {model ? model.name : t('button.select_model')} {providerName ? ' | ' + providerName : ''}
         </ModelName>
       </ButtonContent>
-      <ChevronsUpDown size={14} color="var(--color-icon)" />
+      <ChevronDown size={14} color="var(--color-icon)" />
       {!provider && <Tag color="error">{t('models.invalid_model')}</Tag>}
     </DropdownButton>
   )

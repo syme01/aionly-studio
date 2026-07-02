@@ -1,22 +1,25 @@
-import EmojiAvatar from '@renderer/components/Avatar/EmojiAvatar'
+// import EmojiAvatar from '@renderer/components/Avatar/EmojiAvatar'
+import defaultAvatar from '@renderer/assets/images/avatar-default.png'
 import { HStack } from '@renderer/components/Layout'
-import UserPopup from '@renderer/components/Popups/UserPopup'
-import { APP_NAME, AppLogo, isLocalAi } from '@renderer/config/env'
+// import UserPopup from '@renderer/components/Popups/UserPopup'
+import { /*APP_NAME,*/ AppLogo, isLocalAi } from '@renderer/config/env'
 import { getModelLogoById } from '@renderer/config/models'
 import { useTheme } from '@renderer/context/ThemeProvider'
-import { useAgent } from '@renderer/hooks/agents/useAgent'
-import useAvatar from '@renderer/hooks/useAvatar'
+// import { useAgent } from '@renderer/hooks/agents/useAgent'
+// import useAvatar from '@renderer/hooks/useAvatar'
 import { useChatContext } from '@renderer/hooks/useChatContext'
 import { useMinappPopup } from '@renderer/hooks/useMinappPopup'
-import { useRuntime } from '@renderer/hooks/useRuntime'
+// import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useMessageStyle, useSettings } from '@renderer/hooks/useSettings'
 import { getMessageModelId } from '@renderer/services/MessagesService'
-import { getModelName } from '@renderer/services/ModelService'
+import { useAppSelector } from '@renderer/store'
+import { selectUserInfo } from '@renderer/store/user'
+// import { getModelName } from '@renderer/services/ModelService'
 import type { Assistant, Model, Topic } from '@renderer/types'
 import type { Message } from '@renderer/types/newMessage'
-import { firstLetter, isEmoji, removeLeadingEmoji } from '@renderer/utils'
+import { firstLetter /*isEmoji, removeLeadingEmoji*/ } from '@renderer/utils'
 import { Avatar, Checkbox, Tooltip } from 'antd'
-import dayjs from 'dayjs'
+// import dayjs from 'dayjs'
 import { Sparkle } from 'lucide-react'
 import type { FC } from 'react'
 import { memo, useCallback, useMemo } from 'react'
@@ -37,16 +40,18 @@ const getAvatarSource = (isLocalAi: boolean, modelId: string | undefined) => {
 }
 
 const MessageHeader: FC<Props> = memo(({ assistant, model, message, topic, isGroupContextMessage }) => {
-  const avatar = useAvatar()
+  // const avatar = useAvatar()
   const { theme } = useTheme()
-  const { userName, sidebarIcons } = useSettings()
-  const { chat } = useRuntime()
-  const { activeAgentId } = chat
-  const { agent } = useAgent(activeAgentId)
-  const isAgentView = window.location.hash.startsWith('#/agents')
+  const { /*userName,*/ sidebarIcons } = useSettings()
+  // const { chat } = useRuntime()
+  // const { activeAgentId } = chat
+  // const { agent } = useAgent(activeAgentId)
+  // const isAgentView = window.location.hash.startsWith('#/agents')
   const { t } = useTranslation()
   const { isBubbleStyle } = useMessageStyle()
   const { openMinappById } = useMinappPopup()
+
+  const userInfo: any = useAppSelector(selectUserInfo)
 
   const { isMultiSelectMode, selectedMessageIds, handleSelectMessage } = useChatContext(topic)
 
@@ -54,7 +59,7 @@ const MessageHeader: FC<Props> = memo(({ assistant, model, message, topic, isGro
 
   const avatarSource = useMemo(() => getAvatarSource(isLocalAi, getMessageModelId(message)), [message])
 
-  const getUserName = useCallback(() => {
+  /*const getUserName = useCallback(() => {
     if (isLocalAi && message.role !== 'user') {
       return APP_NAME
     }
@@ -68,7 +73,7 @@ const MessageHeader: FC<Props> = memo(({ assistant, model, message, topic, isGro
     }
 
     return userName || t('common.you')
-  }, [agent?.name, isAgentView, message, model, t, userName])
+  }, [agent?.name, isAgentView, message, model, t, userName])*/
 
   const isAssistantMessage = message.role === 'assistant'
   const isUserMessage = message.role === 'user'
@@ -76,7 +81,7 @@ const MessageHeader: FC<Props> = memo(({ assistant, model, message, topic, isGro
   const showMinappIcon = sidebarIcons.visible.includes('minapp')
 
   const avatarName = useMemo(() => firstLetter(assistant?.name).toUpperCase(), [assistant?.name])
-  const username = useMemo(() => removeLeadingEmoji(getUserName()), [getUserName])
+  // const username = useMemo(() => removeLeadingEmoji(getUserName()), [getUserName])
 
   const showMiniApp = useCallback(() => {
     showMinappIcon && model?.provider && openMinappById(model.provider)
@@ -97,7 +102,6 @@ const MessageHeader: FC<Props> = memo(({ assistant, model, message, topic, isGro
           src={avatarSource}
           size={35}
           style={{
-            borderRadius: '25%',
             cursor: showMinappIcon ? 'pointer' : 'default',
             border: isLocalAi ? '1px solid var(--color-border-soft)' : 'none',
             filter: theme === 'dark' ? 'invert(0.05)' : undefined
@@ -107,7 +111,7 @@ const MessageHeader: FC<Props> = memo(({ assistant, model, message, topic, isGro
         </Avatar>
       ) : (
         <>
-          {isEmoji(avatar) ? (
+          {/*{isEmoji(avatar) ? (
             <EmojiAvatar onClick={() => UserPopup.show()} size={35} fontSize={20}>
               {avatar}
             </EmojiAvatar>
@@ -115,27 +119,29 @@ const MessageHeader: FC<Props> = memo(({ assistant, model, message, topic, isGro
             <Avatar
               src={avatar}
               size={35}
-              style={{ borderRadius: '25%', cursor: 'pointer' }}
+              style={{ cursor: 'pointer' }}
               onClick={() => UserPopup.show()}
             />
-          )}
+          )}*/}
+
+          <Avatar src={userInfo?.avatarUrl ?? defaultAvatar} style={{ background: 'var(--color-gray-3)' }} size={35} />
         </>
       )}
       {!isUserBubbleMessage && (
         <UserWrap>
           <HStack alignItems="center" justifyContent={userNameJustifyContent}>
-            <UserName isBubbleStyle={isBubbleStyle && isUserMessage} theme={theme}>
+            {/*<UserName isBubbleStyle={isBubbleStyle && isUserMessage} theme={theme}>
               {username}
-            </UserName>
+            </UserName>*/}
             {isGroupContextMessage && (
               <Tooltip title={t('chat.message.useful.tip')}>
                 <Sparkle fill="var(--color-primary)" strokeWidth={0} size={18} />
               </Tooltip>
             )}
           </HStack>
-          <InfoWrap className="message-header-info-wrap text-(--color-text-3) text-[10px]">
+          {/*<InfoWrap className="message-header-info-wrap text-(--color-text-3) text-[10px]">
             <MessageTime>{dayjs(message?.updatedAt ?? message.createdAt).format('MM/DD HH:mm')}</MessageTime>
-          </InfoWrap>
+          </InfoWrap>*/}
         </UserWrap>
       )}
       {isMultiSelectMode && (
@@ -154,7 +160,7 @@ MessageHeader.displayName = 'MessageHeader'
 const Container = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  //align-items: center;
   gap: 10px;
   position: relative;
   margin-bottom: 10px;
@@ -167,7 +173,7 @@ const UserWrap = styled.div`
   flex: 1;
 `
 
-const InfoWrap = styled.div`
+/*const InfoWrap = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -183,6 +189,6 @@ const UserName = styled.span<{ isBubbleStyle?: boolean; theme?: string }>`
 const MessageTime = styled.div`
   font-size: 10px;
   color: var(--color-text-3);
-`
+`*/
 
 export default MessageHeader

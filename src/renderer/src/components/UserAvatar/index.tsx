@@ -1,3 +1,4 @@
+import defaultAvatar from '@renderer/assets/images/avatar-default.png'
 import { PERSIST_KEY } from '@renderer/config/env'
 import { SHOW_IN_USER_MENUS } from '@renderer/config/sidebar'
 import { useTheme } from '@renderer/context/ThemeProvider'
@@ -171,12 +172,7 @@ const UserAvatar: React.FC<Props> = () => {
   return (
     <Container className="user-avatar">
       <Popover content={UserInfoPanel} placement={'top'} align={{ offset: [10, -10] }} trigger="hover">
-        <Avatar
-          src={userInfo?.avatarUrl}
-          style={{ backgroundColor: 'var(--color-inline-code-text)', verticalAlign: 'middle' }}
-          size={40}>
-          {userInfo?.nickName}
-        </Avatar>
+        <Avatar src={userInfo?.avatarUrl ?? defaultAvatar} size={40}></Avatar>
       </Popover>
     </Container>
   )

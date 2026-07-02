@@ -52,21 +52,22 @@ import { Dropdown, Popconfirm, Tooltip } from 'antd'
 import dayjs from 'dayjs'
 import type { TFunction } from 'i18next'
 import {
-  AtSign,
+  /*AtSign,*/
   Bug,
   Check,
   CirclePause,
   FilePenLine,
-  Languages,
+  /*Languages,*/
   ListChecks,
   Menu,
-  NotebookPen,
+  /*NotebookPen,*/
   Save,
   Split,
   ThumbsUp,
   Upload
 } from 'lucide-react'
 import type { Dispatch, FC, ReactNode, SetStateAction } from 'react'
+import React from 'react'
 import { Fragment, memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
@@ -593,9 +594,10 @@ const MessageMenubar: FC<Props> = (props) => {
     <>
       {showMessageTokens && (
         <FooterMetadata className="message-footer-metadata">
-          {isUserBubbleStyleMessage && (
+          {/*{isUserBubbleStyleMessage && (
             <MessageTime>{dayjs(message?.updatedAt ?? message.createdAt).format('MM/DD HH:mm')}</MessageTime>
-          )}
+          )}*/}
+          <MessageTime>{dayjs(message?.updatedAt ?? message.createdAt).format('MM/DD HH:mm')}</MessageTime>
           <MessageTokens message={message} />
         </FooterMetadata>
       )}
@@ -636,7 +638,7 @@ const FooterMetadata = styled.div`
 
 const MessageTime = styled.div`
   flex-shrink: 0;
-  font-size: 10px;
+  font-size: 12px;
   height: 26px;
   line-height: 26px;
   color: var(--color-text-3);
@@ -665,7 +667,7 @@ const ActionButton = styled.div<{ $softHoverBg?: boolean }>`
       props.$softHoverBg ? 'var(--color-background-soft)' : 'var(--color-background-mute)'};
     color: var(--color-text-1);
     .anticon,
-    .lucide {
+    .lucide, i {
       color: var(--color-text-1);
     }
   }
@@ -677,6 +679,9 @@ const ActionButton = styled.div<{ $softHoverBg?: boolean }>`
   }
   .icon-at {
     font-size: 16px;
+  }
+  .lucide-copy{
+    transform: rotateX(-180deg);
   }
 `
 
@@ -791,7 +796,8 @@ const buttonRenderers: Record<MessageMenubarButtonId, MessageMenubarButtonRender
     return (
       <Tooltip title={t('message.mention.title')} mouseEnterDelay={0.8}>
         <ActionButton className="message-action-button" onClick={onMentionModel} $softHoverBg={softHoverBg}>
-          <AtSign size={15} />
+          {/* <AtSign size={15} />*/}
+          <i className="iconfont icon-moxing"></i>
         </ActionButton>
       </Tooltip>
     )
@@ -902,7 +908,8 @@ const buttonRenderers: Record<MessageMenubarButtonId, MessageMenubarButtonRender
             className="message-action-button"
             onClick={(e) => e.stopPropagation()}
             $softHoverBg={softHoverBg}>
-            <Languages size={15} />
+            {/*<Languages size={15} />*/}
+            <i className="iconfont icon-fanyi" style={{ fontSize: '16px' }}></i>
           </ActionButton>
         </Tooltip>
       </Dropdown>
@@ -941,7 +948,8 @@ const buttonRenderers: Record<MessageMenubarButtonId, MessageMenubarButtonRender
             void exportMessageToNotes(title, markdown, notesPath)
           }}
           $softHoverBg={softHoverBg}>
-          <NotebookPen size={15} />
+          {/*<NotebookPen size={15} />*/}
+          <i className="iconfont icon-a-bijibenbiji" style={{ fontSize: '16px' }}></i>
         </ActionButton>
       </Tooltip>
     )
@@ -961,7 +969,7 @@ const buttonRenderers: Record<MessageMenubarButtonId, MessageMenubarButtonRender
         mouseEnterDelay={1}
         open={showDeleteTooltip}
         onOpenChange={setShowDeleteTooltip}>
-        <DeleteIcon size={15} />
+        <DeleteIcon size={16} />
       </Tooltip>
     )
 

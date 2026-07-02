@@ -73,7 +73,7 @@ const MessageItem: FC<Props> = ({
   const { assistant, setModel } = useAssistant(message.assistantId)
   const { isMultiSelectMode } = useChatContext(topic)
   const model = useModel(getMessageModelId(message), message.model?.provider) || message.model
-  const { messageFont, fontSize, messageStyle, showMessageOutline } = useSettings()
+  const { messageFont, fontSize, /*messageStyle,*/ showMessageOutline } = useSettings()
   const { editMessageBlocks, resendUserMessageWithEdit, editMessage } = useMessageOperations(topic)
   const messageContainerRef = useRef<HTMLDivElement>(null)
   const { editingMessageId, startEditing, stopEditing } = useMessageEditing()
@@ -124,7 +124,7 @@ const MessageItem: FC<Props> = ({
   const isAssistantMessage = message.role === 'assistant'
   const isProcessing = isMessageProcessing(message)
   const showMenubar = !hideMenuBar && !isEditing && !isProcessing
-  const shouldReverseFooter = isLastMessage && (messageStyle === 'plain' || isAssistantMessage)
+  // const shouldReverseFooter = isLastMessage && (messageStyle === 'plain' || isAssistantMessage)
 
   const messageHighlightHandler = useCallback(
     (highlight: boolean = true) => {
@@ -198,65 +198,77 @@ const MessageItem: FC<Props> = ({
           'message-user': !isAssistantMessage
         })}
         ref={messageContainerRef}>
-        <MessageHeader
-          message={message}
-          assistant={assistant}
-          model={model}
-          key={getModelUniqId(model)}
-          topic={topic}
-          isGroupContextMessage={isGroupContextMessage}
-        />
-        {isEditing && (
-          <MessageEditor
-            message={message}
-            topicId={topic.id}
-            onSave={handleEditSave}
-            onResend={handleEditResend}
-            onCancel={handleEditCancel}
-          />
-        )}
-        {!isEditing && (
+        {isEditing ? (
           <>
-            {!isMultiSelectMode && message.role === 'assistant' && showMessageOutline && (
-              <MessageOutline message={message} />
-            )}
-            <MessageContentContainer
-              className="message-content-container"
-              style={{
-                fontFamily: messageFont === 'serif' ? 'var(--font-family-serif)' : 'var(--font-family)',
-                fontSize,
-                overflowY: isHorizontalMultiModelLayout ? 'auto' : 'visible'
-              }}>
-              <MessageErrorBoundary>
-                <MessageContent message={message} />
-              </MessageErrorBoundary>
-            </MessageContentContainer>
-            {showMenubar && (
-              <MessageFooter className="MessageFooter">
-                <HorizontalScrollContainer
-                  classNames={{
-                    content: cn(
-                      'flex-1 items-center justify-between',
-                      shouldReverseFooter ? 'flex-row-reverse' : 'flex-row'
-                    )
-                  }}>
-                  <MessageMenubar
-                    message={message}
-                    assistant={assistant}
-                    model={model}
-                    index={index}
-                    topic={topic}
-                    isLastMessage={isLastMessage}
-                    isAssistantMessage={isAssistantMessage}
-                    isGrouped={isGrouped}
-                    messageContainerRef={messageContainerRef as React.RefObject<HTMLDivElement>}
-                    setModel={setModel}
-                    onUpdateUseful={onUpdateUseful}
-                  />
-                </HorizontalScrollContainer>
-              </MessageFooter>
-            )}
+            <MessageHeader
+              message={message}
+              assistant={assistant}
+              model={model}
+              key={getModelUniqId(model)}
+              topic={topic}
+              isGroupContextMessage={isGroupContextMessage}
+            />
+            <MessageEditor
+              message={message}
+              topicId={topic.id}
+              onSave={handleEditSave}
+              onResend={handleEditResend}
+              onCancel={handleEditCancel}
+            />
           </>
+        ) : (
+          <MessageInfoWrapper className="message-info-wrapper">
+            <MessageHeader
+              message={message}
+              assistant={assistant}
+              model={model}
+              key={getModelUniqId(model)}
+              topic={topic}
+              isGroupContextMessage={isGroupContextMessage}
+            />
+            <div className="main">
+              {!isMultiSelectMode && message.role === 'assistant' && showMessageOutline && (
+                <MessageOutline message={message} />
+              )}
+              <MessageContentContainer
+                className="message-content-container"
+                style={{
+                  fontFamily: messageFont === 'serif' ? 'var(--font-family-serif)' : 'var(--font-family)',
+                  fontSize,
+                  overflowY: isHorizontalMultiModelLayout ? 'auto' : 'visible'
+                }}>
+                <MessageErrorBoundary>
+                  <MessageContent message={message} />
+                </MessageErrorBoundary>
+              </MessageContentContainer>
+              {showMenubar && (
+                <MessageFooter className="MessageFooter">
+                  <HorizontalScrollContainer
+                    classNames={{
+                      content: cn(
+                        'flex-1 items-center justify-between',
+                        /*shouldReverseFooter ? 'flex-row-reverse' : 'flex-row'*/
+                        isAssistantMessage ? 'flex-row-reverse' : 'flex-row'
+                      )
+                    }}>
+                    <MessageMenubar
+                      message={message}
+                      assistant={assistant}
+                      model={model}
+                      index={index}
+                      topic={topic}
+                      isLastMessage={isLastMessage}
+                      isAssistantMessage={isAssistantMessage}
+                      isGrouped={isGrouped}
+                      messageContainerRef={messageContainerRef as React.RefObject<HTMLDivElement>}
+                      setModel={setModel}
+                      onUpdateUseful={onUpdateUseful}
+                    />
+                  </HorizontalScrollContainer>
+                </MessageFooter>
+              )}
+            </div>
+          </MessageInfoWrapper>
         )}
       </MessageContainer>
     </WrapperContainer>
@@ -272,7 +284,6 @@ const MessageContainer = styled.div`
   transform: translateZ(0);
   will-change: transform;
   padding: 10px;
-  padding-bottom: 0;
   border-radius: 10px;
   .menubar {
     opacity: 0;
@@ -288,13 +299,49 @@ const MessageContainer = styled.div`
       opacity: 1;
     }
   }
+
+
+  &.message-user{
+    .message-info-wrapper{
+      display: flex;
+      justify-content: flex-end;
+    }
+    .message-header{
+        right: 0;
+    }
+    .main{
+      border-radius: 8px 0 8px 8px;
+      width: fit-content;
+      min-width: 25%;
+      max-width: 100%;
+      margin-right: 55px;
+      background-color: var(--color-list-item);
+    }
+  }
+`
+
+const MessageInfoWrapper = styled.div`
+  width: 100%;
+  position: relative;
+  .main{
+    width: calc(100% - 100px);
+    margin-left: 45px;
+    padding: 16px;
+    background-color: var(--color-gray-5);
+    border-radius: 0 8px 8px 8px;
+  }
+  .message-header{
+    position: absolute;
+    top: 0;
+  }
 `
 
 const MessageContentContainer = styled(Scrollbar)`
   max-width: 100%;
-  padding-left: 46px;
+  //padding-left: 46px;
   margin-top: 0;
   overflow-y: auto;
+  flex: 1;
 `
 
 const MessageFooter = styled.div`
@@ -302,8 +349,8 @@ const MessageFooter = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin-left: 46px;
-  margin-top: 3px;
+  //margin-left: 45px;
+  margin: 8px 0 -5px;
 `
 
 const NewContextMessage = styled.div<{ isMultiSelectMode: boolean }>`

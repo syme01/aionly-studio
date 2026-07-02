@@ -63,7 +63,8 @@ export const WebSearchProviderIcon = ({
     case 'local-google':
       return <GoogleOutlined size={size} style={{ color, fontSize: size }} />
     default:
-      return <Globe className="icon" size={size} style={{ color, fontSize: size }} />
+      // return <Globe className="icon" size={size} style={{ color, fontSize: size }} />
+      return <i className="icon iconfont icon-wangluosousuo" style={{ color, fontSize: size }} />
   }
 }
 

@@ -2,7 +2,7 @@ import { ActionIconButton } from '@renderer/components/Buttons'
 import { useShortcutDisplay } from '@renderer/hooks/useShortcuts'
 import { defineTool, registerTool, TopicType } from '@renderer/pages/home/Inputbar/types'
 import { Tooltip } from 'antd'
-import { PaintbrushVertical } from 'lucide-react'
+// import { PaintbrushVertical } from 'lucide-react'
 
 const clearTopicTool = defineTool({
   key: 'clear_topic',
@@ -22,7 +22,8 @@ const clearTopicTool = defineTool({
         mouseLeaveDelay={0}
         arrow>
         <ActionIconButton onClick={actions.clearTopic}>
-          <PaintbrushVertical size={18} />
+          {/*<PaintbrushVertical size={18} />*/}
+          <i className="iconfont icon-15qingkong-1" style={{ fontSize: '18px' }}></i>
         </ActionIconButton>
       </Tooltip>
     )

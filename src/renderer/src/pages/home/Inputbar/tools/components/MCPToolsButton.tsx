@@ -548,9 +548,12 @@ const MCPToolsButton: FC<Props> = ({ quickPanel, setInputValue, resizeTextArea, 
       case 'auto':
         return <Sparkles size={18} />
       case 'disabled':
+        return <i className="iconfont icon-MCPbushu" style={{ fontSize: '18px' }}></i>
       case 'manual':
-      default:
         return <Hammer size={18} />
+      default:
+        // return <Hammer size={18} />
+        return <i className="iconfont icon-MCPbushu" style={{ fontSize: '18px' }}></i>
     }
   }
 
