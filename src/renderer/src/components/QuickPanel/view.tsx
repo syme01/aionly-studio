@@ -822,7 +822,7 @@ const QuickPanelContainer = styled.div<{
   left: 0;
   right: 0;
   width: 100%;
-  padding: 0 35px 0 35px;
+  padding: 0 22px 0 22px;
   transform: translateY(-100%);
   transform-origin: bottom;
   transition: max-height 0.2s ease;
@@ -850,7 +850,9 @@ const QuickPanelBody = styled.div`
     content: '';
     position: absolute;
     inset: 0;
-    background-color: rgba(240, 240, 240, 0.5);
+    //background-color: rgba(240, 240, 240, 0.5);
+    background-color: #fff;
+    box-shadow: 0 0 5px 2px var(--color-gray-3);
     backdrop-filter: blur(35px) saturate(150%);
     z-index: -1;
     border-radius: inherit;

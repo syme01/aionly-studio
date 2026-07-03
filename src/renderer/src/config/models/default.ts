@@ -7,8 +7,15 @@ export const qwenModel: Model = {
   group: 'Qwen'
 }
 
+const aionlyModel: Model = {
+  id: 'claude-opus-4-6',
+  name: 'Claude Opus 4.6',
+  provider: 'aionly',
+  group: 'Anthropic'
+}
+
 export const SYSTEM_MODELS: Record<SystemProviderId | 'defaultModel', Model[]> = {
-  defaultModel: [
+  /*defaultModel: [
     // Default assistant model
     qwenModel,
     // Default topic naming model
@@ -17,6 +24,17 @@ export const SYSTEM_MODELS: Record<SystemProviderId | 'defaultModel', Model[]> =
     qwenModel,
     // Default quick assistant model
     qwenModel
+  ],*/
+
+  defaultModel: [
+    // Default assistant model
+    aionlyModel,
+    // Default topic naming model
+    aionlyModel,
+    // Default translation model
+    aionlyModel,
+    // Default quick assistant model
+    aionlyModel
   ],
   cherryin: [],
   vertexai: [],

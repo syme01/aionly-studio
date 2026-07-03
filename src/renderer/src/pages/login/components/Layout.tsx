@@ -1,7 +1,10 @@
+import { getServiceApi } from '@renderer/api/seat'
 import bgLoginF from '@renderer/assets/images/login/bg-login-f.jpg'
 import lwImg from '@renderer/assets/images/login/lw.png'
 import i18n from '@renderer/i18n'
-import { type FC, useState } from 'react'
+import { useAppDispatch } from '@renderer/store'
+import { setServiceInfo } from '@renderer/store/user'
+import { type FC, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 interface Props {
@@ -75,14 +78,23 @@ const NewUserGiftWrap = styled.div`
 `
 
 const Layout: FC<Props> = ({ children }) => {
-  const [logoUrl] = useState<string>(() => {
-    try {
-      const agentInfoStr = localStorage.getItem('agentInfo')
-      return agentInfoStr ? JSON.parse(agentInfoStr).logoUrl || '' : ''
-    } catch {
-      return ''
-    }
-  })
+  const dispatch = useAppDispatch()
+
+  const [logoUrl, setLogoUrl] = useState<null | undefined | string>(undefined)
+
+  const fetchService = useCallback(() => {
+    // 供应商 信息设置(网页tab,logo,网页title)
+    getServiceApi(window.location.hostname).then((res: any) => {
+      const agentInfo = res.data
+      setLogoUrl(agentInfo?.logoUrl ?? undefined)
+      // localStorage.setItem('agentInfo', JSON.stringify(agentInfo))
+      dispatch(setServiceInfo(agentInfo))
+    })
+  }, [dispatch])
+
+  useEffect(() => {
+    fetchService()
+  }, [fetchService])
 
   return (
     <Container>

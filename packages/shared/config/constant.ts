@@ -501,11 +501,13 @@ export const CHERRYIN_CONFIG = {
 }
 
 // Application Identity
-export const APP_NAME = 'AiiOnly'
+export const APP_NAME = 'AiOnly'
 export const APP_VERSION = '1.0.0' // Application version
-export const APP_PROTOCOL = 'aiionly' // URL protocol (e.g., cherrystudio://)
+export const APP_PROTOCOL = 'aionly' // URL protocol (e.g., cherrystudio://)
 export const APP_BUNDLE_ID = 'com.verycloud.AiOnlyStudio' // macOS bundle identifier // com.kangfenmao.CherryStudio
 export const APP_DIR_NAME = 'AiOnlyStudio' // User data directory name
 export const APP_CONFIG_DIR = '.aionlystudio' // Hidden config directory in home
 // resources/scripts should be maintained manually
 export const HOME_CHERRY_DIR = APP_CONFIG_DIR
+export const APP_HOST = `https://maas.${APP_PROTOCOL}.com`
+export const APP_API_HOST = `https://api.${APP_PROTOCOL}.com`

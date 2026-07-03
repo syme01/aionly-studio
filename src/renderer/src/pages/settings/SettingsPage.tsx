@@ -1,9 +1,9 @@
 import { Navbar, NavbarCenter } from '@renderer/components/app/Navbar'
-import { McpLogo } from '@renderer/components/Icons'
+// import { McpLogo } from '@renderer/components/Icons'
 import Scrollbar from '@renderer/components/Scrollbar'
 import ModelSettings from '@renderer/pages/settings/ModelSettings/ModelSettings'
 import { Divider as AntDivider } from 'antd'
-import {
+/*import {
   Brain,
   CalendarClock,
   Cloud,
@@ -20,8 +20,9 @@ import {
   Sparkles,
   TextCursorInput,
   Zap
-} from 'lucide-react'
+} from 'lucide-react'*/
 import type { FC } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Route, Routes, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
@@ -50,13 +51,145 @@ const SettingsPage: FC = () => {
 
   const isRoute = (path: string): string => (pathname.startsWith(path) ? 'active' : '')
 
+  // 一次性导入 settings 目录下所有 PNG
+  const iconModules = import.meta.glob('@renderer/assets/images/settings/*.png', {
+    eager: true,
+    import: 'default'
+  }) as Record<string, string>
+
+  const getMenuIcon = (iconName: string) => {
+    // 从路径中提取文件名
+    const iconPath = Object.entries(iconModules).find(([path]) => path.includes(`${iconName}.png`))?.[1]
+
+    if (!iconPath) return null
+
+    return <img src={iconPath} alt={iconName} style={{ width: '18px', height: '18px' }} />
+  }
+
+  const groupedMenus = [
+    {
+      group: t('settings.menus.model.title'), // 模型能力
+      menus: [
+        {
+          label: t('settings.provider.title'), // 模型服务
+          icon: getMenuIcon('provider'),
+          path: '/settings/provider'
+        },
+        {
+          label: t('settings.model'), // 默认模型
+          icon: getMenuIcon('model'),
+          path: '/settings/model'
+        },
+        {
+          label: t('memory.title'), // 全局记忆
+          icon: getMenuIcon('memory'),
+          path: '/settings/memory'
+        },
+        {
+          label: t('apiServer.title'), // API 服务
+          icon: getMenuIcon('api-server'),
+          path: '/settings/api-server'
+        }
+      ]
+    },
+    {
+      group: t('settings.menus.system.title'), // 系统设置
+      menus: [
+        {
+          label: t('settings.general.label'), // 常规设置
+          icon: getMenuIcon('general'),
+          path: '/settings/general'
+        },
+        {
+          label: t('settings.display.title'), // 显示设置
+          icon: getMenuIcon('display'),
+          path: '/settings/display'
+        },
+        {
+          label: t('settings.data.title'), // 数据设置
+          icon: getMenuIcon('data'),
+          path: '/settings/data'
+        },
+        {
+          label: t('settings.mcp.title'), // MCP服务器
+          icon: getMenuIcon('mcp'),
+          path: '/settings/mcp'
+        },
+        {
+          label: t('settings.skills.title'), // 技能
+          icon: getMenuIcon('skills'),
+          path: '/settings/skills'
+        },
+        {
+          label: t('settings.tool.websearch.title'), // 网络搜索
+          icon: getMenuIcon('websearch'),
+          path: '/settings/websearch'
+        }
+      ]
+    },
+    {
+      group: t('settings.menus.quick.title'), // 快捷工具
+      menus: [
+        {
+          label: t('settings.quickPhrase.title'), // 快捷短语
+          icon: getMenuIcon('quickphrase'),
+          path: '/settings/quickphrase'
+        },
+        {
+          label: t('settings.shortcuts.title'), // 快速键
+          icon: getMenuIcon('shortcut'),
+          path: '/settings/shortcut'
+        },
+        {
+          label: t('settings.quickAssistant.title'), // 快速助手
+          icon: getMenuIcon('quickAssistant'),
+          path: '/settings/quickAssistant'
+        },
+        {
+          label: t('selection.name'), // 划词助手
+          icon: getMenuIcon('selectionAssistant'),
+          path: '/settings/selectionAssistant'
+        }
+      ]
+    },
+    {
+      group: t('settings.menus.other.title'), // 其他
+      menus: [
+        {
+          label: t('settings.about.label'), // 关于我们
+          icon: getMenuIcon('about'),
+          path: '/settings/about'
+        }
+      ]
+    }
+  ]
+
   return (
-    <Container>
+    <Container className="page-container">
       <Navbar>
         <NavbarCenter style={{ borderRight: 'none' }}>{t('settings.title')}</NavbarCenter>
       </Navbar>
       <ContentContainer id="content-container">
         <SettingMenus>
+          {groupedMenus.map((group, index) => (
+            <React.Fragment key={group.group}>
+              <div className="group-item" key={group.group}>
+                <div className="group-name">{group.group}</div>
+                {group.menus.map((menu) => (
+                  <MenuItemLink to={menu.path} key={menu.path}>
+                    <MenuItem className={isRoute(menu.path)}>
+                      {menu.icon}
+                      {menu.label}
+                    </MenuItem>
+                  </MenuItemLink>
+                ))}
+              </div>
+              {index < groupedMenus.length - 1 && <Divider />}
+            </React.Fragment>
+          ))}
+        </SettingMenus>
+
+        {/*<SettingMenus>
           <MenuItemLink to="/settings/provider">
             <MenuItem className={isRoute('/settings/provider')}>
               <Cloud size={18} />
@@ -119,12 +252,12 @@ const SettingsPage: FC = () => {
               {t('apiServer.title')}
             </MenuItem>
           </MenuItemLink>
-          {/*<MenuItemLink to="/settings/channels">
+          <MenuItemLink to="/settings/channels">
             <MenuItem className={isRoute('/settings/channels')}>
               <Radio size={18} />
               {t('settings.channels.title')}
             </MenuItem>
-          </MenuItemLink>*/}
+          </MenuItemLink>
           <MenuItemLink to="/settings/scheduled-tasks">
             <MenuItem className={isRoute('/settings/scheduled-tasks')}>
               <CalendarClock size={18} />
@@ -169,7 +302,7 @@ const SettingsPage: FC = () => {
               {t('settings.about.label')}
             </MenuItem>
           </MenuItemLink>
-        </SettingMenus>
+        </SettingMenus>*/}
         <SettingContent>
           <Routes>
             <Route path="provider" element={<ProviderList />} />
@@ -207,8 +340,9 @@ const ContentContainer = styled.div`
   display: flex;
   flex: 1;
   flex-direction: row;
-  height: calc(100vh - var(--navbar-height));
+  height: calc(100vh - var(--navbar-height) - 10px);
   padding: 1px 0;
+  gap: 10px;
 `
 
 const SettingMenus = styled(Scrollbar)`
@@ -218,7 +352,19 @@ const SettingMenus = styled(Scrollbar)`
   border-right: 0.5px solid var(--color-border);
   padding: 10px;
   user-select: none;
-  gap: 5px;
+  gap: 8px;
+  background-color: var(--color-background);
+  border-radius: var(--base-border-radius);
+  .group-item{
+    .group-name{
+      padding: 10px 5px;
+      font-size: 12px;
+      color: var(--color-text-3);
+    }
+    + .ant-divider{
+      margin-block: 5px;
+    }
+  }
 `
 
 const MenuItemLink = styled(Link)`
@@ -246,8 +392,9 @@ const MenuItem = styled.li`
     background: var(--color-background-soft);
   }
   &.active {
-    background: var(--color-background-soft);
-    border: 0.5px solid var(--color-border);
+    background: var(--color-list-item);
+    color: var(--color-primary);
+    //border: 0.5px solid var(--color-border);
   }
 `
 
@@ -255,6 +402,8 @@ const SettingContent = styled.div`
   display: flex;
   height: 100%;
   flex: 1;
+  border-radius: var(--base-border-radius);
+  overflow: hidden;
 `
 
 const Divider = styled(AntDivider)`

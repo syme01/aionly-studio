@@ -63,6 +63,7 @@ import ZeroOneProviderLogo from '@renderer/assets/images/providers/zero-one.png'
 import ZhipuProviderLogo from '@renderer/assets/images/providers/zhipu.png'
 import type { AtLeast, SystemProvider, SystemProviderId } from '@renderer/types'
 import { OpenAIServiceTiers } from '@renderer/types'
+import { APP_API_HOST, APP_PROTOCOL } from '@shared/config/constant'
 
 import { TOKENFLUX_HOST } from './constant'
 import { qwenModel, SYSTEM_MODELS } from './models'
@@ -191,7 +192,7 @@ export const SYSTEM_PROVIDERS_CONFIG: Record<SystemProviderId, SystemProvider> =
     name: 'AIOnly',
     type: 'openai',
     apiKey: '',
-    apiHost: 'https://api.aiionly.com',
+    apiHost: APP_API_HOST,
     models: SYSTEM_MODELS.aionly,
     isSystem: true,
     enabled: true
@@ -1451,13 +1452,13 @@ export const PROVIDER_URLS: Record<SystemProviderId, ProviderUrls> = {
   },
   aionly: {
     api: {
-      url: 'https://api.aiionly.com'
+      url: `https://api.${APP_PROTOCOL}.com`
     },
     websites: {
-      official: 'https://www.aiionly.com',
-      apiKey: 'https://maas.aiionly.com/keyApi',
-      docs: 'https://maas.aiionly.com/document',
-      models: 'https://maas.aiionly.com'
+      official: `https://www.${APP_PROTOCOL}.com`,
+      apiKey: `https://maas.${APP_PROTOCOL}.com/keyApi`,
+      docs: `https://maas.${APP_PROTOCOL}.com/document`,
+      models: `https://maas.${APP_PROTOCOL}.com`
     }
   },
   longcat: {

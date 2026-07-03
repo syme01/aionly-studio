@@ -5098,6 +5098,20 @@
       "url": "URL",
       "user": "用户"
     },
+    "menus": {
+      "model": {
+        "title": "模型能力"
+      },
+      "system": {
+        "title": "系统设置"
+      },
+      "quick": {
+        "title": "快捷工具"
+      },
+      "other": {
+        "title": "其他"
+      }
+    },
     "messages": {
       "divider": {
         "label": "消息分割线",

@@ -568,7 +568,7 @@ export class WindowService {
       minHeight: 380,
       maxWidth: 1024,
       maxHeight: 768,
-      title: 'AiiOnly Quick Assistant',
+      title: 'AiOnly Quick Assistant',
       show: false,
       autoHideMenuBar: true,
       transparent: isMac,

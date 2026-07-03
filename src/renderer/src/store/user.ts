@@ -19,6 +19,7 @@ interface UserState {
   logoUrl: string
   // webUrl: string;
   serviceInfo: Record<string, unknown>
+  apiKey: string
 }
 
 const initialState: UserState = {
@@ -28,6 +29,7 @@ const initialState: UserState = {
   indentCount: {},
   wdCount: '',
   logoUrl: logo,
+  apiKey: '',
   // webUrl: webLogo,
   serviceInfo: {}
 }
@@ -74,6 +76,10 @@ const userSlice = createSlice({
     },
     setServiceInfo(state, action: PayloadAction<Record<string, unknown>>) {
       state.serviceInfo = action.payload
+      localStorage.setItem('serviceInfo', JSON.stringify(action.payload))
+    },
+    setApiKey(state, action: PayloadAction<string>) {
+      state.apiKey = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -83,7 +89,7 @@ const userSlice = createSlice({
   }
 })
 
-export const { setToken, clearToken, setMyBalance, setUserInfo, setLogoUrl, setPassWord, setServiceInfo } =
+export const { setToken, clearToken, setMyBalance, setUserInfo, setLogoUrl, setPassWord, setServiceInfo, setApiKey } =
   userSlice.actions
 
 export const selectToken = (state: { user: UserState }) => state.user.token || localStorage.getItem('token') || ''

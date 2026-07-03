@@ -1,6 +1,7 @@
 import { loggerService } from '@logger'
 import { PPIO_APP_SECRET, PPIO_CLIENT_ID, SILICON_CLIENT_ID, TOKENFLUX_HOST } from '@renderer/config/constant'
 import i18n, { getLanguageCode } from '@renderer/i18n'
+import { APP_HOST } from '@shared/config/constant'
 
 const logger = loggerService.withContext('Utils:oauth')
 export const oauthWithSiliconFlow = async (setKey) => {
@@ -327,7 +328,8 @@ export const providerCharge = async (provider: string) => {
     aionly: {
       // url: `https://maas.aiionly.com/recharge`,
       // url: `http://localhost:7023/login?redirect=/recharge`,
-      url: 'https://maas.aiionly.com/login?redirect=/recharge',
+      // url: 'https://maas.aiionly.com/login?redirect=/recharge',
+      url: `${APP_HOST}?redirect=/recharge`,
       width: 900,
       height: 700
     }
@@ -370,7 +372,7 @@ function handleWindowMessage({ win, provider, targetPath }) {
         token,
         targetPath
       }
-      win.postMessage(sendData, 'https://maas.aiionly.com')
+      win.postMessage(sendData, APP_HOST)
       // win.postMessage(sendData, 'http://localhost:7023')
     }
   }
@@ -419,7 +421,7 @@ export const providerBills = async (provider: string) => {
       // url: `https://maas.aiionly.com/billManagement`,
       // url: `https://maas.aiionly.com/login?redirect=/billManagement`,
       // url: `http://localhost:7023/login?redirect=/billManagement`,
-      url: `https://maas.aiionly.com/login?redirect=/billManagement`,
+      url: `${APP_HOST}/login?redirect=/billManagement`,
       width: 900,
       height: 700
     }

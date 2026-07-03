@@ -1,10 +1,11 @@
 import { getFinanceInfo } from '@renderer/api/balance'
-import { getUserProfileApi } from '@renderer/api/login'
+import { getApikeyByUserId, getUserProfileApi } from '@renderer/api/login'
 import Verify from '@renderer/components/verifition/Verify'
+import { useProvider } from '@renderer/hooks/useProvider'
 import i18n from '@renderer/i18n'
 import { Agreements } from '@renderer/pages/login/components/Agreements'
 import { useAppDispatch } from '@renderer/store'
-import { setMyBalance, setUserInfo } from '@renderer/store/user'
+import { setApiKey, setMyBalance, setUserInfo } from '@renderer/store/user'
 import type { TabsProps } from 'antd'
 import { Button } from 'antd'
 import { Tabs } from 'antd'
@@ -64,6 +65,8 @@ export const LoginForm = (props: LoginFormProps) => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
+  const { updateProvider } = useProvider('aionly')
+
   const [activeTabKey, setActiveTabKey] = useState('1')
   const [isAccept, setIsAccept] = useState(false)
   const [formValid, setFormValid] = useState(false)
@@ -97,11 +100,17 @@ export const LoginForm = (props: LoginFormProps) => {
   // 查询并保存用户信息
   const saveUserInfo = useCallback(async () => {
     const res = await getUserProfileApi()
-    const data = res.data?.user
-    dispatch(setUserInfo(data))
+    const user_data = res.data?.user
+    dispatch(setUserInfo(user_data))
     const balance = await getFinanceInfo()
     dispatch(setMyBalance(balance.data))
-  }, [dispatch])
+    const api_key_res = await getApikeyByUserId({ userId: user_data?.userId || '' })
+    const secretKey = api_key_res?.msg ?? ''
+    dispatch(setApiKey(secretKey))
+    updateProvider({
+      apiKey: secretKey
+    })
+  }, [dispatch, updateProvider])
 
   /** 登录成功 **/
   const handleLoginSuccess = () => {
