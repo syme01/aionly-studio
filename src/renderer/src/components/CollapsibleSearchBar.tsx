@@ -31,9 +31,10 @@ const CollapsibleSearchBar = ({
   const inputRef = useRef<InputRef>(null)
 
   const handleTextChange = useCallback(
-    (text: string) => {
+    (text: string, emit?: boolean | undefined) => {
+      // console.log('handleTextChange', text, emit)
       setSearchText(text)
-      onSearch(text)
+      emit && onSearch(text)
     },
     [onSearch]
   )
@@ -46,7 +47,10 @@ const CollapsibleSearchBar = ({
 
   useEffect(() => {
     if (searchVisible && inputRef.current) {
-      inputRef.current.focus()
+      // Use queueMicrotask to defer focus and avoid flushSync warning
+      queueMicrotask(() => {
+        inputRef.current?.focus()
+      })
     }
   }, [searchVisible])
 
@@ -81,6 +85,7 @@ const CollapsibleSearchBar = ({
             if (!searchText) setSearchVisible(false)
           }}
           onClear={handleClear}
+          onPressEnter={() => handleTextChange(searchText, true)}
           style={{ width: '100%', ...style }}
         />
       </motion.div>

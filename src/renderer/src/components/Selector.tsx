@@ -1,6 +1,6 @@
 import type { DropdownProps } from 'antd'
 import { Dropdown } from 'antd'
-import { Check, ChevronsUpDown } from 'lucide-react'
+import { Check, FunnelPlus } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -141,13 +141,14 @@ const Selector = <V extends string | number>({
       onOpenChange={handleOpenChange}>
       <Label style={style} $size={size} $open={open} $disabled={disabled} $isPlaceholder={label === placeholder}>
         {label}
-        <LabelIcon size={size + 3} />
+        {/*<LabelIcon size={size + 3} />*/}
+        <i className="iconfont icon-shaixuan"></i>
       </Label>
     </Dropdown>
   )
 }
 
-const LabelIcon = styled(ChevronsUpDown)`
+const LabelIcon = styled(FunnelPlus)`
   border-radius: 4px;
   padding: 2px 0;
   background-color: var(--color-background-soft);

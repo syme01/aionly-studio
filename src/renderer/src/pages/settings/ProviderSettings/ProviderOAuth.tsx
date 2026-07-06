@@ -4,6 +4,7 @@ import AiOnlyProviderLogo from '@renderer/assets/images/providers/aiOnly.webp'
 import PPIOProviderLogo from '@renderer/assets/images/providers/ppio.png'
 import SiliconFlowProviderLogo from '@renderer/assets/images/providers/silicon.png'
 import TokenFluxProviderLogo from '@renderer/assets/images/providers/tokenflux.png'
+import topImage from '@renderer/assets/images/settings/top.png'
 import { HStack } from '@renderer/components/Layout'
 import { PROVIDER_URLS } from '@renderer/config/providers'
 import { useProvider } from '@renderer/hooks/useProvider'
@@ -47,7 +48,7 @@ const ProviderOAuth: FC<Props> = ({ providerId, fancyProviderName }) => {
   }
 
   return (
-    <Container>
+    <Container topImage={topImage}>
       <div className="left flex items-center gap-3">
         <div className="logo">
           <img src={PROVIDER_LOGO_MAP[provider.id]} alt={provider.name} />
@@ -89,28 +90,27 @@ const ProviderOAuth: FC<Props> = ({ providerId, fancyProviderName }) => {
 
       <div className="right">
         <HStack gap={10}>
-          <Button type="primary" onClick={() => providerCharge(provider.id)}>
-            {t('settings.provider.charge')}
-          </Button>
           <Button type="primary" onClick={() => providerBills(provider.id)}>
             {t('settings.provider.bills')}
           </Button>
+          <OrangeButton onClick={() => providerCharge(provider.id)}>{t('settings.provider.charge')}</OrangeButton>
         </HStack>
       </div>
     </Container>
   )
 }
 
-const Container = styled.div`
+const Container = styled.div<{ topImage: string | undefined | null }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 15px;
   padding: 20px;
   border-radius: 6px;
+  background: url(${(props) => props.topImage}) center center / 100% 100% no-repeat;
 
-  body.light & {
-    background-color: #F4F6F9;
+  body.dark & {
+    background: var(--color-background-mute);
   }
 
   .logo{
@@ -150,6 +150,16 @@ const LinkButton = styled.span`
   &:hover{
     background-color: var(--color-primary);
     color: #fff;
+  }
+`
+
+const OrangeButton = styled(Button)`
+  background-color: rgba(255, 96, 0, 1);
+  color: #fff;
+  &:hover{
+    background-color: rgba(255, 96, 0, 0.8) !important;
+    color: #fff !important;
+    border-color: rgba(255, 96, 0, 0.8) !important;
   }
 `
 

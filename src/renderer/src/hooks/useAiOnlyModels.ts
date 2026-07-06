@@ -18,6 +18,7 @@ export enum ModelAttribute {
 export interface ModelPageParams {
   type: string
   modelAttribute: ModelAttribute
+  modelName?: string
   pageNum: number
   pageSize: number
   total: number
@@ -71,7 +72,7 @@ export interface UseAiOnlyModelsResult {
   /** 加载下一页 */
   fetchNextPage: () => Promise<void>
   /** 重置并重新加载 */
-  reset: () => void
+  reset: (newParams?: Partial<ModelPageParams>) => void
   /** 是否还有更多数据 */
   hasMore: boolean
   /** 滚动事件处理器，用于无限滚动加载 */
@@ -114,7 +115,9 @@ export function transformToModel(item: any, provider?: Provider): Model {
     pricing: item.pricing,
     endpoint_type: item.endpoint_type,
     supported_endpoint_types: item.supported_endpoint_types,
-    supported_text_delta: !isNotSupportTextDeltaModel(item)
+    supported_text_delta: !isNotSupportTextDeltaModel({ ...item, id: item.baseId || item.model }),
+    // 保留所有原始字段，特别是 packageNum 等用于后续过滤的字段
+    ...item
   }
 }
 
@@ -155,10 +158,11 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): {
   models: AiOnlyModel[]
   loading: boolean
   pageParams: ModelPageParams
+  setPageParams: (pageParams: (prev: any) => any) => void
   fetchModels: (pageNum: number) => Promise<void>
   fetchNextPage: () => Promise<void>
   hasMore: boolean
-  reset: () => void
+  reset: (newParams?: Partial<ModelPageParams>) => void
   getFilteredModels: (filter?: (model: AiOnlyModel) => boolean) => AiOnlyModel[]
   handleScroll: (e: React.UIEvent<HTMLDivElement>) => void
 } {
@@ -251,16 +255,29 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): {
     await fetchModels(nextPage)
   }, [fetchModels])
 
-  const reset = useCallback(() => {
-    setModels([])
-    pageParamsRef.current = {
-      ...pageParamsRef.current,
-      pageNum: initialPageNum,
-      total: 0
-    }
-    setPageParams(pageParamsRef.current)
-    void fetchModels(initialPageNum)
-  }, [fetchModels, initialPageNum])
+  const reset = useCallback(
+    (newParams?: Partial<ModelPageParams>) => {
+      setModels([])
+      // 如果传入了新参数，先合并到 ref
+      if (newParams) {
+        pageParamsRef.current = {
+          ...pageParamsRef.current,
+          ...newParams,
+          pageNum: 1,
+          total: 0
+        }
+      } else {
+        pageParamsRef.current = {
+          ...pageParamsRef.current,
+          pageNum: 1,
+          total: 0
+        }
+      }
+      setPageParams(pageParamsRef.current)
+      void fetchModels(initialPageNum)
+    },
+    [fetchModels, initialPageNum]
+  )
 
   const hasMore = models.length < pageParams.total
 
@@ -302,6 +319,7 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): {
     models,
     loading,
     pageParams,
+    setPageParams,
     fetchModels,
     fetchNextPage,
     hasMore,

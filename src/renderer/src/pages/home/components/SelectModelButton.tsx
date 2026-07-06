@@ -4,7 +4,7 @@ import { isLocalAi } from '@renderer/config/env'
 import { isEmbeddingModel, isRerankModel, isWebSearchModel } from '@renderer/config/models'
 import { useAssistant } from '@renderer/hooks/useAssistant'
 import { useProvider } from '@renderer/hooks/useProvider'
-import { getProviderName } from '@renderer/services/ProviderService'
+// import { getProviderName } from '@renderer/services/ProviderService'
 import type { Assistant, Model } from '@renderer/types'
 import { Button, Tag } from 'antd'
 import { ChevronDown } from 'lucide-react'
@@ -51,15 +51,13 @@ const SelectModelButton: FC<Props> = ({ assistant }) => {
     return null
   }
 
-  const providerName = getProviderName(model)
+  // const providerName = getProviderName(model)
 
   return (
     <DropdownButton size="small" type="text" onClick={onSelectModel}>
       <ButtonContent>
         <ModelAvatar model={model} size={20} />
-        <ModelName>
-          {model ? model.name : t('button.select_model')} {providerName ? ' | ' + providerName : ''}
-        </ModelName>
+        <ModelName>{model ? model.name : t('button.select_model')}</ModelName>
       </ButtonContent>
       <ChevronDown size={14} color="var(--color-icon)" />
       {!provider && <Tag color="error">{t('models.invalid_model')}</Tag>}

@@ -1,7 +1,8 @@
-import { pageListApi } from '@renderer/api/openManagement'
+import CollapsibleSearchBar from '@renderer/components/CollapsibleSearchBar'
 import { HStack } from '@renderer/components/Layout'
 import { DynamicVirtualList, type DynamicVirtualListRef } from '@renderer/components/VirtualList'
 import { PROVIDER_URLS } from '@renderer/config/providers'
+import { transformToModel, useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels'
 import { useProvider } from '@renderer/hooks/useProvider'
 import { getProviderLabel } from '@renderer/i18n/label'
 import { SettingHelpLink, SettingHelpText, SettingHelpTextRow, SettingSubtitle } from '@renderer/pages/settings'
@@ -14,7 +15,7 @@ import type { Model } from '@renderer/types'
 import { filterModelsByKeywords } from '@renderer/utils'
 import { getDuplicateModelNames } from '@renderer/utils/model'
 // import { isNewApiProvider } from '@renderer/utils/provider'
-import { Button, Empty, Flex, Space, Spin, Tabs } from 'antd'
+import { Button, Empty, Flex, Radio, RadioChangeEvent, Space, Spin } from 'antd'
 import { groupBy, isEmpty, sortBy, toPairs } from 'lodash'
 import { RefreshCw } from 'lucide-react'
 import React, { memo, startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -34,17 +35,6 @@ enum ModelAttribute {
   ImageModel = 'image_generation'
 }
 
-interface ModelPageParams {
-  type: string
-  modelAttribute: ModelAttribute
-  pageNum: number
-  pageSize: number
-  total: number
-  orderByStatus: number // 1=先有效再停用再失效/下架（或后端约定的枚举）
-  orderByTime: string // 有效组内按时间倒序
-  domain: string
-}
-
 type ModelGroups = Record<string, Model[]>
 const MODEL_COUNT_THRESHOLD = 10
 
@@ -61,14 +51,11 @@ const ModelListContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 600px;
-  overflow-y: auto;
-  /* body 有 light 类名时的样式 */
-  body.light & {
-    background: #f1f1f1;
-    //padding: 10px 5px 10px 10px;
-    border-radius: 8px;
-  }
+  height: calc(100vh - 410px);
+  border-radius: 8px;
+  background-color: var(--color-gray-4);
+  padding: 16px;
+  overflow: hidden;
 
   .ant-collapse-content{
     padding: 15px;
@@ -96,106 +83,54 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
   const { t } = useTranslation()
   // const { provider, models, removeModel } = useProvider(providerId)
   const { provider, removeModel } = useProvider(providerId)
-  const [activeTabKey, setActiveTabKey] = useState(ModelAttribute.TextModel)
+  const [activeTabKey, setActiveTabKey] = useState('1')
   const typeTabs = [
     {
       key: ModelAttribute.TextModel,
-      type: '1',
+      value: '1',
       label: t('settings.models.text_model'),
-      children: null
+      style: { padding: '0 30px', fontSize: '12px' }
     },
     {
       key: ModelAttribute.ImageModel,
-      type: '3',
+      value: '3',
       label: t('settings.models.image_model'),
-      children: null
+      style: { padding: '0 30px', fontSize: '12px' }
     }
   ]
-  const onChange = (key: string) => {
-    setActiveTabKey(key as ModelAttribute)
-    // 切换 tab 时重置列表并重新请求
-    setModels([])
-    const type = typeTabs.find((item) => item.key === key)?.type || ''
-    setModelPageParams((prev) => ({
-      ...prev,
-      modelAttribute: key as ModelAttribute,
-      type,
-      pageNum: 1,
-      total: 0
-    }))
-    // 使用 queueMicrotask 确保 ref 已同步后再请求
-    queueMicrotask(() => {
-      pageParamsRef.current = { ...pageParamsRef.current, type, pageNum: 1, total: 0 }
-      fetchModels(1)
-    })
-  }
-  const [loading, setLoading] = useState(false)
-  const loadingRef = useRef(false)
-  const modelsLengthRef = useRef(0)
-  const pageParamsRef = useRef<ModelPageParams>({
-    type: '1',
-    modelAttribute: ModelAttribute.TextModel,
-    pageNum: 1,
-    pageSize: 10,
-    total: 0,
-    orderByStatus: 1,
-    orderByTime: 'desc',
-    domain: window.location.hostname
-  })
 
   const listRef = useRef<DynamicVirtualListRef>(null)
 
-  // TODO 模型数据源
-  const [models, setModels] = useState<any>([])
-  const [modelPageParams, setModelPageParams] = useState<ModelPageParams>(pageParamsRef.current)
+  const { getFilteredModels, loading, fetchNextPage, reset, hasMore } = useAiOnlyModels()
 
-  // 保持 ref 与 state 同步，供事件回调读取最新值（避免闭包陷阱）
-  useEffect(() => {
-    pageParamsRef.current = modelPageParams
-  }, [modelPageParams])
+  const models = useMemo(() => {
+    const modelList = getFilteredModels()
+    return modelList.map((x: any) => transformToModel(x))
+  }, [getFilteredModels])
 
-  // TODO 模型列表数据源接口
-  const fetchModels = useCallback(async (pageNum: number) => {
-    setLoading(true)
-    try {
-      const params = { ...pageParamsRef.current, pageNum }
-      const res: any = await pageListApi(params)
-      if (res?.code == 200) {
-        const data = res.rows || []
-        const modelList = data.map((item: any) => ({
-          ...item,
-          name: item.modelName,
-          provider: 'aionly',
-          group: item.serviceName
-        }))
-        if (modelList.length > 0) {
-          // 使用 queueMicrotask 避免在渲染周期内调用 setState
-          queueMicrotask(() => {
-            setModels((prevModels: any[]) => [...prevModels, ...modelList])
-            setModelPageParams((prev) => ({ ...prev, total: res.total, pageNum }))
-          })
-        }
+  const handleDynamicListChange = (instance: any) => {
+    // 检测是否滚动到底部
+    const scrollElement = instance.scrollElement
+    if (scrollElement) {
+      const { scrollTop, scrollHeight, clientHeight } = scrollElement
+      const distanceFromBottom = scrollHeight - scrollTop - clientHeight
+
+      if (distanceFromBottom < 50 && hasMore && !loading) {
+        fetchNextPage() // 👈 触发加载更多
       }
-    } catch (e: any) {
-      throw new Error(e)
-    } finally {
-      setLoading(false)
-      loadingRef.current = false
     }
-  }, [])
+  }
 
-  // 将最新 models.length 同步到 ref，供 onChange 回调读取（避免闭包过时值）
-  useEffect(() => {
-    modelsLengthRef.current = models.length
-  }, [models.length])
+  const onChange = (e: RadioChangeEvent) => {
+    const type = (e.target as HTMLInputElement).value
+    setActiveTabKey(type)
 
-  useEffect(() => {
-    fetchModels(1)
-  }, [fetchModels])
+    const modelAttribute = typeTabs.find((tab) => tab.value === type)?.key
 
-  const reload = () => {
-    setModels([])
-    fetchModels(1)
+    reset({
+      modelAttribute: modelAttribute as ModelAttribute,
+      type
+    })
   }
 
   // 稳定的编辑模型回调，避免内联函数导致子组件 memo 失效
@@ -205,7 +140,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
   const docsWebsite = providerConfig?.websites?.docs
   const modelsWebsite = providerConfig?.websites?.models
 
-  const [searchText, _setSearchText] = useState('')
+  const [_searchText, setSearchText] = useState('')
   const [displayedModelGroups, setDisplayedModelGroups] = useState<ModelGroups | null>(() => {
     if (models.length > MODEL_COUNT_THRESHOLD) {
       return null
@@ -221,21 +156,25 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
     return new Map(modelStatuses.map((status) => [status.model.id, status]))
   }, [modelStatuses])
 
-  /*const setSearchText = useCallback((text: string) => {
-    startTransition(() => {
-      _setSearchText(text)
-    })
-  }, [])*/
+  const handleSetSearchText = useCallback(
+    (text: string) => {
+      startTransition(() => {
+        setSearchText(text)
+        reset({ modelName: text })
+      })
+    },
+    [reset]
+  )
 
   useEffect(() => {
     if (models.length > MODEL_COUNT_THRESHOLD) {
       startTransition(() => {
-        setDisplayedModelGroups(calculateModelGroups(models, searchText))
+        setDisplayedModelGroups(calculateModelGroups(models, ''))
       })
     } else {
-      setDisplayedModelGroups(calculateModelGroups(models, searchText))
+      setDisplayedModelGroups(calculateModelGroups(models, ''))
     }
-  }, [models, searchText])
+  }, [models])
 
   /*const modelCount = useMemo(() => {
     return Object.values(displayedModelGroups ?? {}).reduce((acc, group) => acc + group.length, 0)
@@ -247,7 +186,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
     if (result.success) {
       // 开通成功,result.modelIds 是本次开通的模型 id 列表
       // 刷新列表或其他操作
-      reload()
+      reset()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provider])
@@ -272,21 +211,6 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
     return displayedModelGroups ? Object.keys(displayedModelGroups) : []
   }, [displayedModelGroups])*/
 
-  const handleScroll = useCallback(
-    (e: React.UIEvent<HTMLDivElement>) => {
-      const { scrollTop, scrollHeight, clientHeight } = e.currentTarget
-      // 距底部 50px 以内触发加载
-      if (scrollHeight - scrollTop - clientHeight < 50) {
-        if (loadingRef.current) return
-        const { pageNum, /*pageSize,*/ total } = pageParamsRef.current
-        if (models.length >= total) return
-        loadingRef.current = true
-        fetchModels(pageNum + 1)
-      }
-    },
-    [models.length, fetchModels]
-  )
-
   const estimateSize = useCallback(() => 52, [])
 
   const actionButtons = (
@@ -306,12 +230,12 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
     </Space.Compact>*/
 
     <Space>
-      {/*<CollapsibleSearchBar
-        onSearch={setSearchText}
+      <CollapsibleSearchBar
+        onSearch={handleSetSearchText}
         placeholder={t('models.search.placeholder')}
         tooltip={t('models.search.tooltip')}
-      />*/}
-      <Button type="text" onClick={reload} icon={<RefreshCw size={16} />} disabled={isHealthChecking}></Button>
+      />
+      <Button type="text" onClick={reset} icon={<RefreshCw size={16} />} disabled={isHealthChecking}></Button>
       <Button type="primary" onClick={onManageModel} disabled={isHealthChecking}>
         {t('settings.models.manage.add_model')}
       </Button>
@@ -369,24 +293,33 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
           </HStack>
           {actionButtons}
         </HStack>
-        <Tabs activeKey={activeTabKey} items={typeTabs} onChange={onChange} />
       </SettingSubtitle>
+
       <Spin spinning={loading}>
-        {displayedModelGroups && !isEmpty(displayedModelGroups) && (
-          <ModelListContainer onScroll={handleScroll}>
+        <ModelListContainer>
+          <Radio.Group
+            value={activeTabKey}
+            options={typeTabs}
+            defaultValue="1"
+            optionType="button"
+            buttonStyle="solid"
+            onChange={onChange}
+          />
+          {displayedModelGroups && !isEmpty(displayedModelGroups) && (
             <DynamicVirtualList
               ref={listRef}
               list={Object.keys(displayedModelGroups)}
               estimateSize={estimateSize} // 44px item + 8px padding
               overscan={5}
               scrollerStyle={{
-                overflow: 'visible',
+                overflowY: 'auto',
                 height: 'auto',
-                padding: '4px 6px 4px 12px'
+                padding: '0 10px 0 0'
               }}
               itemContainerStyle={{
                 padding: '4px 0'
-              }}>
+              }}
+              onChange={handleDynamicListChange}>
               {(group) => (
                 <ModelListGroup
                   key={group}
@@ -401,14 +334,14 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
                 />
               )}
             </DynamicVirtualList>
-          </ModelListContainer>
-        )}
+          )}
 
-        {isEmpty(displayedModelGroups) && (
-          <Flex justify="center" align="center">
-            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-          </Flex>
-        )}
+          {isEmpty(displayedModelGroups) && (
+            <Flex justify="center" align="center">
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            </Flex>
+          )}
+        </ModelListContainer>
       </Spin>
     </>
   )

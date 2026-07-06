@@ -8,7 +8,7 @@ import { LoadingIcon } from '@renderer/components/Icons'
 import { HStack } from '@renderer/components/Layout'
 // import { ApiKeyListPopup } from '@renderer/components/Popups/ApiKeyListPopup'
 import Selector from '@renderer/components/Selector'
-import { HelpTooltip } from '@renderer/components/TooltipIcons'
+// import { HelpTooltip } from '@renderer/components/TooltipIcons'
 import { isRerankModel } from '@renderer/config/models'
 import { PROVIDER_URLS } from '@renderer/config/providers'
 import { useTheme } from '@renderer/context/ThemeProvider'
@@ -25,7 +25,7 @@ import type { SystemProviderId } from '@renderer/types'
 import { isSystemProviderId, SystemProviderIds } from '@renderer/types'
 import type { ApiKeyConnectivity } from '@renderer/types/healthCheck'
 import { HealthStatus } from '@renderer/types/healthCheck'
-import { formatApiHost, formatApiKeys, getFancyProviderName, validateApiHost } from '@renderer/utils'
+import { /*formatApiHost,*/ formatApiKeys, getFancyProviderName, validateApiHost } from '@renderer/utils'
 import { serializeHealthCheckError } from '@renderer/utils/error'
 /*import {
   isAIGatewayProvider,
@@ -39,7 +39,7 @@ import { serializeHealthCheckError } from '@renderer/utils/error'
   isVertexProvider
 } from '@renderer/utils/provider'*/
 import { isAzureOpenAIProvider, isNewApiProvider, isVertexProvider } from '@renderer/utils/provider'
-import { Button, Input, Select, Space, Tooltip, Typography } from 'antd'
+import { Button, Flex, Input, Select, Space, Tooltip, Typography } from 'antd'
 import { debounce, isEmpty } from 'lodash'
 import { Check, Settings2, TriangleAlert } from 'lucide-react'
 import type { FC } from 'react'
@@ -471,13 +471,13 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
     )
   }, [isCherryIN, provider])
 
-  const anthropicHostPreview = useMemo(() => {
+  /*  const anthropicHostPreview = useMemo(() => {
     const rawHost = anthropicApiHost ?? provider.anthropicApiHost
     // AI SDK uses the baseURL with /v1, then appends /messages
     const normalizedHost = formatApiHost(rawHost)
 
     return `${normalizedHost}/messages`
-  }, [anthropicApiHost, provider.anthropicApiHost])
+  }, [anthropicApiHost, provider.anthropicApiHost])*/
 
   const hostSelectorOptions = useMemo(() => {
     const options: { value: HostField; label: string }[] = [
@@ -565,7 +565,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
             <>
               <SettingSubtitle
                 style={{
-                  marginTop: 5,
+                  marginTop: 15,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between'
@@ -578,9 +578,14 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
                   </Tooltip>
                 )}*/}
                 {provider.id !== 'copilot' && (
-                  <Button type="link" onClick={openApiKeyList} style={{ padding: 0, fontSize: 12 }}>
-                    {t('settings.provider.api.key.list.more')}
-                  </Button>
+                  <Flex gap={10}>
+                    <Button
+                      type="primary"
+                      onClick={openApiKeyList}
+                      style={{ padding: '3px 12px', height: 'auto', fontSize: 12 }}>
+                      {t('settings.provider.api.key.list.title')}
+                    </Button>
+                  </Flex>
                 )}
               </SettingSubtitle>
               <Space.Compact style={{ width: '100%', marginTop: 5 }}>
@@ -631,7 +636,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
                     </>
                   )}
                 </HStack>
-                <SettingHelpText>{t('settings.provider.api_key.tip')}</SettingHelpText>
+                {/*<SettingHelpText>{t('settings.provider.api_key.tip')}</SettingHelpText>*/}
               </SettingHelpTextRow>
             </>
           )}
@@ -651,7 +656,10 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
                       />
                     </div>
                   </Tooltip>
-                  <HelpTooltip title={t('settings.provider.api.url.tip')}></HelpTooltip>
+                  {/*<HelpTooltip title={t('settings.provider.api.url.tip')}></HelpTooltip>*/}
+                  <Tooltip title={t('settings.provider.api.url.tip')} mouseEnterDelay={0.3}>
+                    <i className="iconfont icon-icon" style={{ fontSize: 12, cursor: 'pointer' }}></i>
+                  </Tooltip>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                   <Button
@@ -710,13 +718,13 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
                     />
                     {/* TODO: Add a reset button here. */}
                   </Space.Compact>
-                  <SettingHelpTextRow style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
+                  {/*<SettingHelpTextRow style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
                     <SettingHelpText style={{ marginLeft: 6, whiteSpace: 'break-spaces', wordBreak: 'break-all' }}>
                       {t('settings.provider.anthropic_api_host_preview', {
                         url: anthropicHostPreview || '—'
                       })}
                     </SettingHelpText>
-                  </SettingHelpTextRow>
+                  </SettingHelpTextRow>*/}
                 </>
               )}
             </>

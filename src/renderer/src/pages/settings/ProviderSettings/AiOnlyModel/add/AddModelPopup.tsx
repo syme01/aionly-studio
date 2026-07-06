@@ -2,14 +2,16 @@ import './AddModelPop.css'
 
 import { batchAddModelPayLaterApi } from '@renderer/api/balance'
 import { listUnopenedPayLaterModelsApi } from '@renderer/api/openManagement'
-import checkedImg from '@renderer/assets/images/checked.png'
 import vipImg from '@renderer/assets/images/vipSign.png'
+import CustomCollapse from '@renderer/components/CustomCollapse'
 import { TopView } from '@renderer/components/TopView'
 import type { Provider } from '@renderer/types'
-import { Button, Checkbox, Empty, message, Modal, Radio, Spin } from 'antd'
+import { Button, Checkbox, Empty, Flex, Input, message, Modal, Radio, Spin } from 'antd'
 import type { CheckboxGroupProps } from 'antd/es/checkbox'
-import { useCallback, useEffect, useState } from 'react'
+import { Search } from 'lucide-react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import styled from 'styled-components'
 
 interface ShowParams {
   provider: Provider
@@ -32,12 +34,13 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
     { label: t('settings.models.image_model'), value: 'image_generation' }
   ]
 
-  useEffect(() => {
+  const fetchModels = useCallback(() => {
     setLoading(true)
     setSelectedModelIds([])
     listUnopenedPayLaterModelsApi()
       .then((res: any) => {
-        if (res && res.data && res.data.length > 0 && Array.isArray(res.data)) {
+        const data = res?.data
+        if (data && data.length > 0 && Array.isArray(res.data)) {
           setModelList(res.data)
         }
       })
@@ -45,6 +48,10 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
         setLoading(false)
       })
   }, [])
+
+  useEffect(() => {
+    fetchModels()
+  }, [fetchModels])
 
   /** 无 VIP 或调用权限的模型不可选（灰置） */
   const modelDisabled = (item: any) => {
@@ -54,9 +61,25 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
   }
 
   const filteredModels = modelList.filter((model) => model.modelAttribute === curTabValue)
-  const selectableModels = filteredModels.filter((model) => !modelDisabled(model))
-  const checkAll = selectableModels.length > 0 && selectedModelIds.length === selectableModels.length
-  const indeterminate = selectedModelIds.length > 0 && selectedModelIds.length < selectableModels.length
+
+  // 按 serviceName 分组
+  const groupedModels = filteredModels.reduce(
+    (acc, model) => {
+      const serviceName = model.serviceName || '未分类'
+      if (!acc[serviceName]) {
+        acc[serviceName] = []
+      }
+      acc[serviceName].push(model)
+      return acc
+    },
+    {} as Record<string, any[]>
+  )
+
+  // 转换为数组格式
+  const groupModels = Object.entries(groupedModels).map(([groupName, models]) => ({
+    groupName,
+    models
+  }))
 
   const handleModelClick = (model: any) => {
     if (modelDisabled(model)) {
@@ -67,8 +90,31 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
     )
   }
 
-  const handleSelectAll = () => {
-    setSelectedModelIds(checkAll ? [] : selectableModels.map((model) => model.id))
+  // 组全选逻辑
+  const handleGroupSelectAll = (groupModels: any[]) => {
+    const selectableModels = groupModels.filter((model) => !modelDisabled(model))
+    const selectableIds = selectableModels.map((model) => model.id)
+    const allSelected = selectableIds.every((id) => selectedModelIds.includes(id))
+
+    if (allSelected) {
+      // 取消选中该组的所有模型
+      setSelectedModelIds((prev) => prev.filter((id) => !selectableIds.includes(id)))
+    } else {
+      // 选中该组的所有模型
+      setSelectedModelIds((prev) => [...new Set([...prev, ...selectableIds])])
+    }
+  }
+
+  // 判断组的选中状态
+  const getGroupCheckState = (groupModels: any[]) => {
+    const selectableModels = groupModels.filter((model) => !modelDisabled(model))
+    const selectableIds = selectableModels.map((model) => model.id)
+    const selectedCount = selectableIds.filter((id) => selectedModelIds.includes(id)).length
+
+    return {
+      checked: selectedCount === selectableIds.length && selectableIds.length > 0,
+      indeterminate: selectedCount > 0 && selectedCount < selectableIds.length
+    }
   }
 
   /** 开通模型 **/
@@ -96,10 +142,17 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
 
   const onClose = useCallback(() => resolve({}), [resolve])
 
+  // TODO: 搜索，接口参数还未定义，需要接口定义后才能实现
+  const handleSearch = () => {
+    // const text = e.target.value
+    setSelectedModelIds([])
+    fetchModels()
+  }
+
   return (
     <Modal
-      width="80%"
-      title="添加模型"
+      width="800px"
+      title={t('settings.models.manage.add_model')}
       open={open}
       onOk={onOk}
       onCancel={onCancel}
@@ -117,45 +170,86 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
         </Button>
       )}>
       <div className="tab-nav">
-        <Radio.Group
-          block
-          value={curTabValue}
-          options={tabOptions}
-          optionType="button"
-          buttonStyle="solid"
-          onChange={(e) => {
-            setCurTabValue(e.target.value)
-            setSelectedModelIds([])
-          }}
+        <div className="tab-layout">
+          <Radio.Group
+            block
+            value={curTabValue}
+            options={tabOptions}
+            optionType="button"
+            buttonStyle="solid"
+            onChange={(e) => {
+              setCurTabValue(e.target.value)
+              setSelectedModelIds([])
+            }}
+          />
+        </div>
+        <Input
+          placeholder={t('settings.models.add.search_placeholder')}
+          suffix={<Search size={12} onClick={handleSearch} />}
+          onPressEnter={handleSearch}
+          style={{ width: '50%' }}
         />
       </div>
       <div className="desc">{t('settings.models.add.activate_desc')}</div>
       <div className="model-wrapper">
-        <div className="flex items-center">
-          <Checkbox indeterminate={indeterminate} checked={checkAll} onChange={handleSelectAll}>
-            全选
-          </Checkbox>
-        </div>
         <div className="list">
-          {filteredModels?.map((model: any) => (
-            <div
-              key={model.id}
-              className={`item ${modelDisabled(model) ? 'disabled' : null} ${selectedModelIds.includes(model.id) ? 'selected' : ''}`}
-              onClick={() => handleModelClick(model)}>
-              <img className="model-img" src={model.modelFileUrl} alt={model.modelName} />
-              <span>{model.modelName}</span>
-              {selectedModelIds.includes(model.id) && (
-                <img className="checked-img" src={checkedImg} alt={model.modelName} />
-              )}
-              {model.memberSpecial == '1' && <img src={vipImg} className="vip-img" alt="" />}
-            </div>
-          ))}
-          {(loading || filteredModels.length <= 0) && (
+          {loading ? (
             <div className="loading">
               <Spin>
                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
               </Spin>
             </div>
+          ) : (
+            <CustomCollapseWrapper>
+              {groupModels.map((groupItem: any) => {
+                const groupCheckState = getGroupCheckState(groupItem.models)
+                return (
+                  <CustomCollapse
+                    key={groupItem.groupName}
+                    defaultActiveKey={['1']}
+                    label={
+                      <Flex align="center" gap={10}>
+                        <span style={{ fontWeight: 'bold' }}>{groupItem.groupName}</span>
+                      </Flex>
+                    }
+                    extra={
+                      <Checkbox
+                        indeterminate={groupCheckState.indeterminate}
+                        checked={groupCheckState.checked}
+                        onChange={(e) => {
+                          e.stopPropagation()
+                          handleGroupSelectAll(groupItem.models)
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    }
+                    styles={{
+                      header: {
+                        padding: '10px 16px',
+                        background: 'var(--color-gray-5)'
+                      }
+                    }}>
+                    {groupItem.models.map((model: any) => (
+                      <div
+                        key={model.id}
+                        className={`item ${modelDisabled(model) ? 'disabled' : ''} ${selectedModelIds.includes(model.id) ? 'selected' : ''}`}>
+                        <div className="left">
+                          <img className="model-img" src={model.modelFileUrl} alt={model.modelName} />
+                          <span>{model.modelName}</span>
+                          {model.memberSpecial == '1' && <img className="vip-img" src={vipImg} alt="" />}
+                        </div>
+                        <Checkbox
+                          checked={selectedModelIds.includes(model.id)}
+                          onChange={() => {
+                            handleModelClick(model)
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </CustomCollapse>
+                )
+              })}
+            </CustomCollapseWrapper>
           )}
         </div>
       </div>
@@ -185,3 +279,20 @@ export default class AddModelPopup {
     })
   }
 }
+
+const CustomCollapseWrapper = styled.div`
+  .toolbar-item {
+    transform: translateZ(0);
+    will-change: opacity;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  &:hover .toolbar-item {
+    opacity: 1;
+  }
+
+  /* 移除 collapse 的 padding，转而在 scroller 内部调整 */
+  .ant-collapse-content-box {
+    padding: 0 !important;
+  }
+`
