@@ -235,7 +235,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
         placeholder={t('models.search.placeholder')}
         tooltip={t('models.search.tooltip')}
       />
-      <Button type="text" onClick={reset} icon={<RefreshCw size={16} />} disabled={isHealthChecking}></Button>
+      <Button type="text" onClick={() => reset()} icon={<RefreshCw size={16} />} disabled={isHealthChecking}></Button>
       <Button type="primary" onClick={onManageModel} disabled={isHealthChecking}>
         {t('settings.models.manage.add_model')}
       </Button>

@@ -9,12 +9,12 @@ import { ModelAttribute, useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels
 import { useDefaultModel } from '@renderer/hooks/useAssistant'
 import { useProviders } from '@renderer/hooks/useProvider'
 import { useSettings } from '@renderer/hooks/useSettings'
-import { getModelUniqId, hasModel } from '@renderer/services/ModelService'
+// import { getModelUniqId, hasModel } from '@renderer/services/ModelService'
 import { useAppDispatch } from '@renderer/store'
 import { setTranslateModelPrompt } from '@renderer/store/settings'
 import type { Model } from '@renderer/types'
 import { Button, Tooltip } from 'antd'
-import { find } from 'lodash'
+// import { find } from 'lodash'
 import { Languages, MessageSquareMore, Rocket, Settings2 } from 'lucide-react'
 import type { FC } from 'react'
 import { useCallback, useMemo } from 'react'
@@ -40,7 +40,7 @@ const ModelSettings: FC<ModelSettingsProps> = ({
     useDefaultModel()
   const { providers } = useProviders()
 
-  const allModels = providers.map((p) => p.models).flat()
+  // const allModels = providers.map((p) => p.models).flat()
   const { theme } = useTheme()
   const { t } = useTranslation()
   const { translateModelPrompt } = useSettings()
@@ -52,17 +52,21 @@ const ModelSettings: FC<ModelSettingsProps> = ({
     []
   )
 
-  const defaultModelValue = useMemo(
-    () => (hasModel(defaultModel) ? getModelUniqId(defaultModel) : undefined),
-    [defaultModel]
-  )
+  const defaultModelValue = useMemo(() => {
+    // console.log('defaultModel', defaultModel)
+    // return (hasModel(defaultModel) ? getModelUniqId(defaultModel) : undefined)
+    return defaultModel ? JSON.stringify(defaultModel) : undefined
+  }, [defaultModel])
 
-  const defaultQuickModel = useMemo(() => (hasModel(quickModel) ? getModelUniqId(quickModel) : undefined), [quickModel])
+  const defaultQuickModel = useMemo(() => {
+    return quickModel ? JSON.stringify(quickModel) : undefined
+    // return hasModel(quickModel) ? getModelUniqId(quickModel) : undefined
+  }, [quickModel])
 
-  const defaultTranslateModel = useMemo(
-    () => (hasModel(translateModel) ? getModelUniqId(translateModel) : undefined),
-    [translateModel]
-  )
+  const defaultTranslateModel = useMemo(() => {
+    return translateModel ? JSON.stringify(translateModel) : undefined
+    // return hasModel(translateModel) ? getModelUniqId(translateModel) : undefined
+  }, [translateModel])
 
   const onResetTranslatePrompt = () => {
     dispatch(setTranslateModelPrompt(TRANSLATE_PROMPT))
@@ -81,6 +85,13 @@ const ModelSettings: FC<ModelSettingsProps> = ({
   const aiOnlyApiModels = useMemo(() => {
     return getFilteredModels()
   }, [getFilteredModels])
+
+  const handleSetModel = useCallback((value: string, method: any) => {
+    console.log('value', value)
+    // const model = find(allModels, JSON.parse(value)) as Model
+    const model = JSON.parse(value) as Model
+    method(model)
+  }, [])
 
   return (
     <SettingContainer theme={theme} style={containerStyle}>
@@ -103,7 +114,7 @@ const ModelSettings: FC<ModelSettingsProps> = ({
             onPopupScroll={handleScroll}
             style={{ width: compact ? '100%' : 360 }}
             size={compact ? 'large' : 'middle'}
-            onChange={(value) => setDefaultModel(find(allModels, JSON.parse(value)) as Model)}
+            onChange={(value) => handleSetModel(value, setDefaultModel)}
             placeholder={t('settings.models.empty')}
           />
           {showSettingsButton && (
@@ -134,7 +145,7 @@ const ModelSettings: FC<ModelSettingsProps> = ({
             apiModels={aiOnlyApiModels}
             loading={loading}
             onPopupScroll={handleScroll}
-            onChange={(value) => setQuickModel(find(allModels, JSON.parse(value)) as Model)}
+            onChange={(value) => handleSetModel(value, setQuickModel)}
             placeholder={t('settings.models.empty')}
           />
           {showSettingsButton && (
@@ -162,7 +173,7 @@ const ModelSettings: FC<ModelSettingsProps> = ({
             onPopupScroll={handleScroll}
             style={{ width: compact ? '100%' : 360 }}
             size={compact ? 'large' : 'middle'}
-            onChange={(value) => setTranslateModel(find(allModels, JSON.parse(value)) as Model)}
+            onChange={(value) => handleSetModel(value, setTranslateModel)}
             placeholder={t('settings.models.empty')}
           />
           {showSettingsButton && (

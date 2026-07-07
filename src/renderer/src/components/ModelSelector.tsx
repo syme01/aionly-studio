@@ -138,7 +138,8 @@ const ModelSelector = ({
         id: m.model || m.baseId,
         provider: 'aionly',
         group: serviceName,
-        name: m.modelName
+        name: m.modelName,
+        modelFileUrl: m.modelFileUrl
       })
       return {
         label: (
