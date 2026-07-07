@@ -1,9 +1,10 @@
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
-import { addApikey, deleteApikeyById, getApikeyList } from '@renderer/api/apikey'
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
+import { addApikey, deleteApikeyById, getApikeyList, updateApikey } from '@renderer/api/apikey'
 import { TopView } from '@renderer/components/TopView'
 import { maskApiKey } from '@renderer/utils'
 import type { TableProps } from 'antd'
-import { Button, Modal, Table, Typography } from 'antd'
+import { Button, Divider, Flex, Input, Modal, Table, Tooltip, Typography } from 'antd'
+import { Check, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -20,6 +21,9 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
   const [addLoading, setAddLoading] = useState(false)
   const [loading, setLoading] = useState(false)
   const [showAdd, setShowAdd] = useState(true)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editingData, setEditingData] = useState<{ appname: string }>({ appname: '' })
+  const [originalData, setOriginalData] = useState<{ appname: string }>({ appname: '' })
 
   const query = useRef({
     pageNum: 1,
@@ -29,7 +33,7 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
     keyType: ''
   })
 
-  const apikeyForm = {
+  const apikeyForm = useRef({
     id: '',
     keyType: '标准模式',
     appname: '',
@@ -44,7 +48,7 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
     knowledgeReturn: 10,
     milvusType: '',
     promptVal: ''
-  }
+  })
 
   const { t } = useTranslation()
 
@@ -52,24 +56,153 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
 
   const columns: TableProps<any>['columns'] = [
     {
+      title: '名称',
+      dataIndex: 'appname',
+      key: 'appname',
+      render: (text, record) => {
+        if (record.isEditing) {
+          return (
+            <Input
+              value={editingData.appname}
+              autoFocus={true}
+              placeholder={t('settings.provider.api.key.new_key.name_placeholder')}
+              onChange={(e) => setEditingData({ ...editingData, appname: e.target.value })}
+            />
+          )
+        }
+        return text
+      }
+    },
+    {
       title: 'API KEY',
       dataIndex: 'apikey',
       key: 'apikey',
-      render: (text) => (
-        <Typography.Text style={{ color: 'blue' }} copyable={{ text }}>
-          {maskApiKey(text)}
-        </Typography.Text>
-      )
+      render: (text, record) => {
+        if (record.isEditing && record.isNew) {
+          return '-'
+        }
+        return (
+          <Typography.Text style={{ color: 'blue' }} copyable={{ text }}>
+            {maskApiKey(text)}
+          </Typography.Text>
+        )
+      }
     },
     {
       title: `${t('settings.translate.custom.table.action.title')}`,
       key: 'action',
       align: 'center',
       render: (_, record) => (
-        <DeleteOutlined style={{ fontSize: '16px', color: 'red' }} onClick={() => handleDelete(record)} />
+        <>
+          {record.isEditing ? (
+            <Flex align="center" gap={10} justify="center">
+              <Tooltip title={t('settings.provider.api.key.new_key.confirm')}>
+                <Button icon={<Check size={14} />} onClick={() => handleConfirm(record)} loading={addLoading} />
+              </Tooltip>
+              <Tooltip title={t('settings.provider.api.key.new_key.cancel')}>
+                <Button icon={<X size={14} />} onClick={() => handleCancelEdit(record)} />
+              </Tooltip>
+            </Flex>
+          ) : (
+            <>
+              <Button type="link" size="small" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
+              <Divider type="vertical" />
+              <DeleteOutlined style={{ fontSize: '16px', color: 'red' }} onClick={() => handleDelete(record)} />
+            </>
+          )}
+        </>
       )
     }
   ]
+
+  const handleEdit = (record: any) => {
+    // 检查是否已有编辑中的行
+    if (editingId) {
+      window.toast.warning(t('settings.provider.api.key.new_key.editing_tip'))
+      return
+    }
+
+    // 设置当前行为编辑状态
+    const newList = apiKeyList.map((item) => ({
+      ...item,
+      isEditing: item.id === record.id
+    }))
+    setApiKeyList(newList)
+    setEditingId(record.id)
+    setEditingData({
+      appname: record.appname
+    })
+    setOriginalData({
+      appname: record.appname
+    })
+  }
+
+  const handleCancelEdit = (record: any) => {
+    if (record.isNew) {
+      // 如果是新增行，直接删除
+      setApiKeyList(apiKeyList.filter((item) => item.id !== record.id))
+    } else {
+      // 如果是编辑行，恢复原状态
+      setApiKeyList(apiKeyList.map((item) => (item.id === record.id ? { ...item, isEditing: false } : item)))
+    }
+    setEditingId(null)
+    setEditingData({ appname: '' })
+  }
+
+  // 新增
+  const fetchApiKeyAdd = async () => {
+    apikeyForm.current.appname = editingData.appname
+    const res = await addApikey(apikeyForm.current)
+    if (res.code === 200) {
+      window.toast.success(t('common.add_success'))
+      await fetchData()
+    }
+  }
+
+  // 编辑
+  const fetchApiKeyEdit = async (record: any) => {
+    apikeyForm.current.appname = editingData.appname
+    apikeyForm.current.id = record.id
+    const res = await updateApikey(apikeyForm.current)
+    if (res.code === 200) {
+      window.toast.success(t('common.save_success'))
+      await fetchData()
+    }
+  }
+
+  // 保存确认
+  const handleConfirm = async (record: any) => {
+    if (!editingData.appname.trim()) {
+      window.toast.error(t('settings.provider.api.key.new_key.name_placeholder'))
+      return
+    }
+
+    setAddLoading(true)
+
+    try {
+      if (record.isNew) {
+        await fetchApiKeyAdd()
+        await fetchData()
+      } else {
+        // 检查是否有修改，没修改就不调接口
+        if (editingData.appname === originalData.appname) {
+          // 没有修改，直接退出编辑状态
+          setApiKeyList(apiKeyList.map((item) => (item.id === record.id ? { ...item, isEditing: false } : item)))
+        } else {
+          // 有修改，调用更新接口
+          await fetchApiKeyEdit(record)
+          await fetchData()
+        }
+      }
+      setEditingId(null)
+      setEditingData({ appname: '' })
+      setOriginalData({ appname: '' })
+    } catch (error) {
+      throw error
+    } finally {
+      setAddLoading(false)
+    }
+  }
 
   const handleDelete = (record) => {
     Modal.confirm({
@@ -104,16 +237,28 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
     fetchData()
   }, [])
 
-  const handleAdd = async () => {
-    setAddLoading(true)
-    try {
-      await addApikey(apikeyForm)
-      await fetchData()
-    } finally {
-      timer = setTimeout(() => {
-        setAddLoading(false)
-      }, 2000)
+  const handleAdd = () => {
+    if (apiKeyList.length >= query.current.pageSize) {
+      setShowAdd(false)
+      return
     }
+
+    // 检查是否已有编辑中的行
+    if (editingId) {
+      window.toast.warning(t('settings.provider.api.key.new_key.editing_tip'))
+      return
+    }
+
+    const newRow = {
+      id: `new_${Date.now()}`,
+      appname: '',
+      apikey: '',
+      isEditing: true,
+      isNew: true
+    }
+    setApiKeyList([newRow, ...apiKeyList])
+    setEditingId(newRow.id)
+    setEditingData({ appname: '' })
   }
 
   const onCancel = () => {

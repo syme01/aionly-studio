@@ -1,6 +1,13 @@
 .ant-modal .ant-modal-footer {
-  text-align: center;
-  padding-top: 15px;
+  padding-top: 15px !important;
+  margin-top: 10px;
+  box-shadow: 0px -2px 2px rgba(16, 23, 61, 0.06);
+  .ant-btn {
+    width: 85px;
+    + .ant-btn {
+      margin-left: 16px;
+    }
+  }
 }
 
 .kt-btn {
@@ -65,9 +72,6 @@
 
 .model-wrapper .list .item:not(:first-child) {
   margin-top: 10px;
-}
-
-body.light .model-wrapper .list .item {
 }
 
 .model-wrapper .list .item:hover {

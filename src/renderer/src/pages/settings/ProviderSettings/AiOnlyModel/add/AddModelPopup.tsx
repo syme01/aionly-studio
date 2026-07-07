@@ -160,14 +160,16 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
       destroyOnHidden
       centered
       footer={() => (
-        <Button
-          type="primary"
-          className="kt-btn"
-          disabled={selectedModelIds.length === 0}
-          loading={confirmLoading}
-          onClick={handleActivateModel}>
-          {t('settings.models.add.activate_model')}
-        </Button>
+        <>
+          <Button onClick={onCancel}>{t('common.cancel')}</Button>
+          <Button
+            type="primary"
+            disabled={selectedModelIds.length === 0}
+            loading={confirmLoading}
+            onClick={handleActivateModel}>
+            {t('settings.models.add.activate_model')}
+          </Button>
+        </>
       )}>
       <div className="tab-nav">
         <div className="tab-layout">

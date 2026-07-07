@@ -5210,7 +5210,7 @@
       "image_model": "图片生成",
       "add": {
         "add_model": "添加模型",
-        "activate_model": "确认开通",
+        "activate_model": "开通",
         "activate_desc": "使用模型调用等服务前需要进行模型的开通，开通模式为先用后付，使用则按照模型的刊例价服务计费，不使用则不产生费用。",
         "batch_add_models": "批量添加模型",
         "search_placeholder": "输入模型名称或服务商名称",
@@ -5422,7 +5422,8 @@
             "cancel": "取消",
             "limit_over_tip": "密钥最多可创建200个，请删除部分密钥",
             "placeholder": "输入一个或多个密钥",
-            "name_placeholder": "请输入密钥名称"
+            "name_placeholder": "请输入密钥名称",
+            "editing_tip": "请先完成当前编辑"
           }
         },
         "options": {
