@@ -3271,7 +3271,7 @@
     "image_file_retry": "请重新上传图片",
     "image_handle_required": "请先上传图片",
     "image_mix_failed": "图像混合失败",
-    "image_placeholder": "暂无图片",
+    "image_placeholder": "暂无图片创作，请立即开始您的创意吧",
     "image_retry": "重试",
     "image_size_options": {
       "auto": "自动"
@@ -3374,6 +3374,9 @@
       "design": "设计",
       "general": "通用",
       "realistic": "写实"
+    },
+    "settings": {
+      "title": "功能设置"
     },
     "text_desc_required": "请先输入图片描述",
     "title": "绘画",

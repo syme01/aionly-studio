@@ -1,3 +1,4 @@
+import bgEmptyImage from '@renderer/assets/images/paintings/bg-empty.png'
 import ImageViewer from '@renderer/components/ImageViewer'
 import FileManager from '@renderer/services/FileManager'
 import type { Painting } from '@renderer/types'
@@ -88,7 +89,10 @@ const Artboard: FC<ArtboardProps> = ({
             ) : loadText && isLoading ? (
               ''
             ) : (
-              <div>{t('paintings.image_placeholder')}</div>
+              <div className="empty-wrap">
+                <img src={bgEmptyImage} alt="" />
+                <div>{t('paintings.image_placeholder')}</div>
+              </div>
             )}
           </ImagePlaceholder>
         )}
@@ -110,19 +114,30 @@ const Container = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  padding-bottom: 10px;
 
-  --artboard-max: calc(100vh - 256px);
+  --artboard-max: calc(100vh - 320px);
 `
 
 const ImagePlaceholder = styled.div`
   display: flex;
   width: var(--artboard-max);
   height: var(--artboard-max);
-  background-color: var(--color-background-soft);
+  background-color: var(--color-background);
   align-items: center;
   justify-content: center;
   padding: 24px;
   box-sizing: border-box;
+
+  .empty-wrap{
+    text-align: center;
+    color: var(--color-text-3);
+    font-size: 13px;
+    img {
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+  }
 `
 
 const ImageList = styled.ul`

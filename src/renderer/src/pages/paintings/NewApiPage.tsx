@@ -1,14 +1,14 @@
 import { PlusOutlined } from '@ant-design/icons'
 import { loggerService } from '@logger'
 import { AiProvider } from '@renderer/aiCore'
-import IcImageUp from '@renderer/assets/images/paintings/ic_ImageUp.svg'
+// import IcImageUp from '@renderer/assets/images/paintings/ic_ImageUp.svg'
 import { Navbar, NavbarCenter, NavbarRight } from '@renderer/components/app/Navbar'
 import ModelAvatar from '@renderer/components/Avatar/ModelAvatar'
-import Scrollbar from '@renderer/components/Scrollbar'
+// import Scrollbar from '@renderer/components/Scrollbar'
 import TranslateButton from '@renderer/components/TranslateButton'
 import { isMac } from '@renderer/config/constant'
 import { LanguagesEnum } from '@renderer/config/translate'
-import { useTheme } from '@renderer/context/ThemeProvider'
+// import { useTheme } from '@renderer/context/ThemeProvider'
 import { useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels'
 import { usePaintings } from '@renderer/hooks/usePaintings'
 import { ModelAttribute, useAllProviders } from '@renderer/hooks/useProvider'
@@ -30,10 +30,12 @@ import type { PaintingAction, PaintingsState } from '@renderer/types'
 import type { FileMetadata } from '@renderer/types'
 import { getErrorMessage, uuid } from '@renderer/utils'
 import { isNewApiProvider } from '@renderer/utils/provider'
-import { Button, Empty, Flex, InputNumber, Segmented, Select, Spin, Upload } from 'antd'
+import { Button, Empty, Flex, InputNumber, /*Segmented,*/ Radio, RadioChangeEvent, Select, Spin, Upload } from 'antd'
+import { Tooltip } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import type { RcFile } from 'antd/es/upload'
 import type { UploadFile } from 'antd/es/upload/interface'
+import { Paperclip } from 'lucide-react'
 import type { FC } from 'react'
 import React from 'react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -42,8 +44,9 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import SendMessageButton from '../home/Inputbar/SendMessageButton'
-import { SettingTitle } from '../settings'
+// import { SettingTitle } from '../settings'
 import Artboard from './components/Artboard'
+import FilesCard from './components/FilesCard'
 import { checkProviderEnabled, findPaintingByFiles } from './utils'
 
 const logger = loggerService.withContext('NewApiPage')
@@ -68,7 +71,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
   const [editImageFiles, setEditImageFiles] = useState<File[]>([])
 
   const { t } = useTranslation()
-  const { theme } = useTheme()
+  // const { theme } = useTheme()
   const providers = useAllProviders()
   const location = useLocation()
   // const routeName = location.pathname.split('/').pop() || 'new-api'
@@ -522,7 +525,8 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
   }*/
 
   // 处理模式切换
-  const handleModeChange = (value: string) => {
+  const handleModeChange = (e: RadioChangeEvent) => {
+    const value = e.target.value
     const nextMode = value as keyof PaintingsState
 
     setMode(nextMode)
@@ -603,8 +607,38 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
     }
   }, [modelOptions, painting.model, updatePaintingState])
 
+  // 上传图片文件列表数据
+  const uploadImageFileList = useMemo(() => {
+    return editImageFiles.map((file, idx): UploadFile<any> => {
+      const rcFile: RcFile = {
+        ...file,
+        uid: String(idx),
+        lastModifiedDate: file.lastModified ? new Date(file.lastModified) : new Date()
+      }
+      return {
+        uid: rcFile.uid,
+        name: rcFile.name || `image_${idx + 1}.png`,
+        status: 'done',
+        url: URL.createObjectURL(file),
+        originFileObj: rcFile,
+        lastModifiedDate: rcFile.lastModifiedDate
+      }
+    })
+  }, [editImageFiles])
+
+  // 删除图片文件列表数据
+  const handleFileRemove = (file: any) => {
+    setEditImageFiles((prev) =>
+      prev.filter((f) => {
+        const idx = prev.indexOf(f)
+        return String(idx) !== file.uid
+      })
+    )
+    return true
+  }
+
   return (
-    <Container>
+    <Container className="page-container">
       <Navbar>
         <NavbarCenter style={{ borderRight: 'none' }}>{t('paintings.title')}</NavbarCenter>
         {isMac && (
@@ -615,9 +649,25 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
           </NavbarRight>
         )}
       </Navbar>
+      <div className="top-bar">
+        {/* 添加功能切换分段控制器 */}
+        <ModeSegmentedContainer>
+          {/*<Segmented shape="round" value={mode} onChange={handleModeChange} options={modeOptions} />*/}
+          <div className="inner">
+            <Radio.Group
+              block
+              value={mode}
+              options={modeOptions}
+              optionType="button"
+              buttonStyle="solid"
+              onChange={handleModeChange}
+            />
+          </div>
+        </ModeSegmentedContainer>
+      </div>
       <ContentContainer id="content-container">
-        <LeftContainer>
-          {/*<ProviderTitleContainer>
+        {/*<LeftContainer>
+          <ProviderTitleContainer>
             <SettingTitle style={{ marginBottom: 5 }}>{t('common.provider')}</SettingTitle>
             <SettingHelpLink
               target="_blank"
@@ -630,190 +680,133 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
                 style={{ marginLeft: 5 }}
               />
             </SettingHelpLink>
-          </ProviderTitleContainer>*/}
+          </ProviderTitleContainer>
 
-          {/* <ProviderSelect provider={newApiProvider} options={Options} onChange={handleProviderChange} /> */}
-
-          {/* 当没有可用的 Image Generation 模型时，提示用户先去新增 */}
-          {modelOptions.length === 0 && (
-            <Empty
-              style={{ marginTop: 24 }}
-              description={t('paintings.no_image_generation_model', {
-                endpoint_type: t('endpoint_type.image-generation')
-              })}>
-              <Button type="primary" onClick={handleShowAddModelPopup}>
-                {t('paintings.go_to_settings')}
-              </Button>
-            </Empty>
-          )}
-
-          {modelOptions.length > 0 && (
-            <>
-              {mode === 'openai_image_edit' && (
-                <>
-                  <SettingTitle style={{ marginTop: 20 }}>{t('paintings.input_image')}</SettingTitle>
-                  <ImageUploadButton
-                    accept="image/png, image/jpeg, image/gif"
-                    maxCount={16}
-                    showUploadList={true}
-                    listType="picture"
-                    beforeUpload={handleImageUpload}
-                    fileList={editImageFiles.map((file, idx): UploadFile<any> => {
-                      const rcFile: RcFile = {
-                        ...file,
-                        uid: String(idx),
-                        lastModifiedDate: file.lastModified ? new Date(file.lastModified) : new Date()
-                      }
-                      return {
-                        uid: rcFile.uid,
-                        name: rcFile.name || `image_${idx + 1}.png`,
-                        status: 'done',
-                        url: URL.createObjectURL(file),
-                        originFileObj: rcFile,
-                        lastModifiedDate: rcFile.lastModifiedDate
-                      }
-                    })}
-                    onRemove={(file) => {
-                      setEditImageFiles((prev) =>
-                        prev.filter((f) => {
-                          const idx = prev.indexOf(f)
-                          return String(idx) !== file.uid
-                        })
-                      )
-                      return true
-                    }}>
-                    <ImagePlaceholder>
-                      <ImageSizeImage src={IcImageUp} theme={theme} />
-                    </ImagePlaceholder>
-                  </ImageUploadButton>
-                </>
-              )}
-
-              {/* Model Selector */}
-              <SettingTitle style={{ marginTop: 20 }}>{t('paintings.model')}</SettingTitle>
-              <Select
-                value={painting.model}
-                onChange={handleModelChange}
-                style={{ width: '100%', marginBottom: 15 }}
-                virtual={true}
-                onPopupScroll={handleScroll}
-                popupRender={(menu) => <Spin spinning={loading}>{menu}</Spin>}>
-                {Object.entries(groupedModelOptions).map(([groupName, options]) => (
-                  <Select.OptGroup label={groupName} key={groupName}>
-                    {options.map((m) => (
-                      <Select.Option value={m.value} key={m.value}>
-                        <Flex align="center" gap={5}>
-                          <ModelAvatar model={m} size={18} />
-                          <span className="text-overflow" title={m.label}>
-                            {m.label}
-                          </span>
-                        </Flex>
-                      </Select.Option>
-                    ))}
-                  </Select.OptGroup>
-                ))}
-              </Select>
-
-              {/* Image Size */}
-              {selectedModelConfig?.imageSizes && selectedModelConfig.imageSizes.length > 0 && (
-                <>
-                  <SettingTitle>{t('paintings.image.size')}</SettingTitle>
-                  <Select value={painting.size} onChange={handleSizeChange} style={{ width: '100%', marginBottom: 15 }}>
-                    {selectedModelConfig.imageSizes.map((s) => (
-                      <Select.Option value={s.value} key={s.value}>
-                        {getPaintingsImageSizeOptionsLabel(s.value) ?? s.value}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                </>
-              )}
-
-              {/* Quality */}
-              {selectedModelConfig?.quality && selectedModelConfig.quality.length > 0 && (
-                <>
-                  <SettingTitle>{t('paintings.quality')}</SettingTitle>
-                  <Select
-                    value={painting.quality}
-                    onChange={handleQualityChange}
-                    style={{ width: '100%', marginBottom: 15 }}>
-                    {selectedModelConfig.quality.map((q) => (
-                      <Select.Option value={q.value} key={q.value}>
-                        {getPaintingsQualityOptionsLabel(q.value) ?? q.value}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                </>
-              )}
-
-              {/* Moderation */}
-              {mode !== 'openai_image_edit' &&
-                selectedModelConfig?.moderation &&
-                selectedModelConfig.moderation.length > 0 && (
-                  <>
-                    <SettingTitle>{t('paintings.moderation')}</SettingTitle>
-                    <Select
-                      value={painting.moderation}
-                      onChange={handleModerationChange}
-                      style={{ width: '100%', marginBottom: 15 }}>
-                      {selectedModelConfig.moderation.map((m) => (
-                        <Select.Option value={m.value} key={m.value}>
-                          {getPaintingsModerationOptionsLabel(m.value) ?? m.value}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </>
-                )}
-
-              {/* Background */}
-              {mode === 'openai_image_edit' &&
-                selectedModelConfig?.background &&
-                selectedModelConfig.background.length > 0 && (
-                  <>
-                    <SettingTitle>{t('paintings.background')}</SettingTitle>
-                    <Select
-                      value={painting.background}
-                      onChange={(value) => updatePaintingState({ background: value })}
-                      style={{ width: '100%', marginBottom: 15 }}>
-                      {selectedModelConfig.background.map((b) => (
-                        <Select.Option value={b.value} key={b.value}>
-                          {getPaintingsBackgroundOptionsLabel(b.value) ?? b.value}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </>
-                )}
-
-              {/* Number of Images (n) */}
-              {selectedModelConfig?.max_images && (
-                <>
-                  <SettingTitle>{t('paintings.number_images')}</SettingTitle>
-                  <InputNumber
-                    min={1}
-                    max={selectedModelConfig.max_images}
-                    value={painting.n || 1}
-                    onChange={handleNChange}
-                    style={{ width: '100%', marginBottom: 15 }}
-                  />
-                </>
-              )}
-            </>
-          )}
-        </LeftContainer>
+           <ProviderSelect provider={newApiProvider} options={Options} onChange={handleProviderChange} />
+        </LeftContainer>*/}
         <MainContainer>
-          {/* 添加功能切换分段控制器 */}
-          <ModeSegmentedContainer>
-            <Segmented shape="round" value={mode} onChange={handleModeChange} options={modeOptions} />
-          </ModeSegmentedContainer>
-          <Artboard
-            painting={painting}
-            isLoading={isLoading}
-            currentImageIndex={currentImageIndex}
-            onPrevImage={prevImage}
-            onNextImage={nextImage}
-            onCancel={onCancel}
-            retry={handleRetry}
-          />
+          {modelOptions.length > 0 && (
+            <Artboard
+              painting={painting}
+              isLoading={isLoading}
+              currentImageIndex={currentImageIndex}
+              onPrevImage={prevImage}
+              onNextImage={nextImage}
+              onCancel={onCancel}
+              retry={handleRetry}
+            />
+          )}
+
+          <div className="empty-wrapper">
+            {/* 当没有可用的 Image Generation 模型时，提示用户先去新增 */}
+            {modelOptions.length === 0 && (
+              <Empty
+                style={{ marginTop: 24 }}
+                description={t('paintings.no_image_generation_model', {
+                  endpoint_type: t('endpoint_type.image-generation')
+                })}>
+                <Button type="primary" onClick={handleShowAddModelPopup}>
+                  {t('paintings.go_to_settings')}
+                </Button>
+              </Empty>
+            )}
+          </div>
+
+          <div className="option-set-wrapper">
+            {modelOptions.length > 0 && (
+              <>
+                {/* Background */}
+                {mode === 'openai_image_edit' &&
+                  selectedModelConfig?.background &&
+                  selectedModelConfig.background.length > 0 && (
+                    <>
+                      {/*<SettingTitle>{t('paintings.background')}</SettingTitle>*/}
+                      <Select
+                        value={painting.background}
+                        onChange={(value) => updatePaintingState({ background: value })}
+                        style={{ width: '100px', marginBottom: 0 }}>
+                        {selectedModelConfig.background.map((b) => (
+                          <Select.Option value={b.value} key={b.value}>
+                            {getPaintingsBackgroundOptionsLabel(b.value) ?? b.value}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </>
+                  )}
+              </>
+            )}
+
+            {/* Image Size */}
+            {selectedModelConfig?.imageSizes && selectedModelConfig.imageSizes.length > 0 && (
+              <>
+                {/*<SettingTitle>{t('paintings.image.size')}</SettingTitle>*/}
+                <Select
+                  value={painting.size}
+                  onChange={handleSizeChange}
+                  style={{ width: '120px', flexShrink: 0, marginBottom: 0 }}>
+                  {selectedModelConfig.imageSizes.map((s) => (
+                    <Select.Option value={s.value} key={s.value}>
+                      {getPaintingsImageSizeOptionsLabel(s.value) ?? s.value}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </>
+            )}
+
+            {/* Quality */}
+            {selectedModelConfig?.quality && selectedModelConfig.quality.length > 0 && (
+              <>
+                {/*<SettingTitle>{t('paintings.quality')}</SettingTitle>*/}
+                <Select
+                  value={painting.quality}
+                  onChange={handleQualityChange}
+                  style={{ width: '100px', marginBottom: 0 }}>
+                  {selectedModelConfig.quality.map((q) => (
+                    <Select.Option value={q.value} key={q.value}>
+                      {getPaintingsQualityOptionsLabel(q.value) ?? q.value}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </>
+            )}
+
+            {/* Moderation */}
+            {mode !== 'openai_image_edit' &&
+              selectedModelConfig?.moderation &&
+              selectedModelConfig.moderation.length > 0 && (
+                <>
+                  {/*<SettingTitle>{t('paintings.moderation')}</SettingTitle>*/}
+                  <Select
+                    value={painting.moderation}
+                    onChange={handleModerationChange}
+                    style={{ width: '100px', marginBottom: 0 }}>
+                    {selectedModelConfig.moderation.map((m) => (
+                      <Select.Option value={m.value} key={m.value}>
+                        {getPaintingsModerationOptionsLabel(m.value) ?? m.value}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </>
+              )}
+
+            {/* Number of Images (n) */}
+            {selectedModelConfig?.max_images && (
+              <>
+                {/*<SettingTitle>{t('paintings.number_images')}</SettingTitle>*/}
+                <InputNumber
+                  min={1}
+                  max={selectedModelConfig.max_images}
+                  value={painting.n || 1}
+                  onChange={handleNChange}
+                  style={{ width: '150px', marginBottom: 0 }}
+                />
+              </>
+            )}
+          </div>
           <InputContainer>
+            {mode === 'openai_image_edit' && uploadImageFileList.length > 0 && (
+              <FilesCard files={uploadImageFileList} handleRemoveFile={handleFileRemove} />
+            )}
             <Textarea
               ref={textareaRef}
               variant="borderless"
@@ -831,7 +824,49 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
               onKeyDown={handleKeyDown}
             />
             <Toolbar>
+              <ToolLeftMenu>
+                {/* Model Selector */}
+                <Select
+                  value={painting.model}
+                  onChange={handleModelChange}
+                  style={{ width: '100%', marginBottom: 0 }}
+                  virtual={true}
+                  onPopupScroll={handleScroll}
+                  popupRender={(menu) => <Spin spinning={loading}>{menu}</Spin>}>
+                  {Object.entries(groupedModelOptions).map(([groupName, options]) => (
+                    <Select.OptGroup label={groupName} key={groupName}>
+                      {options.map((m) => (
+                        <Select.Option value={m.value} key={m.value}>
+                          <Flex align="center" gap={5}>
+                            <ModelAvatar model={m} size={18} />
+                            <span className="text-overflow" title={m.label}>
+                              {m.label}
+                            </span>
+                          </Flex>
+                        </Select.Option>
+                      ))}
+                    </Select.OptGroup>
+                  ))}
+                </Select>
+              </ToolLeftMenu>
               <ToolbarMenu>
+                {mode === 'openai_image_edit' && (
+                  <Tooltip title={t('richEditor.imageUploader.uploadFile')}>
+                    <ImageUploadButton
+                      accept="image/png, image/jpeg, image/gif"
+                      maxCount={16}
+                      showUploadList={false}
+                      listType="picture"
+                      beforeUpload={handleImageUpload}
+                      fileList={uploadImageFileList}
+                      onRemove={handleFileRemove}>
+                      <ImagePlaceholder>
+                        {/*<ImageSizeImage src={IcImageUp} theme={theme} />*/}
+                        <Paperclip size={18} />
+                      </ImagePlaceholder>
+                    </ImageUploadButton>
+                  </Tooltip>
+                )}
                 <TranslateButton
                   text={textareaRef.current?.resizableTextArea?.textArea?.value}
                   onTranslated={(translatedText) => updatePaintingState({ prompt: translatedText })}
@@ -866,6 +901,10 @@ const Container = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .top-bar{
+    border-radius: var(--base-border-radius) var(--base-border-radius) 0 0;
+    background-color: var(--color-background);
+  }
 `
 
 const ContentContainer = styled.div`
@@ -875,9 +914,20 @@ const ContentContainer = styled.div`
   height: 100%;
   background-color: var(--color-background);
   overflow: hidden;
+  border-radius: 0 0 var(--base-border-radius) var(--base-border-radius) !important;
+
+  .option-set-wrapper{
+    padding: 0 20px 5px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .empty-wrapper{
+    height: calc(100vh - 220px);
+  }
 `
 
-const LeftContainer = styled(Scrollbar)`
+/*const LeftContainer = styled(Scrollbar)`
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -886,7 +936,7 @@ const LeftContainer = styled(Scrollbar)`
   background-color: var(--color-background);
   max-width: var(--assistants-width);
   border-right: 0.5px solid var(--color-border);
-`
+`*/
 
 const MainContainer = styled.div`
   display: flex;
@@ -900,7 +950,7 @@ const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 95px;
-  max-height: 95px;
+  max-height: 320px;
   position: relative;
   border: 1px solid var(--color-border-soft);
   transition: all 0.3s ease;
@@ -909,7 +959,7 @@ const InputContainer = styled.div`
 `
 
 const Textarea = styled(TextArea)`
-  padding: 10px;
+  padding: 5px 10px 10px;
   border-radius: 0;
   display: flex;
   flex: 1;
@@ -922,10 +972,15 @@ const Toolbar = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  justify-content: flex-end;
-  padding: 0 8px;
-  padding-bottom: 0;
+  padding: 0 8px 0;
   height: 40px;
+`
+
+const ToolLeftMenu = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
 `
 
 const ToolbarMenu = styled.div`
@@ -940,9 +995,10 @@ const ToolbarMenu = styled.div`
 `*/
 
 const ModeSegmentedContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  padding-top: 24px;
+  padding: 16px;
+  .inner{
+    width: 256px;
+  }
 `
 
 /*const _ProviderTitleContainer = styled.div`
@@ -953,10 +1009,11 @@ const ModeSegmentedContainer = styled.div`
 `*/
 
 const ImageUploadButton = styled(Upload)`
+  line-height: 1;
   & .ant-upload.ant-upload-select {
-    width: 100% !important;
-    height: 60px !important;
-    border: 1px dashed var(--color-border);
+   /* width: 60px;
+    height: 60px;
+    border: 1px dashed var(--color-border);*/
   }
 `
 
@@ -970,10 +1027,10 @@ const ImagePlaceholder = styled.div`
   gap: 8px;
 `
 
-const ImageSizeImage = styled.img<{ theme: string }>`
+/*const ImageSizeImage = styled.img<{ theme: string }>`
   filter: ${({ theme }) => (theme === 'dark' ? 'invert(100%)' : 'none')};
   width: 20px;
   height: 20px;
-`
+`*/
 
 export default NewApiPage

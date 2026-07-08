@@ -1,10 +1,10 @@
-import { LoadingOutlined } from '@ant-design/icons'
+import { LoadingOutlined, TranslationOutlined } from '@ant-design/icons'
 import { loggerService } from '@logger'
 import { useSettings } from '@renderer/hooks/useSettings'
 import useTranslate from '@renderer/hooks/useTranslate'
 import { translateText } from '@renderer/services/TranslateService'
 import { Button, Tooltip } from 'antd'
-import { Languages } from 'lucide-react'
+// import { Languages } from 'lucide-react'
 import type { FC } from 'react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -70,7 +70,8 @@ const TranslateButton: FC<Props> = ({ text, onTranslated, disabled, style, isLoa
       mouseLeaveDelay={0}
       arrow>
       <ToolbarButton onClick={handleTranslate} disabled={disabled || isTranslating} style={style} type="text">
-        {isTranslating ? <LoadingOutlined spin /> : <Languages size={18} />}
+        {isTranslating ? <LoadingOutlined spin /> : <TranslationOutlined />}
+        {/*<Languages size={18} />*/}
       </ToolbarButton>
     </Tooltip>
   )
