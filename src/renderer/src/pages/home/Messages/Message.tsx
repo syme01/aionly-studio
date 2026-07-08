@@ -80,6 +80,9 @@ const MessageItem: FC<Props> = ({
   const { setTimeoutTimer } = useTimer()
   const isEditing = editingMessageId === message.id
 
+  console.log('MessageItem------->message', message)
+  console.log('MessageItem------->model', model)
+
   useEffect(() => {
     if (isEditing && messageContainerRef.current) {
       scrollIntoView(messageContainerRef.current, {

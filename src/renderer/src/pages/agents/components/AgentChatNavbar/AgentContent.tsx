@@ -5,12 +5,12 @@ import { useUpdateAgent } from '@renderer/hooks/agents/useUpdateAgent'
 import { useUpdateSession } from '@renderer/hooks/agents/useUpdateSession'
 import { useNavbarPosition } from '@renderer/hooks/useSettings'
 import { useShowAssistants } from '@renderer/hooks/useStore'
-import { AgentSettingsPopup, SessionSettingsPopup } from '@renderer/pages/settings/AgentSettings'
-import { AgentLabel, SessionLabel } from '@renderer/pages/settings/AgentSettings/shared'
+import { AgentSettingsPopup /*SessionSettingsPopup*/ } from '@renderer/pages/settings/AgentSettings'
+// import { AgentLabel, SessionLabel } from '@renderer/pages/settings/AgentSettings/shared'
 import type { AgentEntity, ApiModel } from '@renderer/types'
 import { Tooltip } from 'antd'
 import { t } from 'i18next'
-import { ChevronRight } from 'lucide-react'
+// import { ChevronRight } from 'lucide-react'
 import { Menu, PanelLeftClose, PanelRightClose } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useCallback } from 'react'
@@ -18,7 +18,7 @@ import { useCallback } from 'react'
 import AgentSidePanelDrawer from '../AgentSidePanelDrawer'
 import SelectAgentBaseModelButton from '../SelectAgentBaseModelButton'
 import OpenExternalAppButton from './OpenExternalAppButton'
-import SessionWorkspaceMeta from './SessionWorkspaceMeta'
+// import SessionWorkspaceMeta from './SessionWorkspaceMeta'
 import Tools from './Tools'
 
 type AgentContentProps = {
@@ -80,19 +80,20 @@ const AgentContent = ({ activeAgent }: AgentContentProps) => {
             <div
               className="flex h-full cursor-pointer items-center"
               onClick={() => AgentSettingsPopup.show({ agentId: activeAgent.id })}>
-              <AgentLabel
+              {/* <AgentLabel
                 agent={activeAgent}
                 classNames={{ name: 'max-w-40 text-xs', avatar: 'h-4.5 w-4.5', container: 'gap-1.5' }}
-              />
+              />*/}
+              <span>{activeAgent.name}</span>
             </div>
 
             {activeSession && (
               <>
                 {/* Separator */}
-                <ChevronRight className="h-4 w-4 text-gray-400" />
+                {/*<ChevronRight className="h-4 w-4 text-gray-400" />*/}
 
                 {/* Session Label */}
-                <div
+                {/*<div
                   className="flex h-full cursor-pointer items-center"
                   onClick={() =>
                     SessionSettingsPopup.show({
@@ -101,10 +102,10 @@ const AgentContent = ({ activeAgent }: AgentContentProps) => {
                     })
                   }>
                   <SessionLabel session={activeSession} className="max-w-40 text-xs" />
-                </div>
+                </div>*/}
 
                 {/* Separator */}
-                <ChevronRight className="h-4 w-4 text-gray-400" />
+                {/* <ChevronRight className="h-4 w-4 text-gray-400" />*/}
 
                 {/* Model Button */}
                 <SelectAgentBaseModelButton
@@ -115,10 +116,10 @@ const AgentContent = ({ activeAgent }: AgentContentProps) => {
                 />
 
                 {/* Separator */}
-                <ChevronRight className="h-4 w-4 text-gray-400" />
+                {/*<ChevronRight className="h-4 w-4 text-gray-400" />*/}
 
                 {/* Workspace Meta */}
-                <SessionWorkspaceMeta agent={activeAgent} session={activeSession} />
+                {/*<SessionWorkspaceMeta agent={activeAgent} session={activeSession} />*/}
               </>
             )}
           </div>

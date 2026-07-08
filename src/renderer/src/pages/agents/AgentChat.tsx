@@ -91,9 +91,9 @@ const AgentChat = () => {
         {/* Main Chat */}
         <div className="flex min-w-0 flex-1 flex-col">
           {/* Header */}
-          <div className="flex h-fit w-full min-w-0">
+          {/*<div className="flex h-fit w-full min-w-0">
             {activeAgent && <AgentChatNavbar className="min-w-0" activeAgent={activeAgent} />}
-          </div>
+          </div>*/}
 
           {/* Messages */}
           <div className="translate-z-0 relative flex w-full flex-1 flex-col justify-between overflow-y-auto overflow-x-hidden">
@@ -105,6 +105,8 @@ const AgentChat = () => {
             </div>
             {messageNavigation === 'buttons' && <ChatNavigation containerId="messages" />}
           </div>
+          {/* Header */}
+          {activeAgent && <AgentChatNavbar className="min-w-0" activeAgent={activeAgent} />}
           {/* Inputbar */}
           <AgentSessionInputbar agentId={activeAgentId} sessionId={activeSessionId} />
         </div>
@@ -136,7 +138,7 @@ const Container = ({ children, className }: PropsWithChildren<{ className?: stri
   return (
     <div
       className={cn(
-        'flex flex-1 overflow-hidden',
+        'flex flex-1 overflow-hidden bg-(--color-background) rounded-(--base-border-radius)',
         isTopNavbar && 'rounded-tl-[10px] rounded-bl-[10px] bg-(--color-background)',
         className
       )}>

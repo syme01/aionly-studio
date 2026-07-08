@@ -18,7 +18,7 @@ import type {
   UpdateAgentForm
 } from '@renderer/types'
 import { AgentConfigurationSchema, isAgentType } from '@renderer/types'
-import { cacheAiOnlyModel } from '@renderer/utils/aionly-model-cache'
+// import { cacheAiOnlyModel } from '@renderer/utils/aionly-model-cache'
 import { parseKeyValueString, serializeKeyValueString } from '@renderer/utils/env'
 import type { GitBashPathInfo } from '@shared/config/constant'
 import { Button, Input, Modal, Select, Switch, Tooltip } from 'antd'
@@ -265,10 +265,10 @@ const PopupContainer: React.FC<Props> = ({ agent, afterSubmit, resolve }) => {
     setSelectedModel(model)
 
     // 如果是 AiOnly 模型，缓存到 localStorage 以便后续显示
-    if (model.provider === 'aionly' || model.id?.startsWith('aionly:')) {
+    /*if (model.provider === 'aionly' || model.id?.startsWith('aionly:')) {
       cacheAiOnlyModel(model)
       logger.info('AiOnly model cached to localStorage', { modelId: model.id })
-    }
+    }*/
 
     setForm((prev) => ({ ...prev, model: model.id }))
   }, [])
@@ -307,6 +307,8 @@ const PopupContainer: React.FC<Props> = ({ agent, afterSubmit, resolve }) => {
         loadingRef.current = false
         return
       }
+
+      // console.log('form', form)
 
       if (isEditing(agent)) {
         if (!agent) {

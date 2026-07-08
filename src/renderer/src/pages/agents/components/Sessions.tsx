@@ -46,6 +46,8 @@ const Sessions = ({ agentId, onSelectItem }: SessionsProps) => {
   const listRef = useRef<DraggableVirtualListRef>(null)
   const client = useAgentClient()
 
+  const showAdd = false
+
   // Build sessionId → channelType map from channels table
   const [channelTypeMap, setChannelTypeMap] = useState<Record<string, string>>({})
   useEffect(() => {
@@ -206,9 +208,11 @@ const Sessions = ({ agentId, onSelectItem }: SessionsProps) => {
         itemKey={(index) => sessions[index]?.id ?? index}
         header={
           <div className="-mt-0.5 mb-1.5">
-            <AddButton onClick={createDefaultSession} disabled={creatingSession}>
-              {t('agent.session.add.title')}
-            </AddButton>
+            {showAdd && (
+              <AddButton onClick={createDefaultSession} disabled={creatingSession}>
+                {t('agent.session.add.title')}
+              </AddButton>
+            )}
           </div>
         }>
         {(session) => (

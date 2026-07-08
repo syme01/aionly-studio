@@ -5,7 +5,7 @@ import { useSettings } from '@renderer/hooks/useSettings'
 import { useShortcutDisplay } from '@renderer/hooks/useShortcuts'
 import { defineTool, registerTool, TopicType } from '@renderer/pages/home/Inputbar/types'
 import { Tooltip } from 'antd'
-import { MessageSquareDiff } from 'lucide-react'
+// import { MessageSquareDiff } from 'lucide-react'
 import { useCallback } from 'react'
 
 const logger = loggerService.withContext('CreateSessionTool')
@@ -44,7 +44,8 @@ const createSessionTool = defineTool({
     return (
       <Tooltip placement="top" title={t('chat.input.new_topic', { Command: newTopicShortcut })}>
         <ActionIconButton onClick={handleCreateSession} disabled={createSessionDisabled} loading={creatingSession}>
-          <MessageSquareDiff size={19} />
+          {/*<MessageSquareDiff size={19} />*/}
+          <i className="iconfont icon-xinhuati" style={{ fontSize: '19px' }}></i>
         </ActionIconButton>
       </Tooltip>
     )

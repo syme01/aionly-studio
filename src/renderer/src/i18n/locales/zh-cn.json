@@ -570,6 +570,9 @@
       }
     },
     "sidebar_title": "智能体",
+    "sidebar_agent": {
+      "add": "创建智能体"
+    },
     "todo": {
       "panel": {
         "title": "已完成 {{completed}}/{{total}} 个任务"

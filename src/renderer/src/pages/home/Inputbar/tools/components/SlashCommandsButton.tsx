@@ -2,7 +2,7 @@ import { ActionIconButton } from '@renderer/components/Buttons'
 import { QuickPanelReservedSymbol } from '@renderer/components/QuickPanel'
 import type { ToolContext, ToolQuickPanelController } from '@renderer/pages/home/Inputbar/types'
 import { Tooltip } from 'antd'
-import { Terminal } from 'lucide-react'
+// import { Terminal } from 'lucide-react'
 import { type FC, type ReactElement, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -42,7 +42,8 @@ const SlashCommandsButton: FC<Props> = ({ quickPanelController, session, openPan
         active={isActive}
         disabled={!hasCommands}
         aria-label={t('chat.input.slash_commands.title')}>
-        <Terminal size={18} />
+        {/*<Terminal size={18} />*/}
+        <i className="iconfont icon-daima" style={{ fontSize: '18px' }}></i>
       </ActionIconButton>
     </Tooltip>
   )

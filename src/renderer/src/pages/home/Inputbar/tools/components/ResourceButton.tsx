@@ -1,7 +1,7 @@
 import { ActionIconButton } from '@renderer/components/Buttons'
 import type { ToolQuickPanelApi, ToolQuickPanelController } from '@renderer/pages/home/Inputbar/types'
 import { Tooltip } from 'antd'
-import { FolderOpen } from 'lucide-react'
+// import { FolderOpen } from 'lucide-react'
 import type { FC } from 'react'
 import type React from 'react'
 import { memo } from 'react'
@@ -32,7 +32,8 @@ const ResourceButton: FC<Props> = ({ quickPanel, quickPanelController, accessibl
   return (
     <Tooltip placement="top" title={t('chat.input.resource_panel.title')} mouseLeaveDelay={0} arrow>
       <ActionIconButton onClick={handleOpenQuickPanel} aria-label={t('chat.input.resource_panel.title')}>
-        <FolderOpen size={18} />
+        {/*<FolderOpen size={18} />*/}
+        <i className="iconfont icon-shuliang" style={{ fontSize: '18px' }}></i>
       </ActionIconButton>
     </Tooltip>
   )

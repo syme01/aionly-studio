@@ -102,7 +102,7 @@ const AgentPage = () => {
       <AgentNavbar />
       <div
         id={isLeftNavbar ? 'content-container' : undefined}
-        className="flex min-w-0 flex-1 shrink flex-row overflow-hidden">
+        className="flex min-w-0 flex-1 shrink flex-row gap-2 overflow-hidden">
         <AnimatePresence initial={false}>
           {showAssistants && (
             <ErrorBoundary>
@@ -127,7 +127,7 @@ const AgentPage = () => {
 
 const Container = ({ children, className }: PropsWithChildren<{ className?: string }>) => {
   return (
-    <div id="agent-page" className={cn('flex flex-1 flex-col overflow-hidden', className)}>
+    <div id="agent-page" className={cn('flex flex-1 flex-col overflow-hidden page-container', className)}>
       {children}
     </div>
   )

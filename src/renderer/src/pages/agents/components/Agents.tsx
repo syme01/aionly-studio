@@ -1,3 +1,4 @@
+import { CloseCircleFilled } from '@ant-design/icons'
 import AddButton from '@renderer/components/AddButton'
 import DraggableVirtualList from '@renderer/components/DraggableList/virtual-list'
 import AgentModalPopup from '@renderer/components/Popups/agent/AgentModal'
@@ -13,15 +14,18 @@ import AgentItem from './AgentItem'
 
 interface AgentsProps {
   onSelectItem?: () => void
+  onSetShowAddAgentBtn?: (show: boolean) => void
 }
 
-const Agents = ({ onSelectItem }: AgentsProps) => {
+const Agents = ({ onSelectItem, onSetShowAddAgentBtn }: AgentsProps) => {
   const { t } = useTranslation()
   const { agents, deleteAgent, isLoading, error, reorderAgents } = useAgents()
   const { apiServerRunning, startApiServer } = useApiServer()
   const { chat } = useRuntime()
   const { activeAgentId } = chat
   const { setActiveAgentId } = useActiveAgent()
+
+  const showBtn = false
 
   const handleAgentPress = useCallback(
     (agentId: string) => {
@@ -30,6 +34,10 @@ const Agents = ({ onSelectItem }: AgentsProps) => {
     },
     [setActiveAgentId, onSelectItem]
   )
+
+  const handleSetShowAddAgentBtn = (show: boolean) => {
+    onSetShowAddAgentBtn && onSetShowAddAgentBtn(show)
+  }
 
   const handleAddAgent = useCallback(() => {
     void (!apiServerRunning && startApiServer())
@@ -41,12 +49,22 @@ const Agents = ({ onSelectItem }: AgentsProps) => {
   }, [apiServerRunning, startApiServer, setActiveAgentId])
 
   if (isLoading) {
+    handleSetShowAddAgentBtn(false)
     return <div className="p-5 text-center text-(--color-text-secondary) text-[13px]">{t('common.loading')}</div>
   }
 
   if (error) {
-    return <div className="p-5 text-center text-(--color-error) text-[13px]">{error.message}</div>
+    handleSetShowAddAgentBtn(false)
+    // return <div className="p-5 text-center text-(--color-error) text-[13px]">{error.message}</div>
+    return (
+      <div className="p-5 text-center text-(--color-error) ">
+        <CloseCircleFilled style={{ fontSize: 30, color: 'red' }} />
+        <div className="text-[13px]">{error.message}</div>
+      </div>
+    )
   }
+
+  handleSetShowAddAgentBtn(true)
 
   return (
     <div className="flex h-full flex-col">
@@ -59,8 +77,8 @@ const Agents = ({ onSelectItem }: AgentsProps) => {
         onUpdate={reorderAgents}
         itemKey={(index) => (agents ?? [])[index]?.id ?? index}
         header={
-          <div className="-mt-0.5 mb-1.5">
-            <AddButton onClick={handleAddAgent}>{t('agent.sidebar_title')}</AddButton>
+          <div className="-mt-0.5 mb-[10px]">
+            {showBtn && <AddButton onClick={handleAddAgent}>{t('agent.sidebar_title')}</AddButton>}
           </div>
         }>
         {(agent) => (

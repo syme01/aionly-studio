@@ -20,7 +20,8 @@ const AUTO_EDIT_MODE_COLOR = '#9254de'
 const getPermissionModeIcon = (mode: PermissionMode): ReactNode => {
   switch (mode) {
     case 'default':
-      return <Pointer size={18} color="var(--color-primary)" />
+      return <i className="iconfont icon-putongmoshi" style={{ color: 'var(--color-primary)' }}></i>
+    // return <Pointer size={18} color="var(--color-primary)" />
     case 'plan':
       return <Route size={18} color="var(--color-link)" />
     case 'acceptEdits':

@@ -5,9 +5,10 @@ import { QuickPanelReservedSymbol, useQuickPanel } from '@renderer/components/Qu
 import { isGenerateImageModel, isVisionModel } from '@renderer/config/models'
 import { useAgent } from '@renderer/hooks/agents/useAgent'
 import { useSession } from '@renderer/hooks/agents/useSession'
+import { transformToModel } from '@renderer/hooks/useAiOnlyModels'
 import { useInputText } from '@renderer/hooks/useInputText'
 import { selectNewTopicLoading } from '@renderer/hooks/useMessageOperations'
-import { getModel } from '@renderer/hooks/useModel'
+// import { getModel } from '@renderer/hooks/useModel'
 import { useSettings } from '@renderer/hooks/useSettings'
 import { useTextareaResize } from '@renderer/hooks/useTextareaResize'
 import { useTimer } from '@renderer/hooks/useTimer'
@@ -36,6 +37,7 @@ import type { MessageBlock } from '@renderer/types/newMessage'
 import { MessageBlockStatus } from '@renderer/types/newMessage'
 import { abortCompletion } from '@renderer/utils/abortController'
 import { buildAgentSessionTopicId } from '@renderer/utils/agentSession'
+import { getCachedAiOnlyModel } from '@renderer/utils/aionly-model-cache'
 import { getSendMessageShortcutLabel } from '@renderer/utils/input'
 import { createMainTextBlock, createMessage } from '@renderer/utils/messageUtils/create'
 import { documentExts, imageExts, textExts } from '@shared/config/constant'
@@ -68,11 +70,20 @@ const AgentSessionInputbar = ({ agentId, sessionId }: Props) => {
 
   // Create assistant stub with session data
   const assistantStub = useMemo<Assistant | null>(() => {
+    // console.log('<============session=======>', session)
     if (!session) return null
 
     // Extract model info
-    const [providerId, actualModelId] = session.model?.split(':') ?? [undefined, undefined]
-    const actualModel = actualModelId ? getModel(actualModelId, providerId) : undefined
+    // const [providerId, actualModelId] = session.model?.split(':') ?? [undefined, undefined]
+    // const actualModel = actualModelId ? getModel(actualModelId, providerId) : undefined
+
+    const actualModelId = session.model
+
+    // TODO: 临时处理，从本地缓存拿用户选过的模型，从里面去找对应的模型
+    const cacheModel = actualModelId ? getCachedAiOnlyModel(actualModelId) : undefined
+    const actualModel = cacheModel ? transformToModel(cacheModel) : undefined
+
+    // console.log('<============actualModel=======>', actualModel)
 
     return {
       id: session.agent_id ?? agentId,
@@ -108,6 +119,8 @@ const AgentSessionInputbar = ({ agentId, sessionId }: Props) => {
     }),
     []
   )
+
+  // console.log('<============assistantStub=======>', assistantStub)
 
   if (!assistantStub) {
     return null // Wait for session to load
@@ -152,6 +165,8 @@ const AgentSessionInputbarInner: FC<InnerProps> = ({ assistant, agentId, session
   const { agent: agentBase } = useAgent(agentId)
   const scope = TopicType.Session
   const config = getInputbarConfig(scope)
+
+  console.log('<============assistant=======>', assistant)
 
   // Use shared hooks for text and textarea management with draft persistence
   const draftCacheKey = getAgentDraftCacheKey(agentId)
@@ -401,6 +416,8 @@ const AgentSessionInputbarInner: FC<InnerProps> = ({ assistant, agentId, session
 
       // Calculate token usage for the user message
       const usage = await estimateUserPromptUsage({ content: text })
+
+      console.log('createMessage----assistant', assistant)
 
       const userMessage: Message = createMessage('user', sessionTopicId, agentId, {
         id: userMessageId,

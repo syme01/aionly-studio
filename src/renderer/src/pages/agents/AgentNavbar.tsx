@@ -1,39 +1,39 @@
-import { Navbar, NavbarCenter, NavbarLeft, NavbarRight } from '@renderer/components/app/Navbar'
+import { Navbar, NavbarCenter, /*NavbarLeft,*/ NavbarRight } from '@renderer/components/app/Navbar'
 import { HStack } from '@renderer/components/Layout'
-import NavbarIcon from '@renderer/components/NavbarIcon'
+// import NavbarIcon from '@renderer/components/NavbarIcon'
 import SearchPopup from '@renderer/components/Popups/SearchPopup'
-import { modelGenerating } from '@renderer/hooks/useRuntime'
-import { useSettings } from '@renderer/hooks/useSettings'
+// import { modelGenerating } from '@renderer/hooks/useRuntime'
+// import { useSettings } from '@renderer/hooks/useSettings'
 import { useShortcut } from '@renderer/hooks/useShortcuts'
-import { useShowAssistants, useShowTopics } from '@renderer/hooks/useStore'
-import { useAppDispatch } from '@renderer/store'
-import { setNarrowMode } from '@renderer/store/settings'
-import { Tooltip } from 'antd'
+// import { useShowAssistants, useShowTopics } from '@renderer/hooks/useStore'
+// import { useAppDispatch } from '@renderer/store'
+// import { setNarrowMode } from '@renderer/store/settings'
+// import { Tooltip } from 'antd'
 import { t } from 'i18next'
-import { Menu, PanelLeftClose, PanelRightClose, Search } from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
+// import { Menu, PanelLeftClose, PanelRightClose, Search } from 'lucide-react'
+// import { AnimatePresence, motion } from 'motion/react'
 
-import UpdateAppButton from '../home/components/UpdateAppButton'
-import AgentSidePanelDrawer from './components/AgentSidePanelDrawer'
+// import UpdateAppButton from '../home/components/UpdateAppButton'
+// import AgentSidePanelDrawer from './components/AgentSidePanelDrawer'
 
 const AgentNavbar = () => {
-  const { showAssistants, toggleShowAssistants } = useShowAssistants()
-  const { showTopics, toggleShowTopics } = useShowTopics()
-  const { narrowMode, topicPosition } = useSettings()
-  const dispatch = useAppDispatch()
+  // const { showAssistants, toggleShowAssistants } = useShowAssistants()
+  // const { showTopics, toggleShowTopics } = useShowTopics()
+  // const { narrowMode, topicPosition } = useSettings()
+  // const dispatch = useAppDispatch()
 
   useShortcut('search_message', () => {
     void SearchPopup.show()
   })
 
-  const handleNarrowModeToggle = async () => {
+  /*const handleNarrowModeToggle = async () => {
     await modelGenerating()
     dispatch(setNarrowMode(!narrowMode))
-  }
+  }*/
 
   return (
     <Navbar className="agent-navbar">
-      <AnimatePresence initial={false}>
+      {/*<AnimatePresence initial={false}>
         {showAssistants && (
           <motion.div
             initial={{ width: 0, opacity: 0 }}
@@ -69,8 +69,8 @@ const AgentNavbar = () => {
             <Menu size={18} />
           </NavbarIcon>
         </NavbarLeft>
-      )}
-      <NavbarCenter></NavbarCenter>
+      )}*/}
+      <NavbarCenter>{t('agent.sidebar_title')}</NavbarCenter>
       <NavbarRight
         style={{
           justifyContent: 'flex-end',
@@ -81,7 +81,7 @@ const AgentNavbar = () => {
         }}
         className="agent-navbar-right">
         <HStack alignItems="center" gap={6}>
-          <UpdateAppButton />
+          {/*<UpdateAppButton />
           <Tooltip title={t('chat.assistant.search.placeholder')} mouseEnterDelay={0.8}>
             <NavbarIcon className="max-[1000px]:hidden" onClick={() => SearchPopup.show()}>
               <Search size={18} />
@@ -105,7 +105,7 @@ const AgentNavbar = () => {
                 <PanelRightClose size={18} />
               </NavbarIcon>
             </Tooltip>
-          )}
+          )}*/}
         </HStack>
       </NavbarRight>
     </Navbar>

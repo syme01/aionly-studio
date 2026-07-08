@@ -6,9 +6,10 @@ import type { AgentBaseWithId, ApiModel } from '@renderer/types'
 import { isAgentSessionEntity } from '@renderer/types'
 import { isAgentEntity } from '@renderer/types'
 import { getModelFilterByAgentType } from '@renderer/utils/agentSession'
+import { cacheAiOnlyModel } from '@renderer/utils/aionly-model-cache'
 import type { ButtonProps } from 'antd'
 import { Button } from 'antd'
-import { ChevronsUpDown } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -74,6 +75,7 @@ const SelectAgentBaseModelButton = ({
     // console.log('selectedModel', selectedModel)
     // console.log('agent.model', agent.model)
     if (selectedModel && selectedModel.id !== agent.model) {
+      cacheAiOnlyModel(selectedModel)
       void onSelect(selectedModel)
     }
   }
@@ -104,7 +106,7 @@ const SelectAgentBaseModelButton = ({
             {model?.serviceName && <span className="text-xs text-gray-500"> | {model?.serviceName}</span>}
           </span>
         </div>
-        <ChevronsUpDown size={iconSize} color="var(--color-icon)" />
+        <ChevronDown size={iconSize} color="var(--color-icon)" />
       </div>
     </Button>
   )

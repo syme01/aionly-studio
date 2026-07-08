@@ -8,7 +8,7 @@ import type { AgentEntity } from '@renderer/types'
 import { cn } from '@renderer/utils'
 import type { MenuProps } from 'antd'
 import { Dropdown, Tooltip } from 'antd'
-import { Bot, MoreVertical } from 'lucide-react'
+import { Bot /*MoreVertical*/ } from 'lucide-react'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -86,12 +86,15 @@ const AgentItem = ({ agent, isActive, onDelete, onPress }: AgentItemProps) => {
               menu={{ items: menuItems }}
               trigger={['click']}
               popupRender={(menu) => <div onPointerDown={(e) => e.stopPropagation()}>{menu}</div>}>
-              <MenuButton onClick={handleMenuButtonClick}>
+              {/*<MenuButton onClick={handleMenuButtonClick}>
                 <MoreVertical size={14} className="text-(--color-text-secondary)" />
-              </MenuButton>
+              </MenuButton>*/}
+              <i onClick={handleMenuButtonClick} className="iconfont icon-gengduo2 text-(--color-primary)"></i>
             </Dropdown>
           )}
-          {!isActive && !isHovered && assistantIconType !== 'none' && <BotIcon />}
+          {!isActive && !isHovered && assistantIconType !== 'none' && (
+            <i className="iconfont icon-gengduo2 text-(--color-text-secondary)"></i>
+          )}
         </AssistantNameRow>
       </Container>
     </Dropdown>
@@ -105,9 +108,9 @@ export const Container: React.FC<{ isActive?: boolean } & React.HTMLAttributes<H
 }) => (
   <div
     className={cn(
-      'relative flex h-9.25 w-[calc(var(--assistants-width)-20px)] cursor-pointer flex-row justify-between rounded-(--list-item-border-radius) border border-transparent px-2',
+      'relative flex h-9.25 w-[calc(var(--assistants-width)-20px)] cursor-pointer flex-row justify-between rounded-(--base-border-radius) border border-transparent px-2',
       !isActive && 'hover:bg-(--color-list-item-hover)',
-      isActive && 'bg-(--color-list-item) shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]',
+      isActive && 'bg-(--color-list-item) shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] border-(--color-primary)',
       className
     )}
     {...props}

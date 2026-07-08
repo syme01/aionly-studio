@@ -193,7 +193,7 @@ const SessionItem = ({ session, agentId, channelType, onDelete, onPress }: Sessi
         title={session.name ?? session.id}
         onContextMenu={() => setTargetSession(session)}
         style={{
-          borderRadius: 'var(--list-item-border-radius)',
+          borderRadius: 'var(--base-border-radius)',
           cursor: isEditing ? 'default' : 'pointer'
         }}>
         {isPending && !isActive && <PendingIndicator />}
@@ -223,7 +223,7 @@ const SessionItem = ({ session, agentId, channelType, onDelete, onPress }: Sessi
 
 const SessionListItem = styled.div`
   padding: 7px 12px;
-  border-radius: var(--list-item-border-radius);
+  border-radius: var(--base-border-radius);
   font-size: 13px;
   display: flex;
   flex-direction: column;
@@ -248,6 +248,7 @@ const SessionListItem = styled.div`
   &.active {
     background-color: var(--color-list-item);
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--color-primary);
     .menu {
       opacity: 1;
 

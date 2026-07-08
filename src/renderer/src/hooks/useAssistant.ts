@@ -85,6 +85,8 @@ export function useAssistant(id: string) {
   //   throw new Error(`Assistant model is not set for assistant with name: ${assistant?.name ?? 'unknown'}`)
   // }
 
+  // throw new Error(`Assistant model is not set for assistant with name: ${assistant?.name ?? 'unknown'}`)
+
   if (!model && assistant) {
     throw new Error(`Assistant model is not set for assistant with name: ${assistant?.name ?? 'unknown'}`)
   }

@@ -1,7 +1,7 @@
 import type { ApiModel } from '@renderer/types'
 
 const CACHE_KEY = 'aionly_model_cache'
-const MAX_CACHE_SIZE = 20 // 只缓存最近 20 个模型
+const MAX_CACHE_SIZE = 2000 // 只缓存最近 2000 个模型
 
 interface CachedModel {
   model: ApiModel
