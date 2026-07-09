@@ -697,9 +697,9 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
             />
           )}
 
-          <div className="empty-wrapper">
-            {/* 当没有可用的 Image Generation 模型时，提示用户先去新增 */}
-            {modelOptions.length === 0 && (
+          {modelOptions.length === 0 && (
+            <div className="empty-wrapper">
+              {/* 当没有可用的 Image Generation 模型时，提示用户先去新增 */}
               <Empty
                 style={{ marginTop: 24 }}
                 description={t('paintings.no_image_generation_model', {
@@ -709,8 +709,8 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
                   {t('paintings.go_to_settings')}
                 </Button>
               </Empty>
-            )}
-          </div>
+            </div>
+          )}
 
           <div className="option-set-wrapper">
             {modelOptions.length > 0 && (
@@ -924,6 +924,9 @@ const ContentContainer = styled.div`
 
   .empty-wrapper{
     height: calc(100vh - 220px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 `
 
