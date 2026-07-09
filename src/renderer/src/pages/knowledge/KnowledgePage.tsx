@@ -100,7 +100,7 @@ const KnowledgePage: FC = () => {
   })
 
   return (
-    <Container>
+    <Container className="page-container">
       <Navbar>
         <NavbarCenter style={{ borderRight: 'none' }}>{t('knowledge.title')}</NavbarCenter>
       </Navbar>
@@ -159,6 +159,7 @@ const ContentContainer = styled.div`
   flex: 1;
   flex-direction: row;
   min-height: 100%;
+  background-color: var(--color-background);
 `
 
 const MainContent = styled(Scrollbar)`

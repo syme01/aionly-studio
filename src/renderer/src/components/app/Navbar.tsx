@@ -1,13 +1,16 @@
 import { queryMoneyConfig } from '@renderer/api/balance'
 import bullionImage from '@renderer/assets/images/home/bullion.png'
+import aiOnlyPng from '@renderer/assets/images/providers/aiOnly.png'
 import { isLinux, isMac, isWin } from '@renderer/config/constant'
 import { useTheme } from '@renderer/context/ThemeProvider'
 import { useFullscreen } from '@renderer/hooks/useFullscreen'
+import { useMinappPopup } from '@renderer/hooks/useMinappPopup'
 import useNavBackgroundColor from '@renderer/hooks/useNavBackgroundColor'
 import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useNavbarPosition } from '@renderer/hooks/useSettings'
 import { getThemeModeLabel } from '@renderer/i18n/label'
-import { ThemeMode } from '@renderer/types'
+import { type MinAppType, ThemeMode } from '@renderer/types'
+import { APP_HOST } from '@shared/config/constant'
 import { useQuery } from '@tanstack/react-query'
 import { Divider, Tooltip } from 'antd'
 import { Monitor } from 'lucide-react'
@@ -28,6 +31,7 @@ export const Navbar: FC<Props> = ({ children, ...props }) => {
   const isFullscreen = useFullscreen()
   const { isTopNavbar } = useNavbarPosition()
   const { minappShow } = useRuntime()
+  const { openMinappKeepAlive } = useMinappPopup()
 
   // 使用 React Query 获取余额，自动处理缓存和重复请求
   const { data: balanceData } = useQuery({
@@ -46,7 +50,16 @@ export const Navbar: FC<Props> = ({ children, ...props }) => {
   const hzBalance = balanceData?.hzBalance ? Number(balanceData.hzBalance) : 0
 
   // TODO: 余额充值
-  const handleToRecharge = () => {}
+  const handleToRecharge = () => {
+    const app: MinAppType = {
+      id: 'recharge',
+      name: '充值',
+      logo: aiOnlyPng,
+      supportedRegions: ['CN', 'Global'],
+      url: `${APP_HOST}/login?redirect=/recharge`
+    }
+    openMinappKeepAlive(app)
+  }
 
   if (isTopNavbar) {
     return null

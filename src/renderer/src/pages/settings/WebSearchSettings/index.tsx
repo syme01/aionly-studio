@@ -187,12 +187,14 @@ const MenuList = styled(Scrollbar)`
   padding-bottom: 48px;
   border-right: 0.5px solid var(--color-border);
   height: calc(100vh - var(--navbar-height));
+  background-color: var(--color-background);
 `
 
 const RightContainer = styled.div`
   flex: 1;
   position: relative;
   display: flex;
+  background-color: var(--color-background);
 `
 
 export default WebSearchSettings

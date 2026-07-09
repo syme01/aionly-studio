@@ -1,7 +1,7 @@
 import { loggerService } from '@logger'
 import { useSettings } from '@renderer/hooks/useSettings'
 import type { WebviewTag } from 'electron'
-import { memo, useEffect, useRef } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 
 const logger = loggerService.withContext('WebviewContainer')
 
@@ -26,6 +26,20 @@ const WebviewContainer = memo(
   }) => {
     const webviewRef = useRef<WebviewTag | null>(null)
     const { enableSpellCheck, minappsOpenLinkExternal } = useSettings()
+    const [preloadPath, setPreloadPath] = useState<string>('')
+
+    // Fetch preload path from main process
+    useEffect(() => {
+      window.api
+        .getWebviewPreloadPath()
+        .then((path) => {
+          setPreloadPath(path)
+          logger.debug(`Webview preload path: ${path}`)
+        })
+        .catch((err) => {
+          logger.error('Failed to get webview preload path:', err)
+        })
+    }, [])
 
     const setRef = (appid: string) => {
       onSetRefCallback(appid, null)
@@ -72,6 +86,27 @@ const WebviewContainer = memo(
         onNavigateCallback(appid, event.url)
       }
 
+      const handleIpcMessage = (event: any) => {
+        const channel = event.channel
+        const data = event.args[0]
+
+        logger.debug(`[webview ${appid}] Received IPC message on channel: ${channel}`, data)
+
+        // Handle messages from external web projects loaded in webview
+        switch (channel) {
+          case 'user-action':
+            logger.info(`[webview ${appid}] User action:`, data)
+            if (data?.url) {
+              onNavigateCallback(appid, data.url)
+            }
+            break
+
+          default:
+            logger.debug(`[webview ${appid}] Unhandled IPC channel: ${channel}`)
+            break
+        }
+      }
+
       const handleDomReady = () => {
         const webviewId = webviewRef.current?.getWebContentsId()
         if (webviewId) {
@@ -91,6 +126,7 @@ const WebviewContainer = memo(
       webviewRef.current.addEventListener('did-finish-load', handleLoaded)
       webviewRef.current.addEventListener('ready-to-show', handleReadyToShow)
       webviewRef.current.addEventListener('did-navigate-in-page', handleNavigate)
+      webviewRef.current.addEventListener('ipc-message', handleIpcMessage)
 
       // we set the url when the webview is ready
       webviewRef.current.src = url
@@ -101,6 +137,7 @@ const WebviewContainer = memo(
         webviewRef.current?.removeEventListener('did-finish-load', handleLoaded)
         webviewRef.current?.removeEventListener('ready-to-show', handleReadyToShow)
         webviewRef.current?.removeEventListener('did-navigate-in-page', handleNavigate)
+        webviewRef.current?.removeEventListener('ipc-message', handleIpcMessage)
       }
       // because the appid and url are enough, no need to add onLoadedCallback
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -167,6 +204,13 @@ const WebviewContainer = memo(
       }
     }, [appid, minappsOpenLinkExternal, enableSpellCheck])
 
+    // TODO: 临时处理，待优化
+    useEffect(() => {
+      if (url.endsWith('?redirect=/recharge')) {
+      }
+      // console.log('url', url)
+    }, [url])
+
     const WebviewStyle: React.CSSProperties = {
       width: '100%',
       height: '100%',
@@ -182,6 +226,7 @@ const WebviewContainer = memo(
         style={WebviewStyle}
         allowpopups={'true' as any}
         partition="persist:webview"
+        preload={preloadPath ? `file://${preloadPath}` : undefined}
         useragent={
           appid === 'google'
             ? 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)  Safari/537.36'

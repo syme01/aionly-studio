@@ -350,7 +350,6 @@ export const providerCharge = async (provider: string) => {
 
 function handleWindowMessage({ win, provider, targetPath }) {
   if (!win) {
-    alert('弹窗被浏览器拦截，请允许弹出窗口')
     return
   }
 

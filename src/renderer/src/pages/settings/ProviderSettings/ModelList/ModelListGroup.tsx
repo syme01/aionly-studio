@@ -49,6 +49,7 @@ const ModelListGroup: React.FC<ModelListGroupProps> = ({
   return (
     <CustomCollapseWrapper>
       <CustomCollapse
+        collapsible="disabled"
         defaultActiveKey={defaultOpen ? ['1'] : []}
         onChange={handleCollapseChange}
         label={
@@ -130,6 +131,15 @@ const CustomCollapseWrapper = styled.div`
   /* 移除 collapse 的 padding，转而在 scroller 内部调整 */
   .ant-collapse-content-box {
     padding: 0 !important;
+  }
+
+  .ant-collapse .ant-collapse-item-disabled>.ant-collapse-header,
+  .ant-collapse .ant-collapse-item-disabled>.ant-collapse-header>.arrow{
+    color: var(--color-text-1);
+    cursor: default;
+  }
+  .ant-collapse>.ant-collapse-item >.ant-collapse-header .ant-collapse-expand-icon{
+    display: none;
   }
 `
 

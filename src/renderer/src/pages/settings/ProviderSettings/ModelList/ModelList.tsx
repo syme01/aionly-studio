@@ -15,7 +15,7 @@ import type { Model } from '@renderer/types'
 import { filterModelsByKeywords } from '@renderer/utils'
 import { getDuplicateModelNames } from '@renderer/utils/model'
 // import { isNewApiProvider } from '@renderer/utils/provider'
-import { Button, Empty, Flex, Radio, RadioChangeEvent, Space, Spin } from 'antd'
+import { Button, Divider, Empty, Flex, Radio, RadioChangeEvent, Space, Spin } from 'antd'
 import { groupBy, isEmpty, sortBy, toPairs } from 'lodash'
 import { RefreshCw } from 'lucide-react'
 import React, { memo, startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -28,6 +28,7 @@ import { useHealthCheck } from './useHealthCheck'
 
 interface ModelListProps {
   providerId: string
+  onPaginationStateChange?: (state: { fetchNextPage: () => void; loading: boolean; hasMore: boolean }) => void
 }
 
 enum ModelAttribute {
@@ -51,11 +52,9 @@ const ModelListContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: calc(100vh - 410px);
   border-radius: 8px;
   background-color: var(--color-gray-4);
   padding: 16px;
-  overflow: hidden;
 
   .ant-collapse-content{
     padding: 15px;
@@ -79,7 +78,7 @@ const calculateModelGroups = (models: Model[], searchText: string): ModelGroups 
 /**
  * 模型列表组件，用于 CRUD 操作和健康检查
  */
-const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
+const ModelList: React.FC<ModelListProps> = ({ providerId, onPaginationStateChange }) => {
   const { t } = useTranslation()
   // const { provider, models, removeModel } = useProvider(providerId)
   const { provider, removeModel } = useProvider(providerId)
@@ -108,7 +107,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
     return modelList.map((x: any) => transformToModel(x))
   }, [getFilteredModels])
 
-  const handleDynamicListChange = (instance: any) => {
+  /*  const handleDynamicListChange = (instance: any) => {
     // 检测是否滚动到底部
     const scrollElement = instance.scrollElement
     if (scrollElement) {
@@ -119,7 +118,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
         fetchNextPage() // 👈 触发加载更多
       }
     }
-  }
+  }*/
 
   const onChange = (e: RadioChangeEvent) => {
     const type = (e.target as HTMLInputElement).value
@@ -175,6 +174,13 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
       setDisplayedModelGroups(calculateModelGroups(models, ''))
     }
   }, [models])
+
+  // 将分页状态暴露给父组件
+  useEffect(() => {
+    if (onPaginationStateChange) {
+      onPaginationStateChange({ fetchNextPage, loading, hasMore })
+    }
+  }, [onPaginationStateChange, fetchNextPage, loading, hasMore])
 
   /*const modelCount = useMemo(() => {
     return Object.values(displayedModelGroups ?? {}).reduce((acc, group) => acc + group.length, 0)
@@ -295,54 +301,65 @@ const ModelList: React.FC<ModelListProps> = ({ providerId }) => {
         </HStack>
       </SettingSubtitle>
 
-      <Spin spinning={loading}>
-        <ModelListContainer>
-          <Radio.Group
-            value={activeTabKey}
-            options={typeTabs}
-            defaultValue="1"
-            optionType="button"
-            buttonStyle="solid"
-            onChange={onChange}
-          />
-          {displayedModelGroups && !isEmpty(displayedModelGroups) && (
-            <DynamicVirtualList
-              ref={listRef}
-              list={Object.keys(displayedModelGroups)}
-              estimateSize={estimateSize} // 44px item + 8px padding
-              overscan={5}
-              scrollerStyle={{
-                overflowY: 'auto',
-                height: 'auto',
-                padding: '0 10px 0 0'
-              }}
-              itemContainerStyle={{
-                padding: '4px 0'
-              }}
-              onChange={handleDynamicListChange}>
-              {(group) => (
-                <ModelListGroup
-                  key={group}
-                  groupName={group}
-                  models={displayedModelGroups[group]}
-                  duplicateModelNames={duplicateModelNames}
-                  modelStatusMap={modelStatusMap}
-                  defaultOpen={true}
-                  onEditModel={handleEditModel}
-                  onRemoveModel={removeModel}
-                  onRemoveGroup={() => displayedModelGroups[group].forEach((model) => removeModel(model))}
-                />
-              )}
-            </DynamicVirtualList>
-          )}
+      <ModelListContainer>
+        <Radio.Group
+          value={activeTabKey}
+          options={typeTabs}
+          defaultValue="1"
+          optionType="button"
+          buttonStyle="solid"
+          onChange={onChange}
+        />
+        {displayedModelGroups && !isEmpty(displayedModelGroups) && (
+          <DynamicVirtualList
+            ref={listRef}
+            list={Object.keys(displayedModelGroups)}
+            estimateSize={estimateSize} // 44px item + 8px padding
+            overscan={5}
+            scrollerStyle={{
+              overflowY: 'hidden',
+              height: 'auto',
+              padding: '0'
+            }}
+            itemContainerStyle={{
+              padding: '4px 0'
+            }}
+            /*onChange={handleDynamicListChange}*/
+          >
+            {(group) => (
+              <ModelListGroup
+                key={group}
+                groupName={group}
+                models={displayedModelGroups[group]}
+                duplicateModelNames={duplicateModelNames}
+                modelStatusMap={modelStatusMap}
+                defaultOpen={true}
+                onEditModel={handleEditModel}
+                onRemoveModel={removeModel}
+                onRemoveGroup={() => displayedModelGroups[group].forEach((model) => removeModel(model))}
+              />
+            )}
+          </DynamicVirtualList>
+        )}
 
-          {isEmpty(displayedModelGroups) && (
-            <Flex justify="center" align="center">
-              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-            </Flex>
-          )}
-        </ModelListContainer>
-      </Spin>
+        {isEmpty(displayedModelGroups) && (
+          <Flex justify="center" align="center">
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          </Flex>
+        )}
+        <Spin size="small" spinning={loading} />
+        {!hasMore && (
+          <Divider
+            size="small"
+            style={{
+              fontSize: '12px',
+              color: 'var(--color-text-3)',
+              marginBlock: '0'
+            }}>
+            {t('common.no_more')}
+          </Divider>
+        )}
+      </ModelListContainer>
     </>
   )
 }

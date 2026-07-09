@@ -2,6 +2,7 @@ import { Navbar, NavbarMain } from '@renderer/components/app/Navbar'
 import App from '@renderer/components/MinApp/MinApp'
 import Scrollbar from '@renderer/components/Scrollbar'
 import { useMinapps } from '@renderer/hooks/useMinapps'
+import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useNavbarPosition } from '@renderer/hooks/useSettings'
 import { Button, Input } from 'antd'
 import { Search, SettingsIcon } from 'lucide-react'
@@ -18,6 +19,7 @@ const AppsPage: FC = () => {
   const [search, setSearch] = useState('')
   const { minapps } = useMinapps()
   const { isTopNavbar } = useNavbarPosition()
+  const { minappShow } = useRuntime()
 
   const filteredApps = search
     ? minapps.filter(
@@ -37,8 +39,8 @@ const AppsPage: FC = () => {
   }
 
   return (
-    <Container onContextMenu={handleContextMenu}>
-      <Navbar>
+    <Container onContextMenu={handleContextMenu} className="page-container">
+      <Navbar className={minappShow ? 'opacity-0' : ''}>
         <NavbarMain>
           {t('minapp.title')}
           <Input
@@ -114,6 +116,7 @@ const ContentContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   height: 100%;
+  background-color: var(--color-background);
 `
 
 const HeaderContainer = styled.div`
@@ -130,7 +133,7 @@ const MainContainer = styled.div`
   display: flex;
   flex: 1;
   flex-direction: row;
-  height: calc(100vh - var(--navbar-height));
+  height: calc(100vh - var(--navbar-height) - 10px);
   width: 100%;
 `
 

@@ -445,14 +445,14 @@ const NotesSidebar: FC<NotesSidebarProps> = ({
 export const SidebarContainer = styled.div`
   width: 250px;
   min-width: 250px;
-  height: calc(100vh - var(--navbar-height));
+  height: calc(100vh - var(--navbar-height) - 10px);
   background-color: var(--color-background);
   border-right: 0.5px solid var(--color-border);
-  border-top-left-radius: 10px;
   display: flex;
   flex-direction: column;
   position: relative;
   isolation: isolate;
+  border-radius: var(--base-border-radius) 0 0 var(--base-border-radius);
 `
 
 export const NotesTreeContainer = styled.div`

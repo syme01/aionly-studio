@@ -836,6 +836,7 @@ const MainContainer = styled.div`
   width: 100%;
   height: calc(100vh - var(--navbar-height) - 6px);
   overflow: hidden;
+  background-color: var(--color-background);
 `
 
 const MenuList = styled(Scrollbar)`

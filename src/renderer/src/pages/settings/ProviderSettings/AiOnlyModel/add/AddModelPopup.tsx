@@ -151,6 +151,7 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
 
   return (
     <Modal
+      wrapClassName="add-model-popup"
       width="800px"
       title={t('settings.models.manage.add_model')}
       open={open}

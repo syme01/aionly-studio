@@ -4,7 +4,7 @@ import type { RootState } from '@renderer/store'
 import { useAppDispatch } from '@renderer/store'
 import { setApiServerApiKey, setApiServerPort } from '@renderer/store/settings'
 import { formatErrorMessage } from '@renderer/utils/error'
-import { API_SERVER_DEFAULTS } from '@shared/config/constant'
+import { API_SERVER_DEFAULTS, APP_HOST } from '@shared/config/constant'
 import { Alert, Button, Input, InputNumber, Tooltip, Typography } from 'antd'
 import { Copy, ExternalLink, Play, RotateCcw, Square } from 'lucide-react'
 import type { FC } from 'react'
@@ -65,9 +65,10 @@ const ApiServerSettings: FC = () => {
 
   const openApiDocs = () => {
     if (apiServerRunning) {
-      const host = apiServerConfig.host || API_SERVER_DEFAULTS.HOST
-      const port = apiServerConfig.port || API_SERVER_DEFAULTS.PORT
-      window.open(`http://${host}:${port}/api-docs`, '_blank')
+      // const host = apiServerConfig.host || API_SERVER_DEFAULTS.HOST
+      // const port = apiServerConfig.port || API_SERVER_DEFAULTS.PORT
+      // window.open(`http://${host}:${port}/api-docs`, '_blank')
+      window.open(`${APP_HOST}/document/1965254170465107970`, '_blank')
     }
   }
 

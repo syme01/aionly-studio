@@ -10,6 +10,7 @@ export enum IpcChannel {
   App_Reload = 'app:reload',
   App_Quit = 'app:quit',
   App_Info = 'app:info',
+  App_GetWebviewPreloadPath = 'app:get-webview-preload-path',
   App_Proxy = 'app:proxy',
   App_SetLaunchToTray = 'app:set-launch-to-tray',
   App_SetTray = 'app:set-tray',

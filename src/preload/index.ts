@@ -99,6 +99,7 @@ export function tracedInvoke(channel: string, spanContext: SpanContext | undefin
 // Custom APIs for renderer
 const api = {
   getAppInfo: () => ipcRenderer.invoke(IpcChannel.App_Info),
+  getWebviewPreloadPath: () => ipcRenderer.invoke(IpcChannel.App_GetWebviewPreloadPath),
   getDiskInfo: (directoryPath: string): Promise<{ free: number; size: number } | null> =>
     ipcRenderer.invoke(IpcChannel.App_GetDiskInfo, directoryPath),
   reload: () => ipcRenderer.invoke(IpcChannel.App_Reload),
@@ -835,6 +836,25 @@ const api = {
   },
   analytics: {
     trackTokenUsage: (data: TokenUsageData) => ipcRenderer.invoke(IpcChannel.Analytics_TrackTokenUsage, data)
+  },
+  webviewBridge: {
+    /**
+     * Send message to host application (only available in webview context)
+     * Used by external web projects loaded in webview to communicate with Electron
+     */
+    sendToHost: (channel: string, data?: any) => {
+      ipcRenderer.sendToHost(channel, data)
+    },
+    /**
+     * Listen to messages from host application (only available in webview context)
+     */
+    onMessage: (channel: string, callback: (...args: any[]) => void) => {
+      const listener = (_event: Electron.IpcRendererEvent, ...args: any[]) => {
+        callback(...args)
+      }
+      ipcRenderer.on(channel, listener)
+      return () => ipcRenderer.off(channel, listener)
+    }
   }
 }
 

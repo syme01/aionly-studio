@@ -134,6 +134,8 @@ const ImagePlaceholder = styled.div`
     color: var(--color-text-3);
     font-size: 13px;
     img {
+      width: 200px;
+      height: 200px;
       display: inline-block;
       margin-bottom: 10px;
     }

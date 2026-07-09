@@ -649,22 +649,6 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
           </NavbarRight>
         )}
       </Navbar>
-      <div className="top-bar">
-        {/* 添加功能切换分段控制器 */}
-        <ModeSegmentedContainer>
-          {/*<Segmented shape="round" value={mode} onChange={handleModeChange} options={modeOptions} />*/}
-          <div className="inner">
-            <Radio.Group
-              block
-              value={mode}
-              options={modeOptions}
-              optionType="button"
-              buttonStyle="solid"
-              onChange={handleModeChange}
-            />
-          </div>
-        </ModeSegmentedContainer>
-      </div>
       <ContentContainer id="content-container">
         {/*<LeftContainer>
           <ProviderTitleContainer>
@@ -684,201 +668,230 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
 
            <ProviderSelect provider={newApiProvider} options={Options} onChange={handleProviderChange} />
         </LeftContainer>*/}
-        <MainContainer>
-          {modelOptions.length > 0 && (
-            <Artboard
-              painting={painting}
-              isLoading={isLoading}
-              currentImageIndex={currentImageIndex}
-              onPrevImage={prevImage}
-              onNextImage={nextImage}
-              onCancel={onCancel}
-              retry={handleRetry}
-            />
-          )}
 
-          {modelOptions.length === 0 && (
-            <div className="empty-wrapper">
-              {/* 当没有可用的 Image Generation 模型时，提示用户先去新增 */}
-              <Empty
-                style={{ marginTop: 24 }}
-                description={t('paintings.no_image_generation_model', {
-                  endpoint_type: t('endpoint_type.image-generation')
-                })}>
-                <Button type="primary" onClick={handleShowAddModelPopup}>
-                  {t('paintings.go_to_settings')}
-                </Button>
-              </Empty>
-            </div>
-          )}
-
-          <div className="option-set-wrapper">
+        <div className="left" style={{ width: 'calc(100% - 100px)' }}>
+          <div className="top-bar">
+            {/* 添加功能切换分段控制器 */}
+            <ModeSegmentedContainer>
+              {/*<Segmented shape="round" value={mode} onChange={handleModeChange} options={modeOptions} />*/}
+              <div className="inner">
+                <Radio.Group
+                  block
+                  value={mode}
+                  options={modeOptions}
+                  optionType="button"
+                  buttonStyle="solid"
+                  onChange={handleModeChange}
+                />
+              </div>
+            </ModeSegmentedContainer>
+          </div>
+          <MainContainer>
             {modelOptions.length > 0 && (
-              <>
-                {/* Background */}
-                {mode === 'openai_image_edit' &&
-                  selectedModelConfig?.background &&
-                  selectedModelConfig.background.length > 0 && (
-                    <>
-                      {/*<SettingTitle>{t('paintings.background')}</SettingTitle>*/}
-                      <Select
-                        value={painting.background}
-                        onChange={(value) => updatePaintingState({ background: value })}
-                        style={{ width: '100px', marginBottom: 0 }}>
-                        {selectedModelConfig.background.map((b) => (
-                          <Select.Option value={b.value} key={b.value}>
-                            {getPaintingsBackgroundOptionsLabel(b.value) ?? b.value}
-                          </Select.Option>
-                        ))}
-                      </Select>
-                    </>
-                  )}
-              </>
+              <Artboard
+                painting={painting}
+                isLoading={isLoading}
+                currentImageIndex={currentImageIndex}
+                onPrevImage={prevImage}
+                onNextImage={nextImage}
+                onCancel={onCancel}
+                retry={handleRetry}
+              />
             )}
 
-            {/* Image Size */}
-            {selectedModelConfig?.imageSizes && selectedModelConfig.imageSizes.length > 0 && (
-              <>
-                {/*<SettingTitle>{t('paintings.image.size')}</SettingTitle>*/}
-                <Select
-                  value={painting.size}
-                  onChange={handleSizeChange}
-                  style={{ width: '120px', flexShrink: 0, marginBottom: 0 }}>
-                  {selectedModelConfig.imageSizes.map((s) => (
-                    <Select.Option value={s.value} key={s.value}>
-                      {getPaintingsImageSizeOptionsLabel(s.value) ?? s.value}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </>
+            {modelOptions.length === 0 && (
+              <div className="empty-wrapper">
+                {/* 当没有可用的 Image Generation 模型时，提示用户先去新增 */}
+                <Empty
+                  style={{ marginTop: 24 }}
+                  description={t('paintings.no_image_generation_model', {
+                    endpoint_type: t('endpoint_type.image-generation')
+                  })}>
+                  <Button type="primary" onClick={handleShowAddModelPopup}>
+                    {t('paintings.go_to_settings')}
+                  </Button>
+                </Empty>
+              </div>
             )}
 
-            {/* Quality */}
-            {selectedModelConfig?.quality && selectedModelConfig.quality.length > 0 && (
-              <>
-                {/*<SettingTitle>{t('paintings.quality')}</SettingTitle>*/}
-                <Select
-                  value={painting.quality}
-                  onChange={handleQualityChange}
-                  style={{ width: '100px', marginBottom: 0 }}>
-                  {selectedModelConfig.quality.map((q) => (
-                    <Select.Option value={q.value} key={q.value}>
-                      {getPaintingsQualityOptionsLabel(q.value) ?? q.value}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </>
-            )}
-
-            {/* Moderation */}
-            {mode !== 'openai_image_edit' &&
-              selectedModelConfig?.moderation &&
-              selectedModelConfig.moderation.length > 0 && (
+            <div className="option-set-wrapper">
+              {modelOptions.length > 0 && (
                 <>
-                  {/*<SettingTitle>{t('paintings.moderation')}</SettingTitle>*/}
+                  {/* Background */}
+                  {mode === 'openai_image_edit' &&
+                    selectedModelConfig?.background &&
+                    selectedModelConfig.background.length > 0 && (
+                      <>
+                        {/*<SettingTitle>{t('paintings.background')}</SettingTitle>*/}
+                        <Select
+                          size="small"
+                          prefix={`${t('paintings.background')}:`}
+                          value={painting.background}
+                          onChange={(value) => updatePaintingState({ background: value })}
+                          style={{ width: '120px', marginBottom: 0 }}>
+                          {selectedModelConfig.background.map((b) => (
+                            <Select.Option value={b.value} key={b.value}>
+                              {getPaintingsBackgroundOptionsLabel(b.value) ?? b.value}
+                            </Select.Option>
+                          ))}
+                        </Select>
+                      </>
+                    )}
+                </>
+              )}
+
+              {/* Image Size */}
+              {selectedModelConfig?.imageSizes && selectedModelConfig.imageSizes.length > 0 && (
+                <>
+                  {/*<SettingTitle>{t('paintings.image.size')}</SettingTitle>*/}
                   <Select
-                    value={painting.moderation}
-                    onChange={handleModerationChange}
-                    style={{ width: '100px', marginBottom: 0 }}>
-                    {selectedModelConfig.moderation.map((m) => (
-                      <Select.Option value={m.value} key={m.value}>
-                        {getPaintingsModerationOptionsLabel(m.value) ?? m.value}
+                    size="small"
+                    prefix={`${t('paintings.image.size')}:`}
+                    value={painting.size}
+                    onChange={handleSizeChange}
+                    style={{ width: '150px', flexShrink: 0, marginBottom: 0 }}>
+                    {selectedModelConfig.imageSizes.map((s) => (
+                      <Select.Option value={s.value} key={s.value}>
+                        {getPaintingsImageSizeOptionsLabel(s.value) ?? s.value}
                       </Select.Option>
                     ))}
                   </Select>
                 </>
               )}
 
-            {/* Number of Images (n) */}
-            {selectedModelConfig?.max_images && (
-              <>
-                {/*<SettingTitle>{t('paintings.number_images')}</SettingTitle>*/}
-                <InputNumber
-                  min={1}
-                  max={selectedModelConfig.max_images}
-                  value={painting.n || 1}
-                  onChange={handleNChange}
-                  style={{ width: '150px', marginBottom: 0 }}
-                />
-              </>
-            )}
-          </div>
-          <InputContainer>
-            {mode === 'openai_image_edit' && uploadImageFileList.length > 0 && (
-              <FilesCard files={uploadImageFileList} handleRemoveFile={handleFileRemove} />
-            )}
-            <Textarea
-              ref={textareaRef}
-              variant="borderless"
-              disabled={isLoading}
-              value={painting.prompt}
-              spellCheck={false}
-              onChange={(e) => updatePaintingState({ prompt: e.target.value })}
-              placeholder={
-                isTranslating
-                  ? t('paintings.translating')
-                  : painting.model?.startsWith('imagen-')
-                    ? t('paintings.prompt_placeholder_en')
-                    : t('paintings.prompt_placeholder_edit')
-              }
-              onKeyDown={handleKeyDown}
-            />
-            <Toolbar>
-              <ToolLeftMenu>
-                {/* Model Selector */}
-                <Select
-                  value={painting.model}
-                  onChange={handleModelChange}
-                  style={{ width: '100%', marginBottom: 0 }}
-                  virtual={true}
-                  onPopupScroll={handleScroll}
-                  popupRender={(menu) => <Spin spinning={loading}>{menu}</Spin>}>
-                  {Object.entries(groupedModelOptions).map(([groupName, options]) => (
-                    <Select.OptGroup label={groupName} key={groupName}>
-                      {options.map((m) => (
+              {/* Quality */}
+              {selectedModelConfig?.quality && selectedModelConfig.quality.length > 0 && (
+                <>
+                  {/*<SettingTitle>{t('paintings.quality')}</SettingTitle>*/}
+                  <Select
+                    size="small"
+                    prefix={`${t('paintings.quality')}:`}
+                    value={painting.quality}
+                    onChange={handleQualityChange}
+                    style={{ width: '120px', marginBottom: 0 }}>
+                    {selectedModelConfig.quality.map((q) => (
+                      <Select.Option value={q.value} key={q.value}>
+                        {getPaintingsQualityOptionsLabel(q.value) ?? q.value}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </>
+              )}
+
+              {/* Moderation */}
+              {mode !== 'openai_image_edit' &&
+                selectedModelConfig?.moderation &&
+                selectedModelConfig.moderation.length > 0 && (
+                  <>
+                    {/*<SettingTitle>{t('paintings.moderation')}</SettingTitle>*/}
+                    <Select
+                      size="small"
+                      prefix={`${t('paintings.moderation')}:`}
+                      value={painting.moderation}
+                      onChange={handleModerationChange}
+                      style={{ width: '120px', marginBottom: 0 }}>
+                      {selectedModelConfig.moderation.map((m) => (
                         <Select.Option value={m.value} key={m.value}>
-                          <Flex align="center" gap={5}>
-                            <ModelAvatar model={m} size={18} />
-                            <span className="text-overflow" title={m.label}>
-                              {m.label}
-                            </span>
-                          </Flex>
+                          {getPaintingsModerationOptionsLabel(m.value) ?? m.value}
                         </Select.Option>
                       ))}
-                    </Select.OptGroup>
-                  ))}
-                </Select>
-              </ToolLeftMenu>
-              <ToolbarMenu>
-                {mode === 'openai_image_edit' && (
-                  <Tooltip title={t('richEditor.imageUploader.uploadFile')}>
-                    <ImageUploadButton
-                      accept="image/png, image/jpeg, image/gif"
-                      maxCount={16}
-                      showUploadList={false}
-                      listType="picture"
-                      beforeUpload={handleImageUpload}
-                      fileList={uploadImageFileList}
-                      onRemove={handleFileRemove}>
-                      <ImagePlaceholder>
-                        {/*<ImageSizeImage src={IcImageUp} theme={theme} />*/}
-                        <Paperclip size={18} />
-                      </ImagePlaceholder>
-                    </ImageUploadButton>
-                  </Tooltip>
+                    </Select>
+                  </>
                 )}
-                <TranslateButton
-                  text={textareaRef.current?.resizableTextArea?.textArea?.value}
-                  onTranslated={(translatedText) => updatePaintingState({ prompt: translatedText })}
-                  disabled={isLoading || isTranslating}
-                  isLoading={isTranslating}
-                  style={{ marginRight: 6, borderRadius: '50%' }}
-                />
-                <SendMessageButton sendMessage={onGenerate} disabled={isLoading} />
-              </ToolbarMenu>
-            </Toolbar>
-          </InputContainer>
-        </MainContainer>
+
+              {/* Number of Images (n) */}
+              {selectedModelConfig?.max_images && (
+                <>
+                  {/*<SettingTitle>{t('paintings.number_images')}</SettingTitle>*/}
+                  <InputNumber
+                    size="small"
+                    prefix={`${t('paintings.number_images')}:`}
+                    min={1}
+                    max={selectedModelConfig.max_images}
+                    value={painting.n || 1}
+                    onChange={handleNChange}
+                    style={{ width: '150px', marginBottom: 0 }}
+                  />
+                </>
+              )}
+            </div>
+            <InputContainer>
+              {mode === 'openai_image_edit' && uploadImageFileList.length > 0 && (
+                <FilesCard files={uploadImageFileList} handleRemoveFile={handleFileRemove} />
+              )}
+              <Textarea
+                ref={textareaRef}
+                variant="borderless"
+                disabled={isLoading}
+                value={painting.prompt}
+                spellCheck={false}
+                onChange={(e) => updatePaintingState({ prompt: e.target.value })}
+                placeholder={
+                  isTranslating
+                    ? t('paintings.translating')
+                    : painting.model?.startsWith('imagen-')
+                      ? t('paintings.prompt_placeholder_en')
+                      : t('paintings.prompt_placeholder_edit')
+                }
+                onKeyDown={handleKeyDown}
+              />
+              <Toolbar>
+                <ToolLeftMenu>
+                  {/* Model Selector */}
+                  <Select
+                    value={painting.model}
+                    onChange={handleModelChange}
+                    style={{ width: '100%', marginBottom: 0 }}
+                    virtual={true}
+                    onPopupScroll={handleScroll}
+                    popupRender={(menu) => <Spin spinning={loading}>{menu}</Spin>}>
+                    {Object.entries(groupedModelOptions).map(([groupName, options]) => (
+                      <Select.OptGroup label={groupName} key={groupName}>
+                        {options.map((m) => (
+                          <Select.Option value={m.value} key={m.value}>
+                            <Flex align="center" gap={5}>
+                              <ModelAvatar model={m} size={18} />
+                              <span className="text-overflow" title={m.label}>
+                                {m.label}
+                              </span>
+                            </Flex>
+                          </Select.Option>
+                        ))}
+                      </Select.OptGroup>
+                    ))}
+                  </Select>
+                </ToolLeftMenu>
+                <ToolbarMenu>
+                  {mode === 'openai_image_edit' && (
+                    <Tooltip title={t('richEditor.imageUploader.uploadFile')}>
+                      <ImageUploadButton
+                        accept="image/png, image/jpeg, image/gif"
+                        maxCount={16}
+                        showUploadList={false}
+                        listType="picture"
+                        beforeUpload={handleImageUpload}
+                        fileList={uploadImageFileList}
+                        onRemove={handleFileRemove}>
+                        <ImagePlaceholder>
+                          {/*<ImageSizeImage src={IcImageUp} theme={theme} />*/}
+                          <Paperclip size={18} />
+                        </ImagePlaceholder>
+                      </ImageUploadButton>
+                    </Tooltip>
+                  )}
+                  <TranslateButton
+                    text={textareaRef.current?.resizableTextArea?.textArea?.value}
+                    onTranslated={(translatedText) => updatePaintingState({ prompt: translatedText })}
+                    disabled={isLoading || isTranslating}
+                    isLoading={isTranslating}
+                    style={{ marginRight: 6, borderRadius: '50%' }}
+                  />
+                  <SendMessageButton sendMessage={onGenerate} disabled={isLoading} />
+                </ToolbarMenu>
+              </Toolbar>
+            </InputContainer>
+          </MainContainer>
+        </div>
         <PaintingsList
           namespace={mode}
           paintings={filteredPaintings}
@@ -914,7 +927,8 @@ const ContentContainer = styled.div`
   height: 100%;
   background-color: var(--color-background);
   overflow: hidden;
-  border-radius: 0 0 var(--base-border-radius) var(--base-border-radius) !important;
+  border-radius: var(--base-border-radius) !important;
+  position: relative;
 
   .option-set-wrapper{
     padding: 0 20px 5px;
@@ -945,7 +959,7 @@ const MainContainer = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  height: 100%;
+  height: calc(100% - 70px);
   background-color: var(--color-background);
 `
 

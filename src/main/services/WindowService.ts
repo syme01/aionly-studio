@@ -304,10 +304,10 @@ export class WindowService {
         'http://localhost:7023'
       ]
 
-      const fullScreenUrls = ['https://maas.aiionly.com', 'http://localhost:7023']
+      // const fullScreenUrls = ['https://maas.aiionly.com', 'http://localhost:7023']
 
       if (oauthProviderUrls.some((link) => url.startsWith(link))) {
-        const isFullScreenUrl = fullScreenUrls.some((u) => url.startsWith(u))
+        // const isFullScreenUrl = fullScreenUrls.some((u) => url.startsWith(u))
         return {
           action: 'allow',
           overrideBrowserWindowOptions: {
@@ -315,7 +315,8 @@ export class WindowService {
               partition: 'persist:webview'
             },
             // 如果是全屏URL,不设置parent,让窗口独立
-            parent: isFullScreenUrl ? undefined : mainWindow,
+            // parent: isFullScreenUrl ? undefined : mainWindow,
+            parent: mainWindow,
             show: false // 先不显示,等配置完成后再显示
           }
         }

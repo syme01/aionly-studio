@@ -144,7 +144,7 @@ const FilesPage: FC = () => {
   ] as const
 
   return (
-    <Container>
+    <Container className="page-container">
       <Navbar>
         <NavbarCenter style={{ borderRight: 'none' }}>{t('files.title')}</NavbarCenter>
       </Navbar>
@@ -253,6 +253,7 @@ const ContentContainer = styled.div`
   flex: 1;
   flex-direction: row;
   min-height: 100%;
+  background-color: var(--color-background);
 `
 
 const SideNav = styled.div`

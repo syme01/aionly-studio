@@ -40,7 +40,7 @@ import { serializeHealthCheckError } from '@renderer/utils/error'
 } from '@renderer/utils/provider'*/
 import { isAzureOpenAIProvider, isNewApiProvider, isVertexProvider } from '@renderer/utils/provider'
 import { Button, Flex, Input, Select, Space, Tooltip, Typography } from 'antd'
-import { debounce, isEmpty } from 'lodash'
+import { debounce, isEmpty, throttle } from 'lodash'
 import { Check, Settings2, TriangleAlert } from 'lucide-react'
 import type { FC } from 'react'
 import { useEffect } from 'react'
@@ -504,8 +504,56 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
 
   const isAnthropicOAuth = () => provider.id === 'anthropic' && provider.authType === 'oauth'
 
+  // 保存 ModelList 的分页状态
+  const paginationStateRef = useRef<{
+    fetchNextPage: () => void
+    loading: boolean
+    hasMore: boolean
+  } | null>(null)
+
+  // 接收 ModelList 的分页状态
+  const handlePaginationStateChange = useCallback(
+    (state: { fetchNextPage: () => void; loading: boolean; hasMore: boolean }) => {
+      paginationStateRef.current = state
+    },
+    []
+  )
+
+  // 监听滚动事件，滚动到底部时触发分页加载
+  const handleScrollInner = useCallback((scrollTop: number, scrollHeight: number, clientHeight: number) => {
+    const distanceFromBottom = scrollHeight - scrollTop - clientHeight
+
+    // 距离底部小于 100px 时触发加载
+    if (distanceFromBottom < 50) {
+      const state = paginationStateRef.current
+      if (state && state.hasMore && !state.loading) {
+        state.fetchNextPage()
+      }
+    }
+  }, [])
+
+  const handleScrollInnerThrottled = useMemo(() => throttle(handleScrollInner, 200), [handleScrollInner])
+
+  const handleScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const target = e.currentTarget
+      if (!target) return
+
+      const { scrollTop, scrollHeight, clientHeight } = target
+      handleScrollInnerThrottled(scrollTop, scrollHeight, clientHeight)
+    },
+    [handleScrollInnerThrottled]
+  )
+
+  // 组件卸载时清理节流函数
+  useEffect(() => {
+    return () => {
+      handleScrollInnerThrottled.cancel()
+    }
+  }, [handleScrollInnerThrottled])
+
   return (
-    <SettingContainer theme={theme} style={{ background: 'var(--color-background)' }}>
+    <SettingContainer theme={theme} style={{ background: 'var(--color-background)' }} onScroll={handleScroll}>
       {/*<SettingTitle>
         <Flex align="center" gap={8}>
           <ProviderName>{fancyProviderName}</ProviderName>
@@ -754,7 +802,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
       {provider.id === 'copilot' && <GithubCopilotSettings providerId={provider.id} />}
       {provider.id === 'aws-bedrock' && <AwsBedrockSettings />}
       {provider.id === 'vertexai' && <VertexAISettings />}
-      <ModelList providerId={provider.id} />
+      <ModelList providerId={provider.id} onPaginationStateChange={handlePaginationStateChange} />
     </SettingContainer>
   )
 }

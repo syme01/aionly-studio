@@ -704,6 +704,7 @@ const TranslatePage: FC = () => {
   return (
     <Container
       id="translate-page"
+      className="page-container"
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
@@ -768,7 +769,7 @@ const TranslatePage: FC = () => {
               model={translateModel}
               onSelectModel={handleModelChange}
               modelFilter={modelPredicate}
-              tooltipProps={{ placement: 'bottom' }}
+              noTooltip={true}
             />
             <Button type="text" icon={<Settings2 size={18} />} onClick={() => setSettingsVisible(true)} />
           </InnerOperationBar>
@@ -865,7 +866,7 @@ const Container = styled.div`
 `
 
 const ContentContainer = styled.div<{ $historyDrawerVisible: boolean }>`
-  height: calc(100vh - var(--navbar-height));
+  height: calc(100vh - var(--navbar-height) - 10px);
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -873,6 +874,7 @@ const ContentContainer = styled.div<{ $historyDrawerVisible: boolean }>`
   flex: 1;
   padding: 12px;
   position: relative;
+  background-color: var(--color-background);
   [navbar-position='left'] & {
     padding: 12px 16px;
   }

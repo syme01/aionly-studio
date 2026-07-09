@@ -17,7 +17,7 @@ import { allMinApps } from '@renderer/config/minapps'
 import { useBridge } from '@renderer/hooks/useBridge'
 import { useMinappPopup } from '@renderer/hooks/useMinappPopup'
 import { useMinapps } from '@renderer/hooks/useMinapps'
-import useNavBackgroundColor from '@renderer/hooks/useNavBackgroundColor'
+// import useNavBackgroundColor from '@renderer/hooks/useNavBackgroundColor'
 import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useNavbarPosition, useSettings } from '@renderer/hooks/useSettings'
 import { useTimer } from '@renderer/hooks/useTimer'
@@ -146,7 +146,7 @@ const MinappPopupContainer: React.FC = () => {
   const { closeMinapp, hideMinappPopup } = useMinappPopup()
   const { pinned, updatePinnedMinapps } = useMinapps()
   const { t } = useTranslation()
-  const backgroundColor = useNavBackgroundColor()
+  // const backgroundColor = useNavBackgroundColor()
   const { isTopNavbar } = useNavbarPosition()
   const dispatch = useAppDispatch()
 
@@ -400,7 +400,7 @@ const MinappPopupContainer: React.FC = () => {
     }
 
     return (
-      <TitleContainer style={{ backgroundColor: backgroundColor }}>
+      <TitleContainer /*style={{ backgroundColor: backgroundColor }}*/>
         <Tooltip
           title={
             <TitleTextTooltip>
@@ -580,7 +580,9 @@ const TitleContainer = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: transparent;
+  body.light & {
+    background-color: #BFE2FE;
+  }
   [navbar-position='left'] & {
     padding-left: ${isMac ? '40px' : '10px'};
   }

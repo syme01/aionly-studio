@@ -1,3 +1,4 @@
+import { DownOutlined } from '@ant-design/icons'
 import type { Model } from '@renderer/types'
 import type { TooltipProps } from 'antd'
 import { Button, Tooltip } from 'antd'
@@ -23,7 +24,12 @@ const ModelSelectButton = ({ model, onSelectModel, modelFilter, noTooltip, toolt
   }, [model, modelFilter, onSelectModel])
 
   const button = useMemo(() => {
-    return <Button icon={<ModelAvatar model={model} size={22} />} type="text" shape="circle" onClick={onClick} />
+    return (
+      <Button icon={<ModelAvatar model={model} size={22} />} color="default" variant="filled" onClick={onClick}>
+        {model.name}
+        <DownOutlined style={{ fontSize: '10px', marginLeft: '5px' }} />
+      </Button>
+    )
   }, [model, onClick])
 
   if (noTooltip) {

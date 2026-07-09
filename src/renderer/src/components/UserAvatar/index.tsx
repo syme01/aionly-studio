@@ -22,6 +22,10 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   -webkit-app-region: none;
+
+  .ant-avatar{
+    background-color: var(--color-gray-2);
+  }
 `
 
 const UserInfoContainer = styled.div<{ theme: string }>`
@@ -33,6 +37,10 @@ const UserInfoContainer = styled.div<{ theme: string }>`
     align-items: center;
     padding-bottom: 10px;
     border-bottom:  1px solid ${({ theme }) => (theme === 'dark' ? 'var(--color-gray-3)' : 'var(--color-gray-4)')};
+
+    .ant-avatar{
+      background-color: var(--color-gray-2);
+    }
   }
 
   .id-text{
@@ -134,7 +142,7 @@ const UserAvatar: React.FC<Props> = () => {
           <span className="text">{hzBalance.toFixed(2)}</span>
         </div>*/}
         <div className="avatar">
-          <Avatar src={userInfo?.avatarUrl} size={34} />
+          <Avatar src={userInfo?.avatarUrl ?? defaultAvatar} size={34} />
         </div>
         <div className="info">
           <div className="nick-name">{userInfo?.nickName}</div>
@@ -171,7 +179,13 @@ const UserAvatar: React.FC<Props> = () => {
 
   return (
     <Container className="user-avatar">
-      <Popover content={UserInfoPanel} placement={'top'} align={{ offset: [10, -10] }} trigger="hover">
+      <Popover
+        content={UserInfoPanel}
+        placement={'top'}
+        align={{ offset: [10, -10] }}
+        zIndex={99999}
+        getPopupContainer={() => document.body}
+        trigger="hover">
         <Avatar src={userInfo?.avatarUrl ?? defaultAvatar} size={40}></Avatar>
       </Popover>
     </Container>

@@ -907,7 +907,7 @@ const NotesPage: FC = () => {
   }, [activeNode?.id, activeFilePath, notesTree, dispatch, invalidateFileContent])
 
   return (
-    <Container id="notes-page">
+    <Container id="notes-page" className="page-container">
       <Navbar>
         <NavbarCenter style={{ borderRight: 'none' }}>{t('notes.title')}</NavbarCenter>
       </Navbar>
@@ -971,6 +971,7 @@ const ContentContainer = styled.div`
   flex: 1;
   flex-direction: row;
   min-height: 0;
+  background-color: var(--color-background);
 `
 
 const EditorWrapper = styled.div`

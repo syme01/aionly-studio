@@ -153,6 +153,17 @@ export async function registerIpc(mainWindow: BrowserWindow, app: Electron.App) 
     installPath: path.dirname(app.getPath('exe'))
   }))
 
+  ipcMain.handle(IpcChannel.App_GetWebviewPreloadPath, () => {
+    // Return preload path for webview
+    if (app.isPackaged) {
+      // Production: use app.asar path
+      return path.join(process.resourcesPath, 'app.asar/out/preload/index.js')
+    } else {
+      // Development: use out directory
+      return path.join(app.getAppPath(), 'out/preload/index.js')
+    }
+  })
+
   ipcMain.handle(IpcChannel.App_Proxy, async (_, proxy: string, bypassRules?: string) => {
     let proxyConfig: ProxyConfig
 
