@@ -3,6 +3,7 @@ import ApplicationLogo from '@renderer/assets/images/apps/application.png?url'
 import WanAiLogo from '@renderer/assets/images/providers/7WanAi.png?url'
 import AiOnlyLogo from '@renderer/assets/images/providers/aiOnly.png?url'
 import type { MinAppType } from '@renderer/types'
+import { USER_UI_HOST, WEB_UI_HOST } from '@shared/config/constant'
 
 const logger = loggerService.withContext('Config:minapps')
 
@@ -532,7 +533,8 @@ const ORIGIN_DEFAULT_MIN_APPS: MinAppType[] = [
   {
     id: 'aionly',
     name: 'AiOnly',
-    url: 'https://aiionly.com/',
+    // url: 'https://aiionly.com/',
+    url: WEB_UI_HOST,
     logo: AiOnlyLogo,
     bodered: true,
     style: {
@@ -544,7 +546,8 @@ const ORIGIN_DEFAULT_MIN_APPS: MinAppType[] = [
   {
     id: '7wanai',
     name: '7WanAi',
-    url: 'https://maas.aiionly.com/aiMagicNewHome',
+    // url: 'https://maas.aiionly.com/aiMagicNewHome',
+    url: `${USER_UI_HOST}/aiMagicNewHome`,
     logo: WanAiLogo,
     bodered: true,
     style: {

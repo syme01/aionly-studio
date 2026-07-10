@@ -7,6 +7,7 @@ import TokenFluxProviderLogo from '@renderer/assets/images/providers/tokenflux.p
 import topImage from '@renderer/assets/images/settings/top.png'
 import { HStack } from '@renderer/components/Layout'
 import { PROVIDER_URLS } from '@renderer/config/providers'
+import { useMinappPopup } from '@renderer/hooks/useMinappPopup'
 import { useProvider } from '@renderer/hooks/useProvider'
 import ApiOptionsSettingsPopup from '@renderer/pages/settings/ProviderSettings/ApiOptionsSettings/ApiOptionsSettingsPopup'
 import { isSystemProvider } from '@renderer/types'
@@ -14,7 +15,7 @@ import { providerBills, providerCharge } from '@renderer/utils/oauth'
 import { isSupportAnthropicPromptCacheProvider } from '@renderer/utils/provider'
 import { Button } from 'antd'
 import Link from 'antd/es/typography/Link'
-import type { FC } from 'react'
+import { FC } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
@@ -35,6 +36,7 @@ const PROVIDER_LOGO_MAP = {
 const ProviderOAuth: FC<Props> = ({ providerId, fancyProviderName }) => {
   const { t } = useTranslation()
   const { provider /*updateProvider*/ } = useProvider(providerId)
+  const { handleToBillManagement, handleToRecharge } = useMinappPopup()
 
   // TODO: 这里需要更新ApiKey
   /*const _setApiKey = (newKey: string) => {
@@ -45,6 +47,18 @@ const ProviderOAuth: FC<Props> = ({ providerId, fancyProviderName }) => {
     PROVIDER_URLS[provider.id]?.api?.url.replace('https://', '').replace('api.', '') || provider.name
   if (provider.id === 'ppio') {
     providerWebsite = 'ppio.com'
+  }
+
+  // 费用账单
+  const handleClickBills = () => {
+    const config = providerBills(provider.id)
+    handleToBillManagement(config)
+  }
+
+  // 余额充值
+  const handleClickRecharge = () => {
+    const config = providerCharge(provider.id)
+    handleToRecharge(config)
   }
 
   return (
@@ -90,10 +104,10 @@ const ProviderOAuth: FC<Props> = ({ providerId, fancyProviderName }) => {
 
       <div className="right">
         <HStack gap={10}>
-          <Button type="primary" onClick={() => providerBills(provider.id)}>
+          <Button type="primary" onClick={handleClickBills}>
             {t('settings.provider.bills')}
           </Button>
-          <OrangeButton onClick={() => providerCharge(provider.id)}>{t('settings.provider.charge')}</OrangeButton>
+          <OrangeButton onClick={handleClickRecharge}>{t('settings.provider.charge')}</OrangeButton>
         </HStack>
       </div>
     </Container>

@@ -1,3 +1,4 @@
+import aiOnlyPng from '@renderer/assets/images/providers/aiOnly.png'
 import { allMinApps } from '@renderer/config/minapps'
 import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useSettings } from '@renderer/hooks/useSettings' // 使用设置中的值
@@ -11,7 +12,9 @@ import {
   setOpenedOneOffMinapp
 } from '@renderer/store/runtime'
 import type { MinAppType } from '@renderer/types'
+import { providerBills, providerCharge } from '@renderer/utils/oauth'
 import { clearWebviewState } from '@renderer/utils/webviewStateManager'
+import { t } from 'i18next'
 import { LRUCache } from 'lru-cache'
 import { useCallback } from 'react'
 
@@ -196,6 +199,42 @@ export const useMinappPopup = () => {
     [isTopNavbar, openMinapp, dispatch]
   )
 
+  const handleToShowCustomApp = useCallback(
+    (app: MinAppType, options?: MinAppType) => {
+      if (options) {
+        app = { ...app, ...options }
+      }
+      openMinappKeepAlive(app)
+    },
+    [openMinappKeepAlive]
+  )
+
+  // 充值
+  const handleToRecharge = (config: any) => {
+    const rechargeConfig = providerCharge('aionly')
+    const app: MinAppType = {
+      id: 'recharge',
+      name: t('settings.provider.charge'),
+      logo: aiOnlyPng,
+      supportedRegions: ['CN', 'Global'],
+      url: config?.url ?? rechargeConfig.url
+    }
+    openMinappKeepAlive(app)
+  }
+
+  // 账单
+  const handleToBillManagement = (config: any) => {
+    const billsConfig = providerBills('aionly')
+    const app: MinAppType = {
+      id: 'billManagement',
+      name: t('settings.provider.bills'),
+      logo: aiOnlyPng,
+      supportedRegions: ['CN', 'Global'],
+      url: config?.url ?? billsConfig.url
+    }
+    openMinappKeepAlive(app)
+  }
+
   return {
     openMinapp,
     openMinappKeepAlive,
@@ -205,6 +244,9 @@ export const useMinappPopup = () => {
     closeAllMinapps,
     openSmartMinapp,
     // Expose cache instance for TabsService integration
-    minAppsCache
+    minAppsCache,
+    handleToShowCustomApp,
+    handleToRecharge,
+    handleToBillManagement
   }
 }

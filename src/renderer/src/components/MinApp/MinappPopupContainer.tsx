@@ -496,7 +496,13 @@ const MinappPopupContainer: React.FC = () => {
           </Tooltip>
         </ButtonsGroup>
         {(isWin || isLinux) && (
-          <div style={{ position: 'absolute', right: 0, top: 0, height: '100%' }}>
+          <div
+            style={{
+              position: 'absolute',
+              right: 0,
+              top: 0,
+              height: '100%'
+            }}>
             <WindowControls />
           </div>
         )}

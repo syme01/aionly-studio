@@ -186,6 +186,10 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
     return [...filterModels]
   }, [getFilteredModels])
 
+  const disabled = useMemo(() => {
+    return modelOptions.length === 0
+  }, [modelOptions])
+
   /*const modelOptions = useMemo(() => {
     const customModels = newApiProvider.models
       .filter((m) => m.endpoint_type && m.endpoint_type === 'image-generation')
@@ -724,6 +728,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
                       <>
                         {/*<SettingTitle>{t('paintings.background')}</SettingTitle>*/}
                         <Select
+                          disabled={disabled}
                           size="small"
                           prefix={`${t('paintings.background')}:`}
                           value={painting.background}
@@ -745,6 +750,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
                 <>
                   {/*<SettingTitle>{t('paintings.image.size')}</SettingTitle>*/}
                   <Select
+                    disabled={disabled}
                     size="small"
                     prefix={`${t('paintings.image.size')}:`}
                     value={painting.size}
@@ -764,6 +770,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
                 <>
                   {/*<SettingTitle>{t('paintings.quality')}</SettingTitle>*/}
                   <Select
+                    disabled={disabled}
                     size="small"
                     prefix={`${t('paintings.quality')}:`}
                     value={painting.quality}
@@ -785,6 +792,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
                   <>
                     {/*<SettingTitle>{t('paintings.moderation')}</SettingTitle>*/}
                     <Select
+                      disabled={disabled}
                       size="small"
                       prefix={`${t('paintings.moderation')}:`}
                       value={painting.moderation}
@@ -804,6 +812,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
                 <>
                   {/*<SettingTitle>{t('paintings.number_images')}</SettingTitle>*/}
                   <InputNumber
+                    disabled={disabled}
                     size="small"
                     prefix={`${t('paintings.number_images')}:`}
                     min={1}
@@ -822,7 +831,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
               <Textarea
                 ref={textareaRef}
                 variant="borderless"
-                disabled={isLoading}
+                disabled={isLoading || disabled}
                 value={painting.prompt}
                 spellCheck={false}
                 onChange={(e) => updatePaintingState({ prompt: e.target.value })}
@@ -839,6 +848,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
                 <ToolLeftMenu>
                   {/* Model Selector */}
                   <Select
+                    disabled={disabled}
                     value={painting.model}
                     onChange={handleModelChange}
                     style={{ width: '100%', marginBottom: 0 }}
@@ -865,6 +875,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
                   {mode === 'openai_image_edit' && (
                     <Tooltip title={t('richEditor.imageUploader.uploadFile')}>
                       <ImageUploadButton
+                        disabled={disabled}
                         accept="image/png, image/jpeg, image/gif"
                         maxCount={16}
                         showUploadList={false}
@@ -874,7 +885,14 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
                         onRemove={handleFileRemove}>
                         <ImagePlaceholder>
                           {/*<ImageSizeImage src={IcImageUp} theme={theme} />*/}
-                          <Paperclip size={18} />
+                          <Paperclip
+                            size={18}
+                            style={{
+                              opacity: disabled ? 0.5 : 1,
+                              pointerEvents: disabled ? 'none' : 'auto',
+                              cursor: disabled ? 'not-allowed' : 'pointer'
+                            }}
+                          />
                         </ImagePlaceholder>
                       </ImageUploadButton>
                     </Tooltip>
@@ -882,11 +900,11 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
                   <TranslateButton
                     text={textareaRef.current?.resizableTextArea?.textArea?.value}
                     onTranslated={(translatedText) => updatePaintingState({ prompt: translatedText })}
-                    disabled={isLoading || isTranslating}
+                    disabled={isLoading || isTranslating || disabled}
                     isLoading={isTranslating}
                     style={{ marginRight: 6, borderRadius: '50%' }}
                   />
-                  <SendMessageButton sendMessage={onGenerate} disabled={isLoading} />
+                  <SendMessageButton sendMessage={onGenerate} disabled={isLoading || disabled} />
                 </ToolbarMenu>
               </Toolbar>
             </InputContainer>

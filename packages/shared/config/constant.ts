@@ -510,5 +510,6 @@ export const APP_DIR_NAME = 'AiOnlyStudio' // User data directory name
 export const APP_CONFIG_DIR = '.aionlystudio' // Hidden config directory in home
 // resources/scripts should be maintained manually
 export const HOME_CHERRY_DIR = APP_CONFIG_DIR
-export const APP_HOST = `https://maas.${APP_PROTOCOL}.com`
 export const APP_API_HOST = `https://api.${APP_PROTOCOL}.com`
+export const USER_UI_HOST = `https://maas.${APP_PROTOCOL}.com` // 控制台地址
+export const WEB_UI_HOST = `https://${APP_PROTOCOL}.com` // 官网地址

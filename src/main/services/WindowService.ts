@@ -345,7 +345,7 @@ export class WindowService {
       return { action: 'deny' }
     })
 
-    mainWindow.webContents.on('did-create-window', (win, details) => {
+    /*mainWindow.webContents.on('did-create-window', (win, details) => {
       const fullScreenUrls = ['https://maas.aiionly.com', 'http://localhost:7023']
       if (fullScreenUrls.some((u) => details.url.startsWith(u))) {
         // 等待窗口加载完成后最大化并显示
@@ -363,7 +363,7 @@ export class WindowService {
           }, 1000)
         })
       }
-    })
+    })*/
 
     this.setupWebRequestHeaders(mainWindow)
   }

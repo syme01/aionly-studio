@@ -271,6 +271,7 @@ const Icon = styled.div<{ theme: string }>`
   -webkit-app-region: none;
   border-radius: 8px;
   padding: 5px 0;
+  border: 0.5px solid transparent;
   .icon {
     color: var(--color-icon);
   }
@@ -287,7 +288,7 @@ const Icon = styled.div<{ theme: string }>`
   }
   &.active {
     background-color: ${({ theme }) => (theme === 'dark' ? 'var(--color-black)' : 'var(--color-white)')};
-    border: 0.5px solid var(--color-border);
+    border-color: var(--color-border);
     .icon {
       color: var(--color-primary);
     }

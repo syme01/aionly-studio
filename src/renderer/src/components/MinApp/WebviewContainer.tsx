@@ -1,5 +1,7 @@
 import { loggerService } from '@logger'
+import { useTheme } from '@renderer/context/ThemeProvider'
 import { useSettings } from '@renderer/hooks/useSettings'
+import { USER_UI_HOST, WEB_UI_HOST } from '@shared/config/constant'
 import type { WebviewTag } from 'electron'
 import { memo, useEffect, useRef, useState } from 'react'
 
@@ -27,6 +29,7 @@ const WebviewContainer = memo(
     const webviewRef = useRef<WebviewTag | null>(null)
     const { enableSpellCheck, minappsOpenLinkExternal } = useSettings()
     const [preloadPath, setPreloadPath] = useState<string>('')
+    const { theme } = useTheme()
 
     // Fetch preload path from main process
     useEffect(() => {
@@ -206,10 +209,35 @@ const WebviewContainer = memo(
 
     // TODO: 临时处理，待优化
     useEffect(() => {
-      if (url.endsWith('?redirect=/recharge')) {
+      const allows = [USER_UI_HOST, WEB_UI_HOST, 'http://localhost:7023']
+
+      // 只允许以 allows 中地址开头的 URL
+      if (!allows.some((allowedUrl) => url.startsWith(allowedUrl))) {
+        return
       }
-      // console.log('url', url)
-    }, [url])
+
+      const target_path = url.split('?redirect=')[1]
+
+      if (!webviewRef.current) return
+
+      // 发送初始化消息给目标页面
+      const sendInitData = () => {
+        webviewRef.current?.send('app-config', {
+          appId: appid,
+          token: localStorage.getItem('token'),
+          path: target_path,
+          clientId: import.meta.env.VITE_APP_CLIENT_ID,
+          config: { theme }
+        })
+      }
+
+      // 在dom-ready 时发送
+      webviewRef.current.addEventListener('dom-ready', sendInitData)
+
+      return () => {
+        webviewRef.current?.removeEventListener('dom-ready', sendInitData)
+      }
+    }, [url, appid, theme])
 
     const WebviewStyle: React.CSSProperties = {
       width: '100%',

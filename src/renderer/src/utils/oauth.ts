@@ -1,7 +1,7 @@
 import { loggerService } from '@logger'
 import { PPIO_APP_SECRET, PPIO_CLIENT_ID, SILICON_CLIENT_ID, TOKENFLUX_HOST } from '@renderer/config/constant'
 import i18n, { getLanguageCode } from '@renderer/i18n'
-import { APP_HOST } from '@shared/config/constant'
+import { USER_UI_HOST } from '@shared/config/constant'
 
 const logger = loggerService.withContext('Utils:oauth')
 export const oauthWithSiliconFlow = async (setKey) => {
@@ -298,7 +298,7 @@ export const oauthWithCherryIn = async (setKey: (key: string) => void, config: N
   })
 }
 
-export const providerCharge = async (provider: string) => {
+export const providerCharge = (provider: string) => {
   const chargeUrlMap = {
     silicon: {
       url: 'https://cloud.siliconflow.cn/expensebill',
@@ -327,69 +327,28 @@ export const providerCharge = async (provider: string) => {
     },
     aionly: {
       // url: `https://maas.aiionly.com/recharge`,
-      // url: `http://localhost:7023/login?redirect=/recharge`,
       // url: 'https://maas.aiionly.com/login?redirect=/recharge',
-      url: `${APP_HOST}?redirect=/recharge`,
+      // url: `http://localhost:7023/login?redirect=/recharge`,
+      url: `${USER_UI_HOST}/login?redirect=/recharge`,
       width: 900,
       height: 700
     }
   }
 
   const { url, width, height } = chargeUrlMap[provider]
-  const winW = Math.min(width, Math.floor(screen.availWidth * 1))
-  const winH = Math.min(height, Math.floor(screen.availHeight * 1))
 
-  const win = window.open(
-    url,
-    'oauth',
-    `width=${winW},height=${winH},toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,alwaysOnTop=yes,alwaysRaised=yes`
-  )
-
-  handleWindowMessage({ win, provider, targetPath: '/recharge' })
-}
-
-function handleWindowMessage({ win, provider, targetPath }) {
-  if (!win) {
-    return
+  if (provider !== 'aionly') {
+    window.open(
+      url,
+      'oauth',
+      `width=${width},height=${height},toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,alwaysOnTop=yes,alwaysRaised=yes`
+    )
   }
 
-  // 只处理aionly充值弹窗
-  if (provider !== 'aionly') return
-
-  // 定义监听函数，方便后续移除
-  const handleChildMsg = (e: MessageEvent) => {
-    // 严格校验来源，只接收允许的源
-    const allowOrigin = ['http://localhost:7023', 'https://maas.aiionly.com', 'https://maas.aionly.com']
-    if (!allowOrigin.includes(e.origin)) return
-    logger.info('父页面收到子页面消息', { data: e.data })
-
-    if (e.data.type === 'user_ui_ready') {
-      logger.info('子页面就绪，下发用户数据')
-      const token = localStorage.getItem('token')
-      const sendData = {
-        type: 'client_user_data',
-        token,
-        targetPath
-      }
-      win.postMessage(sendData, APP_HOST)
-      // win.postMessage(sendData, 'http://localhost:7023')
-    }
-  }
-
-  // 绑定监听
-  window.addEventListener('message', handleChildMsg)
-
-  // 弹窗关闭后自动移除监听，防止堆积
-  const clearListener = setInterval(() => {
-    if (win.closed) {
-      logger.info('弹窗已关闭，清理message监听')
-      window.removeEventListener('message', handleChildMsg)
-      clearInterval(clearListener)
-    }
-  }, 500)
+  return { url, targetPath: '/recharge' }
 }
 
-export const providerBills = async (provider: string) => {
+export const providerBills = (provider: string) => {
   const billsUrlMap = {
     silicon: {
       url: 'https://cloud.siliconflow.cn/bills',
@@ -420,7 +379,7 @@ export const providerBills = async (provider: string) => {
       // url: `https://maas.aiionly.com/billManagement`,
       // url: `https://maas.aiionly.com/login?redirect=/billManagement`,
       // url: `http://localhost:7023/login?redirect=/billManagement`,
-      url: `${APP_HOST}/login?redirect=/billManagement`,
+      url: `${USER_UI_HOST}/login?redirect=/billManagement`,
       width: 900,
       height: 700
     }
@@ -428,11 +387,13 @@ export const providerBills = async (provider: string) => {
 
   const { url, width, height } = billsUrlMap[provider]
 
-  const win = window.open(
-    url,
-    'oauth',
-    `width=${width},height=${height},toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,alwaysOnTop=yes,alwaysRaised=yes`
-  )
+  if (provider !== 'aionly') {
+    window.open(
+      url,
+      'oauth',
+      `width=${width},height=${height},toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,alwaysOnTop=yes,alwaysRaised=yes`
+    )
+  }
 
-  handleWindowMessage({ win, provider, targetPath: '/billManagement' })
+  return { url, targetPath: '/billManagement' }
 }
