@@ -71,6 +71,7 @@ files:
   - "resources/**/*" # include all files in resources, and unpack them from asar for runtime access
 asarUnpack:
   - out/proxy/**
+  - out/preload/**
   - resources/**
   - "**/*.{metal,exp,lib}"
   - "node_modules/@img/sharp-*/**"

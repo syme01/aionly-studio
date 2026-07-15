@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import { arch } from 'node:os'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 import type { TokenUsageData } from '@cherrystudio/analytics-client'
 import { loggerService } from '@logger'
@@ -154,14 +155,34 @@ export async function registerIpc(mainWindow: BrowserWindow, app: Electron.App) 
   }))
 
   ipcMain.handle(IpcChannel.App_GetWebviewPreloadPath, () => {
-    // Return preload path for webview
+    // Return preload path for webview as a file URL
+    let preloadPath: string
     if (app.isPackaged) {
-      // Production: use app.asar path
-      return path.join(process.resourcesPath, 'app.asar/out/preload/index.js')
+      // Production: use unpacked preload path (required for webview to access)
+      preloadPath = path.join(process.resourcesPath, 'app.asar.unpacked/out/preload/index.js')
+
+      // 添加诊断日志
+      const fileExists = fs.existsSync(preloadPath)
+      loggerService.withContext('WebviewPreload').info('Checking webview preload path', {
+        path: preloadPath,
+        exists: fileExists,
+        resourcesPath: process.resourcesPath,
+        appPath: app.getAppPath()
+      })
+
+      if (!fileExists) {
+        loggerService.withContext('WebviewPreload').error('Webview preload file not found!', {
+          expectedPath: preloadPath
+        })
+      }
     } else {
       // Development: use out directory
-      return path.join(app.getAppPath(), 'out/preload/index.js')
+      preloadPath = path.join(app.getAppPath(), 'out/preload/index.js')
     }
+    // Convert to file URL (handles Windows paths correctly)
+    const fileUrl = pathToFileURL(preloadPath).href
+    loggerService.withContext('WebviewPreload').info('Webview preload URL', { fileUrl })
+    return fileUrl
   })
 
   ipcMain.handle(IpcChannel.App_Proxy, async (_, proxy: string, bypassRules?: string) => {

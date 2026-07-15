@@ -113,6 +113,7 @@ app.on('web-contents-created', (_, webContents) => {
         ...details.requestHeaders,
         Referer: 'http://localhost:5173',
         hostname: 'localhost:5173'
+        // origin: USER_UI_HOST
       }
     })
   })

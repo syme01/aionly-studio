@@ -37,10 +37,10 @@ const WebviewContainer = memo(
         .getWebviewPreloadPath()
         .then((path) => {
           setPreloadPath(path)
-          logger.debug(`Webview preload path: ${path}`)
+          logger.warn(`[WebviewContainer] Webview preload path received: ${path}`)
         })
         .catch((err) => {
-          logger.error('Failed to get webview preload path:', err)
+          logger.error('[WebviewContainer] Failed to get webview preload path:', err)
         })
     }, [])
 
@@ -222,13 +222,21 @@ const WebviewContainer = memo(
 
       // 发送初始化消息给目标页面
       const sendInitData = () => {
-        webviewRef.current?.send('app-config', {
+        const configData = {
           appId: appid,
           token: localStorage.getItem('token'),
           path: target_path,
           clientId: import.meta.env.VITE_APP_CLIENT_ID,
           config: { theme }
+        }
+
+        logger.warn(`[WebviewContainer] Sending app-config to webview ${appid}`, {
+          hasToken: !!configData.token,
+          hasWebview: !!webviewRef.current,
+          url
         })
+
+        webviewRef.current?.send('app-config', configData)
       }
 
       // 在dom-ready 时发送
@@ -254,7 +262,9 @@ const WebviewContainer = memo(
         style={WebviewStyle}
         allowpopups={'true' as any}
         partition="persist:webview"
-        preload={preloadPath ? `file://${preloadPath}` : undefined}
+        preload={preloadPath || undefined}
+        nodeintegration={false}
+        disablewebsecurity={true}
         useragent={
           appid === 'google'
             ? 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)  Safari/537.36'

@@ -87,7 +87,7 @@ const MenuItem = styled.div<{ theme: string }>`
 
 const UserAvatar: React.FC<Props> = () => {
   const { t } = useTranslation()
-  const { hideMinappPopup } = useMinappPopup()
+  const { hideMinappPopup, closeAllMinapps } = useMinappPopup()
   const userInfo: any = useAppSelector(selectUserInfo)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -112,6 +112,7 @@ const UserAvatar: React.FC<Props> = () => {
         localStorage.removeItem('token')
         localStorage.removeItem('userInfo')
         localStorage.removeItem(`persist:${PERSIST_KEY}`)
+        closeAllMinapps()
         dispatch(clearToken())
         navigate('/login')
       }

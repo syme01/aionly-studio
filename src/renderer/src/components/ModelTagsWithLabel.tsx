@@ -16,6 +16,7 @@ import styled from 'styled-components'
 import {
   EmbeddingTag,
   FreeTag,
+  PriceTag,
   ReasoningTag,
   RerankerTag,
   ToolsCallingTag,
@@ -76,6 +77,7 @@ const ModelTagsWithLabel: FC<ModelTagsProps> = ({
 
   return (
     <Container ref={containerRef} style={style}>
+      {(model as any)?.modelChargeConfigVo && <PriceTag model={model} size={size} />}
       {isVisionModel(model) && <VisionTag size={size} showTooltip={false} showLabel={true} />}
       {isWebSearchModel(model) && <WebSearchTag size={size} showTooltip={false} showLabel={true} />}
       {showReasoning && isReasoningModel(model) && <ReasoningTag size={size} showTooltip={false} showLabel={true} />}

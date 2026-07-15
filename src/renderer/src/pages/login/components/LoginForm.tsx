@@ -124,7 +124,13 @@ export const LoginForm = (props: LoginFormProps) => {
       key: '1',
       label: '短信登录',
       children: (
-        <SMSLogin ref={smsLoginRef} verifyRef={verifyRef} onFormChange={onFormChange} onSuccess={handleLoginSuccess} />
+        <SMSLogin
+          ref={smsLoginRef}
+          verifyRef={verifyRef}
+          onFormChange={onFormChange}
+          onSuccess={handleLoginSuccess}
+          setLoading={setLoading}
+        />
       )
     },
     {
@@ -136,6 +142,7 @@ export const LoginForm = (props: LoginFormProps) => {
           verifyRef={verifyRef}
           onFormChange={onFormChange}
           onSuccess={handleLoginSuccess}
+          setLoading={setLoading}
         />
       )
     },
@@ -148,6 +155,7 @@ export const LoginForm = (props: LoginFormProps) => {
           verifyRef={verifyRef}
           onFormChange={onFormChange}
           onSuccess={handleLoginSuccess}
+          setLoading={setLoading}
         />
       )
     }
@@ -168,14 +176,17 @@ export const LoginForm = (props: LoginFormProps) => {
 
   // 登录按钮点击——调用当前激活子组件的 login 方法
   const handleLoginSubmit = async () => {
-    if (!isAccept) return
+    if (!isAccept) {
+      return
+    }
     const activeRef = getActiveRef()
-    if (!activeRef?.current?.login) return
-    setLoading(true)
+    if (!activeRef?.current?.login) {
+      return
+    }
     try {
       await activeRef.current.login()
-    } finally {
-      setLoading(false)
+    } catch (e) {
+      // login方法中的错误已经被子组件处理
     }
   }
 

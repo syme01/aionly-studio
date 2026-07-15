@@ -1,5 +1,7 @@
+import { CrownFilled } from '@ant-design/icons'
 import type { Model } from '@renderer/types'
-import { memo } from 'react'
+import React, { memo } from 'react'
+import styled from 'styled-components'
 
 import ModelTagsWithLabel from './ModelTagsWithLabel'
 
@@ -28,6 +30,12 @@ const ModelIdWithTags = ({
         <span className="block min-w-0 shrink overflow-hidden text-ellipsis whitespace-nowrap leading-[1.3]">
           {model.name}
         </span>
+        {(model as any)?.memberSpecial == 1 && (
+          <IconVip>
+            <CrownFilled />
+            <span>vip</span>
+          </IconVip>
+        )}
         {shouldShowIdentifier && (
           <span
             className="min-w-0 max-w-[50%] shrink truncate font-mono text-(--color-text-3) text-[12px]! leading-[1.2]"
@@ -40,5 +48,18 @@ const ModelIdWithTags = ({
     </div>
   )
 }
+
+const IconVip = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: var(--color-white);
+  width: 52px;
+  padding: 4px 0;
+  background: linear-gradient(90deg,#ffaa00 0%,#f77a1d 100%);
+  border-radius: 4px;
+  font-size: 12px;
+`
 
 export default memo(ModelIdWithTags)

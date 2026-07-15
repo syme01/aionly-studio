@@ -11,6 +11,7 @@ interface AccountLoginProps {
   onSuccess?: () => void
   onFormChange?: (valid: boolean) => void
   verifyRef?: any
+  setLoading?: (loading: boolean) => void
 }
 
 export interface AccountLoginRef {
@@ -123,6 +124,7 @@ export const AccountLogin = ({ ref, ...props }: AccountLoginProps) => {
     setAccountForm(updatedForm)
 
     // 直接执行登录
+    props.setLoading?.(true)
     try {
       const { data } = await loginApi(updatedForm)
       if (data && data.access_token) {
@@ -131,6 +133,8 @@ export const AccountLogin = ({ ref, ...props }: AccountLoginProps) => {
       }
     } catch (error: any) {
       logger.error('账号登录失败', error)
+    } finally {
+      props.setLoading?.(false)
     }
   }
 

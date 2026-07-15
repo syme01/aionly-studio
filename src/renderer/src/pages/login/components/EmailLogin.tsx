@@ -10,6 +10,7 @@ interface EmailLoginProps {
   onSuccess?: () => void
   onFormChange?: (valid: boolean) => void
   verifyRef?: any
+  setLoading?: (loading: boolean) => void
 }
 
 export interface EmailLoginRef {
@@ -55,13 +56,20 @@ export const EmailLogin = ({ ref, ...props }: EmailLoginProps) => {
 
   // 登录接口
   const login = async () => {
-    // 先做表单验证
-    await form.validateFields()
+    props.setLoading?.(true)
+    try {
+      // 先做表单验证
+      await form.validateFields()
 
-    const { data } = await loginApi(emailForm)
-    if (data && data.access_token) {
-      localStorage.setItem('token', data.access_token)
-      props.onSuccess?.()
+      const { data } = await loginApi(emailForm)
+      if (data && data.access_token) {
+        localStorage.setItem('token', data.access_token)
+        props.onSuccess?.()
+      }
+    } catch (error: any) {
+      logger.error('邮箱登录失败', error)
+    } finally {
+      props.setLoading?.(false)
     }
   }
 

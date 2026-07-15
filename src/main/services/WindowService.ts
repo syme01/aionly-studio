@@ -3,7 +3,7 @@ import './ThemeService'
 
 import { is } from '@electron-toolkit/utils'
 import { loggerService } from '@logger'
-import { isDev, isLinux, isMac, isWin } from '@main/constant'
+import { /*isDev,*/ isLinux, isMac, isWin } from '@main/constant'
 import { getFilesDir } from '@main/utils/file'
 // import { getWindowsBackgroundMaterial } from '@main/utils/windowUtil'
 import { MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH } from '@shared/config/constant'
@@ -73,7 +73,7 @@ export class WindowService {
       minWidth: MIN_WINDOW_WIDTH,
       minHeight: MIN_WINDOW_HEIGHT,
       show: false,
-      autoHideMenuBar: false,
+      autoHideMenuBar: true,
       transparent: false,
       vibrancy: 'sidebar',
       visualEffectState: 'active',
@@ -120,6 +120,9 @@ export class WindowService {
   }
 
   private setupMainWindow(mainWindow: BrowserWindow, mainWindowState: any) {
+    // 完全移除菜单栏
+    mainWindow.setMenu(null)
+
     mainWindowState.manage(mainWindow)
 
     this.setupMaximize(mainWindow, mainWindowState.isMaximized)
@@ -176,14 +179,30 @@ export class WindowService {
     // setup context menu for all webviews like miniapp
     app.on('web-contents-created', (_, webContents) => {
       contextMenu.contextMenu(webContents)
+
+      // 为所有 webContents（包括 webview）添加 did-create-window 监听
+      // 移除通过 window.open 创建的所有窗口的菜单栏
+      webContents.on('did-create-window', (win) => {
+        win.setMenu(null)
+      })
     })
 
-    // Dangerous API
-    if (isDev) {
-      mainWindow.webContents.on('will-attach-webview', (_, webPreferences) => {
+    // Setup webview preload for both dev and production
+    mainWindow.webContents.on('will-attach-webview', (_, webPreferences) => {
+      // Set correct preload path based on environment
+      if (app.isPackaged) {
+        // Production: use unpacked path
+        webPreferences.preload = path.join(process.resourcesPath, 'app.asar.unpacked', 'out', 'preload', 'index.js')
+      } else {
+        // Development: use out directory
         webPreferences.preload = join(__dirname, '../preload/index.js')
-      })
-    }
+      }
+
+      // Ensure preload script can access Node.js APIs
+      webPreferences.nodeIntegration = false
+      webPreferences.contextIsolation = true
+      webPreferences.sandbox = false
+    })
   }
 
   private setupWindowEvents(mainWindow: BrowserWindow) {
@@ -317,6 +336,8 @@ export class WindowService {
             // 如果是全屏URL,不设置parent,让窗口独立
             // parent: isFullScreenUrl ? undefined : mainWindow,
             parent: mainWindow,
+            autoHideMenuBar: true, // 隐藏菜单栏
+            frame: false,
             show: false // 先不显示,等配置完成后再显示
           }
         }
@@ -345,25 +366,10 @@ export class WindowService {
       return { action: 'deny' }
     })
 
-    /*mainWindow.webContents.on('did-create-window', (win, details) => {
-      const fullScreenUrls = ['https://maas.aiionly.com', 'http://localhost:7023']
-      if (fullScreenUrls.some((u) => details.url.startsWith(u))) {
-        // 等待窗口加载完成后最大化并显示
-        win.once('ready-to-show', () => {
-          win.maximize()
-          win.show()
-          win.focus()
-          // 提升窗口层级
-          win.setAlwaysOnTop(true, 'normal')
-          // 短暂延迟后取消置顶,避免一直遮挡其他应用
-          setTimeout(() => {
-            if (!win.isDestroyed()) {
-              win.setAlwaysOnTop(false)
-            }
-          }, 1000)
-        })
-      }
-    })*/
+    mainWindow.webContents.on('did-create-window', (win) => {
+      // 移除所有弹出窗口的菜单栏
+      win.setMenu(null)
+    })
 
     this.setupWebRequestHeaders(mainWindow)
   }

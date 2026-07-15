@@ -866,11 +866,31 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
   } catch (error) {
-    console.error('[Preload]Failed to expose APIs:', error as Error)
+    console.error('[Preload]Failed to expose APIs via contextBridge:', error as Error)
+    // Fallback: directly assign to window (for webview environment)
+    window.electron = electronAPI
+    window.api = api
+    console.log('[Preload] Fallback: APIs exposed via direct assignment')
   }
 } else {
   window.electron = electronAPI
   window.api = api
 }
+
+// ===== Webview Support: Auto-listen for app-config messages =====
+// This allows external websites loaded in webview to receive configuration
+// without needing to call window.api.onMessage explicitly
+ipcRenderer.on('app-config', (_event, config) => {
+  console.log('[Preload] Received app-config for webview:', config)
+
+  // Method 1: Dispatch as CustomEvent (recommended for external sites)
+  const event = new CustomEvent('app-config', { detail: config })
+  window.dispatchEvent(event)
+
+  // Method 2: Store in window object for direct access
+  ;(window as any).__APP_CONFIG__ = config
+
+  console.log('[Preload] app-config dispatched to webpage')
+})
 
 export type WindowApiType = typeof api

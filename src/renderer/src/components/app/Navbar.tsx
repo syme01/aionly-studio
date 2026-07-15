@@ -8,9 +8,11 @@ import useNavBackgroundColor from '@renderer/hooks/useNavBackgroundColor'
 import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useNavbarPosition } from '@renderer/hooks/useSettings'
 import { getThemeModeLabel } from '@renderer/i18n/label'
+import { useAppSelector } from '@renderer/store'
+import { selectToken } from '@renderer/store/user'
 import { ThemeMode } from '@renderer/types'
 import { useQuery } from '@tanstack/react-query'
-import { Divider, Tooltip } from 'antd'
+import { Divider, Skeleton, Tooltip } from 'antd'
 import { Monitor } from 'lucide-react'
 import type { HTMLAttributes } from 'react'
 import type { FC, PropsWithChildren } from 'react'
@@ -31,14 +33,17 @@ export const Navbar: FC<Props> = ({ children, ...props }) => {
   const { minappShow } = useRuntime()
   const { handleToRecharge } = useMinappPopup()
 
+  // 获取当前用户token，用于区分不同用户的缓存
+  const token = useAppSelector(selectToken)
+
   // 使用 React Query 获取余额，自动处理缓存和重复请求
-  const { data: balanceData } = useQuery({
-    queryKey: ['moneyConfig'],
+  const { data: balanceData, isLoading } = useQuery({
+    queryKey: ['moneyConfig', token], // 添加token到queryKey，不同用户有独立缓存
     queryFn: async () => {
       const res = await queryMoneyConfig()
       return res?.data
     },
-    enabled: !isTopNavbar && !minappShow, // 只在需要显示余额时才请求
+    enabled: !isTopNavbar && !minappShow && !!token, // 只在需要显示余额且已登录时才请求
     staleTime: 5 * 60 * 1000, // 5分钟内认为数据是新鲜的，不会重新请求
     gcTime: 10 * 60 * 1000, // 缓存保留10分钟
     refetchOnMount: false, // 组件挂载时不自动重新请求
@@ -57,7 +62,11 @@ export const Navbar: FC<Props> = ({ children, ...props }) => {
       <>
         <RechargeContainer onClick={handleToRecharge}>
           <img className="img-bullion" src={bullionImage} alt="" />
-          <span className="money">{hzBalance.toFixed(2)}</span>
+          {isLoading ? (
+            <Skeleton.Input active size="small" style={{ width: 60, height: 20, minWidth: 60 }} />
+          ) : (
+            <span className="money">{hzBalance.toFixed(2)}</span>
+          )}
           <Divider type="vertical" style={{ margin: '0 2px' }} />
           <span className="pay">{t('settings.provider.oauth.topup')}</span>
         </RechargeContainer>

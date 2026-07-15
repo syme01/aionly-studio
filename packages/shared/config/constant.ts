@@ -511,5 +511,15 @@ export const APP_CONFIG_DIR = '.aionlystudio' // Hidden config directory in home
 // resources/scripts should be maintained manually
 export const HOME_CHERRY_DIR = APP_CONFIG_DIR
 export const APP_API_HOST = `https://api.${APP_PROTOCOL}.com`
+
+// 生产环境的地址
 export const USER_UI_HOST = `https://maas.${APP_PROTOCOL}.com` // 控制台地址
 export const WEB_UI_HOST = `https://${APP_PROTOCOL}.com` // 官网地址
+
+// 测试环境的地址
+// export const USER_UI_HOST = `https://hf.rhwx-ai.com:9825` // 控制台地址
+// export const WEB_UI_HOST = `https://hf.rhwx-ai.com:9820` // 官网地址
+
+// 本地环境的地址
+// export const USER_UI_HOST = `http://localhost:7023` // 控制台地址
+// export const WEB_UI_HOST = `http://localhost:7022` // 官网地址

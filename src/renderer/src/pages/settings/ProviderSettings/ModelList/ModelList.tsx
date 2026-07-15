@@ -342,13 +342,13 @@ const ModelList: React.FC<ModelListProps> = ({ providerId, onPaginationStateChan
           </DynamicVirtualList>
         )}
 
-        {isEmpty(displayedModelGroups) && (
+        {!loading && isEmpty(displayedModelGroups) && (
           <Flex justify="center" align="center">
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
           </Flex>
         )}
         <Spin size="small" spinning={loading} />
-        {!hasMore && (
+        {!hasMore && !loading && (
           <Divider
             size="small"
             style={{

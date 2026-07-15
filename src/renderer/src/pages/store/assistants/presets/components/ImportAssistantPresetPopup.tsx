@@ -9,7 +9,7 @@ import { setAgentssubscribeUrl } from '@renderer/store/settings'
 import type { AssistantPreset } from '@renderer/types'
 import { uuid } from '@renderer/utils'
 import { Button, Divider, Flex, Form, Input, Modal, Radio, Typography } from 'antd'
-import { HelpCircle } from 'lucide-react'
+// import { HelpCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -144,9 +144,9 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
     }
   }
 
-  const handleHelpClick = () => {
-    window.open('https://docs.cherry-ai.com/data-settings/assistants-subscribe', '_blank')
-  }
+  // const handleHelpClick = () => {
+  //   window.open('https://docs.cherry-ai.com/data-settings/assistants-subscribe', '_blank')
+  // }
 
   return (
     <Modal
@@ -205,13 +205,13 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
           {t('assistants.presets.tag.agent')}
           {t('settings.tool.websearch.subscribe_add')}
         </Typography.Text>
-        <HelpCircle
+        {/*<HelpCircle
           size={16}
           color="var(--color-icon)"
           onClick={handleHelpClick}
           className="hover:!text-[var(--color-primary)] cursor-pointer transition-colors"
           style={{ flexShrink: 0 }}
-        />
+        />*/}
       </Flex>
 
       <Flex align="center" gap={12} style={{ marginTop: 10 }}>

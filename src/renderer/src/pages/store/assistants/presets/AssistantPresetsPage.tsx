@@ -4,13 +4,13 @@ import ListItem from '@renderer/components/ListItem'
 import Scrollbar from '@renderer/components/Scrollbar'
 import CustomTag from '@renderer/components/Tags/CustomTag'
 import { useAssistantPresets } from '@renderer/hooks/useAssistantPresets'
-import { useNavbarPosition } from '@renderer/hooks/useSettings'
+// import { useNavbarPosition } from '@renderer/hooks/useSettings'
 import { createAssistantFromAgent } from '@renderer/services/AssistantService'
 import type { AssistantPreset } from '@renderer/types'
 import { uuid } from '@renderer/utils'
 import { Button, Empty, Flex, Input } from 'antd'
 import { omit } from 'lodash'
-import { Import, Plus, Search, Settings2 } from 'lucide-react'
+import { FolderInput, Plus, Search, UserCog } from 'lucide-react'
 import type { FC } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -30,10 +30,10 @@ const AssistantPresetsPage: FC = () => {
   const [searchInput, setSearchInput] = useState('')
   const [activeGroup, setActiveGroup] = useState('我的')
   const [agentGroups, setAgentGroups] = useState<Record<string, AssistantPreset[]>>({})
-  const [isSearchExpanded, setIsSearchExpanded] = useState(false)
+  const [_isSearchExpanded, setIsSearchExpanded] = useState(false)
   const systemPresets = useSystemAssistantPresets()
   const { presets: userPresets } = useAssistantPresets()
-  const { isTopNavbar } = useNavbarPosition()
+  // const { isTopNavbar } = useNavbarPosition()
 
   useEffect(() => {
     const systemAgentsGroupList = groupByCategories(systemPresets)
@@ -129,13 +129,13 @@ const AssistantPresetsPage: FC = () => {
     setIsSearchExpanded(false)
   }
 
-  const handleSearchIconClick = () => {
+  /*  const handleSearchIconClick = () => {
     if (!isSearchExpanded) {
       setIsSearchExpanded(true)
     } else {
       handleSearch()
     }
-  }
+  }*/
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -180,11 +180,11 @@ const AssistantPresetsPage: FC = () => {
   }
 
   return (
-    <Container>
+    <Container className="page-container">
       <Navbar>
         <NavbarCenter style={{ borderRight: 'none', justifyContent: 'space-between' }}>
           {t('assistants.presets.title')}
-          <Input
+          {/* <Input
             placeholder={t('common.search')}
             className="nodrag"
             style={{ width: '30%', height: 28, borderRadius: 15, paddingLeft: 12 }}
@@ -198,7 +198,7 @@ const AssistantPresetsPage: FC = () => {
             onChange={handleSearchInputChange}
             onPressEnter={handleSearch}
             onBlur={handleSearchInputBlur}
-          />
+          />*/}
           <div style={{ width: 80 }} />
         </NavbarCenter>
       </Navbar>
@@ -231,7 +231,7 @@ const AssistantPresetsPage: FC = () => {
 
         <AgentsListContainer>
           <AgentsListHeader>
-            <AgentsListTitle>
+            {/*<AgentsListTitle>
               {search.trim() ? (
                 <>
                   <AssistantPresetGroupIcon groupName="搜索" size={24} />
@@ -249,9 +249,10 @@ const AssistantPresetsPage: FC = () => {
                   {filteredPresets.length}
                 </CustomTag>
               }
-            </AgentsListTitle>
-            <Flex gap={2}>
-              {isSearchExpanded ? (
+            </AgentsListTitle>*/}
+
+            <Flex gap={16} align="center" justify="space-between">
+              {/*{isSearchExpanded ? (
                 <Input
                   placeholder={t('common.search')}
                   className="nodrag"
@@ -277,17 +278,32 @@ const AssistantPresetsPage: FC = () => {
                     {t('common.search')}
                   </Button>
                 )
-              )}
-              <Button type="text" onClick={handleImportAgent} icon={<Import size={18} color="var(--color-icon)" />}>
-                {t('assistants.presets.import.title')}
-              </Button>
-              <Button type="text" onClick={handleManageAgents} icon={<Settings2 size={18} color="var(--color-icon)" />}>
-                {t('assistants.presets.manage.title')}
-              </Button>
-              <Button type="text" onClick={handleAddAgent} icon={<Plus size={18} color="var(--color-icon)" />}>
+              )}*/}
+              <Button type="primary" onClick={handleAddAgent} icon={<Plus size={18} />}>
                 {t('assistants.presets.add.title')}
               </Button>
+              <Button type="primary" onClick={handleManageAgents} icon={<UserCog size={18} />}>
+                {t('assistants.presets.manage.title')}
+              </Button>
+              <Button type="primary" onClick={handleImportAgent} icon={<FolderInput size={18} />}>
+                {t('assistants.presets.import.title')}
+              </Button>
             </Flex>
+
+            <Input
+              placeholder={t('common.search')}
+              className="nodrag"
+              style={{ width: '30%', height: 28, borderRadius: 6, paddingLeft: 12 }}
+              size="small"
+              allowClear
+              onClear={handleSearchClear}
+              suffix={<Search size={14} color="var(--color-icon)" onClick={handleSearch} />}
+              value={searchInput}
+              maxLength={50}
+              onChange={handleSearchInputChange}
+              onPressEnter={handleSearch}
+              onBlur={handleSearchInputBlur}
+            />
           </AgentsListHeader>
 
           {filteredPresets.length > 0 ? (
@@ -322,7 +338,7 @@ const Container = styled.div`
 
 const AgentsGroupList = styled(Scrollbar)`
   min-width: 160px;
-  height: calc(100vh - var(--navbar-height));
+  height: calc(100vh - var(--navbar-height) - 10px);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -340,10 +356,11 @@ const AgentsGroupList = styled(Scrollbar)`
 const Main = styled.div`
   flex: 1;
   display: flex;
+  background-color: var(--color-background);
 `
 
 const AgentsListContainer = styled.div`
-  height: calc(100vh - var(--navbar-height));
+  height: calc(100vh - var(--navbar-height) - 10px);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -356,7 +373,7 @@ const AgentsListHeader = styled.div`
   padding: 12px 16px 12px;
 `
 
-const AgentsListTitle = styled.div`
+/*const AgentsListTitle = styled.div`
   font-size: 16px;
   line-height: 18px;
   font-weight: 500;
@@ -364,7 +381,7 @@ const AgentsListTitle = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-`
+`*/
 
 const AgentsList = styled(Scrollbar)`
   flex: 1;

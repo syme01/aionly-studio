@@ -95,7 +95,7 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
     tenantId: '000001',
     username: '',
     password: '',
-    userType: 'web_user',
+    userType: 'web_sub_user',
     clientId: import.meta.env.VITE_APP_CLIENT_ID,
     phoneNumber: '',
     grantType: 'password',
@@ -142,7 +142,9 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
 
   /** 显示绑定手机/邮箱弹窗 **/
   const showBindPhoneEmail = useCallback(() => {
-    void BindPhoneEmailModal.show({ parentForm: form, navigate })
+    BindPhoneEmailModal.show({ parentForm: form, navigate }).then(() => {
+      verifyType.current = ''
+    })
   }, [form, navigate])
 
   /** 查询并保存用户信息 **/
@@ -165,6 +167,7 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
   /** 接口校验 **/
   const checkByApi = async (params: any) => {
     if (verifyType.current !== 'bind') {
+      // console.log('账号登录开始')
       // 直接执行登录
       try {
         setLoading(true)

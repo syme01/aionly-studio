@@ -69,6 +69,12 @@ export function isFreeModel(model: Model) {
     return true
   }
 
+  if (model.provider === 'aionly') {
+    if ((model as any).FreeTag == '1') {
+      return true
+    }
+  }
+
   return (model.id + model.name).toLocaleLowerCase().includes('free')
 }
 
