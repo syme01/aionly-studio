@@ -42,11 +42,19 @@ export async function getAvailableProviders(): Promise<Provider[]> {
         name: 'AiOnly',
         type: 'openai',
         apiKey: 'aionly',
-        apiHost: '',
+        apiHost: 'https://api.aionly.com',
+        anthropicApiHost: 'https://api.aionly.com',
         models: [],
         enabled: true
       })
     }
+
+    // Ensure aionly provider has anthropicApiHost for ClaudeCodeService validation
+    supportedProviders.forEach((p: Provider) => {
+      if (p.id === 'aionly' && !p.anthropicApiHost) {
+        p.anthropicApiHost = p.apiHost || 'https://api.aionly.com'
+      }
+    })
 
     // Format provider apiHost according to their type
     const results = await Promise.allSettled(supportedProviders.map((p: Provider) => formatProviderApiHost(p)))
@@ -146,6 +154,7 @@ export async function validateModelId(model: string): Promise<{
   provider?: Provider
   modelId?: string
 }> {
+  console.log('Validating model', model)
   try {
     if (!model || typeof model !== 'string') {
       return {
@@ -184,10 +193,16 @@ export async function validateModelId(model: string): Promise<{
     const providerId = modelInfo[0]
     const modelId = getRealProviderModel(model)
 
+    const providers = await getAvailableProviders()
+
+    console.log('Providers====>', providers)
+
+    console.log('Validating model', modelId)
+
     // Special handling for 'aionly' provider
     // AiOnly models are fetched dynamically from external API, not stored in Redux
     // Skip validation for aionly provider to avoid localStorage bloat
-    if (providerId === 'aionly') {
+    /*if (providerId === 'aionly') {
       logger.debug('Skipping model validation for aionly provider (external API)', { modelId })
       return {
         valid: true,
@@ -196,15 +211,18 @@ export async function validateModelId(model: string): Promise<{
           name: 'AiOnly',
           type: 'openai',
           apiKey: 'aionly', // Set placeholder API key for validation
-          apiHost: '',
+          apiHost: 'https://api.aionly.com',
+          anthropicApiHost: 'https://api.aionly.com',
           models: [],
           enabled: true
         },
         modelId
       }
-    }
+    }*/
 
-    const provider = await getProviderByModel(model)
+    // const provider = await getProviderByModel(model)
+
+    const provider = providers.find((p: Provider) => p.id === providerId)
 
     if (!provider) {
       return {
@@ -217,8 +235,11 @@ export async function validateModelId(model: string): Promise<{
       }
     }
 
+    /**
+     * 由于aionly自己从集成接口集成模型，这里直接就返回，不做模型是否存在的验证
+     */
     // Check if model exists in provider
-    const modelExists = provider.models?.some((m) => m.id === modelId)
+    /*const modelExists = provider.models?.some((m) => m.id === modelId)
     if (!modelExists) {
       const availableModels = provider.models?.map((m) => m.id).join(', ') || 'none'
       return {
@@ -229,7 +250,7 @@ export async function validateModelId(model: string): Promise<{
           code: 'model_not_available'
         }
       }
-    }
+    }*/
 
     return {
       valid: true,

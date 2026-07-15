@@ -78,7 +78,7 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
   // 合并正则（手机号或邮箱）
   const userNamePattern = new RegExp(`(${phoneRegexp.source})|(${emailRegexp.source})`)
   // 密码正则
-  const passwordPattern = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$)([^\u4e00-\u9fa5\s]){6,20}$/
+  // const passwordPattern = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$)([^\u4e00-\u9fa5\s]){6,20}$/
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -297,10 +297,6 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
               {
                 required: true,
                 message: i18n.t('login.sub_account.password_required')
-              },
-              {
-                pattern: passwordPattern,
-                message: i18n.t('login.sub_account.password_invalid')
               }
             ]}>
             <PwdInput

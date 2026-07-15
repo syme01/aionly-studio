@@ -348,7 +348,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId, onPaginationStateChan
           </Flex>
         )}
         <Spin size="small" spinning={loading} />
-        {!hasMore && !loading && (
+        {!hasMore && !loading && !isEmpty(displayedModelGroups) && (
           <Divider
             size="small"
             style={{

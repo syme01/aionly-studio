@@ -200,6 +200,7 @@ const MessageBlockRenderer: React.FC<Props> = ({ blocks, message }) => {
   const renderedBlocks = blocks.map((blockId) => blockEntities[blockId]).filter(Boolean)
   // Check if message is still processing
   const isProcessing = isMessageProcessing(message)
+  console.log('isProcessing', isProcessing, message)
   const allowCollapseExecutionDetails = !(message.role === 'assistant' && isProcessing)
   const groupedBlocks = useMemo(
     () => groupSimilarBlocks(renderedBlocks, allowCollapseExecutionDetails),
@@ -369,6 +370,8 @@ const MessageBlockRenderer: React.FC<Props> = ({ blocks, message }) => {
 }
 
 export default React.memo(MessageBlockRenderer)
+
+// export default MessageBlockRenderer
 
 const ImageBlockGroup = styled.div<{ count: number }>`
   display: flex;
