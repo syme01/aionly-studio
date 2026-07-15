@@ -6195,6 +6195,13 @@
     "saveDataError": "保存数据失败，请重试",
     "title": "更新提示"
   },
+  "user": {
+    "limit": {
+      "title": "额度",
+      "limit_day": "每日额度",
+      "rest": "剩余额度"
+    }
+  },
   "warning": {
     "missing_provider": "供应商不存在，已回退到默认供应商 {{provider}}。这可能导致问题。"
   },

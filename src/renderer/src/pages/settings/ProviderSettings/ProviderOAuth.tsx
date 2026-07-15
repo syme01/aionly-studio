@@ -10,6 +10,8 @@ import { PROVIDER_URLS } from '@renderer/config/providers'
 import { useMinappPopup } from '@renderer/hooks/useMinappPopup'
 import { useProvider } from '@renderer/hooks/useProvider'
 import ApiOptionsSettingsPopup from '@renderer/pages/settings/ProviderSettings/ApiOptionsSettings/ApiOptionsSettingsPopup'
+import { useAppSelector } from '@renderer/store'
+import { selectUserInfo } from '@renderer/store/user'
 import { isSystemProvider } from '@renderer/types'
 import { providerBills, providerCharge } from '@renderer/utils/oauth'
 import { isSupportAnthropicPromptCacheProvider } from '@renderer/utils/provider'
@@ -37,6 +39,7 @@ const ProviderOAuth: FC<Props> = ({ providerId, fancyProviderName }) => {
   const { t } = useTranslation()
   const { provider /*updateProvider*/ } = useProvider(providerId)
   const { handleToBillManagement, handleToRecharge } = useMinappPopup()
+  const userInfo: any = useAppSelector(selectUserInfo)
 
   // TODO: 这里需要更新ApiKey
   /*const _setApiKey = (newKey: string) => {
@@ -103,12 +106,15 @@ const ProviderOAuth: FC<Props> = ({ providerId, fancyProviderName }) => {
       </OAuthButton>*/}
 
       <div className="right">
-        <HStack gap={10}>
-          <Button type="primary" onClick={handleClickBills}>
-            {t('settings.provider.bills')}
-          </Button>
-          <OrangeButton onClick={handleClickRecharge}>{t('settings.provider.charge')}</OrangeButton>
-        </HStack>
+        {/* 子账号没有余额充值和账单 */}
+        {userInfo?.userSubjectType != '2' && (
+          <HStack gap={10}>
+            <Button type="primary" onClick={handleClickBills}>
+              {t('settings.provider.bills')}
+            </Button>
+            <OrangeButton onClick={handleClickRecharge}>{t('settings.provider.charge')}</OrangeButton>
+          </HStack>
+        )}
       </div>
     </Container>
   )

@@ -1,4 +1,4 @@
-import { queryMoneyConfig } from '@renderer/api/balance'
+import { getChildLimit, queryMoneyConfig } from '@renderer/api/balance'
 import bullionImage from '@renderer/assets/images/home/bullion.png'
 import { isLinux, isMac, isWin } from '@renderer/config/constant'
 import { useTheme } from '@renderer/context/ThemeProvider'
@@ -9,13 +9,13 @@ import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useNavbarPosition } from '@renderer/hooks/useSettings'
 import { getThemeModeLabel } from '@renderer/i18n/label'
 import { useAppSelector } from '@renderer/store'
-import { selectToken } from '@renderer/store/user'
+import { selectToken, selectUserInfo } from '@renderer/store/user'
 import { ThemeMode } from '@renderer/types'
 import { useQuery } from '@tanstack/react-query'
-import { Divider, Skeleton, Tooltip } from 'antd'
+import { Divider, Popover, Skeleton, Tooltip } from 'antd'
 import { Monitor } from 'lucide-react'
-import type { HTMLAttributes } from 'react'
 import type { FC, PropsWithChildren } from 'react'
+import { HTMLAttributes } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
@@ -32,25 +32,46 @@ export const Navbar: FC<Props> = ({ children, ...props }) => {
   const { isTopNavbar } = useNavbarPosition()
   const { minappShow } = useRuntime()
   const { handleToRecharge } = useMinappPopup()
+  const userInfo: any = useAppSelector(selectUserInfo)
+  const defaultChildLimit = {
+    limitTotal: '0.00',
+    restotal: '0.00'
+  }
 
   // 获取当前用户token，用于区分不同用户的缓存
   const token = useAppSelector(selectToken)
 
   // 使用 React Query 获取余额，自动处理缓存和重复请求
   const { data: balanceData, isLoading } = useQuery({
-    queryKey: ['moneyConfig', token], // 添加token到queryKey，不同用户有独立缓存
+    queryKey: ['balance', token], // 使用独立的queryKey区分余额查询
     queryFn: async () => {
       const res = await queryMoneyConfig()
       return res?.data
     },
-    enabled: !isTopNavbar && !minappShow && !!token, // 只在需要显示余额且已登录时才请求
-    staleTime: 5 * 60 * 1000, // 5分钟内认为数据是新鲜的，不会重新请求
-    gcTime: 10 * 60 * 1000, // 缓存保留10分钟
-    refetchOnMount: false, // 组件挂载时不自动重新请求
+    enabled: !isTopNavbar && !minappShow && !!token && userInfo?.userSubjectType != '2', // 只在不是子账户(userSubjectType不为2)且已登录时才请求
+    staleTime: 30 * 1000, // 30秒内认为数据是新鲜的，切换账号时能快速更新
+    gcTime: 5 * 60 * 1000, // 缓存保留5分钟
+    refetchOnMount: true, // 组件挂载时自动重新请求，确保切换账号后数据更新
     refetchOnWindowFocus: false // 窗口聚焦时不自动重新请求
   })
 
   const hzBalance = balanceData?.hzBalance ? Number(balanceData.hzBalance) : 0
+
+  // 使用 React Query 获取额度，自动处理缓存和重复请求
+  const { data: childLimitData, isLoading: childLimitLoading } = useQuery({
+    queryKey: ['childLimit', token], // 使用独立的queryKey区分子账户额度查询
+    queryFn: async () => {
+      const res = await getChildLimit()
+      return res?.data
+    },
+    enabled: !isTopNavbar && !minappShow && !!token && userInfo?.userSubjectType == '2', // 只在子账户(userSubjectType为2)且已登录时才请求
+    staleTime: 30 * 1000, // 30秒内认为数据是新鲜的，切换账号时能快速更新
+    gcTime: 5 * 60 * 1000, // 缓存保留5分钟
+    refetchOnMount: true, // 组件挂载时自动重新请求，确保切换账号后数据更新
+    refetchOnWindowFocus: false // 窗口聚焦时不自动重新请求
+  })
+
+  const childLimit = childLimitData || defaultChildLimit
 
   if (isTopNavbar) {
     return null
@@ -60,16 +81,45 @@ export const Navbar: FC<Props> = ({ children, ...props }) => {
     <NavbarContainer {...props} style={{ backgroundColor }} $isFullScreen={isFullscreen}>
       {children}
       <>
-        <RechargeContainer onClick={handleToRecharge}>
-          <img className="img-bullion" src={bullionImage} alt="" />
-          {isLoading ? (
-            <Skeleton.Input active size="small" style={{ width: 60, height: 20, minWidth: 60 }} />
-          ) : (
-            <span className="money">{hzBalance.toFixed(2)}</span>
-          )}
-          <Divider type="vertical" style={{ margin: '0 2px' }} />
-          <span className="pay">{t('settings.provider.oauth.topup')}</span>
-        </RechargeContainer>
+        {/* 主账号金币数 */}
+        {userInfo?.userSubjectType != '2' && (
+          <RechargeContainer onClick={handleToRecharge}>
+            <img className="img-bullion" src={bullionImage} alt="" />
+            {isLoading ? (
+              <Skeleton.Input active size="small" style={{ width: 60, height: 20, minWidth: 60 }} />
+            ) : (
+              <span className="money">{hzBalance.toFixed(2)}</span>
+            )}
+            <Divider type="vertical" style={{ margin: '0 2px' }} />
+            <span className="pay">{t('settings.provider.oauth.topup')}</span>
+          </RechargeContainer>
+        )}
+        {/* 子账户额度 */}
+        {userInfo?.userSubjectType == '2' && (
+          <Popover
+            align={{ offset: [0, -8] }}
+            content={
+              <LimitContainer>
+                <div className="item">
+                  <div className="title">{t('user.limit.limit_day')}</div>
+                  <div className="value">{childLimit?.limitTotal}</div>
+                </div>
+                <div className="item">
+                  <div className="title">{t('user.limit.rest')}</div>
+                  <div className="value rest">{childLimit?.restotal}</div>
+                </div>
+              </LimitContainer>
+            }>
+            <RechargeContainer>
+              <img className="img-bullion" src={bullionImage} alt="" />
+              {childLimitLoading ? (
+                <Skeleton.Input active size="small" style={{ width: 60, height: 20, minWidth: 60 }} />
+              ) : (
+                <span className="text">{t('user.limit.title')}</span>
+              )}
+            </RechargeContainer>
+          </Popover>
+        )}
         <Tooltip title={t('settings.theme.title') + ': ' + getThemeModeLabel(settedTheme)} placement="bottom">
           <Icon theme={theme} onClick={toggleTheme}>
             {settedTheme === ThemeMode.dark ? (
@@ -255,5 +305,22 @@ const RechargeContainer = styled.div`
   .img-bullion {
     width: 18px;
     height: 18px;
+  }
+`
+
+const LimitContainer = styled.div`
+  display: flex;
+  gap: 30px;
+  .title{
+    font-size: 14px;
+    color: var(--color-text-3);
+  }
+  .value{
+    font-size: 16px;
+    color: var(--color-text-1);
+    font-weight: 600;
+    &.rest{
+      color: rgb(247, 127, 38);
+    }
   }
 `
