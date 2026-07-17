@@ -87,7 +87,7 @@ const ModelSettings: FC<ModelSettingsProps> = ({
   }, [getFilteredModels])
 
   const handleSetModel = useCallback((value: string, method: any) => {
-    console.log('value', value)
+    // console.log('value', value)
     // const model = find(allModels, JSON.parse(value)) as Model
     const model = JSON.parse(value) as Model
     method(model)

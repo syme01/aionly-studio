@@ -50,7 +50,8 @@ export enum ConfigKeys {
   EnableDeveloperMode = 'enableDeveloperMode',
   ClientId = 'clientId',
   GitBashPath = 'gitBashPath',
-  GitBashPathSource = 'gitBashPathSource' // 'manual' | 'auto' | null
+  GitBashPathSource = 'gitBashPathSource', // 'manual' | 'auto' | null
+  HideMenuBar = 'hideMenuBar' // 'true' | 'false'
 }
 
 export class ConfigManager {
@@ -281,6 +282,14 @@ export class ConfigManager {
     }
 
     return clientId
+  }
+
+  getHideMenuBar(): boolean {
+    return this.get<boolean>(ConfigKeys.HideMenuBar, true)
+  }
+
+  setHideMenuBar(value: boolean) {
+    this.set(ConfigKeys.HideMenuBar, value)
   }
 
   set(key: string, value: unknown, isNotify: boolean = false) {

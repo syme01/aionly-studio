@@ -154,7 +154,7 @@ export async function validateModelId(model: string): Promise<{
   provider?: Provider
   modelId?: string
 }> {
-  console.log('Validating model', model)
+  // console.log('Validating model', model)
   try {
     if (!model || typeof model !== 'string') {
       return {
@@ -195,9 +195,9 @@ export async function validateModelId(model: string): Promise<{
 
     const providers = await getAvailableProviders()
 
-    console.log('Providers====>', providers)
+    // console.log('Providers====>', providers)
 
-    console.log('Validating model', modelId)
+    // console.log('Validating model', modelId)
 
     // Special handling for 'aionly' provider
     // AiOnly models are fetched dynamically from external API, not stored in Redux

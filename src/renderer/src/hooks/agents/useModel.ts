@@ -17,7 +17,8 @@ export const useApiModel = ({ id, filter }: UseModelProps): ApiModel | undefined
   // If model not found and it's an aionly model, try to get from cache
   // This handles the case where aionly models are dynamically fetched from external API
   // and not stored in Redux, so they won't appear in the models list
-  if (!foundModel && id?.startsWith('aionly:')) {
+  if (id?.startsWith('aionly:')) {
+    // console.log('useApiModel: not found in models, trying cache', id)
     const cachedModel = getCachedAiOnlyModel(id)
     if (cachedModel) {
       // console.log('useApiModel: found in cache', cachedModel)

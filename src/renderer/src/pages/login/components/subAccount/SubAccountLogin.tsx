@@ -1,11 +1,13 @@
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons'
 import { loggerService } from '@logger'
-import { getUserProfileApi, loginApi } from '@renderer/api/login'
+import { getApikeyByUserId, getUserProfileApi, loginApi } from '@renderer/api/login'
 import { queryPhoneByName } from '@renderer/api/user'
 import Verify from '@renderer/components/verifition/Verify'
+import { useFetchAndSetupModels } from '@renderer/hooks/useAiOnlyModels'
+import { useProvider } from '@renderer/hooks/useProvider'
 import i18n from '@renderer/i18n'
 import { useAppDispatch } from '@renderer/store'
-import { setUserInfo } from '@renderer/store/user'
+import { setApiKey, setUserInfo } from '@renderer/store/user'
 import { Button, Flex, Form, type FormProps, Input } from 'antd'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -80,8 +82,10 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
   // 密码正则
   // const passwordPattern = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$)([^\u4e00-\u9fa5\s]){6,20}$/
 
+  const { updateProvider } = useProvider('aionly')
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const setupModels = useFetchAndSetupModels()
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const verifyRef = useRef<any>(null)
@@ -150,15 +154,22 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
   /** 查询并保存用户信息 **/
   const saveUserInfo = useCallback(async () => {
     const res = await getUserProfileApi()
-    const data = res.data?.user
-    dispatch(setUserInfo(data))
+    const user_data = res.data?.user
+    dispatch(setUserInfo(user_data))
     // const balance = await getFinanceInfo()
     // dispatch(setMyBalance(balance.data))
-  }, [dispatch])
+    const api_key_res = await getApikeyByUserId({ userId: user_data?.userId || '' })
+    const secretKey = api_key_res?.msg ?? ''
+    dispatch(setApiKey(secretKey))
+    updateProvider({
+      apiKey: secretKey
+    })
+  }, [dispatch, updateProvider])
 
   /** 登录成功 **/
-  const handleLoginSuccess = () => {
-    saveUserInfo().then()
+  const handleLoginSuccess = async () => {
+    await saveUserInfo()
+    await setupModels(10) // 预存10个模型供页面优先展示
     setScene(LoginSceneType.MainAccount)
     props.onComplete?.()
     navigate('/')

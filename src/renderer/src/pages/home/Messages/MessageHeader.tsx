@@ -3,7 +3,7 @@ import defaultAvatar from '@renderer/assets/images/avatar-default.png'
 import { HStack } from '@renderer/components/Layout'
 // import UserPopup from '@renderer/components/Popups/UserPopup'
 import { /*APP_NAME,*/ AppLogo, isLocalAi } from '@renderer/config/env'
-import { getModelLogoById } from '@renderer/config/models'
+import { getModelLogo } from '@renderer/config/models'
 import { useTheme } from '@renderer/context/ThemeProvider'
 // import { useAgent } from '@renderer/hooks/agents/useAgent'
 // import useAvatar from '@renderer/hooks/useAvatar'
@@ -35,12 +35,17 @@ interface Props {
 }
 
 const getAvatarSource = (isLocalAi: boolean, modelId: string | undefined, model?: any) => {
-  // console.log('getAvatarSource', isLocalAi, modelId)
+  // console.log('getAvatarSource', isLocalAi, modelId, model)
   if (isLocalAi) return AppLogo
   if (model && model.modelFileUrl) {
     return model.modelFileUrl
   }
-  return modelId ? getModelLogoById(modelId) : undefined
+  const logo = getModelLogo(model)
+  // 如果没有 logo，使用 modelId 尝试获取
+  if (!logo && modelId) {
+    return getModelLogo({ id: modelId, name: modelId } as any)
+  }
+  return logo || AppLogo // 兜底返回 AppLogo
 }
 
 const MessageHeader: FC<Props> = memo(({ assistant, model, message, topic, isGroupContextMessage }) => {

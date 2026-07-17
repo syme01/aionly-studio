@@ -195,6 +195,7 @@ export function getAssistantMessage({ assistant, topic }: { assistant: Assistant
 }
 
 export function getMessageModelId(message: Message) {
+  // console.log('getMessageModelId', message)
   return message?.model?.id || message.modelId
 }
 

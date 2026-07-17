@@ -53,7 +53,7 @@ import type { StreamProcessorCallbacks } from './StreamProcessingService'
 // FIXME: 这里太多重复逻辑，需要重构
 
 const logger = loggerService.withContext('ApiService')
-const SUMMARY_REQUEST_TIMEOUT_MS = 15_000
+const SUMMARY_REQUEST_TIMEOUT_MS = 600_000
 
 /**
  * Get the MCP servers to use based on the assistant's MCP mode.
@@ -516,7 +516,7 @@ export async function fetchMessagesSummary({
     providerOptions,
     ...standardParams,
     abortSignal: AbortSignal.timeout(SUMMARY_REQUEST_TIMEOUT_MS),
-    maxRetries: 0
+    maxRetries: 1
   }
 
   const middlewareConfig: AiSdkMiddlewareConfig = {

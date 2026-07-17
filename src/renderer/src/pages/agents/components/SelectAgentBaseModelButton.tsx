@@ -1,7 +1,9 @@
 import ModelAvatar from '@renderer/components/Avatar/ModelAvatar'
 import { SelectAgentModelPopup } from '@renderer/components/Popups/SelectModelPopup'
 import { agentModelFilter } from '@renderer/config/models'
-import { useApiModel } from '@renderer/hooks/agents/useModel'
+import { useDefaultModel } from '@renderer/hooks/useAssistant'
+import { selectAiOnlyModels } from '@renderer/store/user'
+// import { useApiModel } from '@renderer/hooks/agents/useModel'
 import type { AgentBaseWithId, ApiModel } from '@renderer/types'
 import { isAgentSessionEntity } from '@renderer/types'
 import { isAgentEntity } from '@renderer/types'
@@ -12,6 +14,7 @@ import { Button } from 'antd'
 import { ChevronDown } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 
 interface Props {
   agentBase: AgentBaseWithId
@@ -49,9 +52,18 @@ const SelectAgentBaseModelButton = ({
 }: Props) => {
   const { t } = useTranslation()
 
+  const { defaultModel } = useDefaultModel()
+  // 获取 aiOnly 模型列表
+  const aiOnlyModels = useSelector(selectAiOnlyModels)
+  const matchedModel = aiOnlyModels.find((model) => model.id === agent?.model.replace('aionly:', ''))
+  const apiModel = matchedModel ?? aiOnlyModels[0] ?? defaultModel
+
   // 如果传入了 selectedModel，使用它；否则从 API 获取
-  const apiModel = useApiModel({ id: agent?.model })
+  // const apiModel = useApiModel({ id: agent?.model })
+  // id aionly:doubao-seed-2-0-code-preview-260215
   const model = selectedModel || apiModel
+
+  // console.log('agent', agent)
 
   // console.log('selectedModel', selectedModel)
   // console.log('apiModel', apiModel)

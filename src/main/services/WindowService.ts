@@ -52,6 +52,7 @@ export class WindowService {
       return this.mainWindow
     }
 
+    const hideMenuBar = configManager.getHideMenuBar()
     const mainWindowState = windowStateKeeper({
       defaultWidth: MIN_WINDOW_WIDTH,
       defaultHeight: MIN_WINDOW_HEIGHT,
@@ -73,7 +74,7 @@ export class WindowService {
       minWidth: MIN_WINDOW_WIDTH,
       minHeight: MIN_WINDOW_HEIGHT,
       show: false,
-      autoHideMenuBar: true,
+      autoHideMenuBar: hideMenuBar,
       transparent: false,
       vibrancy: 'sidebar',
       visualEffectState: 'active',
@@ -86,8 +87,8 @@ export class WindowService {
             trafficLightPosition: { x: 13, y: 13 }
           }
         : {
-            // On Linux, allow using system title bar if setting is enabled
-            frame: isLinux && configManager.getUseSystemTitleBar() ? true : false
+            // On Linux and Windows, allow using system title bar if menu bar is enabled
+            frame: (isLinux && configManager.getUseSystemTitleBar()) || (isWin && !hideMenuBar) ? true : false
             // frame: true
           }),
       //...(windowsBackgroundMaterial ? { backgroundMaterial: windowsBackgroundMaterial } : {}),
@@ -105,7 +106,7 @@ export class WindowService {
       }
     })
 
-    this.setupMainWindow(this.mainWindow, mainWindowState)
+    this.setupMainWindow(this.mainWindow, mainWindowState, hideMenuBar)
 
     //preload miniWindow to resolve series of issues about miniWindow in Mac
     const enableQuickAssistant = configManager.getEnableQuickAssistant()
@@ -119,9 +120,11 @@ export class WindowService {
     return this.mainWindow
   }
 
-  private setupMainWindow(mainWindow: BrowserWindow, mainWindowState: any) {
-    // 完全移除菜单栏
-    mainWindow.setMenu(null)
+  private setupMainWindow(mainWindow: BrowserWindow, mainWindowState: any, hideMenuBar: boolean) {
+    // 根据配置决定是否完全移除菜单栏
+    if (hideMenuBar) {
+      mainWindow.setMenu(null)
+    }
 
     mainWindowState.manage(mainWindow)
 
@@ -560,6 +563,7 @@ export class WindowService {
       return this.miniWindow
     }
 
+    const hideMenuBar = configManager.getHideMenuBar()
     const miniWindowState = windowStateKeeper({
       defaultWidth: DEFAULT_MINIWINDOW_WIDTH,
       defaultHeight: DEFAULT_MINIWINDOW_HEIGHT,
@@ -577,7 +581,7 @@ export class WindowService {
       maxHeight: 768,
       title: 'AiOnly Quick Assistant',
       show: false,
-      autoHideMenuBar: true,
+      autoHideMenuBar: hideMenuBar,
       transparent: isMac,
       vibrancy: 'under-window',
       visualEffectState: 'followWindow',

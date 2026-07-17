@@ -72,7 +72,7 @@ const MessageItem: FC<Props> = ({
   const { t } = useTranslation()
   const { assistant, setModel } = useAssistant(message.assistantId)
   const { isMultiSelectMode } = useChatContext(topic)
-  const model = useModel(getMessageModelId(message), message.model?.provider) || message.model
+  const model = useModel(getMessageModelId(message), message.model?.provider) || message.model || assistant?.model
   const { messageFont, fontSize, /*messageStyle,*/ showMessageOutline } = useSettings()
   const { editMessageBlocks, resendUserMessageWithEdit, editMessage } = useMessageOperations(topic)
   const messageContainerRef = useRef<HTMLDivElement>(null)
@@ -80,8 +80,8 @@ const MessageItem: FC<Props> = ({
   const { setTimeoutTimer } = useTimer()
   const isEditing = editingMessageId === message.id
 
-  console.log('MessageItem------->message', message)
-  console.log('MessageItem------->model', model)
+  // console.log('MessageItem------->message', message)
+  // console.log('MessageItem------->model', model)
 
   useEffect(() => {
     if (isEditing && messageContainerRef.current) {

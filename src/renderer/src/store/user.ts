@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 // import webLogo from "@/assets/images/login/webLogo.png";
 import { getIndentCountList } from '@renderer/api/order'
 import logo from '@renderer/assets/images/logo.png'
+import type { Model } from '@renderer/types'
 
 interface UserInfo {
   payPasswordFlag?: unknown
@@ -20,6 +21,7 @@ interface UserState {
   // webUrl: string;
   serviceInfo: Record<string, unknown>
   apiKey: string
+  aiOnlyModels: Model[]
 }
 
 const initialState: UserState = {
@@ -30,6 +32,7 @@ const initialState: UserState = {
   wdCount: '',
   logoUrl: logo,
   apiKey: '',
+  aiOnlyModels: [],
   // webUrl: webLogo,
   serviceInfo: {}
 }
@@ -80,6 +83,9 @@ const userSlice = createSlice({
     },
     setApiKey(state, action: PayloadAction<string>) {
       state.apiKey = action.payload
+    },
+    setAiOnlyModels(state, action: PayloadAction<Model[]>) {
+      state.aiOnlyModels = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -89,13 +95,23 @@ const userSlice = createSlice({
   }
 })
 
-export const { setToken, clearToken, setMyBalance, setUserInfo, setLogoUrl, setPassWord, setServiceInfo, setApiKey } =
-  userSlice.actions
+export const {
+  setToken,
+  clearToken,
+  setMyBalance,
+  setUserInfo,
+  setLogoUrl,
+  setPassWord,
+  setServiceInfo,
+  setApiKey,
+  setAiOnlyModels
+} = userSlice.actions
 
 export const selectToken = (state: { user: UserState }) => state.user.token || localStorage.getItem('token') || ''
 export const selectUserInfo = (state: { user: UserState }) => state.user.userInfo
 export const selectMyBalance = (state: { user: UserState }) => state.user.myBalance
 export const selectServiceInfo = (state: { user: UserState }) => state.user.serviceInfo
 export const selectIndentCount = (state: { user: UserState }) => state.user.indentCount
+export const selectAiOnlyModels = (state: { user: UserState }) => state.user.aiOnlyModels
 
 export default userSlice.reducer

@@ -330,7 +330,7 @@ export const initialState: SettingsState = {
   webdavHost: '',
   webdavUser: '',
   webdavPass: '',
-  webdavPath: '/aionly-studio',
+  webdavPath: '/aionly',
   webdavAutoSync: false,
   webdavSyncInterval: 0,
   webdavMaxBackups: 0,

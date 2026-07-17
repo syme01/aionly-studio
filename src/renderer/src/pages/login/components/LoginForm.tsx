@@ -1,6 +1,7 @@
 import { getFinanceInfo } from '@renderer/api/balance'
 import { getApikeyByUserId, getUserProfileApi } from '@renderer/api/login'
 import Verify from '@renderer/components/verifition/Verify'
+import { useFetchAndSetupModels } from '@renderer/hooks/useAiOnlyModels'
 import { useProvider } from '@renderer/hooks/useProvider'
 import i18n from '@renderer/i18n'
 import { Agreements } from '@renderer/pages/login/components/Agreements'
@@ -66,6 +67,7 @@ export const LoginForm = (props: LoginFormProps) => {
   const navigate = useNavigate()
 
   const { updateProvider } = useProvider('aionly')
+  const setupModels = useFetchAndSetupModels()
 
   const [activeTabKey, setActiveTabKey] = useState('1')
   const [isAccept, setIsAccept] = useState(false)
@@ -113,8 +115,9 @@ export const LoginForm = (props: LoginFormProps) => {
   }, [dispatch, updateProvider])
 
   /** 登录成功 **/
-  const handleLoginSuccess = () => {
-    saveUserInfo()
+  const handleLoginSuccess = async () => {
+    await saveUserInfo()
+    await setupModels(10) // 预存10个模型供页面优先展示
     props.onComplete?.()
     navigate('/')
   }

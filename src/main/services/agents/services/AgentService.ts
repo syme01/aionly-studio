@@ -329,7 +329,7 @@ export class AgentService extends BaseService {
 
       const now = new Date().toISOString()
       const configuration: CreateAgentRequest['configuration'] = {
-        avatar: '🦞',
+        avatar: '🐦‍🔥',
         permission_mode: 'bypassPermissions',
         max_turns: 100,
         soul_enabled: true,
@@ -342,8 +342,8 @@ export class AgentService extends BaseService {
 
       const req: CreateAgentRequest = {
         type: 'claude-code',
-        name: 'Cherry Claw',
-        description: 'Default autonomous CherryClaw agent',
+        name: 'Aionly Claw',
+        description: 'Default autonomous AionlyClaw agent',
         model: firstModel.id,
         accessible_paths: [],
         configuration
@@ -357,7 +357,7 @@ export class AgentService extends BaseService {
       const insertData: InsertAgentRow = {
         id,
         type: req.type,
-        name: req.name || 'CherryClaw',
+        name: req.name || 'AionlyClaw',
         description: req.description,
         instructions: 'You are a helpful assistant.',
         model: req.model,

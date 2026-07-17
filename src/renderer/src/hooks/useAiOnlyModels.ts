@@ -1,14 +1,61 @@
 import { loggerService } from '@logger'
 import { pageListApi } from '@renderer/api/openManagement'
 import { isNotSupportTextDeltaModel } from '@renderer/config/models'
+import { useAppDispatch } from '@renderer/store'
+import { setAiOnlyModels } from '@renderer/store/user'
 import type { ApiModel, Model, Provider } from '@renderer/types'
 import { isNewApiProvider } from '@renderer/utils/provider'
 import { useCallback, useEffect, useRef, useState } from 'react'
+
+import { useDefaultModel } from './useAssistant'
 
 const logger = loggerService.withContext('useAiOnlyModels')
 
 // 默认模型过滤器：只保留"先用后付"套餐的模型
 const DEFAULT_MODEL_FILTER = (model: AiOnlyModel) => model.packageNum === '先用后付'
+
+export const filterModels = (models: AiOnlyModel[], filter: (model: AiOnlyModel) => boolean = DEFAULT_MODEL_FILTER) => {
+  return models.filter(filter)
+}
+
+/**
+ * 直接调用 API 获取 AiOnly 模型列表（不依赖 hook 状态）
+ * @param params - 查询参数
+ * @returns Promise<{ models: AiOnlyModel[], total: number }>
+ */
+export async function fetchAiOnlyModelsApi(
+  params: Partial<ModelPageParams>
+): Promise<{ models: AiOnlyModel[]; total: number }> {
+  const defaultParams: ModelPageParams = {
+    type: '1',
+    modelAttribute: ModelAttribute.TextModel,
+    pageNum: 1,
+    pageSize: 10,
+    total: 0,
+    orderByStatus: 1,
+    orderByTime: 'desc',
+    domain: window.location.hostname || 'localhost:5173'
+  }
+
+  const finalParams = { ...defaultParams, ...params }
+
+  try {
+    const res: any = await pageListApi(finalParams)
+    if (res?.code === 200 && res.rows) {
+      const modelList: AiOnlyModel[] = res.rows.map((item: any) => ({
+        ...item,
+        name: item.modelName,
+        provider: 'aionly',
+        group: item.serviceName
+      }))
+      return { models: modelList, total: res.total || 0 }
+    }
+    return { models: [], total: 0 }
+  } catch (error) {
+    logger.error('Failed to fetch AiOnly models', { error })
+    return { models: [], total: 0 }
+  }
+}
 
 export enum ModelAttribute {
   TextModel = 'text_model',
@@ -104,6 +151,7 @@ export function processModelLikeAddModel(model: Model, provider: Provider): Mode
 // 把的接口数据转成 Model 格式
 export function transformToModel(item: any, provider?: Provider): Model {
   return {
+    ...item,
     id: item.baseId || item.model,
     provider: provider?.id || 'aionly',
     name: item.modelName,
@@ -113,11 +161,9 @@ export function transformToModel(item: any, provider?: Provider): Model {
     capabilities: item.capabilities || [],
     type: item.type,
     pricing: item.pricing,
-    endpoint_type: item.endpoint_type,
+    endpoint_type: item.endpoint_type || item.modelAttribute == 'image_generation' ? 'image-generation' : 'openai',
     supported_endpoint_types: item.supported_endpoint_types,
-    supported_text_delta: !isNotSupportTextDeltaModel({ ...item, id: item.baseId || item.model }),
-    // 保留所有原始字段，特别是 packageNum 等用于后续过滤的字段
-    ...item
+    supported_text_delta: !isNotSupportTextDeltaModel({ ...item, id: item.baseId || item.model })
   }
 }
 
@@ -203,47 +249,31 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): {
     setLoading(true)
 
     try {
-      const params = { ...pageParamsRef.current, pageNum }
-      const res: any = await pageListApi(params)
-      if (res?.code === 200) {
-        const data = res.rows || []
-        logger.info('Data rows count', { count: data.length })
-        const modelList: AiOnlyModel[] = data.map((item: any) => ({
-          ...item,
-          name: item.modelName,
-          provider: 'aionly',
-          group: item.serviceName
-        }))
+      // 复用 fetchAiOnlyModelsApi 获取数据
+      const { models: modelList, total } = await fetchAiOnlyModelsApi({
+        ...pageParamsRef.current,
+        pageNum
+      })
 
-        // 使用 queueMicrotask 避免在渲染周期内调用 setState
-        queueMicrotask(() => {
-          setModels((prevModels) => {
-            // 如果是第一页，直接替换；否则追加
-            const newModels = pageNum === 1 ? modelList : [...prevModels, ...modelList]
-            logger.info('Updated models count', { count: newModels.length })
-            return newModels
-          })
+      logger.info('Data rows count', { count: modelList.length })
 
-          const newParams = {
-            ...pageParamsRef.current,
-            total: res.total || 0,
-            pageNum
-          }
-          pageParamsRef.current = newParams
-          setPageParams(newParams)
-          // pageNum 已提交后再解锁，防止窗口期内重复触发同一页加载
-          /*setLoading(false)
-          loadingRef.current = false*/
-        })
-      } else {
-        logger.warn('API returned non-200 code', { code: res?.code })
-        setLoading(false)
-        loadingRef.current = false
+      // 更新状态
+      setModels((prevModels) => {
+        // 如果是第一页，直接替换；否则追加
+        const newModels = pageNum === 1 ? modelList : [...prevModels, ...modelList]
+        logger.info('Updated models count', { count: newModels.length })
+        return newModels
+      })
+
+      const newParams = {
+        ...pageParamsRef.current,
+        total,
+        pageNum
       }
+      pageParamsRef.current = newParams
+      setPageParams(newParams)
     } catch (e: any) {
       logger.error('Failed to fetch models', { error: e })
-      setLoading(false)
-      loadingRef.current = false
     } finally {
       setLoading(false)
       loadingRef.current = false
@@ -356,4 +386,105 @@ export function convertToStandardModel(aiOnlyModel: AiOnlyModel): {
       provider_type: 'openai'
     }
   }
+}
+
+export interface SimpleModel {
+  id: string
+  modelName: string
+  name: string
+  object: string
+  serviceName: string
+  modelFileUrl?: string
+  provider: string
+  group: string
+  original: any
+}
+
+export interface FetchAndSetupModelsOptions {
+  /** 分页大小，默认 10 */
+  pageSize?: number
+  /** Redux dispatch 函数 */
+  dispatch: any
+  /** 设置默认模型的回调 */
+  setDefaultModel?: (model: SimpleModel) => void
+  /** 设置快捷模型的回调 */
+  setQuickModel?: (model: SimpleModel) => void
+  /** 设置翻译模型的回调 */
+  setTranslateModel?: (model: SimpleModel) => void
+  /** Redux action: setAiOnlyModels */
+  setAiOnlyModelsAction: any
+}
+
+/**
+ * 封装完整的"获取→过滤→转换→存储→设置默认"流程
+ * 内部函数，由 useFetchAndSetupModels hook 调用
+ */
+async function fetchAndSetupModels(options: FetchAndSetupModelsOptions): Promise<Model[]> {
+  const { pageSize = 10, dispatch, setDefaultModel, setQuickModel, setTranslateModel, setAiOnlyModelsAction } = options
+
+  try {
+    // 1. 获取模型数据
+    const { models } = await fetchAiOnlyModelsApi({ pageSize })
+
+    // 2. 过滤"先用后付"套餐的模型
+    const filteredModels = filterModels(models)
+
+    // 3. 转换为标准 Model 格式
+    const transformedModels = filteredModels.map((model) => transformToModel(model))
+
+    // 4. 存储到 Redux
+    dispatch(setAiOnlyModelsAction(transformedModels))
+
+    // 5. 设置默认模型
+    if (transformedModels.length > 0 && (setDefaultModel || setQuickModel || setTranslateModel)) {
+      const defaultModel: any = transformedModels[0]
+      const simpleModel: SimpleModel = {
+        id: defaultModel.id,
+        modelName: defaultModel.modelName,
+        name: defaultModel.name,
+        object: defaultModel.object,
+        serviceName: defaultModel.serviceName,
+        modelFileUrl: defaultModel.modelFileUrl,
+        provider: defaultModel.provider,
+        group: defaultModel.group,
+        original: defaultModel
+      }
+      setDefaultModel?.(simpleModel)
+      setQuickModel?.(simpleModel)
+      setTranslateModel?.(simpleModel)
+    }
+
+    return transformedModels
+  } catch (error) {
+    logger.error('Failed to fetch and setup models', { error })
+    throw error
+  }
+}
+
+/**
+ * 封装完整的"获取→过滤→转换→存储→设置默认"流程的 Hook
+ *
+ * @example
+ * ```tsx
+ * const setupModels = useFetchAndSetupModels()
+ * await setupModels(10)
+ * ```
+ */
+export function useFetchAndSetupModels() {
+  const dispatch = useAppDispatch()
+  const { setDefaultModel, setQuickModel, setTranslateModel } = useDefaultModel()
+
+  return useCallback(
+    async (pageSize = 10) => {
+      await fetchAndSetupModels({
+        pageSize,
+        dispatch,
+        setAiOnlyModelsAction: setAiOnlyModels,
+        setDefaultModel,
+        setQuickModel,
+        setTranslateModel
+      })
+    },
+    [dispatch, setDefaultModel, setQuickModel, setTranslateModel]
+  )
 }

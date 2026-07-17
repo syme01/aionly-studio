@@ -10,6 +10,7 @@ import { useAppDispatch } from '@renderer/store'
 import { setUpdateState } from '@renderer/store/runtime'
 import { ThemeMode } from '@renderer/types'
 import { runAsyncFunction } from '@renderer/utils'
+import { WEB_UI_HOST } from '@shared/config/constant'
 // import { UpgradeChannel } from '@shared/config/constant'
 import { Avatar, Button, Progress, Row, Switch, Tag } from 'antd'
 import { debounce } from 'lodash'
@@ -210,7 +211,7 @@ const AboutSettings: FC = () => {
           {/*<Button onClick={showReleases}>{t('settings.about.releases.button')}</Button>*/}
         </SettingRow>
         <SettingDivider />
-        <SettingRow onClick={() => onOpenWebsite('https://aiionly.com/')}>
+        <SettingRow onClick={() => onOpenWebsite(WEB_UI_HOST)}>
           <SettingRowTitle>
             <Globe size={18} />
             {t('settings.about.website.title')}
