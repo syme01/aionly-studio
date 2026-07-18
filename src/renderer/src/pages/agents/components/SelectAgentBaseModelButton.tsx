@@ -77,6 +77,10 @@ const SelectAgentBaseModelButton = ({
 
   if (!agent) return null
 
+  // Only show fallback model if agent.model exists or user has explicitly selected
+  // This prevents showing a misleading default when form.model is actually empty
+  const shouldShowFallback = agent.model || selectedModel
+
   const onSelectModel = async () => {
     const selectedModel = await SelectAgentModelPopup.show({
       model,
@@ -112,10 +116,10 @@ const SelectAgentBaseModelButton = ({
       disabled={isDisabled}>
       <div className={containerClassName || 'flex w-full items-center gap-1.5'}>
         <div className="flex flex-1 items-center gap-1.5 overflow-x-hidden">
-          {model && <ModelAvatar model={model} size={avatarSize} />}
+          {shouldShowFallback && model && <ModelAvatar model={model} size={avatarSize} />}
           <span className="truncate text-(--color-text)">
-            {model ? model.modelName || model.name : t('button.select_model')}
-            {model?.serviceName && <span className="text-xs text-gray-500"> | {model?.serviceName}</span>}
+            {shouldShowFallback && model ? model.modelName || model.name : t('button.select_model')}
+            {shouldShowFallback && model?.serviceName && <span className="text-xs text-gray-500"> | {model?.serviceName}</span>}
           </span>
         </div>
         <ChevronDown size={iconSize} color="var(--color-icon)" />
