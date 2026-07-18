@@ -12,7 +12,7 @@ export const useApiModel = ({ id, filter }: UseModelProps): ApiModel | undefined
   const { models } = useApiModels(filter)
   // console.log('useApiModel', id, models)
 
-  const foundModel = models.find((model) => model.id === id)
+  const foundModel = models?.find((model) => model.id === id)
 
   // If model not found and it's an aionly model, try to get from cache
   // This handles the case where aionly models are dynamically fetched from external API
