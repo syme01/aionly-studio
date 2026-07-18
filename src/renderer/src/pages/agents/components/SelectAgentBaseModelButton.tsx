@@ -55,7 +55,7 @@ const SelectAgentBaseModelButton = ({
   const { defaultModel } = useDefaultModel()
   // 获取 aiOnly 模型列表
   const aiOnlyModels = useSelector(selectAiOnlyModels)
-  const matchedModel = aiOnlyModels.find((model) => model.id === agent?.model.replace('aionly:', ''))
+  const matchedModel = aiOnlyModels?.find((model) => model.id === agent?.model?.replace('aionly:', ''))
   const apiModel = matchedModel ?? aiOnlyModels[0] ?? defaultModel
 
   // 如果传入了 selectedModel，使用它；否则从 API 获取
@@ -119,7 +119,9 @@ const SelectAgentBaseModelButton = ({
           {shouldShowFallback && model && <ModelAvatar model={model} size={avatarSize} />}
           <span className="truncate text-(--color-text)">
             {shouldShowFallback && model ? model.modelName || model.name : t('button.select_model')}
-            {shouldShowFallback && model?.serviceName && <span className="text-xs text-gray-500"> | {model?.serviceName}</span>}
+            {shouldShowFallback && model?.serviceName && (
+              <span className="text-xs text-gray-500"> | {model?.serviceName}</span>
+            )}
           </span>
         </div>
         <ChevronDown size={iconSize} color="var(--color-icon)" />

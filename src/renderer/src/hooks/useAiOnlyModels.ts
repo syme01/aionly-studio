@@ -15,7 +15,10 @@ const logger = loggerService.withContext('useAiOnlyModels')
 const DEFAULT_MODEL_FILTER = (model: AiOnlyModel) => model.packageNum === '先用后付'
 
 export const filterModels = (models: AiOnlyModel[], filter: (model: AiOnlyModel) => boolean = DEFAULT_MODEL_FILTER) => {
-  return models.filter(filter)
+  if (models && Array.isArray(models)) {
+    return models.filter(filter)
+  }
+  return []
 }
 
 /**
@@ -42,13 +45,13 @@ export async function fetchAiOnlyModelsApi(
   try {
     const res: any = await pageListApi(finalParams)
     if (res?.code === 200 && res.rows) {
-      const modelList: AiOnlyModel[] = res.rows.map((item: any) => ({
+      const modelList: AiOnlyModel[] = res?.rows?.map((item: any) => ({
         ...item,
         name: item.modelName,
         provider: 'aionly',
         group: item.serviceName
       }))
-      return { models: modelList, total: res.total || 0 }
+      return { models: modelList || [], total: res.total || 0 }
     }
     return { models: [], total: 0 }
   } catch (error) {
