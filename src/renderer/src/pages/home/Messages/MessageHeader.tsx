@@ -34,11 +34,11 @@ interface Props {
   isGroupContextMessage?: boolean
 }
 
-const getAvatarSource = (isLocalAi: boolean, modelId: string | undefined, model?: any) => {
+const getAvatarSource = (isLocalAi: boolean, modelId: string | undefined, message: any, model?: any) => {
   // console.log('getAvatarSource', isLocalAi, modelId, model)
   if (isLocalAi) return AppLogo
-  if (model && model.modelFileUrl) {
-    return model.modelFileUrl
+  if ((model && model.modelFileUrl) || message?.model?.modelFileUrl) {
+    return model.modelFileUrl || message?.model?.modelFileUrl
   }
   const logo = getModelLogo(model)
   // 如果没有 logo，使用 modelId 尝试获取
@@ -68,7 +68,10 @@ const MessageHeader: FC<Props> = memo(({ assistant, model, message, topic, isGro
   const isSelected = selectedMessageIds?.includes(message.id)
 
   // const avatarSource = useMemo(() => getAvatarSource(isLocalAi, getMessageModelId(message)), [message])
-  const avatarSource = useMemo(() => getAvatarSource(isLocalAi, getMessageModelId(message), model), [message, model])
+  const avatarSource = useMemo(
+    () => getAvatarSource(isLocalAi, getMessageModelId(message), message, model),
+    [message, model]
+  )
   /*const getUserName = useCallback(() => {
     if (isLocalAi && message.role !== 'user') {
       return APP_NAME

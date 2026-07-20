@@ -53,7 +53,7 @@ const SelectModelPopupView: React.FC<Props> = ({ model, modelFilter, fromType, r
     })
   }, [])
 
-  const { models, loading, fetchNextPage, hasMore } = useAiOnlyModels({
+  const { models, loading, fetchNextPage, getFilteredModels, hasMore } = useAiOnlyModels({
     pageSize: 10,
     autoFetch: true
   })
@@ -75,8 +75,10 @@ const SelectModelPopupView: React.FC<Props> = ({ model, modelFilter, fromType, r
   const createModelItem = useCallback(
     (model: any): FlatListModel => {
       const modelId = getModelUniqId(model)
+      // 使用与去重逻辑一致的唯一标识：baseId-serviceName
+      const uniqueKey = `${model.baseId || model.id}-${model.serviceName}`
       return {
-        key: `${model.origin_id}`,
+        key: uniqueKey,
         type: 'model',
         name: (
           <ModelName>
@@ -101,7 +103,7 @@ const SelectModelPopupView: React.FC<Props> = ({ model, modelFilter, fromType, r
   // 构建列表数据
   const { listItems, modelItems } = useMemo(() => {
     const items: FlatListItem[] = []
-    let filterModels = models.filter((x: any) => x.packageNum === '先用后付')
+    let filterModels = getFilteredModels()
 
     // 应用 modelFilter（如果提供）
     if (modelFilter) {

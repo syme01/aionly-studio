@@ -153,7 +153,7 @@ export function processModelLikeAddModel(model: Model, provider: Provider): Mode
 
 // 把的接口数据转成 Model 格式
 export function transformToModel(item: any, provider?: Provider): Model {
-  return {
+  const modelItem = {
     ...item,
     id: item.baseId || item.model,
     provider: provider?.id || 'aionly',
@@ -162,11 +162,15 @@ export function transformToModel(item: any, provider?: Provider): Model {
     owned_by: item.owned_by || 'AiOnly',
     description: item.description || '',
     capabilities: item.capabilities || [],
-    type: item.type,
+    type: item.type || 'model',
     pricing: item.pricing,
     endpoint_type: item.endpoint_type || item.modelAttribute == 'image_generation' ? 'image-generation' : 'openai',
     supported_endpoint_types: item.supported_endpoint_types,
     supported_text_delta: !isNotSupportTextDeltaModel({ ...item, id: item.baseId || item.model })
+  }
+  return {
+    ...modelItem,
+    origin: modelItem
   }
 }
 
@@ -400,7 +404,7 @@ export interface SimpleModel {
   modelFileUrl?: string
   provider: string
   group: string
-  original: any
+  origin: any
 }
 
 export interface FetchAndSetupModelsOptions {
@@ -450,7 +454,7 @@ async function fetchAndSetupModels(options: FetchAndSetupModelsOptions): Promise
         modelFileUrl: defaultModel.modelFileUrl,
         provider: defaultModel.provider,
         group: defaultModel.group,
-        original: defaultModel
+        origin: defaultModel
       }
       setDefaultModel?.(simpleModel)
       setQuickModel?.(simpleModel)

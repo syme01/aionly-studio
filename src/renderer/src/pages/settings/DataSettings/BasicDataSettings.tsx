@@ -11,6 +11,7 @@ import store, { useAppDispatch } from '@renderer/store'
 import { setSkipBackupFile as _setSkipBackupFile } from '@renderer/store/settings'
 import type { AppInfo } from '@renderer/types'
 import { formatFileSize } from '@renderer/utils'
+import { clearAiOnlyModelCache } from '@renderer/utils/aionly-model-cache'
 import { occupiedDirs } from '@shared/config/constant'
 import { Button, Progress, Switch, Tooltip, Typography } from 'antd'
 import { FolderInput, FolderOpen, FolderOutput, SaveIcon } from 'lucide-react'
@@ -424,6 +425,7 @@ const BasicDataSettings: React.FC = () => {
           await window.api.clearCache()
           await window.api.trace.cleanLocalData()
           await window.api.getCacheSize().then(setCacheSize)
+          clearAiOnlyModelCache()
           window.toast.success(t('settings.data.clear_cache.success'))
         } catch (error) {
           window.toast.error(t('settings.data.clear_cache.error'))

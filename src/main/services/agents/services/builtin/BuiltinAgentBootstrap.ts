@@ -19,6 +19,7 @@ const logger = loggerService.withContext('BuiltinAgentBootstrap')
 const RETRY_DELAYS_MS = [5000, 15000, 30000]
 const retryAttempts = new Map<string, number>()
 const retryTimers = new Map<string, NodeJS.Timeout>()
+const showInit = false // TODO：暂时屏蔽掉自动创建cherry的智能体
 
 /**
  * Initialize all built-in skills and agents. Safe to call multiple times (idempotent).
@@ -33,7 +34,9 @@ export async function bootstrapBuiltinAgents(): Promise<void> {
     logger.error('Failed to install built-in skills', error as Error)
   }
 
-  await Promise.all([initCherryClaw(), initCherryAssistant()])
+  if (showInit) {
+    await Promise.all([initCherryClaw(), initCherryAssistant()])
+  }
 }
 
 function clearRetry(agentId: string): void {
