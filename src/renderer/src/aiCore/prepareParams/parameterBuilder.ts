@@ -4,8 +4,8 @@
  */
 
 import { combineHeaders } from '@ai-sdk/provider-utils'
-import type { WebSearchPluginConfig } from '@cherrystudio/ai-core/built-in/plugins'
-import { extensionRegistry } from '@cherrystudio/ai-core/provider'
+import type { WebSearchPluginConfig } from '@aionly/ai-core/built-in/plugins'
+import { extensionRegistry } from '@aionly/ai-core/provider'
 import { loggerService } from '@logger'
 import type { AppProviderId } from '@renderer/aiCore/types'
 import { MAX_TOOL_CALLS, MIN_TOOL_CALLS } from '@renderer/config/constant'

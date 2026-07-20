@@ -12,9 +12,9 @@ import {
   definePlugin,
   type StreamTextParams,
   type StreamTextResult
-} from '@cherrystudio/ai-core'
+} from '@aionly/ai-core'
 import { loggerService } from '@logger'
-// import { generateObject } from '@cherrystudio/ai-core'
+// import { generateObject } from '@aionly/ai-core'
 import {
   SEARCH_SUMMARY_PROMPT,
   SEARCH_SUMMARY_PROMPT_KNOWLEDGE_ONLY,

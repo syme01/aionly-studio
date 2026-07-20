@@ -10,7 +10,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { buildProviderOptions } from '../options'
 
 // Mock dependencies
-vi.mock('@cherrystudio/ai-core/provider', async (importOriginal) => {
+vi.mock('@aionly/ai-core/provider', async (importOriginal) => {
   const actual = (await importOriginal()) as object
   return {
     ...actual,

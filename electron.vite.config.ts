@@ -88,11 +88,11 @@ export default defineConfig({
         '@logger': resolve('src/renderer/src/services/LoggerService'),
         '@mcp-trace/trace-core': resolve('packages/mcp-trace/trace-core'),
         '@mcp-trace/trace-web': resolve('packages/mcp-trace/trace-web'),
-        '@cherrystudio/ai-core/provider': resolve('packages/aiCore/src/core/providers'),
-        '@cherrystudio/ai-core/built-in/plugins': resolve('packages/aiCore/src/core/plugins/built-in'),
-        '@cherrystudio/ai-core': resolve('packages/aiCore/src'),
-        '@cherrystudio/extension-table-plus': resolve('packages/extension-table-plus/src'),
-        '@cherrystudio/ai-sdk-provider': resolve('packages/ai-sdk-provider/src')
+        '@aionly/ai-core/provider': resolve('packages/aiCore/src/core/providers'),
+        '@aionly/ai-core/built-in/plugins': resolve('packages/aiCore/src/core/plugins/built-in'),
+        '@aionly/ai-core': resolve('packages/aiCore/src'),
+        '@aionly/extension-table-plus': resolve('packages/extension-table-plus/src'),
+        '@aionly/ai-sdk-provider': resolve('packages/ai-sdk-provider/src')
       }
     },
     optimizeDeps: {

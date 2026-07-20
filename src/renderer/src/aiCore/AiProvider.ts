@@ -1,5 +1,5 @@
-import { createExecutor } from '@cherrystudio/ai-core'
-import type { generateImageResult } from '@cherrystudio/ai-core/core/runtime/types'
+import { createExecutor } from '@aionly/ai-core'
+import type { generateImageResult } from '@aionly/ai-core/core/runtime/types'
 import { loggerService } from '@logger'
 import { getEnableDeveloperMode } from '@renderer/hooks/useSettings'
 import { addSpan, endSpan } from '@renderer/services/SpanManagerService'

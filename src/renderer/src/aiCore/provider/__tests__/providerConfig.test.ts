@@ -61,7 +61,7 @@ vi.mock('@renderer/hooks/useAwsBedrock', () => ({
 
 import type { GoogleVertexProviderSettings } from '@ai-sdk/google-vertex/edge'
 import type { OpenAICompatibleProviderSettings } from '@ai-sdk/openai-compatible'
-import type { CherryInProviderSettings } from '@cherrystudio/ai-sdk-provider'
+import type { CherryInProviderSettings } from '@aionly/ai-sdk-provider'
 import type { GitHubCopilotProviderSettings } from '@opeoginni/github-copilot-openai-compatible'
 import type { ProviderConfig } from '@renderer/aiCore/types'
 import { getAwsBedrockAuthType } from '@renderer/hooks/useAwsBedrock'

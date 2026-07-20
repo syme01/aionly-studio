@@ -78,7 +78,7 @@ export function getDefaultAssistant(): Assistant {
   return {
     id: 'default',
     name: i18n.t('chat.default.name'),
-    emoji: '😀',
+    emoji: '🤖',
     prompt: '',
     topics: [getDefaultTopic('default')],
     messages: [],

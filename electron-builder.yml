@@ -1,4 +1,4 @@
-appId: com.verycloud.AiOnlyStudio
+appId: com.verycloud.AiOnlyStudio.v1
 productName: AiOnly
 electronLanguages:
   - zh-CN
@@ -16,7 +16,7 @@ directories:
 protocols:
   - name: AiOnly
     schemes:
-      - aiionly
+      - aionly
 files:
   - "**/*"
   - "!**/{.vscode,.yarn,.yarn-lock,.github,.cursorrules,.prettierrc}"
@@ -123,10 +123,10 @@ linux:
   category: Utility
   desktop:
     entry:
-      Name: AiiOnly
-      StartupWMClass: AiiOnly
+      Name: AiOnly
+      StartupWMClass: AiOnly
   mimeTypes:
-    - x-scheme-handler/cherrystudio
+    - x-scheme-handler/aionly
 rpm:
   # Workaround for electron build issue on rpm package:
   # https://github.com/electron/forge/issues/3594

@@ -1,4 +1,4 @@
-import { DEFAULT_SYSTEM_PROMPT } from '@cherrystudio/ai-core/built-in/plugins'
+import { DEFAULT_SYSTEM_PROMPT } from '@aionly/ai-core/built-in/plugins'
 import { loggerService } from '@logger'
 import store from '@renderer/store'
 import type { MCPTool } from '@renderer/types'

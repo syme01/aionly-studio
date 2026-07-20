@@ -1,4 +1,4 @@
-import { definePlugin } from '@cherrystudio/ai-core'
+import { definePlugin } from '@aionly/ai-core'
 import type { LanguageModelMiddleware } from 'ai'
 
 /**

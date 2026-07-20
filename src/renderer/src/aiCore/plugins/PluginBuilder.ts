@@ -1,5 +1,5 @@
-import type { AiPlugin } from '@cherrystudio/ai-core'
-import { createPromptToolUsePlugin, providerToolPlugin } from '@cherrystudio/ai-core/built-in/plugins'
+import type { AiPlugin } from '@aionly/ai-core'
+import { createPromptToolUsePlugin, providerToolPlugin } from '@aionly/ai-core/built-in/plugins'
 import { loggerService } from '@logger'
 import {
   isDeepSeekModel,

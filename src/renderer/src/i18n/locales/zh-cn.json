@@ -892,9 +892,9 @@
     },
     "save": {
       "success": "保存成功",
-      "title": "保存到助手库"
+      "title": "保存到角色库"
     },
-    "search": "搜索助手",
+    "search": "搜索角色",
     "settings": {
       "default_model": "默认模型",
       "knowledge_base": {
@@ -903,7 +903,7 @@
           "label": "调用知识库",
           "off": "强制检索",
           "on": "意图识别",
-          "tip": "助手将调用大模型的意图识别能力，判断是否需要调用知识库进行回答，该功能将依赖模型的能力"
+          "tip": "角色将调用大模型的意图识别能力，判断是否需要调用知识库进行回答，该功能将依赖模型的能力"
         }
       },
       "max_tool_calls": {
@@ -932,7 +932,7 @@
         "title": "MCP 服务器"
       },
       "model": "模型设置",
-      "more": "助手设置",
+      "more": "角色设置",
       "prompt": "提示词设置",
       "reasoning_effort": {
         "auto": "自动",
@@ -964,7 +964,7 @@
         "titleLabel": "标题",
         "titlePlaceholder": "输入标题"
       },
-      "title": "助手设置",
+      "title": "角色设置",
       "tool_use_mode": {
         "function": "函数",
         "label": "工具调用方式",
@@ -1064,8 +1064,8 @@
     },
     "deeply_thought": "已深度思考（用时 {{seconds}} 秒）",
     "default": {
-      "description": "你好，我是默认助手。你可以立刻开始跟我聊天",
-      "name": "默认助手",
+      "description": "你好，我是默认角色。你可以立刻开始跟我聊天",
+      "name": "默认角色",
       "topic": {
         "name": "默认对话"
       }
@@ -1363,7 +1363,7 @@
         "tip": "单次交互所用的最大 Token 数，会影响返回结果的长度。要根据模型上下文限制来设置，否则会报错"
       },
       "reset": "重置",
-      "set_as_default": "应用到默认助手",
+      "set_as_default": "应用到默认角色",
       "show_line_numbers": "代码显示行号",
       "temperature": {
         "label": "模型温度",
@@ -1468,7 +1468,7 @@
         },
         "move": {
           "button": "移动",
-          "placeholder": "选择目标助手",
+          "placeholder": "选择目标角色",
           "success": "已移动 {{count}} 个对话"
         },
         "pinned": "已固定的对话",
@@ -2252,15 +2252,15 @@
     "delete_user_confirm_content": "确定要删除用户 {{user}} 及其所有记忆吗？",
     "delete_user_confirm_title": "删除用户",
     "delete_user_failed": "删除用户失败",
-    "description": "记忆功能允许您存储和管理与助手交互的信息。您可以添加、编辑和删除记忆，也可以对它们进行过滤和搜索。",
+    "description": "记忆功能允许您存储和管理与角色交互的信息。您可以添加、编辑和删除记忆，也可以对它们进行过滤和搜索。",
     "edit_memory": "编辑记忆",
     "embedding_dimensions": "嵌入维度",
     "embedding_model": "嵌入模型",
     "enable_global_memory_first": "请先启用全局记忆",
     "end_date": "结束日期",
     "global_memory": "全局记忆",
-    "global_memory_description": "需要开启助手设置中的全局记忆才能使用",
-    "global_memory_disabled_desc": "要使用记忆功能，请先在助手设置中启用全局记忆。",
+    "global_memory_description": "需要开启角色设置中的全局记忆才能使用",
+    "global_memory_disabled_desc": "要使用记忆功能，请先在角色设置中启用全局记忆。",
     "global_memory_disabled_title": "全局记忆已禁用",
     "global_memory_enabled": "全局记忆已启用",
     "go_to_memory_page": "前往记忆页面",
@@ -2335,7 +2335,7 @@
       "import": {
         "error": "导入失败"
       },
-      "imported": "成功导入 {{count}} 个助手"
+      "imported": "成功导入 {{count}} 个角色"
     },
     "api": {
       "check": {
@@ -2350,7 +2350,7 @@
     },
     "assistant": {
       "added": {
-        "content": "助手添加成功"
+        "content": "角色添加成功"
       }
     },
     "attachments": {
@@ -2464,7 +2464,7 @@
     },
     "group": {
       "delete": {
-        "content": "删除分组消息会删除用户提问和所有助手的回答",
+        "content": "删除分组消息会删除用户提问和所有角色的回答",
         "title": "删除分组消息"
       },
       "retry_failed": "重试出错的消息"
@@ -3053,7 +3053,7 @@
   },
   "openclaw": {
     "checking_installation": "正在检查 OpenClaw 安装状态...",
-    "description": "使用 Aionly 服务商为 OpenClaw 提供支持，OpenClaw 是您的个人 AI 助手，可在 WhatsApp、Telegram、Slack、Discord 等平台上使用。",
+    "description": "使用 Aionly 服务商为 OpenClaw 提供支持，OpenClaw 是您的个人 AI 角色，可在 WhatsApp、Telegram、Slack、Discord 等平台上使用。",
     "error": {
       "select_provider_model": "请先选择服务商和模型"
     },
@@ -4092,9 +4092,9 @@
           "none": "不显示"
         }
       },
-      "label": "默认助手",
+      "label": "默认角色",
       "model_params": "模型参数",
-      "title": "默认助手"
+      "title": "默认角色"
     },
     "channels": {
       "description": "将 Agent 连接到 Telegram、飞书、Discord 等消息平台。",
@@ -4728,7 +4728,7 @@
     },
     "display": {
       "assistant": {
-        "title": "助手设置"
+        "title": "角色设置"
       },
       "custom": {
         "css": {
@@ -5300,8 +5300,8 @@
         "title": "模型健康检测",
         "use_all_keys": "使用密钥"
       },
-      "default_assistant_model": "默认助手模型",
-      "default_assistant_model_description": "创建新助手时使用的模型，如果助手未设置模型，则使用此模型",
+      "default_assistant_model": "默认角色模型",
+      "default_assistant_model_description": "创建新角色时使用的模型，如果角色未设置模型，则使用此模型",
       "empty": "没有模型",
       "manage": {
         "add_listed": {
@@ -5358,7 +5358,7 @@
     },
     "no_provider_selected": "未选择提供商",
     "notification": {
-      "assistant": "助手消息",
+      "assistant": "角色消息",
       "backup": "备份",
       "knowledge_embed": "知识库",
       "title": "通知设置"
@@ -6031,7 +6031,7 @@
     "openclaw": "OpenClaw",
     "paintings": "绘画",
     "settings": "设置",
-    "store": "助手库",
+    "store": "角色库",
     "translate": "翻译"
   },
   "trace": {
