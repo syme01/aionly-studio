@@ -157,6 +157,7 @@ jobs:
         run: |
           pnpm build:win
         env:
+          npm_config_msvs_version: 2022
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_OPTIONS: --max-old-space-size=8192
           MAIN_VITE_CHERRYAI_CLIENT_SECRET: ${{ secrets.MAIN_VITE_CHERRYAI_CLIENT_SECRET }}
