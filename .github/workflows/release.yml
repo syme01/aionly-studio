@@ -106,7 +106,7 @@ jobs:
             ${{ runner.os }}-pnpm-
 
       - name: Install Dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --force
 
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
