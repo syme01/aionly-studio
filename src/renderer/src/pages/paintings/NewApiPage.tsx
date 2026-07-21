@@ -389,7 +389,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
 
         // append images
         editImages.forEach((file) => {
-          formData.append('image', file)
+          formData.append('image[]', file)
         })
 
         // TODO: mask support later
