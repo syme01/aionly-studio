@@ -89,6 +89,13 @@ jobs:
         run: |
           brew install python-setuptools
 
+      - name: Configure node-gyp (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          npm install -g node-gyp
+          npm config set msvs_version 2022
+
       - name: Install pnpm
         uses: pnpm/action-setup@v5
 
