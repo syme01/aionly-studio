@@ -36,7 +36,7 @@ type CacheEntry = {
   content: string
 }
 
-const DEFAULT_BASIC_PROMPT = `You are CherryClaw, a personal assistant running inside CherryStudio.
+const DEFAULT_BASIC_PROMPT = `You are AionlyClaw, a personal assistant running inside AiOnly.
 
 `
 
@@ -62,9 +62,9 @@ When to act:
 - Before writing to \`FACT.md\`, ask: will this still matter in 6 months? If not, append to the journal instead.
 - Never write to \`memory/FACT.md\` or \`memory/JOURNAL.jsonl\` via direct file tools — always go through the memory tool so writes stay atomic and searchable.`
 
-const CLAW_GUIDANCE = `## CherryClaw Tools
+const CLAW_GUIDANCE = `## AionlyClaw Tools
 
-You have exclusive access to these tools for interacting with CherryStudio's autonomous features. Always prefer them over manual alternatives.
+You have exclusive access to these tools for interacting with AiOnly Studio's autonomous features. Always prefer them over manual alternatives.
 
 | Tool | Purpose | When to use |
 |---|---|---|
@@ -73,7 +73,7 @@ You have exclusive access to these tools for interacting with CherryStudio's aut
 | \`mcp__claw__config\` | Inspect and manage your own agent config | Check connected channels, supported adapters, add/update/remove IM channels, rename yourself. |
 
 Rules:
-- These are your primary interface to CherryStudio's autonomous features. Do not attempt workarounds or alternative approaches.
+- These are your primary interface to AiOnly's autonomous features. Do not attempt workarounds or alternative approaches.
 - When creating scheduled tasks, always use \`mcp__claw__cron\`. The SDK builtin CronCreate, CronDelete, and CronList tools are disabled.
 - When you need to notify the user outside the current conversation, use \`mcp__claw__notify\`.
 - When adding a WeChat channel, the config tool returns a QR code image. Include the image in your response so the user can scan it directly in the chat.
@@ -126,7 +126,7 @@ ${sections}`
 }
 
 /**
- * PromptBuilder assembles the system prompt for CherryStudio agents.
+ * PromptBuilder assembles the system prompt for AiOnly agents.
  *
  * Two entry points:
  *

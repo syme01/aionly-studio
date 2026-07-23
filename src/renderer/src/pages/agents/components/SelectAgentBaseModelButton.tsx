@@ -12,7 +12,8 @@ import { cacheAiOnlyModel, getCachedAiOnlyModel } from '@renderer/utils/aionly-m
 import type { ButtonProps } from 'antd'
 import { Button } from 'antd'
 import { ChevronDown } from 'lucide-react'
-import { CSSProperties, useEffect, useMemo, useState } from 'react'
+import type { CSSProperties } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 
@@ -135,7 +136,7 @@ const SelectAgentBaseModelButton = ({
           <span className="truncate text-(--color-text)">
             {shouldShowFallback && model ? model.modelName || model.name : t('button.select_model')}
             {shouldShowFallback && model?.serviceName && (
-              <span className="text-xs text-gray-500"> | {model?.serviceName}</span>
+              <span className="text-gray-500 text-xs"> | {model?.serviceName}</span>
             )}
           </span>
         </div>

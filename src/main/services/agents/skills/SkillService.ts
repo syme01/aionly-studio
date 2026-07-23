@@ -147,7 +147,7 @@ export class SkillService {
    * Seed skill enablement for a freshly created agent.
    *
    * Every skill marked `source = 'builtin'` is auto-enabled for the new
-   * agent — they ship with Cherry Studio and users expect them to work
+   * agent — they ship with AiOnly Studio and users expect them to work
    * everywhere. Other skills default to disabled.
    */
   async initSkillsForAgent(agentId: string, workspace: string | undefined): Promise<void> {
@@ -518,7 +518,7 @@ export class SkillService {
     // Fetch skill detail to get download URL
     const detailUrl = `https://api.clawhub.ai/api/v1/skills/${slug}`
     const detailResp = await net.fetch(detailUrl, {
-      headers: { 'User-Agent': 'CherryStudio' }
+      headers: { 'User-Agent': 'AiOnlyStudio' }
     })
 
     if (!detailResp.ok) {
@@ -528,7 +528,7 @@ export class SkillService {
     // Download the skill zip
     const downloadUrl = `https://api.clawhub.ai/api/v1/skills/${slug}/download`
     const downloadResp = await net.fetch(downloadUrl, {
-      headers: { 'User-Agent': 'CherryStudio' }
+      headers: { 'User-Agent': 'AiOnlyStudio' }
     })
 
     if (!downloadResp.ok) {

@@ -1,6 +1,7 @@
 import { CloseCircleFilled } from '@ant-design/icons'
 import { Image } from 'antd'
-import { FC, memo } from 'react'
+import type { FC } from 'react'
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 

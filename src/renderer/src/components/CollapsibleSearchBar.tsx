@@ -31,7 +31,7 @@ const CollapsibleSearchBar = ({
   const inputRef = useRef<InputRef>(null)
 
   const handleTextChange = useCallback(
-    (text: string, emit?: boolean | undefined) => {
+    (text: string, emit?: boolean) => {
       // console.log('handleTextChange', text, emit)
       setSearchText(text)
       emit && onSearch(text)

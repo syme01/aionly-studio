@@ -2,14 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const {
   mockInstallBuiltinSkills,
-  mockInitDefaultCherryClawAgent,
+  mockInitDefaultAionlyClawAgent,
   mockInitBuiltinAgent,
   mockListSessions,
   mockCreateSession,
   mockEnsureHeartbeatTask
 } = vi.hoisted(() => ({
   mockInstallBuiltinSkills: vi.fn(),
-  mockInitDefaultCherryClawAgent: vi.fn(),
+  mockInitDefaultAionlyClawAgent: vi.fn(),
   mockInitBuiltinAgent: vi.fn(),
   mockListSessions: vi.fn(),
   mockCreateSession: vi.fn(),
@@ -22,7 +22,7 @@ vi.mock('@main/utils/builtinSkills', () => ({
 
 vi.mock('../../AgentService', () => ({
   agentService: {
-    initDefaultCherryClawAgent: mockInitDefaultCherryClawAgent,
+    initDefaultAionlyClawAgent: mockInitDefaultAionlyClawAgent,
     initBuiltinAgent: mockInitBuiltinAgent
   }
 }))
@@ -60,7 +60,7 @@ describe('bootstrapBuiltinAgents', () => {
   })
 
   it('retries built-in bootstrap when no model is available yet', async () => {
-    mockInitDefaultCherryClawAgent
+    mockInitDefaultAionlyClawAgent
       .mockResolvedValueOnce({ agentId: null, skippedReason: 'no_model' })
       .mockResolvedValueOnce({ agentId: 'cherry-claw-default' })
     mockInitBuiltinAgent.mockResolvedValue({ agentId: null, skippedReason: 'deleted' })
@@ -68,19 +68,19 @@ describe('bootstrapBuiltinAgents', () => {
     const { bootstrapBuiltinAgents } = await import('../BuiltinAgentBootstrap')
 
     await bootstrapBuiltinAgents()
-    expect(mockInitDefaultCherryClawAgent).toHaveBeenCalledTimes(1)
+    expect(mockInitDefaultAionlyClawAgent).toHaveBeenCalledTimes(1)
     expect(mockCreateSession).not.toHaveBeenCalled()
 
     await vi.advanceTimersByTimeAsync(5000)
 
-    expect(mockInitDefaultCherryClawAgent).toHaveBeenCalledTimes(2)
+    expect(mockInitDefaultAionlyClawAgent).toHaveBeenCalledTimes(2)
     expect(mockListSessions).toHaveBeenCalledWith('cherry-claw-default', { limit: 1 })
     expect(mockCreateSession).toHaveBeenCalledWith('cherry-claw-default', {})
     expect(mockEnsureHeartbeatTask).toHaveBeenCalledWith('cherry-claw-default', 30)
   })
 
   it('does not retry built-in agents deleted by the user', async () => {
-    mockInitDefaultCherryClawAgent.mockResolvedValue({ agentId: null, skippedReason: 'deleted' })
+    mockInitDefaultAionlyClawAgent.mockResolvedValue({ agentId: null, skippedReason: 'deleted' })
     mockInitBuiltinAgent.mockResolvedValue({ agentId: null, skippedReason: 'deleted' })
 
     const { bootstrapBuiltinAgents } = await import('../BuiltinAgentBootstrap')
@@ -88,7 +88,7 @@ describe('bootstrapBuiltinAgents', () => {
     await bootstrapBuiltinAgents()
     await vi.advanceTimersByTimeAsync(60000)
 
-    expect(mockInitDefaultCherryClawAgent).toHaveBeenCalledTimes(1)
+    expect(mockInitDefaultAionlyClawAgent).toHaveBeenCalledTimes(1)
     expect(mockInitBuiltinAgent).toHaveBeenCalledTimes(1)
     expect(mockCreateSession).not.toHaveBeenCalled()
     expect(mockEnsureHeartbeatTask).not.toHaveBeenCalled()

@@ -11,9 +11,9 @@
   },
   "accessible_paths": [
     "#{PROJECT_ROOT}",
-    "#{USER_HOME}/Library/Application Support/CherryStudio/logs/",
-    "#{USER_HOME}/Library/Application Support/CherryStudioDev/logs/",
-    "#{USER_HOME}/AppData/Roaming/CherryStudio/logs/"
+    "#{USER_HOME}/Library/Application Support/AiOnlyStudio/logs/",
+    "#{USER_HOME}/Library/Application Support/AiOnlyStudioDev/logs/",
+    "#{USER_HOME}/AppData/Roaming/AiOnlyStudio/logs/"
   ],
   "allowed_tools": [],
   "mcps": [],

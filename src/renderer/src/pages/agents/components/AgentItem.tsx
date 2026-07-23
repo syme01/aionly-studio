@@ -110,7 +110,7 @@ export const Container: React.FC<{ isActive?: boolean } & React.HTMLAttributes<H
     className={cn(
       'relative flex h-9.25 w-[calc(var(--assistants-width)-20px)] cursor-pointer flex-row justify-between rounded-(--base-border-radius) border border-transparent px-2',
       !isActive && 'hover:bg-(--color-list-item-hover)',
-      isActive && 'bg-(--color-list-item) shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] border-(--color-primary)',
+      isActive && 'border-(--color-primary) bg-(--color-list-item) shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]',
       className
     )}
     {...props}

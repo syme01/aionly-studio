@@ -57,7 +57,7 @@ const Agents = ({ onSelectItem, onSetShowAddAgentBtn }: AgentsProps) => {
     handleSetShowAddAgentBtn(false)
     // return <div className="p-5 text-center text-(--color-error) text-[13px]">{error.message}</div>
     return (
-      <div className="p-5 text-center text-(--color-error) ">
+      <div className="p-5 text-center text-(--color-error)">
         <CloseCircleFilled style={{ fontSize: 30, color: 'red' }} />
         <div className="text-[13px]">{error.message}</div>
       </div>

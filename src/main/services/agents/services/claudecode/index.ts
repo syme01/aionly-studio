@@ -447,7 +447,7 @@ class ClaudeCodeService implements AgentServiceInterface {
     // shared web tool strategy. This is a lightweight strategy suffix that
     // sits on top of the SDK's `claude_code` preset rather than replacing it.
     // Soul agents already get the full guidance via `soulSystemPrompt`, and
-    // Cherry Assistant has its own specialized prompt path.
+    // Aionly Assistant has its own specialized prompt path.
     const nonSoulToolGuidance = !soulEnabled && !isAssistant ? promptBuilder.buildToolGuidance() : ''
 
     // Recall side of the cross-session learning loop for non-Soul agents:
@@ -466,7 +466,7 @@ class ClaudeCodeService implements AgentServiceInterface {
       logger.info('Provisioned builtin agent workspace', { builtinRole, cwd })
     }
 
-    // Build lightweight environment snapshot for Cherry Assistant
+    // Build lightweight environment snapshot for Aionly Assistant
     let assistantSystemPrompt: string | undefined
     if (isAssistant) {
       try {
@@ -551,7 +551,7 @@ class ClaudeCodeService implements AgentServiceInterface {
       disallowedTools: [
         ...GLOBALLY_DISALLOWED_TOOLS,
         ...(soulEnabled ? SOUL_MODE_DISALLOWED_TOOLS : []),
-        // Cherry Assistant is a read-only guide; it should not ask users questions via tool
+        // Aionly Assistant is a read-only guide; it should not ask users questions via tool
         ...(isAssistant ? ['AskUserQuestion'] : [])
       ],
       ...(thinkingOptions?.effort ? { effort: thinkingOptions.effort } : {}),
@@ -592,7 +592,7 @@ class ClaudeCodeService implements AgentServiceInterface {
     // not coupled to Soul Mode's autonomous-agent semantics.
     const skillsServer = new SkillsServer(session.agent_id)
     options.mcpServers.skills = { type: 'sdk', name: 'skills', instance: skillsServer.mcpServer }
-    // Auto-approve via Cherry Studio's own permission gate. The SDK whitelist
+    // Auto-approve via AiOnly Studio's own permission gate. The SDK whitelist
     // (`options.allowedTools`) takes glob patterns, but `canUseTool` checks
     // `autoAllowTools` with exact string matching, so we have to add the full
     // tool names there too — otherwise non-Soul agents (which do not run in
@@ -646,7 +646,7 @@ class ClaudeCodeService implements AgentServiceInterface {
       })
     }
 
-    // Cherry Assistant: inject navigate + diagnose MCP server
+    // Aionly Assistant: inject navigate + diagnose MCP server
     if (isAssistant) {
       const assistantServer = new AssistantServer()
       options.mcpServers.assistant = { type: 'sdk', name: 'assistant', instance: assistantServer.mcpServer }
@@ -664,7 +664,7 @@ class ClaudeCodeService implements AgentServiceInterface {
         options.allowedTools = ['mcp__assistant__*']
       }
 
-      logger.debug('Cherry Assistant: injected assistant MCP server', {
+      logger.debug('Aionly Assistant: injected assistant MCP server', {
         agentId: session.agent_id,
         totalMcpServers: Object.keys(options.mcpServers).length
       })
@@ -1073,7 +1073,7 @@ class ClaudeCodeService implements AgentServiceInterface {
 }
 
 /**
- * Build a lightweight environment snapshot (~200 tokens) for Cherry Assistant.
+ * Build a lightweight environment snapshot (~200 tokens) for Aionly Assistant.
  * Injected into system prompt so the agent knows the user's setup immediately.
  */
 async function buildAssistantContext(): Promise<string> {
@@ -1106,7 +1106,7 @@ async function buildAssistantContext(): Promise<string> {
 
   return [
     '## Current Environment',
-    `- App: Cherry Studio v${appVersion}`,
+    `- App: AiOnly Studio v${appVersion}`,
     `- OS: ${platform}`,
     `- Language: ${language}, Theme: ${theme}`,
     proxy ? `- Proxy: ${proxy}` : '- Proxy: none',

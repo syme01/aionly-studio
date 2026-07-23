@@ -17,7 +17,7 @@ import { providerBills, providerCharge } from '@renderer/utils/oauth'
 import { isSupportAnthropicPromptCacheProvider } from '@renderer/utils/provider'
 import { Button } from 'antd'
 import Link from 'antd/es/typography/Link'
-import { FC } from 'react'
+import type { FC } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 

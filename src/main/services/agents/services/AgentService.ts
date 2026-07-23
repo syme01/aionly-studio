@@ -301,7 +301,7 @@ export class AgentService extends BaseService {
   }
 
   /**
-   * Initialize the built-in CherryClaw agent with a fixed ID.
+   * Initialize the built-in AionlyClaw agent with a fixed ID.
    * Called once at app startup. Safe to call multiple times — skips if the agent already exists.
    * Returns the agent ID if created or already present, or null if no compatible model is available yet.
    */
@@ -312,7 +312,7 @@ export class AgentService extends BaseService {
       const existing = await this.findAgentRow(id, { includeDeleted: true })
 
       if (existing?.deleted_at) {
-        logger.info('Default CherryClaw agent was deleted by user — skipping recreation', { id })
+        logger.info('Default AionlyClaw agent was deleted by user — skipping recreation', { id })
         return { agentId: null, skippedReason: 'deleted' }
       }
 
@@ -323,7 +323,7 @@ export class AgentService extends BaseService {
       const modelsRes = await modelsService.getModels({ providerType: 'anthropic', limit: 1 })
       const firstModel = modelsRes.data?.[0]
       if (!firstModel) {
-        logger.info('No Anthropic-compatible models available yet — skipping default CherryClaw creation')
+        logger.info('No Anthropic-compatible models available yet — skipping default AionlyClaw creation')
         return { agentId: null, skippedReason: 'no_model' }
       }
 
@@ -385,16 +385,16 @@ export class AgentService extends BaseService {
       try {
         await skillService.initSkillsForAgent(id, workspace)
       } catch (error) {
-        logger.warn('Failed to seed builtin skills for CherryClaw agent', {
+        logger.warn('Failed to seed builtin skills for AionlyClaw agent', {
           agentId: id,
           error: error instanceof Error ? error.message : String(error)
         })
       }
 
-      logger.info('Created default CherryClaw agent', { id })
+      logger.info('Created default AionlyClaw agent', { id })
       return { agentId: id }
     } catch (error) {
-      logger.error('Failed to init default CherryClaw agent', error as Error)
+      logger.error('Failed to init default AionlyClaw agent', error as Error)
       return { agentId: null, skippedReason: 'no_model' }
     }
   }

@@ -127,7 +127,7 @@ const AgentPage = () => {
 
 const Container = ({ children, className }: PropsWithChildren<{ className?: string }>) => {
   return (
-    <div id="agent-page" className={cn('flex flex-1 flex-col overflow-hidden page-container', className)}>
+    <div id="agent-page" className={cn('page-container flex flex-1 flex-col overflow-hidden', className)}>
       {children}
     </div>
   )

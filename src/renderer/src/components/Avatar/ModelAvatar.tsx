@@ -3,7 +3,8 @@ import type { Model } from '@renderer/types'
 import type { AvatarProps } from 'antd'
 import { Avatar } from 'antd'
 import { first } from 'lodash'
-import { FC, useMemo } from 'react'
+import type { FC } from 'react'
+import { useMemo } from 'react'
 
 interface Props {
   model?: Model | any
