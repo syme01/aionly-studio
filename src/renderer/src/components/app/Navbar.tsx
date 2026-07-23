@@ -15,7 +15,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Divider, Popover, Skeleton, Tooltip } from 'antd'
 import { Monitor } from 'lucide-react'
 import type { FC, PropsWithChildren } from 'react'
-import { HTMLAttributes } from 'react'
+import type { HTMLAttributes } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
@@ -49,8 +49,9 @@ export const Navbar: FC<Props> = ({ children, ...props }) => {
       return res?.data
     },
     enabled: !isTopNavbar && !minappShow && !!token && userInfo?.userSubjectType != '2', // 只在不是子账户(userSubjectType不为2)且已登录时才请求
-    staleTime: 30 * 1000, // 30秒内认为数据是新鲜的，切换账号时能快速更新
+    staleTime: 50 * 1000, // 30秒内认为数据是新鲜的，切换账号时能快速更新
     gcTime: 5 * 60 * 1000, // 缓存保留5分钟
+    refetchInterval: 30 * 1000, // 每3秒自动刷新一次额度数据
     refetchOnMount: true, // 组件挂载时自动重新请求，确保切换账号后数据更新
     refetchOnWindowFocus: false // 窗口聚焦时不自动重新请求
   })
@@ -65,10 +66,11 @@ export const Navbar: FC<Props> = ({ children, ...props }) => {
       return res?.data
     },
     enabled: !isTopNavbar && !minappShow && !!token && userInfo?.userSubjectType == '2', // 只在子账户(userSubjectType为2)且已登录时才请求
-    staleTime: 30 * 1000, // 30秒内认为数据是新鲜的，切换账号时能快速更新
-    gcTime: 5 * 60 * 1000, // 缓存保留5分钟
+    staleTime: 50 * 1000, // 50秒内认为数据是新鲜的
+    gcTime: 5 * 1000, // 缓存保留5秒
+    refetchInterval: 30 * 1000, // 每3秒自动刷新一次额度数据
     refetchOnMount: true, // 组件挂载时自动重新请求，确保切换账号后数据更新
-    refetchOnWindowFocus: false // 窗口聚焦时不自动重新请求
+    refetchOnWindowFocus: true // 窗口聚焦时自动重新请求，确保用户回到页面时看到最新额度
   })
 
   const childLimit = childLimitData || defaultChildLimit

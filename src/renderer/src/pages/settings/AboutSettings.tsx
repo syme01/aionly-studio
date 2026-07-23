@@ -1,39 +1,39 @@
-// import IndicatorLight from '@renderer/components/IndicatorLight'
-// import UpdateDialogPopup from '@renderer/components/Popups/UpdateDialogPopup'
+import IndicatorLight from '@renderer/components/IndicatorLight'
+import UpdateDialogPopup from '@renderer/components/Popups/UpdateDialogPopup'
 import { APP_NAME, AppLogo } from '@renderer/config/env'
 import { useTheme } from '@renderer/context/ThemeProvider'
-// import { useMinappPopup } from '@renderer/hooks/useMinappPopup'
+import { useMinappPopup } from '@renderer/hooks/useMinappPopup'
 import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useSettings } from '@renderer/hooks/useSettings'
 // import i18n from '@renderer/i18n'
-// import { useAppDispatch } from '@renderer/store'
-// import { setUpdateState } from '@renderer/store/runtime'
-// import { ThemeMode } from '@renderer/types'
+import { useAppDispatch } from '@renderer/store'
+import { setUpdateState } from '@renderer/store/runtime'
+import { ThemeMode } from '@renderer/types'
 import { runAsyncFunction } from '@renderer/utils'
 import { WEB_UI_HOST } from '@shared/config/constant'
 // import { UpgradeChannel } from '@shared/config/constant'
-import { Avatar, /*Button,*/ Progress, Row, /*Switch,*/ Tag } from 'antd'
-// import { debounce } from 'lodash'
-import { ChevronRight, /*Clock4,*/ Globe } from 'lucide-react'
+import { Avatar, Button, Progress, Row, Switch, Tag /*Tooltip, Radio*/ } from 'antd'
+import { debounce } from 'lodash'
+import { ChevronRight, Clock4, Globe } from 'lucide-react'
 import type { FC } from 'react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-// import Markdown from 'react-markdown'
+import Markdown from 'react-markdown'
 import styled from 'styled-components'
 
 import { SettingContainer, SettingDivider, SettingGroup, SettingRow, SettingTitle } from '.'
 
 const AboutSettings: FC = () => {
   const [version, setVersion] = useState('')
-  // const [isPortable, setIsPortable] = useState(false)
+  const [isPortable /*setIsPortable*/] = useState(false)
   const { t } = useTranslation()
   const { autoCheckUpdate, setAutoCheckUpdate /*testPlan, setTestPlan, testChannel, setTestChannel*/ } = useSettings()
   const { theme } = useTheme()
-  // const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch()
   const { update } = useRuntime()
-  // const { openSmartMinapp } = useMinappPopup()
+  const { openSmartMinapp } = useMinappPopup()
 
-  /*const onCheckUpdate = debounce(
+  const onCheckUpdate = debounce(
     async () => {
       if (update.checking || update.downloading) {
         return
@@ -58,21 +58,21 @@ const AboutSettings: FC = () => {
     },
     2000,
     { leading: true, trailing: false }
-  )*/
+  )
 
   const onOpenWebsite = (url: string) => {
     void window.api.openWebsite(url)
   }
 
-  /*const showReleases = async () => {
+  const showReleases = async () => {
     const { appPath } = await window.api.getAppInfo()
     openSmartMinapp({
-      id: 'cherrystudio-releases',
+      id: 'aionly-releases',
       name: t('settings.about.releases.title'),
       url: `file://${appPath}/resources/cherry-studio/releases.html?theme=${theme === ThemeMode.dark ? 'dark' : 'light'}`,
       logo: AppLogo
     })
-  }*/
+  }
 
   /*const currentChannelByVersion =
     [
@@ -119,15 +119,12 @@ const AboutSettings: FC = () => {
             <VersionWrapper>
               <Title>{APP_NAME}</Title>
               <Description>{t('settings.about.description')}</Description>
-              <Tag
-                onClick={() => onOpenWebsite('https://github.com/CherryHQ/cherry-studio/releases')}
-                color="blue"
-                style={{ marginTop: 8, cursor: 'pointer' }}>
+              <Tag color="blue" style={{ marginTop: 8, cursor: 'pointer' }}>
                 v{version}
               </Tag>
             </VersionWrapper>
           </Row>
-          {/*{!isPortable && (
+          {!isPortable && (
             <CheckUpdateButton
               onClick={onCheckUpdate}
               loading={update.checking}
@@ -138,9 +135,9 @@ const AboutSettings: FC = () => {
                   ? t('settings.about.checkUpdate.available')
                   : t('settings.about.checkUpdate.label')}
             </CheckUpdateButton>
-          )}*/}
+          )}
         </AboutHeader>
-        {/*{!isPortable && (
+        {!isPortable && (
           <>
             <SettingDivider />
             <SettingRow>
@@ -148,7 +145,7 @@ const AboutSettings: FC = () => {
               <Switch value={autoCheckUpdate} onChange={(v) => setAutoCheckUpdate(v)} />
             </SettingRow>
             <SettingDivider />
-            <SettingRow>
+            {/*<SettingRow>
               <SettingRowTitle>{t('settings.general.test_plan.title')}</SettingRowTitle>
               <Tooltip title={t('settings.general.test_plan.tooltip')} trigger={['hover', 'focus']}>
                 <Switch value={testPlan} onChange={(v) => handleSetTestPlan(v)} />
@@ -172,11 +169,11 @@ const AboutSettings: FC = () => {
                   </Radio.Group>
                 </SettingRow>
               </>
-            )}
+            )}*/}
           </>
-        )}*/}
+        )}
       </SettingGroup>
-      {/*{update.info && update.available && (
+      {update.info && update.available && (
         <SettingGroup theme={theme}>
           <SettingRow>
             <SettingRowTitle>
@@ -192,7 +189,7 @@ const AboutSettings: FC = () => {
             </Markdown>
           </UpdateNotesWrapper>
         </SettingGroup>
-      )}*/}
+      )}
       <SettingGroup theme={theme}>
         {/*<SettingRow>
           <SettingRowTitle>
@@ -202,15 +199,14 @@ const AboutSettings: FC = () => {
           <Button onClick={onOpenDocs}>{t('settings.about.website.button')}</Button>
         </SettingRow>
         <SettingDivider />*/}
-        {/*<SettingRow onClick={showReleases}>
+        <SettingRow onClick={showReleases}>
           <SettingRowTitle>
             <Clock4 size={18} />
             {t('settings.about.releases.title')}
           </SettingRowTitle>
           <ChevronRight size={20} />
-          <Button onClick={showReleases}>{t('settings.about.releases.button')}</Button>
         </SettingRow>
-        <SettingDivider />*/}
+        <SettingDivider />
         <SettingRow onClick={() => onOpenWebsite(WEB_UI_HOST)}>
           <SettingRowTitle>
             <Globe size={18} />
@@ -298,7 +294,7 @@ const Description = styled.div`
   text-align: center;
 `
 
-// const CheckUpdateButton = styled(Button)``
+const CheckUpdateButton = styled(Button)``
 
 const AvatarWrapper = styled.div`
   position: relative;
@@ -326,7 +322,7 @@ export const SettingRowTitle = styled.div`
   }
 `
 
-/*const UpdateNotesWrapper = styled.div`
+const UpdateNotesWrapper = styled.div`
   padding: 12px 0;
   margin: 8px 0;
   //background-color: var(--color-bg-2);
@@ -338,6 +334,6 @@ export const SettingRowTitle = styled.div`
   p {
     margin: 0;
   }
-`*/
+`
 
 export default AboutSettings

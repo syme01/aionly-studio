@@ -1,14 +1,15 @@
 import { loggerService } from '@logger'
 import { isWin } from '@main/constant'
-import { getIpCountry } from '@main/utils/ipService'
+// import { getIpCountry } from '@main/utils/ipService'
 import { generateUserAgent } from '@main/utils/systemInfo'
-import { APP_NAME, FeedUrl, UpdateConfigUrl, UpdateMirror, UpgradeChannel } from '@shared/config/constant'
+import { APP_NAME, UPDATE_API_BASE_URL, UPDATE_CHECK_PATH } from '@shared/config/constant'
 import { IpcChannel } from '@shared/IpcChannel'
 import type { UpdateInfo } from 'builder-util-runtime'
 import { CancellationToken } from 'builder-util-runtime'
-import { app, net } from 'electron'
+import { app, net, shell } from 'electron'
 import type { AppUpdater as _AppUpdater, Logger, NsisUpdater, UpdateCheckResult } from 'electron-updater'
 import { autoUpdater } from 'electron-updater'
+import fs from 'fs'
 import path from 'path'
 import semver from 'semver'
 
@@ -36,14 +37,14 @@ const LANG_MARKERS = {
   END: '<!--LANG:END-->'
 }
 
-interface UpdateConfig {
+/*interface UpdateConfig {
   lastUpdated: string
   versions: {
     [versionKey: string]: VersionConfig
   }
-}
+}*/
 
-interface VersionConfig {
+/*interface VersionConfig {
   minCompatibleVersion: string
   description: string
   channels: {
@@ -51,17 +52,18 @@ interface VersionConfig {
     rc: ChannelConfig | null
     beta: ChannelConfig | null
   }
-}
+}*/
 
-interface ChannelConfig {
+/*interface ChannelConfig {
   version: string
   feedUrls: Record<UpdateMirror, string>
-}
+}*/
 
 export default class AppUpdater {
   autoUpdater: _AppUpdater = autoUpdater
   private cancellationToken: CancellationToken = new CancellationToken()
   private updateCheckResult: UpdateCheckResult | null = null
+  private _downloadedInstallerPath: string | null = null
 
   constructor() {
     autoUpdater.logger = logger as Logger
@@ -116,7 +118,7 @@ export default class AppUpdater {
     // autoInstallOnAppQuit is always false - user must explicitly click "Install Now"
   }
 
-  private _getChannelByVersion(version: string) {
+  /*private _getChannelByVersion(version: string) {
     if (version.includes(`-${UpgradeChannel.BETA}.`)) {
       return UpgradeChannel.BETA
     }
@@ -124,9 +126,9 @@ export default class AppUpdater {
       return UpgradeChannel.RC
     }
     return UpgradeChannel.LATEST
-  }
+  }*/
 
-  private _getTestChannel() {
+  /*private _getTestChannel() {
     const currentChannel = this._getChannelByVersion(app.getVersion())
     const savedChannel = configManager.getTestChannel()
 
@@ -140,14 +142,14 @@ export default class AppUpdater {
 
     // if the upgrade channel is not equal to the current channel, use the latest channel
     return UpgradeChannel.LATEST
-  }
+  }*/
 
   /**
    * Fetch update configuration from GitHub or GitCode based on mirror
    * @param mirror - Mirror to fetch config from
    * @returns UpdateConfig object or null if fetch fails
    */
-  private async _fetchUpdateConfig(mirror: UpdateMirror): Promise<UpdateConfig | null> {
+  /*private async _fetchUpdateConfig(mirror: UpdateMirror): Promise<UpdateConfig | null> {
     const configUrl = mirror === UpdateMirror.GITCODE ? UpdateConfigUrl.GITCODE : UpdateConfigUrl.GITHUB
 
     try {
@@ -170,7 +172,7 @@ export default class AppUpdater {
       logger.error('Failed to fetch update config:', error as Error)
       return null
     }
-  }
+  }*/
 
   /**
    * Find compatible channel configuration based on current version
@@ -179,7 +181,7 @@ export default class AppUpdater {
    * @param config - Update configuration object
    * @returns Object containing ChannelConfig and actual channel if found, null otherwise
    */
-  private _findCompatibleChannel(
+  /*private _findCompatibleChannel(
     currentVersion: string,
     requestedChannel: UpgradeChannel,
     config: UpdateConfig
@@ -229,9 +231,9 @@ export default class AppUpdater {
 
     logger.warn(`No compatible channel found for version ${currentVersion} and channel ${requestedChannel}`)
     return null
-  }
+  }*/
 
-  private _setChannel(channel: UpgradeChannel, feedUrl: string) {
+  /*private _setChannel(channel: UpgradeChannel, feedUrl: string) {
     this.autoUpdater.channel = channel
     this.autoUpdater.setFeedURL(feedUrl)
 
@@ -239,9 +241,9 @@ export default class AppUpdater {
     this.autoUpdater.allowDowngrade = false
     // github and gitcode don't support multiple range download
     this.autoUpdater.disableDifferentialDownload = true
-  }
+  }*/
 
-  private async _setFeedUrl() {
+  /*private async _setFeedUrl() {
     const currentVersion = app.getVersion()
     const testPlan = configManager.getTestPlan()
     const requestedChannel = testPlan ? this._getTestChannel() : UpgradeChannel.LATEST
@@ -278,7 +280,7 @@ export default class AppUpdater {
 
     logger.info(`Using fallback feed URL: ${defaultFeedUrl}`)
     this._setChannel(UpgradeChannel.LATEST, defaultFeedUrl)
-  }
+  }*/
 
   public cancelDownload() {
     this.cancellationToken.cancel()
@@ -286,6 +288,89 @@ export default class AppUpdater {
     if (this.autoUpdater.autoDownload) {
       this.updateCheckResult?.cancellationToken?.cancel()
     }
+  }
+
+  // ============ Custom Download Method ============
+  private async _downloadInstaller(url: string, version: string): Promise<string> {
+    const fileName = path.basename(url)
+    const downloadDir = path.join(app.getPath('temp'), 'updates')
+
+    if (!fs.existsSync(downloadDir)) {
+      fs.mkdirSync(downloadDir, { recursive: true })
+    }
+
+    const filePath = path.join(downloadDir, fileName)
+    logger.info(`Downloading update from ${url} to ${filePath} ${version}`)
+
+    return new Promise((resolve, reject) => {
+      const request = net.request({
+        url,
+        method: 'GET'
+      })
+
+      let totalBytes = 0
+      let downloadedBytes = 0
+      let lastProgressUpdate = 0
+      const PROGRESS_THROTTLE_MS = 100 // 限制进度更新频率为每100ms一次
+      const writeStream = fs.createWriteStream(filePath)
+
+      request.on('response', (response) => {
+        if (response.statusCode !== 200) {
+          reject(new Error(`Download failed with status ${response.statusCode}`))
+          return
+        }
+
+        const contentLength = response.headers['content-length']
+        if (contentLength && typeof contentLength === 'string') {
+          totalBytes = parseInt(contentLength, 10)
+        }
+
+        response.on('data', (chunk: Buffer) => {
+          downloadedBytes += chunk.length
+          writeStream.write(chunk)
+
+          // 节流：只在时间间隔超过阈值时更新进度
+          const now = Date.now()
+          if (totalBytes > 0 && now - lastProgressUpdate >= PROGRESS_THROTTLE_MS) {
+            lastProgressUpdate = now
+            const percent = Math.round((downloadedBytes / totalBytes) * 100)
+            windowService.getMainWindow()?.webContents.send(IpcChannel.DownloadProgress, {
+              percent,
+              bytesPerSecond: 0,
+              total: totalBytes,
+              transferred: downloadedBytes
+            })
+          }
+        })
+
+        response.on('end', () => {
+          writeStream.end()
+          // 确保最后发送100%的进度
+          if (totalBytes > 0) {
+            windowService.getMainWindow()?.webContents.send(IpcChannel.DownloadProgress, {
+              percent: 100,
+              bytesPerSecond: 0,
+              total: totalBytes,
+              transferred: downloadedBytes
+            })
+          }
+          logger.info(`Download completed: ${filePath}`)
+          resolve(filePath)
+        })
+
+        response.on('error', (error) => {
+          writeStream.end()
+          reject(error)
+        })
+      })
+
+      request.on('error', (error) => {
+        writeStream.end()
+        reject(error)
+      })
+
+      request.end()
+    })
   }
 
   public async checkForUpdates() {
@@ -299,6 +384,77 @@ export default class AppUpdater {
     }
 
     try {
+      // ============ Custom Update API ============
+      const currentVersion = app.getVersion()
+      const platform = process.platform === 'win32' ? 'Windows' : process.platform === 'darwin' ? 'MacOS' : 'Linux'
+      const url = `${UPDATE_API_BASE_URL}${UPDATE_CHECK_PATH}/${platform}`
+
+      logger.info(`Checking custom update from ${url}, current version: ${currentVersion}`)
+
+      const response = await net.fetch(url, {
+        headers: {
+          ...getCommonHeaders(),
+          Accept: 'application/json'
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      logger.info('Custom update API response:', result)
+
+      if (result.code !== 200 || !result.data) {
+        throw new Error(`API error: ${result.msg || 'Unknown error'}`)
+      }
+
+      const latestVersion = result.data?.version
+      const hasUpdate = latestVersion && semver.gt(latestVersion, currentVersion)
+
+      if (hasUpdate) {
+        const updateInfo: UpdateInfo = {
+          version: latestVersion,
+          releaseNotes: result.data?.notes || '',
+          releaseName: `v${latestVersion}`,
+          releaseDate: result.data?.releaseTime || new Date().toISOString(),
+          path: result.data?.ossUrl || '',
+          sha512: result.data?.sha512 || '',
+          files: []
+        }
+
+        // 通知前端有新版本
+        windowService.getMainWindow()?.webContents.send(IpcChannel.UpdateAvailable, updateInfo)
+
+        // 延迟启动下载，给 UI 时间更新状态，避免卡顿
+        setTimeout(() => {
+          void this._downloadInstaller(result.data.ossUrl, latestVersion)
+            .then((filePath) => {
+              this._downloadedInstallerPath = filePath
+              windowService.getMainWindow()?.webContents.send(IpcChannel.UpdateDownloaded, updateInfo)
+              logger.info(`Installer ready at: ${filePath}`)
+            })
+            .catch((error) => {
+              logger.error('Failed to download installer:', error as Error)
+              windowService.getMainWindow()?.webContents.send(IpcChannel.UpdateError, error)
+            })
+        }, 200) // 200ms 延迟足够让 UI 完成状态更新
+
+        return {
+          currentVersion,
+          updateInfo
+        }
+      } else {
+        // 无可用更新
+        windowService.getMainWindow()?.webContents.send(IpcChannel.UpdateNotAvailable)
+        return {
+          currentVersion,
+          updateInfo: null
+        }
+      }
+
+      // ============ Legacy Cherry Studio Update Logic (Deprecated) ============
+      /*
       await this._setFeedUrl()
 
       this.updateCheckResult = await this.autoUpdater.checkForUpdates()
@@ -307,8 +463,6 @@ export default class AppUpdater {
       )
 
       if (this.updateCheckResult?.isUpdateAvailable && !this.autoUpdater.autoDownload) {
-        // 如果 autoDownload 为 false，则需要再调用下面的函数触发下
-        // do not use await, because it will block the return of this function
         logger.info('downloadUpdate manual by check for updates', this.cancellationToken)
         void this.autoUpdater.downloadUpdate(this.cancellationToken)
       }
@@ -317,6 +471,7 @@ export default class AppUpdater {
         currentVersion: this.autoUpdater.currentVersion,
         updateInfo: this.updateCheckResult?.isUpdateAvailable ? this.updateCheckResult?.updateInfo : null
       }
+      */
     } catch (error) {
       logger.error('Failed to check for update:', error as Error)
       return {
@@ -327,8 +482,29 @@ export default class AppUpdater {
   }
 
   public quitAndInstall() {
-    app.isQuitting = true
-    setImmediate(() => autoUpdater.quitAndInstall(true, true))
+    // ============ Custom Installer Launch ============
+    if (this._downloadedInstallerPath && fs.existsSync(this._downloadedInstallerPath)) {
+      logger.info(`Launching installer: ${this._downloadedInstallerPath}`)
+      shell
+        .openPath(this._downloadedInstallerPath)
+        .then(() => {
+          app.isQuitting = true
+          app.quit()
+        })
+        .catch((error) => {
+          logger.error('Failed to open installer:', error)
+          windowService
+            .getMainWindow()
+            ?.webContents.send(IpcChannel.UpdateError, new Error('Failed to launch installer'))
+        })
+    } else {
+      logger.error('Installer not found, cannot install update')
+      windowService.getMainWindow()?.webContents.send(IpcChannel.UpdateError, new Error('Installer file not found'))
+    }
+
+    // ============ Legacy autoUpdater quitAndInstall (Deprecated) ============
+    // app.isQuitting = true
+    // setImmediate(() => autoUpdater.quitAndInstall(true, true))
   }
 
   /**

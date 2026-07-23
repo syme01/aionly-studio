@@ -198,6 +198,7 @@ export const MB = 1024 * KB
 export const GB = 1024 * MB
 export const defaultLanguage = 'en-US'
 
+// ============ Legacy Cherry Studio Update Config (Deprecated) ============
 export enum FeedUrl {
   PRODUCTION = 'https://releases.cherry-ai.com',
   GITHUB_LATEST = 'https://github.com/CherryHQ/cherry-studio/releases/latest/download'
@@ -513,13 +514,17 @@ export const HOME_CHERRY_DIR = APP_CONFIG_DIR
 export const APP_API_HOST = `https://api.${APP_PROTOCOL}.com`
 
 // 生产环境的地址
-export const USER_UI_HOST = `https://maas.${APP_PROTOCOL}.com` // 控制台地址
-export const WEB_UI_HOST = `https://${APP_PROTOCOL}.com` // 官网地址
+// export const USER_UI_HOST = `https://maas.${APP_PROTOCOL}.com` // 控制台地址
+// export const WEB_UI_HOST = `https://${APP_PROTOCOL}.com` // 官网地址
 
 // 测试环境的地址
-// export const USER_UI_HOST = `https://hf.rhwx-ai.com:9825` // 控制台地址
-// export const WEB_UI_HOST = `https://hf.rhwx-ai.com:9820` // 官网地址
+export const USER_UI_HOST = `https://hf.rhwx-ai.com:9825` // 控制台地址
+export const WEB_UI_HOST = `https://hf.rhwx-ai.com:9820` // 官网地址
 
 // 本地环境的地址
 // export const USER_UI_HOST = `http://localhost:7023` // 控制台地址
 // export const WEB_UI_HOST = `http://localhost:7022` // 官网地址
+
+// ============ Custom Update 自动更新服务接口地址 API ============
+export const UPDATE_API_BASE_URL = WEB_UI_HOST
+export const UPDATE_CHECK_PATH = '/api/base/clientVersion/latest' // GET {base}/base/clientVersion/latest/{platform}
