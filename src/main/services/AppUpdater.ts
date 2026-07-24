@@ -405,8 +405,10 @@ export default class AppUpdater {
       const result = await response.json()
       logger.info('Custom update API response:', result)
 
-      if (result.code !== 200 || !result.data) {
-        throw new Error(`API error: ${result.msg || 'Unknown error'}`)
+      if (result.code != 200 || !result.data) {
+        // throw new Error(`API error: ${result.msg || ''}`)
+        // TODO: 提示信息暂空，理应由后端返回
+        throw new Error(`API error: result.data is null`)
       }
 
       const latestVersion = result.data?.version
@@ -426,8 +428,13 @@ export default class AppUpdater {
         // 通知前端有新版本
         windowService.getMainWindow()?.webContents.send(IpcChannel.UpdateAvailable, updateInfo)
 
+        if (!result.data?.ossId) {
+          throw new Error('ossId is missing')
+        }
+
         // 延迟启动下载，给 UI 时间更新状态，避免卡顿
         setTimeout(() => {
+          // const downloadUrl = `${UPDATE_API_BASE_URL}/${UPDATE_DOWNLOAD_API_BASE_URL}/${result.data.ossId}`
           void this._downloadInstaller(result.data.ossUrl, latestVersion)
             .then((filePath) => {
               this._downloadedInstallerPath = filePath
@@ -474,6 +481,7 @@ export default class AppUpdater {
       */
     } catch (error) {
       logger.error('Failed to check for update:', error as Error)
+      windowService.getMainWindow()?.webContents.send(IpcChannel.UpdateError, error)
       return {
         currentVersion: app.getVersion(),
         updateInfo: null

@@ -1,3 +1,4 @@
+import { CloseCircleFilled } from '@ant-design/icons'
 import UpdateDialogPopup from '@renderer/components/Popups/UpdateDialogPopup'
 import { NotificationService } from '@renderer/services/NotificationService'
 import { useAppDispatch } from '@renderer/store'
@@ -5,7 +6,7 @@ import { setUpdateState } from '@renderer/store/runtime'
 import { uuid } from '@renderer/utils'
 import { IpcChannel } from '@shared/IpcChannel'
 import type { ProgressInfo, UpdateInfo } from 'builder-util-runtime'
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useRuntime } from './useRuntime'
@@ -92,10 +93,10 @@ export default function useUpdateHandler() {
           })
         )
         if (window.location.hash.includes('settings/about')) {
-          window.modal.info({
+          window.modal.error({
             title: t('settings.about.updateError'),
             content: error?.message || t('settings.about.updateError'),
-            icon: null
+            icon: React.createElement(CloseCircleFilled)
           })
         }
       })
