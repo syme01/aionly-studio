@@ -150,6 +150,7 @@ export async function registerIpc(mainWindow: BrowserWindow, app: Electron.App) 
     resourcesPath: getResourcePath(),
     logsPath: logger.getLogsDir(),
     arch: arch(),
+    platform: process.platform === 'win32' ? 'Windows' : process.platform === 'darwin' ? 'MacOS' : 'Linux',
     isPortable: isWin && 'PORTABLE_EXECUTABLE_DIR' in process.env,
     installPath: path.dirname(app.getPath('exe'))
   }))

@@ -504,7 +504,7 @@ export const CHERRYIN_CONFIG = {
 
 // Application Identity
 export const APP_NAME = 'AiOnly'
-export const APP_VERSION = '0.0.1' // Application version
+export const APP_VERSION = '0.7.24' // Application version
 export const APP_PROTOCOL = 'aionly' // URL protocol (e.g., cherrystudio://)
 export const APP_BUNDLE_ID = 'com.verycloud.AiOnlyStudio' // macOS bundle identifier // com.kangfenmao.CherryStudio
 export const APP_DIR_NAME = 'AiOnlyStudio' // User data directory name

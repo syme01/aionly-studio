@@ -79,15 +79,39 @@
           }
         },
         methods: {
-          async fetchReleases() {
+            async fetchReleases() {
             try {
               this.loading = true
               this.error = null
-              const response = await fetch('https://api.github.com/repos/kangfenmao/cherry-studio/releases')
-              if (!response.ok) {
-                throw new Error('Failed to fetch releases')
+              const url = new URL(window.location.href)
+              const updateApiUrl = url.searchParams.get('updateApiUrl')
+              if (!updateApiUrl) {
+                throw new Error('updateApiUrl param is missing')
               }
-              this.releases = await response.json()
+              const response = await fetch(updateApiUrl, {
+                headers: {
+                  Accept: 'application/json',
+                  'Cache-Control': 'no-cache'
+                }
+              })
+              console.log('response', response)
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`)
+              }
+              const result = await response.json()
+              if (result.code !== 200 || !result.data) {
+                throw new Error(result.msg || 'Invalid response')
+              }
+              const data = result.data
+              this.releases = [
+                {
+                  id: data.version,
+                  name: `${data.version}`,
+                  tag_name: `${data.version}`,
+                  published_at: data.releaseTime,
+                  body: data.notes || ''
+                }
+              ]
             } catch (err) {
               this.error = 'Error loading releases: ' + err.message
             } finally {

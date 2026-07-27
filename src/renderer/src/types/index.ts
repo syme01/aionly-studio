@@ -578,6 +578,7 @@ export type AppInfo = {
   filesPath: string
   logsPath: string
   arch: string
+  platform: string
   isPortable: boolean
   installPath: string
 }

@@ -10,7 +10,7 @@ import { useAppDispatch } from '@renderer/store'
 import { setUpdateState } from '@renderer/store/runtime'
 import { ThemeMode } from '@renderer/types'
 import { runAsyncFunction } from '@renderer/utils'
-import { WEB_UI_HOST } from '@shared/config/constant'
+import { UPDATE_API_BASE_URL, UPDATE_CHECK_PATH, WEB_UI_HOST } from '@shared/config/constant'
 // import { UpgradeChannel } from '@shared/config/constant'
 import { Avatar, Button, Progress, Row, Switch, Tag /*Tooltip, Radio*/ } from 'antd'
 import { debounce } from 'lodash'
@@ -65,11 +65,12 @@ const AboutSettings: FC = () => {
   }
 
   const showReleases = async () => {
-    const { appPath } = await window.api.getAppInfo()
+    const { appPath, platform } = await window.api.getAppInfo()
+    const updateApiUrl = `${UPDATE_API_BASE_URL}${UPDATE_CHECK_PATH}/${platform}`
     openSmartMinapp({
       id: 'aionly-releases',
       name: t('settings.about.releases.title'),
-      url: `file://${appPath}/resources/cherry-studio/releases.html?theme=${theme === ThemeMode.dark ? 'dark' : 'light'}`,
+      url: `file://${appPath}/resources/cherry-studio/releases.html?theme=${theme === ThemeMode.dark ? 'dark' : 'light'}&updateApiUrl=${encodeURIComponent(updateApiUrl)}`,
       logo: AppLogo
     })
   }
@@ -120,7 +121,7 @@ const AboutSettings: FC = () => {
               <Title>{APP_NAME}</Title>
               <Description>{t('settings.about.description')}</Description>
               <Tag color="blue" style={{ marginTop: 8, cursor: 'pointer' }}>
-                v{version}
+                {version.includes('v') ? version : `v${version}`}
               </Tag>
             </VersionWrapper>
           </Row>
