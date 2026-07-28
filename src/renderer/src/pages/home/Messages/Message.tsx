@@ -229,7 +229,7 @@ const MessageItem: FC<Props> = ({
               topic={topic}
               isGroupContextMessage={isGroupContextMessage}
             />
-            <div className="main">
+            <div className={cn('main', { 'is-grouped': isGrouped })}>
               {!isMultiSelectMode && message.role === 'assistant' && showMessageOutline && (
                 <MessageOutline message={message} />
               )}
@@ -327,11 +327,14 @@ const MessageInfoWrapper = styled.div`
   width: 100%;
   position: relative;
   .main{
-    width: calc(100% - 100px);
+    //width: calc(100% - 100px);
     margin-left: 45px;
     padding: 16px;
     background-color: var(--color-gray-5);
     border-radius: 0 8px 8px 8px;
+    &:not(.is-grouped){
+      width: calc(100% - 100px);
+    }
   }
   .message-header{
     position: absolute;

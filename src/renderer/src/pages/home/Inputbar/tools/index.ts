@@ -2,7 +2,7 @@
 // Import all tool definitions to register them
 
 import './attachmentTool'
-// import './mentionModelsTool' // TODO: @模型功能，暂时注释掉，后期可能需要放开
+import './mentionModelsTool' // TODO: @模型功能，暂时注释掉，后期可能需要放开
 import './newTopicTool'
 import './quickPhrasesTool'
 import './thinkingTool'

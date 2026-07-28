@@ -1,8 +1,10 @@
+import { CrownFilled } from '@ant-design/icons'
 import ModelTagsWithLabel from '@renderer/components/ModelTagsWithLabel'
 import type { QuickPanelListItem } from '@renderer/components/QuickPanel'
 import { QuickPanelReservedSymbol } from '@renderer/components/QuickPanel'
 import { getModelLogo, isEmbeddingModel, isRerankModel, isVisionModel } from '@renderer/config/models'
 import db from '@renderer/databases'
+import { transformToModel, useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels'
 import { useProviders } from '@renderer/hooks/useProvider'
 import type { ToolQuickPanelApi, ToolQuickPanelController } from '@renderer/pages/home/Inputbar/types'
 import { getModelUniqId } from '@renderer/services/ModelService'
@@ -117,6 +119,7 @@ export const useMentionModelsPanel = (params: Params, role: 'button' | 'manager'
     setMentionedModels([])
   }, [setMentionedModels])
 
+  // 用户置顶模型
   const pinnedModels = useLiveQuery(
     async () => {
       const setting = await db.settings.get('pinned:models')
@@ -125,6 +128,117 @@ export const useMentionModelsPanel = (params: Params, role: 'button' | 'manager'
     [],
     []
   )
+
+  const {
+    fetchNextPage: fetchNextAiOnlyPage,
+    hasMore: hasMoreAiOnly,
+    loading: aiOnlyLoading,
+    getFilteredModels
+  } = useAiOnlyModels({ autoFetch: true })
+
+  // 获取aionly用户开通的所有文本模型
+  const aionlyModelItems = useMemo(() => {
+    const filteredModels = getFilteredModels()
+    const items: QuickPanelListItem[] = []
+
+    const pinnedAiOnlyModels = filteredModels.filter((m) => pinnedModels.includes(m.baseId || m.id))
+    if (pinnedAiOnlyModels.length > 0) {
+      const pinnedItems = pinnedAiOnlyModels.map((m) => {
+        const model = transformToModel(m)
+        return {
+          label: (
+            <>
+              <ProviderName>{m.serviceName || m.group}</ProviderName>
+              <span style={{ opacity: 0.8 }}> | {m.modelName}</span>
+            </>
+          ),
+          description: <ModelTagsWithLabel model={model} showLabel={false} size={10} style={{ opacity: 0.8 }} />,
+          icon: (
+            <Avatar src={getModelLogo(model)} size={20}>
+              {first(m.modelName)}
+            </Avatar>
+          ),
+          filterText: (m.serviceName || m.group) + m.modelName,
+          action: () => onMentionModel(model),
+          isSelected: mentionedModels.some((selected) => getModelUniqId(selected) === getModelUniqId(model))
+        }
+      })
+      items.push(...sortBy(pinnedItems, ['filterText']))
+    }
+
+    const nonPinnedItems = filteredModels
+      .filter((m) => !pinnedModels.includes(m.baseId || m.id))
+      .filter((m) => {
+        const model = transformToModel(m)
+        return couldMentionNotVisionModel || isVisionModel(model)
+      })
+      .map((m) => {
+        const model = transformToModel(m)
+        return {
+          label: (
+            <>
+              <ProviderName>{m.serviceName || m.group}</ProviderName>
+              <span style={{ opacity: 0.8 }}> | {m.modelName}</span>
+              {m.memberSpecial == 1 && (
+                <IconVip>
+                  <CrownFilled />
+                  <span>vip</span>
+                </IconVip>
+              )}
+            </>
+          ),
+          description: <ModelTagsWithLabel model={model} showLabel={false} size={10} style={{ opacity: 0.8 }} />,
+          icon: (
+            <Avatar src={getModelLogo(model)} size={20}>
+              {first(m.modelName)}
+            </Avatar>
+          ),
+          filterText: (m.serviceName || m.group) + m.modelName,
+          action: () => onMentionModel(model),
+          isSelected: mentionedModels.some((selected) => getModelUniqId(selected) === getModelUniqId(model))
+        }
+      })
+    items.push(...sortBy(nonPinnedItems, ['filterText']))
+
+    items.push({
+      label: t('settings.models.add.add_model') + '...',
+      icon: <Plus />,
+      action: () => navigate('/settings/provider'),
+      isSelected: false
+    })
+
+    items.unshift({
+      label: t('settings.input.clear.all'),
+      description: t('settings.input.clear.models'),
+      icon: <CircleX />,
+      alwaysVisible: true,
+      isSelected: false,
+      action: ({ context }) => {
+        onClearMentionModels()
+        if (triggerInfoRef.current?.type === 'input') {
+          setText((currentText) => {
+            const textArea = document.querySelector('.inputbar textarea') as HTMLTextAreaElement | null
+            const caret = textArea ? (textArea.selectionStart ?? currentText.length) : currentText.length
+            return removeAtSymbolAndText(currentText, caret, undefined, triggerInfoRef.current?.position)
+          })
+        }
+        context.close()
+      }
+    })
+
+    return items
+  }, [
+    getFilteredModels,
+    couldMentionNotVisionModel,
+    mentionedModels,
+    navigate,
+    onClearMentionModels,
+    onMentionModel,
+    pinnedModels,
+    removeAtSymbolAndText,
+    setText,
+    t
+  ])
 
   const modelItems = useMemo(() => {
     const items: QuickPanelListItem[] = []
@@ -158,6 +272,8 @@ export const useMentionModelsPanel = (params: Params, role: 'button' | 'manager'
         items.push(...sortBy(pinnedItems, ['label']))
       }
     }
+
+    // console.log('providers', providers)
 
     providers.forEach((provider) => {
       const providerModels = sortBy(
@@ -240,7 +356,7 @@ export const useMentionModelsPanel = (params: Params, role: 'button' | 'manager'
 
       open({
         title: t('assistants.presets.edit.model.select.title'),
-        list: modelItems,
+        list: aionlyModelItems,
         symbol: QuickPanelReservedSymbol.MentionModels,
         multiple: true,
         triggerInfo: triggerInfo || { type: 'button' },
@@ -290,6 +406,36 @@ export const useMentionModelsPanel = (params: Params, role: 'button' | 'manager'
     }
   }, [isVisible, modelItems, role, symbol, updateList])
 
+  // 当 aiOnlyModels 分页加载更多数据时，同步刷新面板列表
+  useEffect(() => {
+    if (role !== 'manager') return
+    if (isVisible && symbol === QuickPanelReservedSymbol.MentionModels) {
+      updateList(aionlyModelItems)
+    }
+  }, [isVisible, aionlyModelItems, role, symbol, updateList])
+
+  // 滚动加载：监听 QuickPanel 虚拟列表滚动，触底时请求下一页
+  useEffect(() => {
+    if (role !== 'manager') return
+    if (!isVisible || symbol !== QuickPanelReservedSymbol.MentionModels) return
+
+    const scrollEl = document.querySelector(
+      '[data-testid="quick-panel"] .dynamic-virtual-list'
+    ) as HTMLDivElement | null
+    if (!scrollEl) return
+
+    const onScroll = () => {
+      if (aiOnlyLoading || !hasMoreAiOnly) return
+      const { scrollTop, scrollHeight, clientHeight } = scrollEl
+      if (scrollHeight - scrollTop - clientHeight < 50) {
+        void fetchNextAiOnlyPage()
+      }
+    }
+
+    scrollEl.addEventListener('scroll', onScroll)
+    return () => scrollEl.removeEventListener('scroll', onScroll)
+  }, [isVisible, symbol, role, fetchNextAiOnlyPage, hasMoreAiOnly, aiOnlyLoading])
+
   useEffect(() => {
     if (role !== 'manager') return
     const disposeRootMenu = registerRootMenu([
@@ -321,4 +467,15 @@ export const useMentionModelsPanel = (params: Params, role: 'button' | 'manager'
 
 const ProviderName = styled.span`
   font-weight: 500;
+`
+const IconVip = styled.div`
+  display: inline-block;
+  text-align: center;
+  color: var(--color-white);
+  width: 52px;
+  padding: 2px 0;
+  background: linear-gradient(90deg,#ffaa00 0%,#f77a1d 100%);
+  border-radius: 4px;
+  font-size: 12px;
+  margin-left: 15px;
 `

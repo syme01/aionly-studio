@@ -12,8 +12,8 @@ import type { Message } from '@renderer/types/newMessage'
 import { classNames } from '@renderer/utils'
 import { scrollIntoView } from '@renderer/utils/dom'
 import { Popover } from 'antd'
-import type { ComponentProps, WheelEvent as ReactWheelEvent } from 'react'
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import type { ComponentProps } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import MessageItem from './Message'
@@ -194,31 +194,65 @@ const MessageGroup = ({ messages, topic, registerMessageElement }: Props) => {
     }
   }, [messages])
 
-  const handleHorizontalGroupWheel = useCallback((event: ReactWheelEvent<HTMLDivElement>) => {
-    const target = event.target as HTMLElement | null
-    if (target?.closest('.message-content-container')) {
-      return
-    }
+  // const handleHorizontalGroupWheel = useCallback((event: ReactWheelEvent<HTMLDivElement>) => {
+  //   const target = event.target as HTMLElement | null
+  //   if (target?.closest('.message-content-container')) {
+  //     return
+  //   }
+  //
+  //   const groupContainer = event.currentTarget
+  //   const contentContainers = Array.from(groupContainer.querySelectorAll<HTMLElement>('.message-content-container'))
+  //   const hasInnerVerticalScroll = contentContainers.some(
+  //     (contentContainer) => contentContainer.scrollHeight > contentContainer.clientHeight + 1
+  //   )
+  //   const hasHorizontalScroll = groupContainer.scrollWidth > groupContainer.clientWidth + 1
+  //   const horizontalDelta = Math.abs(event.deltaX) > 0 ? event.deltaX : event.shiftKey ? event.deltaY : 0
+  //
+  //   if (horizontalDelta !== 0 && hasHorizontalScroll) {
+  //     event.preventDefault()
+  //     event.stopPropagation()
+  //     groupContainer.scrollLeft += horizontalDelta
+  //     return
+  //   }
+  //
+  //   if (hasInnerVerticalScroll) {
+  //     event.preventDefault()
+  //     event.stopPropagation()
+  //   }
+  // }, [])
 
-    const groupContainer = event.currentTarget
-    const contentContainers = Array.from(groupContainer.querySelectorAll<HTMLElement>('.message-content-container'))
-    const hasInnerVerticalScroll = contentContainers.some(
-      (contentContainer) => contentContainer.scrollHeight > contentContainer.clientHeight + 1
-    )
-    const hasHorizontalScroll = groupContainer.scrollWidth > groupContainer.clientWidth + 1
-    const horizontalDelta = Math.abs(event.deltaX) > 0 ? event.deltaX : event.shiftKey ? event.deltaY : 0
+  const gridContainerRef = useRef<HTMLDivElement>(null)
+  const isDragging = useRef(false)
+  const dragStartX = useRef(0)
+  const scrollStartLeft = useRef(0)
 
-    if (horizontalDelta !== 0 && hasHorizontalScroll) {
-      event.preventDefault()
-      event.stopPropagation()
-      groupContainer.scrollLeft += horizontalDelta
-      return
-    }
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (multiModelMessageStyle !== 'horizontal') return
+      const target = e.target as HTMLElement
+      if (target.closest('.message-content-container')) return
+      isDragging.current = true
+      dragStartX.current = e.clientX
+      scrollStartLeft.current = e.currentTarget.scrollLeft
+    },
+    [multiModelMessageStyle]
+  )
 
-    if (hasInnerVerticalScroll) {
-      event.preventDefault()
-      event.stopPropagation()
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!isDragging.current || multiModelMessageStyle !== 'horizontal') return
+      const delta = dragStartX.current - e.clientX
+      e.currentTarget.scrollLeft = scrollStartLeft.current + delta
+    },
+    [multiModelMessageStyle]
+  )
+
+  useEffect(() => {
+    const handleMouseUp = () => {
+      isDragging.current = false
     }
+    window.addEventListener('mouseup', handleMouseUp)
+    return () => window.removeEventListener('mouseup', handleMouseUp)
   }, [])
 
   const renderMessage = useCallback(
@@ -298,10 +332,13 @@ const MessageGroup = ({ messages, topic, registerMessageElement }: Props) => {
         id={messages[0].askId ? `message-group-${messages[0].askId}` : undefined}
         className={classNames([multiModelMessageStyle, { 'multi-select-mode': isMultiSelectMode }])}>
         <GridContainer
+          ref={gridContainerRef}
           $count={messageLength}
           $gridColumns={gridColumns}
           className={classNames([multiModelMessageStyle, { 'multi-select-mode': isMultiSelectMode }])}
-          onWheelCapture={multiModelMessageStyle === 'horizontal' ? handleHorizontalGroupWheel : undefined}>
+          // onWheelCapture={multiModelMessageStyle === 'horizontal' ? handleHorizontalGroupWheel : undefined}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}>
           {messages.map(renderMessage)}
         </GridContainer>
         {isGrouped && (
@@ -349,6 +386,10 @@ const GridContainer = styled(Scrollbar)<{ $count: number; $gridColumns: number }
     grid-template-columns: repeat(${({ $count }) => $count}, minmax(420px, 1fr));
     overflow-x: auto;
     overflow-y: hidden;
+    cursor: grab;
+    &:active {
+      cursor: grabbing;
+    }
   }
   &.fold,
   &.vertical {
@@ -413,7 +454,8 @@ const MessageWrapper = styled.div<MessageWrapperProps>`
   &.grid {
     display: block;
     height: 300px;
-    overflow-y: hidden;
+    //overflow-y: hidden;
+    overflow-y: auto;
     border: 0.5px solid var(--color-border);
     border-radius: 10px;
     cursor: pointer;

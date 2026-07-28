@@ -27,6 +27,7 @@ export const REQUIRED_SIDEBAR_ICONS: SidebarIcon[] = ['assistants', 'agents', 'p
 
 /**
  * 必须显示的侧边栏图标（不能被隐藏）
+ * TODO：暂时屏蔽知识库菜单，因为aionly平台暂时没有向量模型
  */
 export const SHOW_IN_USER_MENUS = [
   {
@@ -34,11 +35,11 @@ export const SHOW_IN_USER_MENUS = [
     name: 'settings',
     icon: 'icon-shezhi'
   },
-  {
+  /*{
     path: '/knowledge',
     name: 'knowledge',
     icon: 'icon-zhishiku'
-  },
+  },*/
   {
     path: '/files',
     name: 'files',

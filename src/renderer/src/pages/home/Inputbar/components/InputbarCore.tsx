@@ -736,7 +736,7 @@ const Container = styled.div`
 `
 
 const InputBarContainer = styled.div`
-  display: flex;
+  // display: flex;
   border: 0.5px solid var(--color-border);
   transition: all 0.2s ease;
   position: relative;

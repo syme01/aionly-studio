@@ -48,7 +48,7 @@ interface ModelSelectorProps extends SelectProps {
  */
 const ModelSelector = ({
   // providers,
-  // predicate,
+  predicate,
   grouped = true,
   showAvatar = true,
   // showSuffix = true,
@@ -157,7 +157,12 @@ const ModelSelector = ({
 
   // 构建 AiOnly 模型选项，优先使用父组件传入的 apiModels，否则从 hook 获取
   const aionlyOptions = useMemo((): SelectOption[] => {
-    const filteredModels = apiModels ?? getFilteredModels()
+    let filteredModels = apiModels ?? getFilteredModels()
+
+    // 应用 predicate 过滤
+    if (predicate) {
+      filteredModels = filteredModels.filter(predicate)
+    }
 
     if (grouped) {
       // 按 serviceName 分组
@@ -181,7 +186,7 @@ const ModelSelector = ({
     // 不分组，直接返回所有模型
     const result = filteredModels.map((m) => getAiOnlyModelOption(m, m.serviceName || 'Unknown'))
     return result
-  }, [apiModels, getFilteredModels, grouped, getAiOnlyModelOption])
+  }, [apiModels, getFilteredModels, grouped, getAiOnlyModelOption, predicate])
 
   const handlePopupRender = useCallback(
     (menu) => {

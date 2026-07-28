@@ -320,5 +320,5 @@ export function getModelLogoById(modelId: string): string | undefined {
 }
 
 export function getModelLogo(model: Model | undefined | null): string | undefined {
-  return model ? (getModelLogoById(model.id) ?? getModelLogoById(model.name)) : undefined
+  return model ? ((model as any).modelFileUrl ?? getModelLogoById(model.id) ?? getModelLogoById(model.name)) : undefined
 }
