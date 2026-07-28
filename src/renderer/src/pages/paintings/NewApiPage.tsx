@@ -1,12 +1,12 @@
-import { PlusOutlined } from '@ant-design/icons'
+// import { PlusOutlined } from '@ant-design/icons'
 import { loggerService } from '@logger'
 import { AiProvider } from '@renderer/aiCore'
 // import IcImageUp from '@renderer/assets/images/paintings/ic_ImageUp.svg'
-import { Navbar, NavbarCenter, NavbarRight } from '@renderer/components/app/Navbar'
+import { Navbar, NavbarCenter /*NavbarRight*/ } from '@renderer/components/app/Navbar'
 import ModelAvatar from '@renderer/components/Avatar/ModelAvatar'
 // import Scrollbar from '@renderer/components/Scrollbar'
 import TranslateButton from '@renderer/components/TranslateButton'
-import { isMac } from '@renderer/config/constant'
+// import { isMac } from '@renderer/config/constant'
 import { LanguagesEnum } from '@renderer/config/translate'
 // import { useTheme } from '@renderer/context/ThemeProvider'
 import { useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels'
@@ -646,13 +646,13 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
     <Container className="page-container">
       <Navbar>
         <NavbarCenter style={{ borderRight: 'none' }}>{t('paintings.title')}</NavbarCenter>
-        {isMac && (
+        {/*{isMac && (
           <NavbarRight style={{ justifyContent: 'flex-end' }}>
             <Button size="small" className="nodrag" icon={<PlusOutlined />} onClick={handleAddPainting}>
               {t('paintings.button.new.image')}
             </Button>
           </NavbarRight>
-        )}
+        )}*/}
       </Navbar>
       <ContentContainer id="content-container">
         {/*<LeftContainer>
