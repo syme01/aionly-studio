@@ -292,7 +292,7 @@ export default class AppUpdater {
 
   // ============ Custom Download Method ============
   private async _downloadInstaller(url: string, version: string): Promise<string> {
-    const fileName = path.basename(url)
+    const fileName = path.basename(new URL(url).pathname)
     const downloadDir = path.join(app.getPath('temp'), 'updates')
 
     if (!fs.existsSync(downloadDir)) {
