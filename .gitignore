@@ -44,6 +44,7 @@ resources/binaries/
 .env
 .env.*
 !.env.example
+!config/**/.env.override
 
 # Local
 local
