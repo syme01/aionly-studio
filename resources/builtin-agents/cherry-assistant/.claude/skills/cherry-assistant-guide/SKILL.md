@@ -111,9 +111,9 @@ Cmd/Ctrl + N 新建话题, +F 搜索, +Shift+F 全局搜索, +K 新上下文, +L
 
 ## 反馈渠道
 
-**Bug/需求提交**(推荐): https://maas.aiionly.com/myOrder?from=https://maas.aiionly.com
+**Bug/需求提交**(推荐): https://maas.aionly.com/myOrder?from=https://maas.aionly.com
 
-**官网**: aiionly.com | 中文文档 https://maas.aiionly.com/document/1930518409270280194
+**官网**: aionly.com | 中文文档 https://maas.aionly.com/document/1930518409270280194
 
 ## 日志路径
 

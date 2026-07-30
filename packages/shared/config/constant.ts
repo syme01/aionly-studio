@@ -7,7 +7,7 @@ export const documentExts = ['.pdf', '.doc', '.docx', '.pptx', '.xlsx', '.odt', 
 export const thirdPartyApplicationExts = ['.draftsExport']
 export const bookExts = ['.epub']
 
-export const API_SERVER_PORT = 23336
+export const API_SERVER_PORT = 23335
 
 export const API_SERVER_DEFAULTS = {
   HOST: '127.0.0.1',
@@ -504,15 +504,15 @@ export const CHERRYIN_CONFIG = {
 }
 
 // Application Identity
-export const APP_NAME = 'AiiOnly'
-export const APP_VERSION = '0.7.24' // Application version
-export const APP_PROTOCOL = 'aiionly'
-export const APP_BUNDLE_ID = 'com.verycloud.AiiOnlyStudio'
+export const APP_NAME = 'AiOnly'
+// export const APP_VERSION = '0.7.25' // unused — source of truth is package.json
+export const APP_PROTOCOL = 'aionly'
+export const APP_BUNDLE_ID = 'com.verycloud.AiOnlyStudio'
 export const APP_DIR_NAME = 'AiOnlyStudio' // User data directory name
 export const APP_CONFIG_DIR = '.aionlystudio' // Hidden config directory in home
 // resources/scripts should be maintained manually
 export const HOME_CHERRY_DIR = APP_CONFIG_DIR
-export const APP_API_HOST = 'https://llm.aiionly.com'
+export const APP_API_HOST = 'https://api.aionly.com'
 
 // 生产环境的地址
 export const USER_UI_HOST = `https://maas.${APP_PROTOCOL}.com` // 控制台地址

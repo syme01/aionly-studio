@@ -68,7 +68,8 @@ const ApiServerSettings: FC = () => {
       // const host = apiServerConfig.host || API_SERVER_DEFAULTS.HOST
       // const port = apiServerConfig.port || API_SERVER_DEFAULTS.PORT
       // window.open(`http://${host}:${port}/api-docs`, '_blank')
-      window.open(`${USER_UI_HOST}/document/1965254170465107970`, '_blank')
+      // window.open(`${USER_UI_HOST}/document/1965254170465107970`, '_blank')
+      window.api.shell.openExternal(`${USER_UI_HOST}/document/1965254170465107970`)
     }
   }
 
