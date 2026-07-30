@@ -20,6 +20,14 @@ on:
           - windows
           - mac
           - linux
+      flavor:
+        description: "Build flavor"
+        required: true
+        default: "global"
+        type: choice
+        options:
+          - global
+          - cn
   pull_request_target:
     branches:
       - main
@@ -72,12 +80,20 @@ jobs:
             echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Set package.json version
+      - name: Determine flavor
+        id: flavor
         shell: bash
         run: |
-          TAG="${{ steps.get-tag.outputs.tag }}"
-          VERSION="${TAG#v}"
-          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "flavor=${{ github.event.inputs.flavor }}" >> $GITHUB_OUTPUT
+          else
+            TAG="${{ steps.get-tag.outputs.tag }}"
+            if [[ "$TAG" == *"-cn" ]]; then
+              echo "flavor=cn" >> $GITHUB_OUTPUT
+            else
+              echo "flavor=global" >> $GITHUB_OUTPUT
+            fi
+          fi
 
       - name: Install Node.js
         uses: actions/setup-node@v6
@@ -116,6 +132,18 @@ jobs:
         run: pnpm install --no-frozen-lockfile
         env:
           npm_config_msvs_version: 2022
+
+      - name: Switch flavor
+        run: pnpm flavor:${{ steps.flavor.outputs.flavor }}
+
+      - name: Set package.json version
+        shell: bash
+        run: |
+          TAG="${{ steps.get-tag.outputs.tag }}"
+          VERSION="${TAG#v}"
+          VERSION="${VERSION%-cn}"
+          VERSION="${VERSION%-global}"
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
 
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'

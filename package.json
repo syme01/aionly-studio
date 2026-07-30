@@ -12,6 +12,8 @@
   },
   "scripts": {
     "sync:config": "tsx scripts/sync-app-config.ts",
+    "flavor:cn": "tsx scripts/switch-flavor.ts cn && pnpm sync:config",
+    "flavor:global": "tsx scripts/switch-flavor.ts global && pnpm sync:config",
     "start": "electron-vite preview",
     "generate:openapi": "tsx scripts/generate-openapi-spec.ts && biome format --write src/main/apiServer/generated/openapi-spec.json",
     "openapi:check": "tsx scripts/generate-openapi-spec.ts --check",

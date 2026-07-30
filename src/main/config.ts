@@ -1,7 +1,13 @@
+import path from 'node:path'
+
 import { isDev, isWin } from '@main/constant'
+import { APP_NAME } from '@shared/config/constant'
 import { app } from 'electron'
 
 import { getDataPath } from './utils'
+
+// Isolate userData per flavor so cn (AiiOnly) and global (AiOnly) can coexist
+app.setPath('userData', path.join(app.getPath('appData'), APP_NAME))
 
 if (isDev) {
   app.setPath('userData', app.getPath('userData') + 'Dev')

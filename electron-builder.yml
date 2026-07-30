@@ -1,5 +1,5 @@
-appId: com.verycloud.AiOnlyStudio
-productName: AiOnly
+appId: com.verycloud.AiiOnlyStudio
+productName: AiiOnly
 electronLanguages:
   - zh-CN
   - zh-TW
@@ -14,9 +14,9 @@ directories:
   buildResources: build
 
 protocols:
-  - name: AiOnly
+  - name: AiiOnly
     schemes:
-      - aionly
+      - aiionly
 files:
   - "**/*"
   - "!**/{.vscode,.yarn,.yarn-lock,.github,.cursorrules,.prettierrc}"
@@ -74,9 +74,12 @@ asarUnpack:
   - out/preload/**
   - resources/**
   - "**/*.{metal,exp,lib}"
+  - "**/*.node"
   - "node_modules/@img/sharp-*/**"
+  - "node_modules/@libsql/**"
 
 win:
+  icon: config/cn/build/icon.ico
   executableName: AiiOnly
   artifactName: ${productName}-${version}-${arch}-setup.${ext}
   target:
@@ -99,6 +102,7 @@ portable:
   artifactName: ${productName}-${version}-${arch}-portable.${ext}
   buildUniversalInstaller: false
 mac:
+  icon: config/cn/build/icon.icns
   entitlementsInherit: build/entitlements.mac.plist
   notarize: false
   artifactName: ${productName}-${version}-${arch}.${ext}
@@ -113,6 +117,7 @@ mac:
 dmg:
   writeUpdateInfo: false
 linux:
+  icon: config/cn/build/icons
   artifactName: ${productName}-${version}-${arch}.${ext}
   executableName: AiiOnly
   target:
@@ -123,10 +128,10 @@ linux:
   category: Utility
   desktop:
     entry:
-      Name: AiOnly
-      StartupWMClass: AiOnly
+      Name: AiiOnly
+      StartupWMClass: AiiOnly
   mimeTypes:
-    - x-scheme-handler/aionly
+    - x-scheme-handler/aiionly
 rpm:
   # Workaround for electron build issue on rpm package:
   # https://github.com/electron/forge/issues/3594
@@ -143,10 +148,10 @@ artifactBuildCompleted: scripts/artifact-build-completed.js
 releaseInfo:
   releaseNotes: |
     <!--LANG:en-->
-    AiOnly 0.0.1 - Stability and Model Updates
+    AiiOnly 0.0.1 - Stability and Model Updates
 
     <!--LANG:zh-CN-->
-    AiOnly 0.0.1 - 内部公测更新
+    AiiOnly 0.0.1 - 内部公测更新
 
     ✨
     - 测试自动更新

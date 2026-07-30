@@ -8,7 +8,6 @@ const constantFile = fs.readFileSync(path.join(root, 'packages/shared/config/con
 const extract = (name: string) => constantFile.match(new RegExp(`${name} = ['"]([^'"]+)['"]`))?.[1]
 
 const APP_NAME = extract('APP_NAME')!
-const APP_VERSION = extract('APP_VERSION')!
 const APP_PROTOCOL = extract('APP_PROTOCOL')!
 const APP_BUNDLE_ID = extract('APP_BUNDLE_ID')!
 
@@ -27,14 +26,8 @@ yml = yml
   .replace(/^productName:.*$/m, `productName: ${APP_NAME}`)
   .replace(/^\s+- name:.*$/m, `  - name: ${APP_NAME}`)
   .replace(/^\s+- cherrystudio$/m, `      - ${APP_PROTOCOL}`)
+  .replace(/^(\s+executableName:).*$/gm, `$1 ${APP_NAME}`)
 fs.writeFileSync(ymlPath, yml)
-
-// Update package.json
-const pkgPath = path.join(root, 'package.json')
-const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'))
-pkg.name = APP_NAME
-pkg.version = APP_VERSION
-fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n')
 
 // Update src/renderer/index.html
 const indexHtmlPath = path.join(root, 'src/renderer/index.html')
@@ -87,4 +80,4 @@ if (fs.existsSync(skillMdPath) && USER_UI_HOST && WEB_UI_HOST) {
   console.log(`✅ Updated SKILL.md with ${APP_PROTOCOL} protocol and ${USER_UI_HOST} host`)
 }
 
-console.log(`✅ Synced: ${APP_NAME} v${APP_VERSION} | ${APP_PROTOCOL} | ${APP_BUNDLE_ID}`)
+console.log(`✅ Synced: ${APP_NAME} | ${APP_PROTOCOL} | ${APP_BUNDLE_ID}`)
