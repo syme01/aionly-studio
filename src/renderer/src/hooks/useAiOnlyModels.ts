@@ -3,6 +3,7 @@ import { pageListApi } from '@renderer/api/openManagement'
 import { isNotSupportTextDeltaModel } from '@renderer/config/models'
 import { useAppDispatch } from '@renderer/store'
 import { setAiOnlyModels } from '@renderer/store/user'
+import { getDefaultEndpointTypeById } from '@renderer/tools'
 import type { ApiModel, Model, Provider } from '@renderer/types'
 import { isNewApiProvider } from '@renderer/utils/provider'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -49,7 +50,8 @@ export async function fetchAiOnlyModelsApi(
         ...item,
         name: item.modelName,
         provider: 'aionly',
-        group: item.serviceName
+        group: item.serviceName,
+        endpoint_type: item.endpoint_type ?? getDefaultEndpointTypeById(item)
       }))
       return { models: modelList || [], total: res.total || 0 }
     }
@@ -164,7 +166,7 @@ export function transformToModel(item: any, provider?: Provider): Model {
     capabilities: item.capabilities || [],
     type: item.type || 'model',
     pricing: item.pricing,
-    endpoint_type: item.endpoint_type || item.modelAttribute == 'image_generation' ? 'image-generation' : 'openai',
+    endpoint_type: item.endpoint_type ?? getDefaultEndpointTypeById(item),
     supported_endpoint_types: item.supported_endpoint_types,
     supported_text_delta: !isNotSupportTextDeltaModel({ ...item, id: item.baseId || item.model })
   }

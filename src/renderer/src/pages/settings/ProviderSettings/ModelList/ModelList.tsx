@@ -7,6 +7,7 @@ import { useProvider } from '@renderer/hooks/useProvider'
 import { getProviderLabel } from '@renderer/i18n/label'
 import { SettingHelpLink, SettingHelpText, SettingHelpTextRow, SettingSubtitle } from '@renderer/pages/settings'
 import EditModelPopup from '@renderer/pages/settings/ProviderSettings/EditModelPopup/EditModelPopup'
+import { handleCacheUpdatedModels } from '@renderer/tools'
 // import AddModelPopup from '@renderer/pages/settings/ProviderSettings/ModelList/AddModelPopup'
 // import DownloadOVMSModelPopup from '@renderer/pages/settings/ProviderSettings/ModelList/DownloadOVMSModelPopup'
 // import ManageModelsPopup from '@renderer/pages/settings/ProviderSettings/ModelList/ManageModelsPopup'
@@ -83,6 +84,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId, onPaginationStateChan
   const { t } = useTranslation()
   // const { provider, models, removeModel } = useProvider(providerId)
   const { provider, removeModel } = useProvider(providerId)
+  const [localUpdates, setLocalUpdates] = useState<Map<string, Model>>(new Map())
   const [activeTabKey, setActiveTabKey] = useState('1')
   const typeTabs = [
     {
@@ -105,8 +107,12 @@ const ModelList: React.FC<ModelListProps> = ({ providerId, onPaginationStateChan
 
   const models = useMemo(() => {
     const modelList = getFilteredModels()
-    return modelList.map((x: any) => transformToModel(x))
-  }, [getFilteredModels])
+    return modelList.map((x: any) => {
+      const m = transformToModel(x)
+      const local = localUpdates.get(m.id)
+      return local ? { ...m, ...local } : m
+    })
+  }, [getFilteredModels, localUpdates])
 
   /*  const handleDynamicListChange = (instance: any) => {
     // 检测是否滚动到底部
@@ -134,7 +140,18 @@ const ModelList: React.FC<ModelListProps> = ({ providerId, onPaginationStateChan
   }
 
   // 稳定的编辑模型回调，避免内联函数导致子组件 memo 失效
-  const handleEditModel = useCallback((model: Model) => EditModelPopup.show({ provider, model }), [provider])
+  const handleEditModel = useCallback(
+    async (model: Model) => {
+      await EditModelPopup.show({ provider, model })
+      // 弹窗关闭后，从 localStorage 读最新值
+      const cached = handleCacheUpdatedModels().getUpdatedModels() as Model[]
+      const updated = cached.find((m) => m.id === model.id)
+      if (updated) {
+        setLocalUpdates((prev) => new Map(prev).set(updated.id, updated))
+      }
+    },
+    [provider]
+  )
 
   const providerConfig = PROVIDER_URLS[provider.id]
   const docsWebsite = providerConfig?.websites?.docs

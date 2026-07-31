@@ -12,4 +12,5 @@ export function isBuiltInTool(tool: MCPTool): boolean {
   return tool.isBuiltIn === true
 }
 
+export * from './model'
 export * from './think'

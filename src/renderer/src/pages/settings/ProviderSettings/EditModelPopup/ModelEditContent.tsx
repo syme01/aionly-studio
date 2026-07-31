@@ -18,11 +18,12 @@ import {
   isWebSearchModel
 } from '@renderer/config/models'
 import { useDynamicLabelWidth } from '@renderer/hooks/useDynamicLabelWidth'
+import { getDefaultEndpointTypeById } from '@renderer/tools'
 import type { Model, ModelCapability, ModelType, Provider } from '@renderer/types'
 import { getDefaultGroupName, getDifference, getUnion, uniqueObjectArray } from '@renderer/utils'
 import { isNewApiProvider } from '@renderer/utils/provider'
 import type { ModalProps } from 'antd'
-import { Button, Divider, Flex, Form, Input, InputNumber, message, Modal, Select, Switch, Tooltip } from 'antd'
+import { Button, Divider, Flex, Form, Input, /*InputNumber,*/ message, Modal, Select, Switch, Tooltip } from 'antd'
 import { cloneDeep } from 'lodash'
 import { ChevronDown, ChevronUp, RotateCcw, SaveIcon } from 'lucide-react'
 import type { FC } from 'react'
@@ -41,8 +42,8 @@ const ModelEditContent: FC<ModelEditContentProps & ModalProps> = ({ provider, mo
   const [form] = Form.useForm()
   const { t } = useTranslation()
   const [showMoreSettings, setShowMoreSettings] = useState(false)
-  const [currencySymbol, setCurrencySymbol] = useState(model.pricing?.currencySymbol || '$')
-  const [isCustomCurrency, setIsCustomCurrency] = useState(!symbols.includes(model.pricing?.currencySymbol || '$'))
+  const [currencySymbol /*setCurrencySymbol*/] = useState(model.pricing?.currencySymbol || '$')
+  const [isCustomCurrency /*setIsCustomCurrency*/] = useState(!symbols.includes(model.pricing?.currencySymbol || '$'))
   const [modelCapabilities, setModelCapabilities] = useState(model.capabilities || [])
   const originalModelCapabilities = cloneDeep(model.capabilities || [])
   const [supportedTextDelta, setSupportedTextDelta] = useState(model.supported_text_delta)
@@ -81,13 +82,14 @@ const ModelEditContent: FC<ModelEditContentProps & ModalProps> = ({ provider, mo
   }
 
   const onFinish = (values: any) => {
+    const modelEndpointType = getDefaultEndpointTypeById(model)
     const finalCurrencySymbol = isCustomCurrency ? values.customCurrencySymbol : values.currencySymbol
     const updatedModel: Model = {
       ...model,
       id: values.id || model.id,
       name: values.name || model.name,
       group: values.group || model.group,
-      endpoint_type: isNewApiProvider(provider) ? values.endpointType : model.endpoint_type,
+      endpoint_type: isNewApiProvider(provider) ? values.endpointType : (model.endpoint_type ?? modelEndpointType),
       capabilities: modelCapabilities,
       supported_text_delta: supportedTextDelta,
       pricing: {
@@ -96,15 +98,16 @@ const ModelEditContent: FC<ModelEditContentProps & ModalProps> = ({ provider, mo
         currencySymbol: finalCurrencySymbol || '$'
       }
     }
+    // console.log('updatedModel=========>', updatedModel)
     onUpdateModel(updatedModel)
     setShowMoreSettings(false)
     props.onOk?.(undefined as any)
   }
 
-  const currencyOptions = [
+  /* const currencyOptions = [
     ...symbols.map((symbol) => ({ label: symbol, value: symbol })),
     { label: t('models.price.custom'), value: 'custom' }
-  ]
+  ]*/
 
   const defaultTypes: ModelType[] = useMemo(
     () => [
@@ -170,6 +173,7 @@ const ModelEditContent: FC<ModelEditContentProps & ModalProps> = ({ provider, mo
     }
 
     const updateType = useCallback((type: ModelType) => {
+      console.log('updateType==========>', type)
       setHasUserModified(true)
       setModelCapabilities((prev) =>
         uniqueObjectArray([
@@ -352,7 +356,7 @@ const ModelEditContent: FC<ModelEditContentProps & ModalProps> = ({ provider, mo
                 }}
               />
             </Form.Item>
-            <Divider style={{ margin: '12px 0 16px 0' }} />
+            {/*<Divider style={{ margin: '12px 0 16px 0' }} />
             <Form.Item name="currencySymbol" label={t('models.price.currency')} style={{ marginBottom: 10 }}>
               <Select
                 style={{ width: '100px' }}
@@ -434,7 +438,7 @@ const ModelEditContent: FC<ModelEditContentProps & ModalProps> = ({ provider, mo
                   autoSave()
                 }}
               />
-            </Form.Item>
+            </Form.Item>*/}
           </div>
         )}
       </Form>

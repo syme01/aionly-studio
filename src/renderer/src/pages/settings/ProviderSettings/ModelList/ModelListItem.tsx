@@ -7,9 +7,10 @@ import type { Model } from '@renderer/types'
 import type { ModelWithStatus } from '@renderer/types/healthCheck'
 // import { HealthStatus } from '@renderer/types/healthCheck'
 // import { maskApiKey } from '@renderer/utils/api'
-import { Avatar } from 'antd'
-import React, { memo /*useCallback, useMemo*/ } from 'react'
-// import { useTranslation } from 'react-i18next'
+import { Avatar, Button, Tooltip } from 'antd'
+import { Bolt } from 'lucide-react'
+import React, { memo, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 interface ModelListItemProps {
@@ -25,13 +26,13 @@ interface ModelListItemProps {
 const ModelListItem: React.FC<ModelListItemProps> = ({
   ref,
   model,
-  showIdentifier = false
-  /*modelStatus,
+  showIdentifier = false,
   disabled,
-  onEdit,
+  onEdit
+  /*modelStatus,
   onRemove*/
 }) => {
-  // const { t } = useTranslation()
+  const { t } = useTranslation()
   // const isChecking = modelStatus?.checking === true
 
   /*const healthResults = useMemo(
@@ -56,13 +57,14 @@ const ModelListItem: React.FC<ModelListItemProps> = ({
     }
   }, [hasFailedResult])
 
-  const handleEdit = useCallback(() => {
-    onEdit(model)
-  }, [model, onEdit])
-
   const handleRemove = useCallback(() => {
     onRemove(model)
   }, [model, onRemove])*/
+
+  const handleEdit = useCallback(() => {
+    // console.log('handleEdit', model)
+    onEdit(model)
+  }, [model, onEdit])
 
   return (
     <>
@@ -82,6 +84,13 @@ const ModelListItem: React.FC<ModelListItemProps> = ({
           />
           <FreeTrialModelTag model={model} />
         </HStack>
+        {(model as any)?.modelAttribute === 'text_model' && (
+          <HStack alignItems="center" gap={6}>
+            <Tooltip title={t('models.edit')} mouseLeaveDelay={0}>
+              <Button type="text" onClick={handleEdit} disabled={disabled} icon={<Bolt size={14} />} />
+            </Tooltip>
+          </HStack>
+        )}
         {/*<HStack alignItems="center" gap={6}>
           <HealthStatusIndicator
             results={healthResults}

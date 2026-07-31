@@ -2,6 +2,7 @@ import { TopView } from '@renderer/components/TopView'
 import { useAssistants, useDefaultModel } from '@renderer/hooks/useAssistant'
 import { useProvider } from '@renderer/hooks/useProvider'
 import ModelEditContent from '@renderer/pages/settings/ProviderSettings/EditModelPopup/ModelEditContent'
+import { handleCacheUpdatedModels } from '@renderer/tools'
 import type { Model, Provider } from '@renderer/types'
 import React, { useCallback, useState } from 'react'
 
@@ -20,6 +21,7 @@ const PopupContainer: React.FC<Props> = ({ provider: _provider, model, resolve }
   const { assistants, updateAssistants } = useAssistants()
   const { defaultModel, setDefaultModel, translateModel, setTranslateModel, quickModel, setQuickModel } =
     useDefaultModel()
+  const { setUpdatedModels } = handleCacheUpdatedModels()
 
   const onOk = () => {
     setOpen(false)
@@ -37,8 +39,8 @@ const PopupContainer: React.FC<Props> = ({ provider: _provider, model, resolve }
   const onUpdateModel = useCallback(
     (updatedModel: Model) => {
       const updatedModels = models.map((m) => (m.id === updatedModel.id ? updatedModel : m))
-
       updateProvider({ models: updatedModels })
+      setUpdatedModels(updatedModel)
 
       updateAssistants(
         assistants.map((a) => {
