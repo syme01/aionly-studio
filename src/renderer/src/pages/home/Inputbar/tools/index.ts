@@ -2,13 +2,13 @@
 // Import all tool definitions to register them
 
 import './attachmentTool'
-import './mentionModelsTool' // TODO: @模型功能，暂时注释掉，后期可能需要放开
+import './mentionModelsTool'
 import './newTopicTool'
 import './quickPhrasesTool'
 import './thinkingTool'
 import './webSearchTool'
 import './urlContextTool'
-import './knowledgeBaseTool'
+// import './knowledgeBaseTool' // TODO: 知识库功能，暂时注释掉，目前平台没有向量模型，后期可能需要放开
 import './mcpToolsTool'
 import './generateImageTool'
 import './clearTopicTool'

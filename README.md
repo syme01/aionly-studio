@@ -1,6 +1,6 @@
 <h1 align="center">
-  <img src="./build/icon.png" width="120" height="120" alt="AiOnly Studio" /><br>
-  AiOnly Studio
+  <img src="./build/icon.png" width="120" height="120" alt="AiOnly " /><br>
+  AiOnly
 </h1>
 
 <p align="center">A powerful desktop AI assistant client</p>
@@ -10,7 +10,7 @@
 
 ## 🚀 About
 
-AiOnly Studio is a cross-platform desktop application that provides seamless access to multiple AI language models. Built with modern technologies, it offers a clean and intuitive interface for AI-powered conversations, content generation, and productivity enhancement.
+AiOnly  is a cross-platform desktop application that provides seamless access to multiple AI language models. Built with modern technologies, it offers a clean and intuitive interface for AI-powered conversations, content generation, and productivity enhancement.
 
 ## ✨ Features
 
@@ -26,9 +26,9 @@ AiOnly Studio is a cross-platform desktop application that provides seamless acc
 
 Download the latest release for your platform:
 
-- **Windows**: `AiOnly-Studio-Setup-x.x.x.exe`
-- **macOS**: `AiOnly-Studio-x.x.x.dmg`
-- **Linux**: `AiOnly-Studio-x.x.x.AppImage`
+- **Windows**: `AiOnly--Setup-x.x.x.exe`
+- **macOS**: `AiOnly--x.x.x.dmg`
+- **Linux**: `AiOnly--x.x.x.AppImage`
 
 ## 🛠️ Development
 
@@ -81,7 +81,7 @@ Contributions are welcome! Please feel free to submit issues and pull requests.
 
 ## 📄 License
 
-Copyright © 2024-2026 AiOnly Studio
+Copyright © 2024-2026 AiOnly
 
 This software is proprietary and confidential. Unauthorized copying, distribution, or use of this software, via any medium, is strictly prohibited.
 

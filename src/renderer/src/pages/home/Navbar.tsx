@@ -17,7 +17,7 @@ import type { FC } from 'react'
 // import styled from 'styled-components'
 import NavbarIcon from '../../components/NavbarIcon'
 import AssistantsDrawer from './components/AssistantsDrawer'
-// import UpdateAppButton from './components/UpdateAppButton'
+import UpdateAppButton from './components/UpdateAppButton'
 
 interface Props {
   activeAssistant: Assistant
@@ -108,6 +108,7 @@ const HeaderNavbar: FC<Props> = ({ activeAssistant, setActiveAssistant, activeTo
           paddingRight: '15px'
         }}
         className="home-navbar-right">
+        <UpdateAppButton />
         {/*<HStack alignItems="center" gap={6}>
           <UpdateAppButton />
           <Tooltip title={t('chat.assistant.search.placeholder')} mouseEnterDelay={0.8}>
