@@ -387,9 +387,9 @@ export default class AppUpdater {
       // ============ Custom Update API ============
       const currentVersion = app.getVersion()
       const platform = process.platform === 'win32' ? 'Windows' : process.platform === 'darwin' ? 'MacOS' : 'Linux'
-      const url = `${UPDATE_API_BASE_URL}${UPDATE_CHECK_PATH}/${platform}`
+      const url = `${UPDATE_API_BASE_URL}${UPDATE_CHECK_PATH}/${platform}?arch=${process.arch}`
 
-      logger.info(`Checking custom update from ${url}, current version: ${currentVersion}`)
+      logger.info(`Checking custom update from ${url}, current version: ${currentVersion}, arch: ${process.arch}`)
 
       const response = await net.fetch(url, {
         headers: {
