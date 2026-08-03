@@ -2168,6 +2168,7 @@
       "send_code": "获取验证码"
     },
     "send_code": "获取验证码",
+    "back_login": "返回登录",
     "back_main_login": "返回主账号登录",
     "forgot_password": {
       "sub_title": "请输入验证的信息",
@@ -2182,7 +2183,12 @@
         "new_password_required": "请输入新密码",
         "new_password_invalid": "请输入6-20位英文字母、数字或者符号（除空格），且字母、数字和标点符号至少包含两种",
         "confirm_password_label": "确认新密码",
-        "confirm_password_required": "请输入确认密码"
+        "confirm_password_required": "请输入确认密码",
+        "password_not_match": "两次密码输入不一致"
+      },
+      "stepThree": {
+        "successful": "密码修改成功",
+        "auto_back_text": "秒后自动返回登录页"
       },
       "phone": {
         "title": "手机号",
@@ -2208,11 +2214,11 @@
       "phone_email_label": "主账号手机号/邮箱",
       "phone_email_required": "请输入主账号手机号/邮箱",
       "phone_email_invalid": "手机号或邮箱格式错误",
-      "password_label": "密码",
-      "password_required": "请输入密码",
+      "password_label": "子账号密码",
+      "password_required": "请输入子账号密码",
       "password_invalid": "请输入6-20位英文字母、数字或者符号（除空格），且字母、数字和标点符号至少包含两种",
-      "username_label": "用户名",
-      "username_required": "请输入子用户名",
+      "username_label": "子账号",
+      "username_required": "请输入子账号",
       "back_main_login": "返回主账号登录",
       "bind_phone_email": {
         "title": "绑定手机号/邮箱",

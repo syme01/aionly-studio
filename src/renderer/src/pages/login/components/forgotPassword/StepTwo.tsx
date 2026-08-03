@@ -85,6 +85,14 @@ const StepTwo: React.FC<Props> = ({ changeStep, validateResult }) => {
             {
               required: true,
               message: t('login.forgot_password.stepTwo.confirm_password_required')
+            },
+            {
+              validator: (_, value) => {
+                if (value && value !== form.getFieldValue('newPassword')) {
+                  return Promise.reject(new Error(t('login.forgot_password.stepTwo.password_not_match')))
+                }
+                return Promise.resolve()
+              }
             }
           ]}>
           <StyleInput
