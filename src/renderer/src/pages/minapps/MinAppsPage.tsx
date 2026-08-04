@@ -1,35 +1,46 @@
+// import NewAppButton from './NewAppButton'
+import { getMiniProgramList } from '@renderer/api/miniProgram'
 import { Navbar, NavbarMain } from '@renderer/components/app/Navbar'
 import App from '@renderer/components/MinApp/MinApp'
 import Scrollbar from '@renderer/components/Scrollbar'
-import { useMinapps } from '@renderer/hooks/useMinapps'
+// import { useMinapps } from '@renderer/hooks/useMinapps'
 import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useNavbarPosition } from '@renderer/hooks/useSettings'
 import { Button, Input } from 'antd'
 import { Search, SettingsIcon } from 'lucide-react'
-import type { FC } from 'react'
+import { FC, useCallback, useEffect, useRef } from 'react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 import MinappSettingsPopup from './MiniappSettings/MinappSettingsPopup'
-import NewAppButton from './NewAppButton'
+// import {WEB_UI_HOST} from "@shared/config/constant";
+// import AiOnlyLogo from "@renderer/assets/images/providers/aiOnly.png";
 
 const AppsPage: FC = () => {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
-  const { minapps } = useMinapps()
+  // const { minapps } = useMinapps()
   const { isTopNavbar } = useNavbarPosition()
   const { minappShow } = useRuntime()
+  const [apiApps, setApiApps] = useState([])
 
-  const filteredApps = search
+  const queryParams = useRef({
+    // programName: '', // String | 小程序名称
+    //status: '',  // String | 启用状态
+    pageNum: 1,
+    pageSize: 100 // TODO: 先查100条，足够用了，目前也就两个
+  })
+
+  /*const filteredApps = search
     ? minapps.filter(
         (app) => app.name.toLowerCase().includes(search.toLowerCase()) || app.url.includes(search.toLowerCase())
       )
-    : minapps
+    : minapps*/
 
   // Calculate the required number of lines
   const itemsPerRow = Math.floor(930 / 115) // Maximum width divided by the width of each item (including spacing)
-  const rowCount = Math.ceil((filteredApps.length + 1) / itemsPerRow) // +1 for the add button
+  const rowCount = Math.ceil((apiApps.length + 1) / itemsPerRow) // +1 for the add button
   // Each line height is 85px (60px icon + 5px margin + 12px text + spacing)
   const containerHeight = rowCount * 85 + (rowCount - 1) * 25 // 25px is the line spacing.
 
@@ -38,12 +49,36 @@ const AppsPage: FC = () => {
     e.preventDefault()
   }
 
+  // 查询小程序列表
+  const fetchMiniProgramList = useCallback(async () => {
+    const res = await getMiniProgramList(queryParams.current)
+    const data = res.rows || []
+    const apps = data.map((item: any) => {
+      return {
+        id: item.id,
+        name: item.programName,
+        url: item.url,
+        logo: item.logoUrl,
+        bodered: true,
+        style: {
+          borderRadius: 10
+        },
+        supportedRegions: ['CN', 'Global']
+      }
+    })
+    setApiApps(apps)
+  }, [])
+
+  useEffect(() => {
+    fetchMiniProgramList().then()
+  }, [fetchMiniProgramList])
+
   return (
     <Container onContextMenu={handleContextMenu} className="page-container">
       <Navbar className={minappShow ? 'opacity-0' : ''}>
         <NavbarMain>
           {t('minapp.title')}
-          <Input
+          {/*<Input
             placeholder={t('common.search')}
             className="nodrag"
             style={{
@@ -62,7 +97,7 @@ const AppsPage: FC = () => {
             className="nodrag"
             icon={<SettingsIcon size={18} color="var(--color-text-2)" />}
             onClick={MinappSettingsPopup.show}
-          />
+          />*/}
         </NavbarMain>
       </Navbar>
       <ContentContainer id="content-container">
@@ -89,10 +124,10 @@ const AppsPage: FC = () => {
             )}
             <AppsContainerWrapper>
               <AppsContainer style={{ height: containerHeight }}>
-                {filteredApps.map((app) => (
+                {apiApps.map((app: any) => (
                   <App key={app.id} app={app} />
                 ))}
-                <NewAppButton />
+                {/*<NewAppButton />*/}
               </AppsContainer>
             </AppsContainerWrapper>
           </RightContainer>

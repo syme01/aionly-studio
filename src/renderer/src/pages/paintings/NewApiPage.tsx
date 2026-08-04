@@ -876,7 +876,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
                       disabled={disabled}
                       value={painting.model}
                       onChange={handleModelChange}
-                      style={{ width: '200px', marginBottom: 0 }}
+                      style={{ minWidth: '200px', marginBottom: 0 }}
                       virtual={true}
                       onPopupScroll={handleScroll}
                       popupRender={(menu) => <Spin spinning={loading}>{menu}</Spin>}>

@@ -12,7 +12,7 @@ import {
 } from '@ant-design/icons'
 import { loggerService } from '@logger'
 import WindowControls from '@renderer/components/WindowControls'
-import { /*isDev,*/ isLinux, isMac, isWin } from '@renderer/config/constant'
+import { isDev, isLinux, isMac, isWin } from '@renderer/config/constant'
 import { allMinApps } from '@renderer/config/minapps'
 import { useBridge } from '@renderer/hooks/useBridge'
 import { useMinappPopup } from '@renderer/hooks/useMinappPopup'
@@ -475,18 +475,13 @@ const MinappPopupContainer: React.FC = () => {
               <LinkOutlined />
             </TitleButton>
           </Tooltip>
-          {/*{isDev && (
+          {isDev && (
             <Tooltip title={t('minapp.popup.devtools')} mouseEnterDelay={0.8} placement="bottom">
               <TitleButton onClick={() => handleOpenDevTools(appInfo.id)}>
                 <CodeOutlined />
               </TitleButton>
             </Tooltip>
-          )}*/}
-          <Tooltip title={t('minapp.popup.devtools')} mouseEnterDelay={0.8} placement="bottom">
-            <TitleButton onClick={() => handleOpenDevTools(appInfo.id)}>
-              <CodeOutlined />
-            </TitleButton>
-          </Tooltip>
+          )}
           {canMinimize && (
             <Tooltip title={t('minapp.popup.minimize')} mouseEnterDelay={0.8} placement="bottom">
               <TitleButton onClick={() => handlePopupMinimize()}>
