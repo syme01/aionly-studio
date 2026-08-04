@@ -1,16 +1,17 @@
 import { Navbar, NavbarCenter } from '@renderer/components/app/Navbar'
-import { HStack } from '@renderer/components/Layout'
-import ListItem from '@renderer/components/ListItem'
+// import { HStack } from '@renderer/components/Layout'
+// import ListItem from '@renderer/components/ListItem'
 import Scrollbar from '@renderer/components/Scrollbar'
-import CustomTag from '@renderer/components/Tags/CustomTag'
+// import CustomTag from '@renderer/components/Tags/CustomTag'
 import { useAssistantPresets } from '@renderer/hooks/useAssistantPresets'
 // import { useNavbarPosition } from '@renderer/hooks/useSettings'
 import { createAssistantFromAgent } from '@renderer/services/AssistantService'
 import type { AssistantPreset } from '@renderer/types'
 import { uuid } from '@renderer/utils'
-import { Button, Empty, Flex, Input } from 'antd'
+import { cn } from '@renderer/utils/style'
+import { Button, Divider, Empty, Flex, Input } from 'antd'
 import { omit } from 'lodash'
-import { FolderInput, Plus, Search, UserCog } from 'lucide-react'
+import { ChevronDown, ChevronUp, FolderInput, Plus, Search, UserCog } from 'lucide-react'
 import type { FC } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -21,16 +22,18 @@ import { groupByCategories, useSystemAssistantPresets } from '.'
 import { groupTranslations } from './assistantPresetGroupTranslations'
 import AddAssistantPresetPopup from './components/AddAssistantPresetPopup'
 import AssistantPresetCard from './components/AssistantPresetCard'
-import { AssistantPresetGroupIcon } from './components/AssistantPresetGroupIcon'
+// import { AssistantPresetGroupIcon } from './components/AssistantPresetGroupIcon'
 import ImportAssistantPresetPopup from './components/ImportAssistantPresetPopup'
 import ManageAssistantPresetsPopup from './components/ManageAssistantPresetsPopup'
 
 const AssistantPresetsPage: FC = () => {
   const [search, setSearch] = useState('')
   const [searchInput, setSearchInput] = useState('')
-  const [activeGroup, setActiveGroup] = useState('我的')
+  // const [activeGroup, setActiveGroup] = useState('我的') // 原逻辑：默认选中「我的」
+  const [activeGroup, setActiveGroup] = useState('') // 新逻辑：默认展示全部
   const [agentGroups, setAgentGroups] = useState<Record<string, AssistantPreset[]>>({})
   const [_isSearchExpanded, setIsSearchExpanded] = useState(false)
+  const [isCategoryExpanded, setIsCategoryExpanded] = useState(true)
   const systemPresets = useSystemAssistantPresets()
   const { presets: userPresets } = useAssistantPresets()
   // const { isTopNavbar } = useNavbarPosition()
@@ -46,22 +49,43 @@ const AssistantPresetsPage: FC = () => {
   }, [systemPresets, userPresets])
 
   const filteredPresets = useMemo(() => {
+    // 原逻辑（已保留）：
     // 搜索框为空直接返回「我的」分组下的 agent
-    if (!search.trim()) {
-      return agentGroups[activeGroup] || []
-    }
-    const uniquePresets = new Map<string, AssistantPreset>()
+    // if (!search.trim()) {
+    //   return agentGroups[activeGroup] || []
+    // }
+    // const uniquePresets = new Map<string, AssistantPreset>()
+    // Object.entries(agentGroups).forEach(([, agents]) => {
+    //   agents.forEach((agent) => {
+    //     if (
+    //       agent.name.toLowerCase().includes(search.toLowerCase()) ||
+    //       agent.description?.toLowerCase().includes(search.toLowerCase())
+    //     ) {
+    //       uniquePresets.set(agent.id, agent)
+    //     }
+    //   })
+    // })
+    // return Array.from(uniquePresets.values())
+
+    // 新逻辑：默认展示全部，支持分组筛选
+    const allPresets = new Map<string, AssistantPreset>()
     Object.entries(agentGroups).forEach(([, agents]) => {
-      agents.forEach((agent) => {
-        if (
-          agent.name.toLowerCase().includes(search.toLowerCase()) ||
-          agent.description?.toLowerCase().includes(search.toLowerCase())
-        ) {
-          uniquePresets.set(agent.id, agent)
-        }
-      })
+      agents.forEach((agent) => allPresets.set(agent.id, agent))
     })
-    return Array.from(uniquePresets.values())
+
+    // activeGroup 为空时展示全部，否则展示对应分组
+    const pool = activeGroup ? agentGroups[activeGroup] || [] : Array.from(allPresets.values())
+
+    // 搜索过滤
+    if (!search.trim()) {
+      return pool
+    }
+
+    return pool.filter(
+      (agent) =>
+        agent.name.toLowerCase().includes(search.toLowerCase()) ||
+        agent.description?.toLowerCase().includes(search.toLowerCase())
+    )
   }, [agentGroups, activeGroup, search])
 
   const { t, i18n } = useTranslation()
@@ -112,10 +136,29 @@ const AssistantPresetsPage: FC = () => {
     [i18n.language]
   )
 
+  const agentGroupOptions = useMemo(() => {
+    // 原逻辑：只显示分组
+    // return Object.keys(agentGroups).map((group) => ({
+    //   label: getLocalizedGroupName(group),
+    //   value: group
+    // }))
+
+    // 新逻辑：添加"全部"选项
+    const options = [{ label: t('models.all'), value: '' }]
+    Object.keys(agentGroups).forEach((group) => {
+      options.push({
+        label: getLocalizedGroupName(group),
+        value: group
+      })
+    })
+    return options
+  }, [agentGroups, getLocalizedGroupName, t])
+
   const handleSearch = () => {
     if (searchInput.trim() === '') {
       setSearch('')
-      setActiveGroup('我的')
+      // setActiveGroup('我的') // 原逻辑：恢复到「我的」分组
+      setActiveGroup('') // 新逻辑：恢复到全部
     } else {
       setActiveGroup('')
       setSearch(searchInput)
@@ -125,7 +168,8 @@ const AssistantPresetsPage: FC = () => {
   const handleSearchClear = () => {
     setSearch('')
     setSearchInput('')
-    setActiveGroup('我的')
+    // setActiveGroup('我的') // 原逻辑：恢复到「我的」分组
+    setActiveGroup('') // 新逻辑：恢复到全部
     setIsSearchExpanded(false)
   }
 
@@ -144,7 +188,8 @@ const AssistantPresetsPage: FC = () => {
     if (value.trim() === '') {
       setIsSearchExpanded(false)
       setSearch('')
-      setActiveGroup('我的')
+      // setActiveGroup('我的') // 原逻辑：恢复到「我的」分组
+      setActiveGroup('') // 新逻辑：恢复到全部
     }
   }
 
@@ -179,6 +224,10 @@ const AssistantPresetsPage: FC = () => {
     ManageAssistantPresetsPopup.show()
   }
 
+  const toggleCategoryExpand = () => {
+    setIsCategoryExpanded(!isCategoryExpanded)
+  }
+
   return (
     <Container className="page-container">
       <Navbar>
@@ -204,7 +253,7 @@ const AssistantPresetsPage: FC = () => {
       </Navbar>
 
       <Main id="content-container">
-        <AgentsGroupList>
+        {/*<AgentsGroupList>
           {Object.entries(agentGroups).map(([group]) => (
             <ListItem
               active={activeGroup === group && !search.trim()}
@@ -227,7 +276,33 @@ const AssistantPresetsPage: FC = () => {
               style={{ margin: '0 8px', paddingLeft: 16, paddingRight: 16 }}
               onClick={handleGroupClick(group)}></ListItem>
           ))}
-        </AgentsGroupList>
+        </AgentsGroupList>*/}
+
+        <AgentCategoryWrap className={cn({ collapsed: !isCategoryExpanded })}>
+          <div className="category-list">
+            {agentGroupOptions.map((category) => (
+              <div
+                className={cn('group-item', { active: activeGroup === category.value && !search.trim() })}
+                key={category.value}
+                onClick={handleGroupClick(category.value)}>
+                {category.label}
+              </div>
+            ))}
+          </div>
+          <div className="toggle-btn" onClick={toggleCategoryExpand}>
+            {isCategoryExpanded ? (
+              <>
+                {t('notes.collapse')}
+                <ChevronUp size={12} />
+              </>
+            ) : (
+              <>
+                {t('notes.expand')}
+                <ChevronDown size={12} />
+              </>
+            )}
+          </div>
+        </AgentCategoryWrap>
 
         <AgentsListContainer>
           <AgentsListHeader>
@@ -290,21 +365,25 @@ const AssistantPresetsPage: FC = () => {
               </Button>
             </Flex>
 
-            <Input
-              placeholder={t('common.search')}
-              className="nodrag"
-              style={{ width: '30%', height: 28, borderRadius: 6, paddingLeft: 12 }}
-              size="small"
-              allowClear
-              onClear={handleSearchClear}
-              suffix={<Search size={14} color="var(--color-icon)" onClick={handleSearch} />}
-              value={searchInput}
-              maxLength={50}
-              onChange={handleSearchInputChange}
-              onPressEnter={handleSearch}
-              onBlur={handleSearchInputBlur}
-            />
+            <Flex align="center" gap={16}>
+              <Input
+                placeholder={t('common.search')}
+                className="nodrag"
+                style={{ height: 28, borderRadius: 6, paddingLeft: 12 }}
+                size="small"
+                allowClear
+                onClear={handleSearchClear}
+                suffix={<Search size={14} color="var(--color-icon)" onClick={handleSearch} />}
+                value={searchInput}
+                maxLength={50}
+                onChange={handleSearchInputChange}
+                onPressEnter={handleSearch}
+                onBlur={handleSearchInputBlur}
+              />
+            </Flex>
           </AgentsListHeader>
+
+          <Divider style={{ margin: '0' }} />
 
           {filteredPresets.length > 0 ? (
             <AgentsList>
@@ -312,6 +391,7 @@ const AssistantPresetsPage: FC = () => {
                 <AssistantPresetCard
                   key={agent.id || index}
                   onClick={() => onAddPresetConfirm(getPresetFromSystemPreset(agent))}
+                  onAddAssistant={() => createAssistantFromAgent(getPresetFromSystemPreset(agent))}
                   preset={agent}
                   activegroup={activeGroup}
                   getLocalizedGroupName={getLocalizedGroupName}
@@ -336,7 +416,7 @@ const Container = styled.div`
   height: 100%;
 `
 
-const AgentsGroupList = styled(Scrollbar)`
+/*const AgentsGroupList = styled(Scrollbar)`
   min-width: 160px;
   height: calc(100vh - var(--navbar-height) - 10px);
   display: flex;
@@ -351,11 +431,11 @@ const AgentsGroupList = styled(Scrollbar)`
   &::-webkit-scrollbar {
     display: none;
   }
-`
+`*/
 
 const Main = styled.div`
-  flex: 1;
-  display: flex;
+  //flex: 1;
+  //display: flex;
   background-color: var(--color-background);
 `
 
@@ -413,6 +493,64 @@ const EmptyView = styled.div`
   align-items: center;
   font-size: 16px;
   color: var(--color-text-secondary);
+`
+
+const AgentCategoryWrap = styled.div`
+  display: flex;
+  padding: 10px;
+  position: relative;
+  &::after{
+    display: block;
+    content: "";
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-background-mute);
+    margin-top: 10px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+  .category-list{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 10px;
+    overflow: hidden;
+    max-height: 100px;
+    transition: max-height 0.3s ease;
+  }
+  &.collapsed .category-list{
+    max-height: 30px;
+  }
+  .group-item{
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+    &.active{
+      background-color: var(--color-list-item);
+      color: var(--color-primary);
+    }
+  }
+  .toggle-btn{
+    height: 22px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--color-text-3);
+    cursor: pointer;
+    user-select: none;
+    flex-shrink: 0;
+    &:hover{
+      color: var(--color-primary);
+      background-color: var(--color-background-soft);
+    }
+  }
 `
 
 export default AssistantPresetsPage

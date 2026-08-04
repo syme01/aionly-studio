@@ -8,7 +8,7 @@ import { EVENT_NAMES, EventEmitter } from '@renderer/services/EventService'
 import type { Assistant, AssistantPreset } from '@renderer/types'
 import { uuid } from '@renderer/utils'
 import type { InputRef } from 'antd'
-import { Divider, Input, Modal, Tag } from 'antd'
+import { Input, Modal, Tag } from 'antd'
 import { take } from 'lodash'
 import { Search } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -161,9 +161,10 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
       onCancel={onCancel}
       afterClose={onClose}
       transitionName="animation-move-down"
+      title={t('chat.add.assistant.title')}
       styles={{
         content: {
-          borderRadius: 20,
+          borderRadius: 10,
           padding: 0,
           overflow: 'hidden',
           paddingBottom: 20
@@ -176,9 +177,9 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
       footer={null}>
       <HStack style={{ padding: '0 12px', marginTop: 5 }}>
         <Input
-          prefix={
+          suffix={
             <SearchIcon>
-              <Search size={14} />
+              <Search size={14} style={{ color: 'var(--color-text-3)' }} />
             </SearchIcon>
           }
           ref={inputRef}
@@ -187,12 +188,9 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
           onChange={(e) => setSearchText(e.target.value)}
           allowClear
           autoFocus
-          style={{ paddingLeft: 0 }}
-          variant="borderless"
           size="middle"
         />
       </HStack>
-      <Divider style={{ margin: 0, marginTop: 4, borderBlockStartWidth: 0.5 }} />
       <Container ref={containerRef}>
         {take(presets, 100).map((preset, index) => (
           <AgentItem
@@ -200,13 +198,25 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
             onClick={() => onCreateAssistant(preset)}
             className={`agent-item ${preset.id === 'default' ? 'default' : ''} ${index === selectedIndex ? 'keyboard-selected' : ''}`}
             onMouseEnter={() => setSelectedIndex(index)}>
-            <HStack alignItems="center" gap={5} style={{ overflow: 'hidden', maxWidth: '100%' }}>
+            <div>
               <EmojiIcon emoji={preset.emoji || ''} />
-              <span className="text-nowrap">{preset.name}</span>
-            </HStack>
-            {preset.id === 'default' && <Tag color="green">{t('assistants.presets.tag.system')}</Tag>}
-            {preset.type === 'agent' && <Tag color="orange">{t('assistants.presets.tag.agent')}</Tag>}
-            {preset.id === 'new' && <Tag color="green">{t('assistants.presets.tag.new')}</Tag>}
+            </div>
+            <div className="name">{preset.name}</div>
+            {preset.id === 'default' && (
+              <Tag color="#f50" className="tag">
+                {t('assistants.presets.tag.system')}
+              </Tag>
+            )}
+            {preset.type === 'agent' && (
+              <Tag color="#d46b08" className="tag">
+                {t('assistants.presets.tag.agent')}
+              </Tag>
+            )}
+            {preset.id === 'new' && (
+              <Tag className="tag" color="#389e0d">
+                {t('assistants.presets.tag.new')}
+              </Tag>
+            )}
           </AgentItem>
         ))}
       </Container>
@@ -215,47 +225,61 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
 }
 
 const Container = styled(Scrollbar)`
-  padding: 0 12px;
+  padding: 10px 12px;
   height: 50vh;
   margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
 `
 
 const AgentItem = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 15px;
+  width: 110px;
+  padding: 10px;
   border-radius: 8px;
   user-select: none;
-  margin-bottom: 8px;
+  border: 1px solid var(--color-list-item);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   cursor: pointer;
   overflow: hidden;
   &.default {
-    background-color: var(--color-background-mute);
+    //background-color: var(--color-background-mute);
+    background-color: var(--color-list-item);
+    border-color: var(--color-primary);
   }
   &.keyboard-selected {
-    background-color: var(--color-background-mute);
+    //background-color: var(--color-background-mute);
+    background-color: var(--color-list-item);
+    border-color: var(--color-primary);
   }
   .anticon {
     font-size: 16px;
     color: var(--color-icon);
   }
   &:hover {
-    background-color: var(--color-background-mute);
+    background-color: var(--color-list-item);
+    border-color: var(--color-primary);
+  }
+
+  .tag{
+    position: absolute;
+    top: 0px;
+    right: -10px;
+  }
+
+  .name{
+    margin-top: 10px;
+    text-align: center;
   }
 `
 
 const SearchIcon = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--color-background-mute);
-  margin-right: 2px;
+  color: var(--color-text-3);
 `
 
 export default class AddAssistantPopup {

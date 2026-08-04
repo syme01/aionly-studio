@@ -4,7 +4,7 @@ import { useAssistantPresets } from '@renderer/hooks/useAssistantPresets'
 import AssistantSettingsPopup from '@renderer/pages/settings/AssistantSettings'
 import { createAssistantFromAgent } from '@renderer/services/AssistantService'
 import type { AssistantPreset } from '@renderer/types'
-import { getLeadingEmoji } from '@renderer/utils'
+// import { getLeadingEmoji } from '@renderer/utils'
 import { Button, Dropdown } from 'antd'
 import { t } from 'i18next'
 import { isArray } from 'lodash'
@@ -18,10 +18,11 @@ interface Props {
   preset: AssistantPreset
   activegroup?: string
   onClick: () => void
+  onAddAssistant?: () => void
   getLocalizedGroupName: (group: string) => string
 }
 
-const AssistantPresetCard: FC<Props> = ({ preset, onClick, activegroup, getLocalizedGroupName }) => {
+const AssistantPresetCard: FC<Props> = ({ preset, onClick, onAddAssistant, activegroup, getLocalizedGroupName }) => {
   const { removeAssistantPreset } = useAssistantPresets()
   const [isVisible, setIsVisible] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
@@ -126,34 +127,28 @@ const AssistantPresetCard: FC<Props> = ({ preset, onClick, activegroup, getLocal
     }
   }, [])
 
-  const emoji = preset.emoji || getLeadingEmoji(preset.name)
+  const handleAddAssistant = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+    onAddAssistant?.()
+  }
+
+  // const emoji = preset.emoji || getLeadingEmoji(preset.name)
   const prompt = (preset.description || preset.prompt).substring(0, 200).replace(/\\n/g, '')
 
   const content = (
     <AgentCardContainer onClick={onClick} ref={cardRef}>
       {isVisible && (
         <AgentCardBody>
-          <AgentCardBackground>{emoji}</AgentCardBackground>
+          {/*<AgentCardBackground>{emoji}</AgentCardBackground>*/}
           <AgentCardHeader>
             <AgentCardHeaderInfo>
+              {/*{emoji && <HeaderInfoEmoji>{emoji}</HeaderInfoEmoji>}*/}
               <AgentCardHeaderInfoTitle>{preset.name}</AgentCardHeaderInfoTitle>
-              <AgentCardHeaderInfoTags>
-                {activegroup === '我的' && (
-                  <CustomTag color="#A0A0A0" size={11}>
-                    {getLocalizedGroupName('我的')}
-                  </CustomTag>
-                )}
-                {isArray(preset.group) &&
-                  preset.group.map((group) => (
-                    <CustomTag key={group} color="#A0A0A0" size={11}>
-                      {getLocalizedGroupName(group)}
-                    </CustomTag>
-                  ))}
-              </AgentCardHeaderInfoTags>
             </AgentCardHeaderInfo>
             {activegroup === '我的' ? (
               <AgentCardHeaderInfoAction>
-                {emoji && <HeaderInfoEmoji>{emoji}</HeaderInfoEmoji>}
+                {/*{emoji && <HeaderInfoEmoji>{emoji}</HeaderInfoEmoji>}*/}
                 <Dropdown
                   menu={{
                     items: menuItems
@@ -173,9 +168,24 @@ const AssistantPresetCard: FC<Props> = ({ preset, onClick, activegroup, getLocal
                 </Dropdown>
               </AgentCardHeaderInfoAction>
             ) : (
-              emoji && <HeaderInfoEmoji>{emoji}</HeaderInfoEmoji>
+              /*emoji && <HeaderInfoEmoji>{emoji}</HeaderInfoEmoji>*/
+              ''
             )}
+            <AddButton onClick={handleAddAssistant}>{t('assistants.presets.add.button')}</AddButton>
           </AgentCardHeader>
+          <AgentCardHeaderInfoTags>
+            {activegroup === '我的' && (
+              <CustomTag color="#f00" size={11}>
+                {getLocalizedGroupName('我的')}
+              </CustomTag>
+            )}
+            {isArray(preset.group) &&
+              preset.group.map((group) => (
+                <CustomTag key={group} color="#6F738B" style={{ borderRadius: 4 }} size={11}>
+                  {getLocalizedGroupName(group)}
+                </CustomTag>
+              ))}
+          </AgentCardHeaderInfoTags>
           <CardInfo>
             <AgentPrompt>{prompt}</AgentPrompt>
           </CardInfo>
@@ -211,13 +221,12 @@ const AgentCardHeaderInfoAction = styled.div`
 const HeaderInfoEmoji = styled.div`
   width: 45px;
   height: 45px;
-  border-radius: var(--list-item-border-radius);
+  border-radius: 50%;
   font-size: 26px;
   line-height: 1;
   flex-shrink: 0;
   opacity: 1;
   transition: opacity 0.2s ease;
-  background-color: var(--color-background-soft);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -230,11 +239,12 @@ const MenuButton = styled(Button)`
 `
 
 const AgentCardContainer = styled.div`
-  border-radius: var(--list-item-border-radius);
+  border-radius: var(--base-border-radius);
   cursor: pointer;
-  border: 0.5px solid var(--color-border);
+  //border: 0.5px solid var(--color-border);
   padding: 16px;
   overflow: hidden;
+  background: var(--color-gray-5);
   transition:
     box-shadow 0.2s ease,
     background-color 0.2s ease,
@@ -278,34 +288,35 @@ const AgentCardBody = styled.div`
   animation: fadeIn 0.2s ease;
 `
 
-const AgentCardBackground = styled.div`
+/*const AgentCardBackground = styled.div`
+  width: 100%;
   height: 100%;
   position: absolute;
   top: 0;
-  right: -50px;
-  font-size: 200px;
+  right: 0;
+  font-size: 240px;
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
   opacity: 0.1;
-  filter: blur(20px);
+  filter: blur(30px);
   border-radius: 99px;
   overflow: hidden;
-`
+`*/
 
 const AgentCardHeader = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 8px;
   justify-content: flex-start;
-  overflow: hidden;
+  //overflow: hidden;
 `
 
 const AgentCardHeaderInfo = styled.div`
   flex: 1;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 7px;
 `
 
@@ -325,15 +336,17 @@ const AgentCardHeaderInfoTags = styled.div`
   flex-direction: row;
   gap: 5px;
   flex-wrap: wrap;
+  //justify-content: flex-end;
+  padding-top: 10px;
 `
 
 const CardInfo = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-top: 16px;
-  background-color: var(--color-background-soft);
-  padding: 8px;
+  //margin-top: 16px;
+  //background-color: var(--color-background-soft);
+  padding: 8px 0;
   border-radius: 10px;
 `
 
@@ -345,6 +358,18 @@ const AgentPrompt = styled.div`
   -webkit-box-orient: vertical;
   overflow: hidden;
   color: var(--color-text-2);
+`
+
+const AddButton = styled(Button)`
+  font-size: 12px;
+  background-color: var(--color-black);
+  color: var(--color-white);
+  &:hover {
+    background-color: var(--color-black) !important;
+    color: var(--color-white) !important;
+    opacity: 0.8;
+    border-color: var(--color-black) !important;
+  }
 `
 
 export default memo(AssistantPresetCard)
