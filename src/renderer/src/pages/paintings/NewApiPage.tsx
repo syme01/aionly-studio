@@ -1,4 +1,5 @@
 // import { PlusOutlined } from '@ant-design/icons'
+import { WarningFilled } from '@ant-design/icons'
 import { loggerService } from '@logger'
 import { AiProvider } from '@renderer/aiCore'
 // import IcImageUp from '@renderer/assets/images/paintings/ic_ImageUp.svg'
@@ -11,7 +12,7 @@ import { LanguagesEnum } from '@renderer/config/translate'
 // import { useTheme } from '@renderer/context/ThemeProvider'
 import { useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels'
 import { usePaintings } from '@renderer/hooks/usePaintings'
-import { ModelAttribute, useAllProviders } from '@renderer/hooks/useProvider'
+import { ModelAttribute, useAllProviders, useProvider } from '@renderer/hooks/useProvider'
 import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useSettings } from '@renderer/hooks/useSettings'
 import {
@@ -22,6 +23,7 @@ import {
 } from '@renderer/i18n/label'
 import PaintingsList from '@renderer/pages/paintings/components/PaintingsList'
 import { DEFAULT_PAINTING, MODELS, SUPPORTED_MODELS } from '@renderer/pages/paintings/config/NewApiConfig'
+import AiOnlyAddModelPopup from '@renderer/pages/settings/ProviderSettings/AiOnlyModel/add/AddModelPopup'
 import FileManager from '@renderer/services/FileManager'
 import { translateText } from '@renderer/services/TranslateService'
 import { useAppDispatch } from '@renderer/store'
@@ -41,7 +43,7 @@ import type { FC } from 'react'
 import React from 'react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation /*useNavigate*/ } from 'react-router-dom'
 import styled from 'styled-components'
 
 import SendMessageButton from '../home/Inputbar/SendMessageButton'
@@ -79,10 +81,11 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
   const routeName = location.pathname.split('/').pop() || 'aionly'
   // const newApiProviders = providers.filter((p) => isNewApiProvider(p))
   const newApiProviders = providers.filter((p) => isNewApiProvider(p) && p.id === 'aionly')
+  const { provider } = useProvider('aionly')
 
   const dispatch = useAppDispatch()
   const { generating } = useRuntime()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const { autoTranslateWithSpace } = useSettings()
   const spaceClickTimer = useRef<NodeJS.Timeout>(null)
   const newApiProvider = newApiProviders.find((p) => p.id === routeName) || newApiProviders[0]
@@ -161,7 +164,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
   // const modelOptions = MODELS.map((m) => ({ label: m.name, value: m.name }))
 
   /** 从接口查询图片模型 **/
-  const { loading, getFilteredModels, handleScroll } = useAiOnlyModels({
+  const { loading, getFilteredModels, handleScroll, fetchModels } = useAiOnlyModels({
     type: '3',
     modelAttribute: ModelAttribute.ImageModel,
     pageSize: 10,
@@ -576,8 +579,16 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
   }
 
   // 当 modelOptions 为空时，引导用户跳转到 Provider 设置页面，新增 image-generation 端点模型
-  const handleShowAddModelPopup = () => {
+  /* const handleShowAddModelPopup = () => {
     navigate(`/settings/provider?id=${newApiProvider.id}`)
+  }*/
+
+  // 开通模型
+  const handleOpenModel = async () => {
+    const result = await AiOnlyAddModelPopup.show({ provider, modelType: 'image_generation' })
+    if (result.success) {
+      await fetchModels(1)
+    }
   }
 
   useEffect(() => {
@@ -707,7 +718,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
             {modelOptions.length === 0 && (
               <div className="empty-wrapper">
                 {/* 当没有可用的 Image Generation 模型时，提示用户先去新增 */}
-                <Empty
+                {/*<Empty
                   style={{ marginTop: 24 }}
                   description={t('paintings.no_image_generation_model', {
                     endpoint_type: t('endpoint_type.image-generation')
@@ -715,7 +726,19 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
                   <Button type="primary" onClick={handleShowAddModelPopup}>
                     {t('paintings.go_to_settings')}
                   </Button>
-                </Empty>
+                </Empty>*/}
+                {loading && <Spin spinning={true} />}
+                {!loading && (
+                  <Empty style={{ marginTop: 24 }} image={Empty.PRESENTED_IMAGE_SIMPLE}>
+                    <TipText className="tips">
+                      <WarningFilled />
+                      {t('chat.topics.no_model')}
+                    </TipText>
+                    <Button type="primary" onClick={handleOpenModel}>
+                      {t('chat.topics.open_model_text')}
+                    </Button>
+                  </Empty>
+                )}
               </div>
             )}
 
@@ -848,29 +871,31 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
               <Toolbar>
                 <ToolLeftMenu>
                   {/* Model Selector */}
-                  <Select
-                    disabled={disabled}
-                    value={painting.model}
-                    onChange={handleModelChange}
-                    style={{ width: '100%', marginBottom: 0 }}
-                    virtual={true}
-                    onPopupScroll={handleScroll}
-                    popupRender={(menu) => <Spin spinning={loading}>{menu}</Spin>}>
-                    {Object.entries(groupedModelOptions).map(([groupName, options]) => (
-                      <Select.OptGroup label={groupName} key={groupName}>
-                        {options.map((m) => (
-                          <Select.Option value={m.value} key={m.value}>
-                            <Flex align="center" gap={5}>
-                              <ModelAvatar model={m} size={18} />
-                              <span className="text-overflow" title={m.label}>
-                                {m.label}
-                              </span>
-                            </Flex>
-                          </Select.Option>
-                        ))}
-                      </Select.OptGroup>
-                    ))}
-                  </Select>
+                  {modelOptions && modelOptions.length > 0 && (
+                    <Select
+                      disabled={disabled}
+                      value={painting.model}
+                      onChange={handleModelChange}
+                      style={{ width: '200px', marginBottom: 0 }}
+                      virtual={true}
+                      onPopupScroll={handleScroll}
+                      popupRender={(menu) => <Spin spinning={loading}>{menu}</Spin>}>
+                      {Object.entries(groupedModelOptions).map(([groupName, options]) => (
+                        <Select.OptGroup label={groupName} key={groupName}>
+                          {options.map((m) => (
+                            <Select.Option value={m.value} key={m.value}>
+                              <Flex align="center" gap={5}>
+                                <ModelAvatar model={m} size={18} />
+                                <span className="text-overflow" title={m.label}>
+                                  {m.label}
+                                </span>
+                              </Flex>
+                            </Select.Option>
+                          ))}
+                        </Select.OptGroup>
+                      ))}
+                    </Select>
+                  )}
                 </ToolLeftMenu>
                 <ToolbarMenu>
                   {mode === 'openai_image_edit' && (
@@ -1068,5 +1093,11 @@ const ImagePlaceholder = styled.div`
   width: 20px;
   height: 20px;
 `*/
+
+const TipText = styled.div`
+  color: var(--color-red-600);
+  font-size: 14px;
+  margin-bottom: 10px;
+`
 
 export default NewApiPage

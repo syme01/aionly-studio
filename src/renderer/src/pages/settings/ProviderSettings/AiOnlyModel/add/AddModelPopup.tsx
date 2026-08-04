@@ -15,16 +15,17 @@ import styled from 'styled-components'
 
 interface ShowParams {
   provider: Provider
+  modelType?: 'text_model' | 'image_generation'
 }
 
 interface Props extends ShowParams {
   resolve: (data: any) => void
 }
 
-const PopupContainer: React.FC<Props> = ({ resolve }) => {
+const PopupContainer: React.FC<Props> = ({ resolve, modelType }) => {
   const { t } = useTranslation()
   const [open, setOpen] = useState(true)
-  const [curTabValue, setCurTabValue] = useState<string>('text_model')
+  const [curTabValue, setCurTabValue] = useState<string>(modelType || 'text_model')
   const [modelList, setModelList] = useState<any[]>([])
   const [selectedModelIds, setSelectedModelIds] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
@@ -193,7 +194,10 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
           style={{ width: '50%' }}
         />
       </div>
-      <div className="desc">{t('settings.models.add.activate_desc')}</div>
+      <div className="desc">
+        {t('settings.models.add.activate_desc')}
+        <span className="color-red">{t('settings.models.add.tips')}</span>
+      </div>
       <div className="model-wrapper">
         <div className="list">
           {loading ? (

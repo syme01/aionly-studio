@@ -1,4 +1,4 @@
-import { PlusOutlined, SendOutlined, SwapOutlined } from '@ant-design/icons'
+import { PlusOutlined, SendOutlined, SwapOutlined, WarningFilled } from '@ant-design/icons'
 import { loggerService } from '@logger'
 import { Navbar, NavbarCenter } from '@renderer/components/app/Navbar'
 import { CopyIcon } from '@renderer/components/Icons'
@@ -8,18 +8,22 @@ import { isEmbeddingModel, isRerankModel, isTextToImageModel } from '@renderer/c
 import { LanguagesEnum, UNKNOWN } from '@renderer/config/translate'
 import { useCodeStyle } from '@renderer/context/CodeStyleProvider'
 import db from '@renderer/databases'
+import { useFetchAndSetupModels } from '@renderer/hooks/useAiOnlyModels'
 import { useDefaultModel } from '@renderer/hooks/useAssistant'
 import { useDrag } from '@renderer/hooks/useDrag'
 import { useFiles } from '@renderer/hooks/useFiles'
 import { useOcr } from '@renderer/hooks/useOcr'
+import { useProvider } from '@renderer/hooks/useProvider'
 import { useTemporaryValue } from '@renderer/hooks/useTemporaryValue'
 import { useTimer } from '@renderer/hooks/useTimer'
 import useTranslate from '@renderer/hooks/useTranslate'
+import AiOnlyAddModelPopup from '@renderer/pages/settings/ProviderSettings/AiOnlyModel/add/AddModelPopup'
 import { estimateTextTokens } from '@renderer/services/TokenService'
 import { saveTranslateHistory, translateText } from '@renderer/services/TranslateService'
 import { useAppDispatch, useAppSelector } from '@renderer/store'
 import { setTranslateAbortKey, setTranslating as setTranslatingAction } from '@renderer/store/runtime'
 import { setTranslatedContent as setTranslatedContentAction, setTranslateInput } from '@renderer/store/translate'
+import { selectAiOnlyModels } from '@renderer/store/user'
 import type { FileMetadata, SupportedOcrFile } from '@renderer/types'
 import {
   type AutoDetectionMethod,
@@ -45,9 +49,10 @@ import type { TextAreaRef } from 'antd/es/input/TextArea'
 import TextArea from 'antd/es/input/TextArea'
 import { isEmpty, throttle } from 'lodash'
 import { Check, CirclePause, FolderClock, Settings2, UploadIcon } from 'lucide-react'
-import type { FC } from 'react'
+import React, { FC } from 'react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import TranslateHistoryList from './TranslateHistory'
@@ -101,10 +106,24 @@ const TranslatePage: FC = () => {
   const outputTextRef = useRef<HTMLDivElement>(null)
   const isProgrammaticScroll = useRef(false)
 
+  const { provider } = useProvider('aionly')
+
   const dispatch = useAppDispatch()
 
   _sourceLanguage = sourceLanguage
   _targetLanguage = targetLanguage
+
+  // 获取用户预存的 aiOnly 模型列表（前10条）
+  const aiOnlyModels = useSelector(selectAiOnlyModels)
+  const setupModels = useFetchAndSetupModels()
+
+  // 开通模型
+  const handleOpenModel = async () => {
+    const result = await AiOnlyAddModelPopup.show({ provider })
+    if (result.success) {
+      await setupModels(10)
+    }
+  }
 
   // 控制翻译模型切换
   const handleModelChange = (model: Model) => {
@@ -765,13 +784,27 @@ const TranslatePage: FC = () => {
             />
           </InnerOperationBar>
           <InnerOperationBar style={{ justifyContent: 'flex-end' }}>
-            <ModelSelectButton
-              model={translateModel}
-              onSelectModel={handleModelChange}
-              modelFilter={modelPredicate}
-              noTooltip={true}
-            />
-            <Button type="text" icon={<Settings2 size={18} />} onClick={() => setSettingsVisible(true)} />
+            {aiOnlyModels && aiOnlyModels.length > 0 ? (
+              <>
+                <ModelSelectButton
+                  model={translateModel}
+                  onSelectModel={handleModelChange}
+                  modelFilter={modelPredicate}
+                  noTooltip={true}
+                />
+                <Button type="text" icon={<Settings2 size={18} />} onClick={() => setSettingsVisible(true)} />
+              </>
+            ) : (
+              <Flex align="center" gap={5}>
+                <TipText className="tips">
+                  <WarningFilled />
+                  {t('chat.topics.no_model')}
+                </TipText>
+                <Button type="primary" onClick={handleOpenModel}>
+                  {t('chat.topics.open_model_text')}
+                </Button>
+              </Flex>
+            )}
           </InnerOperationBar>
         </OperationBar>
         <AreaContainer>
@@ -1060,6 +1093,11 @@ const InnerOperationBar = styled.div`
   align-items: center;
   gap: 8px;
   overflow: hidden;
+`
+
+const TipText = styled.div`
+  color: var(--color-red-600);
+  font-size: 14px;
 `
 
 export default TranslatePage

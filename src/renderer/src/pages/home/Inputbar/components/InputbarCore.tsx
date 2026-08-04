@@ -12,6 +12,7 @@ import PasteService from '@renderer/services/PasteService'
 import { translateText } from '@renderer/services/TranslateService'
 import { useAppDispatch } from '@renderer/store'
 import { setSearching } from '@renderer/store/runtime'
+import { selectAiOnlyModels } from '@renderer/store/user'
 import type { FileMetadata } from '@renderer/types'
 import { classNames } from '@renderer/utils'
 import { formatQuotedText } from '@renderer/utils/formats'
@@ -24,6 +25,7 @@ import { CirclePause, Languages } from 'lucide-react'
 import type { CSSProperties, FC } from 'react'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import NarrowLayout from '../../Messages/NarrowLayout'
@@ -144,6 +146,9 @@ export const InputbarCore: FC<InputbarCoreProps> = ({
   const { t } = useTranslation()
   const [isTranslating, setIsTranslating] = useState(false)
   const { getLanguageByLangcode } = useTranslate()
+
+  // 获取用户预存的 aiOnly 模型列表（前10条）
+  const aiOnlyModels = useSelector(selectAiOnlyModels)
 
   const dispatch = useAppDispatch()
   const [spaceClickCount, setSpaceClickCount] = useState(0)
@@ -634,6 +639,10 @@ export const InputbarCore: FC<InputbarCoreProps> = ({
 
   const quickPanelElement = config.enableQuickPanel ? <QuickPanelView setInputText={setText} /> : null
 
+  const noModels = useMemo(() => {
+    return aiOnlyModels && aiOnlyModels.length === 0
+  }, [aiOnlyModels])
+
   return (
     <NarrowLayout style={{ width: '100%' }}>
       <Container
@@ -675,7 +684,7 @@ export const InputbarCore: FC<InputbarCoreProps> = ({
               height: height,
               minHeight: '30px'
             }}
-            disabled={isTranslating || searching}
+            disabled={isTranslating || searching || noModels}
             onClick={() => {
               searching && dispatch(setSearching(false))
               quickPanel.close()
@@ -690,7 +699,7 @@ export const InputbarCore: FC<InputbarCoreProps> = ({
             </RightSection>
           </BottomBar>
         </InputBarContainer>
-        <ToolBar>
+        <ToolBar className={noModels ? 'disabled' : ''}>
           <LeftSection>{leftToolbar}</LeftSection>
         </ToolBar>
       </Container>
@@ -815,4 +824,10 @@ const ToolBar = styled.div`
   align-items: center;
   width: fit-content;
   margin: 10px auto 0;
+  cursor: not-allowed;
+  &.disabled{
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
 `

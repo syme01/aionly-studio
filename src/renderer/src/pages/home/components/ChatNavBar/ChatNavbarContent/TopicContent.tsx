@@ -1,12 +1,20 @@
 // import EmojiIcon from '@renderer/components/EmojiIcon'
+import { WarningFilled } from '@ant-design/icons'
 import HorizontalScrollContainer from '@renderer/components/HorizontalScrollContainer'
+import { useFetchAndSetupModels } from '@renderer/hooks/useAiOnlyModels'
+import { useProvider } from '@renderer/hooks/useProvider'
+import AiOnlyAddModelPopup from '@renderer/pages/settings/ProviderSettings/AiOnlyModel/add/AddModelPopup'
+import { selectAiOnlyModels } from '@renderer/store/user'
 // import AssistantSettingsPopup from '@renderer/pages/settings/AssistantSettings'
 import type { Assistant } from '@renderer/types'
-
+import { Button } from 'antd'
 // import { getLeadingEmoji } from '@renderer/utils'
 // import { ChevronRight } from 'lucide-react'
 // import { useMemo } from 'react'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
+import styled from 'styled-components'
+
 import SelectModelButton from '../../SelectModelButton'
 import Tools from '../Tools'
 
@@ -15,8 +23,20 @@ type TopicContentProps = {
 }
 
 const TopicContent = ({ assistant }: TopicContentProps) => {
-  // const { t } = useTranslation()
+  const { t } = useTranslation()
   // const assistantName = useMemo(() => assistant.name || t('chat.default.name'), [assistant.name, t])
+  const { provider } = useProvider('aionly')
+
+  // 获取 aiOnly 模型列表
+  const aiOnlyModels = useSelector(selectAiOnlyModels)
+  const setupModels = useFetchAndSetupModels()
+
+  const handleOpenModel = async () => {
+    const result = await AiOnlyAddModelPopup.show({ provider })
+    if (result.success) {
+      await setupModels(10)
+    }
+  }
 
   return (
     <>
@@ -34,12 +54,29 @@ const TopicContent = ({ assistant }: TopicContentProps) => {
           {/*<ChevronRight className="h-4 w-4 text-gray-400" />*/}
 
           {/* Model Button */}
-          <SelectModelButton assistant={assistant} />
+          {aiOnlyModels && aiOnlyModels.length > 0 ? (
+            <SelectModelButton assistant={assistant} />
+          ) : (
+            <>
+              <TipText className="tips">
+                <WarningFilled />
+                {t('chat.topics.no_model')}
+              </TipText>
+              <Button type="primary" size="small" onClick={handleOpenModel}>
+                {t('chat.topics.open_model_text')}
+              </Button>
+            </>
+          )}
         </div>
       </HorizontalScrollContainer>
-      <Tools assistant={assistant} />
+      {aiOnlyModels && aiOnlyModels.length > 0 && <Tools assistant={assistant} />}
     </>
   )
 }
+
+const TipText = styled.span`
+  color: var(--color-red-600);
+  font-size: 14px;
+`
 
 export default TopicContent
