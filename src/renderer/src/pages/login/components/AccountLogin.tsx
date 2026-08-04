@@ -129,7 +129,7 @@ export const AccountLogin = ({ ref, ...props }: AccountLoginProps) => {
       const { data } = await loginApi(updatedForm)
       if (data && data.access_token) {
         localStorage.setItem('token', data.access_token)
-        props.onSuccess?.()
+        await props.onSuccess?.()
       }
     } catch (error: any) {
       logger.error('账号登录失败', error)

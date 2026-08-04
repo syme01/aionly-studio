@@ -65,7 +65,7 @@ export const SMSLogin = ({ ref, ...props }: LoginFormProps) => {
       const { data } = await loginApi(codeForm)
       if (data && data.access_token) {
         localStorage.setItem('token', data.access_token)
-        props.onSuccess?.()
+        await props.onSuccess?.()
       }
     } catch (error: any) {
       logger.error('短信登录失败', error)

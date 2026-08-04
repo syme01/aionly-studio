@@ -7,10 +7,11 @@ import i18n from '@renderer/i18n'
 import { Agreements } from '@renderer/pages/login/components/Agreements'
 import { useAppDispatch } from '@renderer/store'
 import { setApiKey, setMyBalance, setUserInfo } from '@renderer/store/user'
+import { APP_PROTOCOL } from '@shared/config/constant'
 import type { TabsProps } from 'antd'
 import { Button } from 'antd'
 import { Tabs } from 'antd'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -69,7 +70,7 @@ export const LoginForm = (props: LoginFormProps) => {
   const { updateProvider } = useProvider('aionly')
   const setupModels = useFetchAndSetupModels()
 
-  const [activeTabKey, setActiveTabKey] = useState('1')
+  const [activeTabKey, setActiveTabKey] = useState(APP_PROTOCOL == 'aionly' ? '2' : '1')
   const [isAccept, setIsAccept] = useState(false)
   const [formValid, setFormValid] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -122,47 +123,79 @@ export const LoginForm = (props: LoginFormProps) => {
     navigate('/')
   }
 
-  const tabList: TabsProps['items'] = [
-    {
-      key: '1',
-      label: '短信登录',
-      children: (
-        <SMSLogin
-          ref={smsLoginRef}
-          verifyRef={verifyRef}
-          onFormChange={onFormChange}
-          onSuccess={handleLoginSuccess}
-          setLoading={setLoading}
-        />
-      )
-    },
-    {
-      key: '2',
-      label: '邮箱登录',
-      children: (
-        <EmailLogin
-          ref={emailLoginRef}
-          verifyRef={verifyRef}
-          onFormChange={onFormChange}
-          onSuccess={handleLoginSuccess}
-          setLoading={setLoading}
-        />
-      )
-    },
-    {
-      key: '3',
-      label: '账号登录',
-      children: (
-        <AccountLogin
-          ref={accountLoginRef}
-          verifyRef={verifyRef}
-          onFormChange={onFormChange}
-          onSuccess={handleLoginSuccess}
-          setLoading={setLoading}
-        />
-      )
+  const tabList: TabsProps['items'] = useMemo(() => {
+    if (APP_PROTOCOL === 'aionly') {
+      return [
+        {
+          key: '2',
+          label: '邮箱登录',
+          children: (
+            <EmailLogin
+              ref={emailLoginRef}
+              verifyRef={verifyRef}
+              onFormChange={onFormChange}
+              onSuccess={handleLoginSuccess}
+              setLoading={setLoading}
+            />
+          )
+        },
+        {
+          key: '3',
+          label: '账号登录',
+          children: (
+            <AccountLogin
+              ref={accountLoginRef}
+              verifyRef={verifyRef}
+              onFormChange={onFormChange}
+              onSuccess={handleLoginSuccess}
+              setLoading={setLoading}
+            />
+          )
+        }
+      ]
     }
-  ]
+    return [
+      {
+        key: '1',
+        label: '短信登录',
+        children: (
+          <SMSLogin
+            ref={smsLoginRef}
+            verifyRef={verifyRef}
+            onFormChange={onFormChange}
+            onSuccess={handleLoginSuccess}
+            setLoading={setLoading}
+          />
+        )
+      },
+      {
+        key: '2',
+        label: '邮箱登录',
+        children: (
+          <EmailLogin
+            ref={emailLoginRef}
+            verifyRef={verifyRef}
+            onFormChange={onFormChange}
+            onSuccess={handleLoginSuccess}
+            setLoading={setLoading}
+          />
+        )
+      },
+      {
+        key: '3',
+        label: '账号登录',
+        children: (
+          <AccountLogin
+            ref={accountLoginRef}
+            verifyRef={verifyRef}
+            onFormChange={onFormChange}
+            onSuccess={handleLoginSuccess}
+            setLoading={setLoading}
+          />
+        )
+      }
+    ]
+  }, [handleLoginSuccess])
 
   const onTabChange = (key: string) => {
     setActiveTabKey(key)

@@ -64,7 +64,7 @@ export const EmailLogin = ({ ref, ...props }: EmailLoginProps) => {
       const { data } = await loginApi(emailForm)
       if (data && data.access_token) {
         localStorage.setItem('token', data.access_token)
-        props.onSuccess?.()
+        await props.onSuccess?.()
       }
     } catch (error: any) {
       logger.error('邮箱登录失败', error)

@@ -192,7 +192,7 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
           const data = login_res?.data
           if (data && data.access_token) {
             localStorage.setItem('token', data.access_token)
-            handleLoginSuccess()
+            await handleLoginSuccess()
           }
         } else {
           verifyType.current = 'bind'
