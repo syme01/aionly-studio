@@ -89,10 +89,10 @@ if (fs.existsSync(ymlPath)) {
   yml = yml.replace(/^(\s+StartupWMClass:\s*).*$/m, `$1${appName}`)
 
   // NSIS installDirectory (prevent installation path conflicts)
-  yml = yml.replace(/^(\s+installDirectory:\s*).*$/m, `$1"$PROGRAMFILES\\${appName}"`)
+  yml = yml.replace(/^(\s+installDirectory:\s*).*$/m, `$1"$PROGRAMFILES\\\\${appName}"`)
   // If installDirectory doesn't exist, add it after nsis: section
   if (!yml.match(/^\s+installDirectory:/m)) {
-    yml = yml.replace(/^(nsis:\s*$)/m, `$1\n  installDirectory: "$PROGRAMFILES\\${appName}"`)
+    yml = yml.replace(/^(nsis:\s*$)/m, `$1\n  installDirectory: "$PROGRAMFILES\\\\${appName}"`)
   }
 
   // Icon paths
