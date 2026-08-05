@@ -1,4 +1,4 @@
-appId: com.verycloud.AiOnlyStudio
+appId: global.verycloud.AiOnly
 productName: AiOnly
 electronLanguages:
   - zh-CN
@@ -89,6 +89,7 @@ win:
     sign: scripts/win-sign.js
   verifyUpdateCodeSignature: false
 nsis:
+  installDirectory: "$PROGRAMFILES\AiOnly"
   artifactName: ${productName}-${version}-${arch}-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}

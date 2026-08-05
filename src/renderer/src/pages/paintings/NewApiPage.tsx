@@ -3,7 +3,7 @@ import { WarningFilled } from '@ant-design/icons'
 import { loggerService } from '@logger'
 import { AiProvider } from '@renderer/aiCore'
 // import IcImageUp from '@renderer/assets/images/paintings/ic_ImageUp.svg'
-import { Navbar, NavbarCenter /*NavbarRight*/ } from '@renderer/components/app/Navbar'
+import { Navbar, NavbarCenter } from '@renderer/components/app/Navbar'
 import ModelAvatar from '@renderer/components/Avatar/ModelAvatar'
 // import Scrollbar from '@renderer/components/Scrollbar'
 import TranslateButton from '@renderer/components/TranslateButton'
@@ -28,22 +28,19 @@ import FileManager from '@renderer/services/FileManager'
 import { translateText } from '@renderer/services/TranslateService'
 import { useAppDispatch } from '@renderer/store'
 import { setGenerating } from '@renderer/store/runtime'
-import type { PaintingAction, PaintingsState } from '@renderer/types'
-import type { FileMetadata } from '@renderer/types'
-import { getErrorMessage, uuid } from '@renderer/utils'
+import type { FileMetadata, PaintingAction, PaintingsState } from '@renderer/types'
+import { convertToBase64, getErrorMessage, uuid } from '@renderer/utils'
 import { isNewApiProvider } from '@renderer/utils/provider'
 import type { RadioChangeEvent } from 'antd'
-import { Button, Empty, Flex, InputNumber, /*Segmented,*/ Radio, Select, Spin, Upload } from 'antd'
-import { Tooltip } from 'antd'
+import { Button, Empty, Flex, InputNumber, Radio, Select, Spin, Tooltip, Upload } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import type { RcFile } from 'antd/es/upload'
 import type { UploadFile } from 'antd/es/upload/interface'
 import { Paperclip } from 'lucide-react'
 import type { FC } from 'react'
-import React from 'react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation /*useNavigate*/ } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
 import SendMessageButton from '../home/Inputbar/SendMessageButton'
@@ -303,6 +300,10 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
     return downloadedFiles.filter((file): file is FileMetadata => file !== null)
   }
 
+  const getFileBase64 = async (file: any) => {
+    return await convertToBase64(file)
+  }
+
   const onGenerate = async () => {
     await checkProviderEnabled(newApiProvider, t)
 
@@ -347,8 +348,12 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
     let url = newApiProvider.apiHost.replace(/\/v1$/, '') + `/v1/images/generations`
     let editUrl = newApiProvider.apiHost.replace(/\/v1$/, '') + `/v1/images/edits`
     if (newApiProvider.id === 'aionly') {
+      // url = newApiProvider.apiHost.replace(/\/v1$/, '') + `/openai/v1/images/generations`
+      // editUrl = newApiProvider.apiHost.replace(/\/v1$/, '') + `/openai/v1/images/edits`
+
+      // 新的兼容接口
       url = newApiProvider.apiHost.replace(/\/v1$/, '') + `/openai/v1/images/generations`
-      editUrl = newApiProvider.apiHost.replace(/\/v1$/, '') + `/openai/v1/images/edits`
+      editUrl = newApiProvider.apiHost.replace(/\/v1$/, '') + `/v1/images/generations`
     }
 
     try {
@@ -372,7 +377,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
           return
         }
 
-        const formData = new FormData()
+        /*const formData = new FormData()
         formData.append('prompt', prompt)
         formData.append('model', painting.model)
         if (painting.background && painting.background !== 'auto') {
@@ -398,9 +403,26 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
 
         // TODO: mask support later
 
-        body = formData
+        body = formData*/
 
         // For edit mode we do not set content-type; browser will set multipart boundary
+
+        // TODO: v1/images/generations---Openai image
+        const editImageParams = {
+          model: painting.model,
+          input: {
+            prompt,
+            images: await Promise.all(editImages.map((file) => getFileBase64(file)))
+          },
+          parameters: {
+            size: painting.size || 'auto',
+            quality: painting.quality || 'auto',
+            moderation: painting.moderation || 'auto'
+          }
+        }
+
+        body = JSON.stringify(editImageParams)
+        headers['Content-Type'] = 'application/json'
       }
 
       const requestUrl = mode === 'openai_image_edit' ? editUrl : url
@@ -408,12 +430,15 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error?.message || t('paintings.generate_failed'))
+        // console.log('errorData:', errorData)
+        throw new Error(errorData.error?.message || errorData?.msg || t('paintings.generate_failed'))
       }
 
       const data = await response.json()
       const urls = data.data.filter((item) => item.url).map((item) => item.url)
-      const base64s = data.data.filter((item) => item.b64_json).map((item) => item.b64_json)
+      const base64s = data.data
+        .filter((item) => item.b64_json || item.base64)
+        .map((item) => item.b64_json || item.base64)
 
       if (urls.length > 0) {
         const validFiles = await downloadImages(urls)

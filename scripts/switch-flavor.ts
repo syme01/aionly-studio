@@ -88,6 +88,13 @@ if (fs.existsSync(ymlPath)) {
   yml = yml.replace(/^(\s+Name:\s*).*$/m, `$1${appName}`)
   yml = yml.replace(/^(\s+StartupWMClass:\s*).*$/m, `$1${appName}`)
 
+  // NSIS installDirectory (prevent installation path conflicts)
+  yml = yml.replace(/^(\s+installDirectory:\s*).*$/m, `$1"$PROGRAMFILES\\${appName}"`)
+  // If installDirectory doesn't exist, add it after nsis: section
+  if (!yml.match(/^\s+installDirectory:/m)) {
+    yml = yml.replace(/^(nsis:\s*$)/m, `$1\n  installDirectory: "$PROGRAMFILES\\${appName}"`)
+  }
+
   // Icon paths
   yml = yml
     .replace(/^(\s+icon:\s*)config\/[^/\s]+\/build\/icon\.ico$/m, `$1config/${flavor}/build/icon.ico`)
@@ -95,7 +102,7 @@ if (fs.existsSync(ymlPath)) {
     .replace(/^(\s+icon:\s*)config\/[^/\s]+\/build\/icons$/m, `$1config/${flavor}/build/icons`)
 
   fs.writeFileSync(ymlPath, yml)
-  console.log(`✅ Updated electron-builder.yml (identity + icons)`)
+  console.log(`✅ Updated electron-builder.yml (identity + icons + installDirectory)`)
 }
 
 // 4. Copy logo to renderer assets
@@ -117,5 +124,15 @@ for (const file of runtimeIcons) {
   }
 }
 console.log(`✅ Copied runtime icons to build/`)
+
+// 6. Update package.json name field to ensure full identity separation
+const packageJsonPath = path.join(root, 'package.json')
+if (fs.existsSync(packageJsonPath)) {
+  const appName = get('APP_NAME')
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
+  packageJson.name = appName
+  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n')
+  console.log(`✅ Updated package.json name to: ${appName}`)
+}
 
 console.log(`✅ Switched to flavor: ${flavor}`)

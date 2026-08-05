@@ -507,7 +507,7 @@ export const CHERRYIN_CONFIG = {
 export const APP_NAME = 'AiOnly'
 // export const APP_VERSION = '0.7.25' // unused — source of truth is package.json
 export const APP_PROTOCOL = 'aionly'
-export const APP_BUNDLE_ID = 'com.verycloud.AiOnlyStudio'
+export const APP_BUNDLE_ID = 'global.verycloud.AiOnly'
 export const APP_DIR_NAME = 'AiOnlyStudio' // User data directory name
 export const APP_CONFIG_DIR = '.aionlystudio' // Hidden config directory in home
 // resources/scripts should be maintained manually

@@ -70,7 +70,7 @@ export const LoginForm = (props: LoginFormProps) => {
   const { updateProvider } = useProvider('aionly')
   const setupModels = useFetchAndSetupModels()
 
-  const [activeTabKey, setActiveTabKey] = useState(APP_PROTOCOL == 'aionly' ? '2' : '1')
+  const [activeTabKey, setActiveTabKey] = useState((APP_PROTOCOL as string) === 'aionly' ? '2' : '1')
   const [isAccept, setIsAccept] = useState(false)
   const [formValid, setFormValid] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -154,7 +154,7 @@ export const LoginForm = (props: LoginFormProps) => {
         )
       }
     ]
-    if (APP_PROTOCOL === 'aionly') {
+    if ((APP_PROTOCOL as string) === 'aionly') {
       return base
     }
     return [
