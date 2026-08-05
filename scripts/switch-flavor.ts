@@ -29,12 +29,31 @@ for (const line of overrides.split('\n')) {
 
 const get = (key: string) => entries.find(([k]) => k === key)?.[1] ?? ''
 
+// Environment variables take precedence over .env.override
+const getWithEnv = (key: string) => process.env[key] || get(key)
+
 // 1. Apply VITE_* entries to .env.production
 const envProdPath = path.join(root, '.env.production')
 if (fs.existsSync(envProdPath)) {
   let envProd = fs.readFileSync(envProdPath, 'utf-8')
+
+  // Environment-specific URLs (prioritize CI environment variables)
+  const envVars = ['VITE_API_URL', 'VITE_USER_UI_HOST', 'VITE_WEB_UI_HOST']
+
+  for (const key of envVars) {
+    const value = getWithEnv(key)
+    if (value) {
+      if (new RegExp(`^${key}\\s*=`, 'm').test(envProd)) {
+        envProd = envProd.replace(new RegExp(`^${key}\\s*=.*$`, 'm'), `${key} = ${value}`)
+      } else {
+        envProd += `\n${key} = ${value}`
+      }
+    }
+  }
+
+  // Other VITE_* variables from .env.override
   for (const [key, value] of entries) {
-    if (key.startsWith('VITE_') || key.startsWith('MAIN_VITE_')) {
+    if ((key.startsWith('VITE_') || key.startsWith('MAIN_VITE_')) && !envVars.includes(key)) {
       if (new RegExp(`^${key}\\s*=`, 'm').test(envProd)) {
         envProd = envProd.replace(new RegExp(`^${key}\\s*=.*$`, 'm'), `${key} = ${value}`)
       } else {
@@ -50,8 +69,16 @@ if (fs.existsSync(envProdPath)) {
 const constantPath = path.join(root, 'packages/shared/config/constant.ts')
 if (fs.existsSync(constantPath)) {
   let constant = fs.readFileSync(constantPath, 'utf-8')
+
+  // APP_API_HOST can be overridden by environment variable
+  const appApiHost = getWithEnv('APP_API_HOST')
+  if (appApiHost) {
+    constant = constant.replace(new RegExp(`^(export const APP_API_HOST\\s*=\\s*).*$`, 'm'), `$1'${appApiHost}'`)
+  }
+
+  // Other non-VITE entries from .env.override
   for (const [key, value] of entries) {
-    if (!key.startsWith('VITE_') && !key.startsWith('MAIN_VITE_')) {
+    if (!key.startsWith('VITE_') && !key.startsWith('MAIN_VITE_') && key !== 'APP_API_HOST') {
       const isNumber = /^\d+$/.test(value)
       constant = constant.replace(
         new RegExp(`^(export const ${key}\\s*=\\s*).*$`, 'm'),

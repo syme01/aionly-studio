@@ -28,6 +28,15 @@ on:
         options:
           - global
           - cn
+      environment:
+        description: "Deployment environment"
+        required: true
+        default: "production-global"
+        type: choice
+        options:
+          - test
+          - production-cn
+          - production-global
   pull_request_target:
     branches:
       - main
@@ -45,6 +54,7 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'pull_request_target' && github.event.pull_request.merged == true && github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.event.pull_request.head.ref, 'release/v'))
     runs-on: ${{ matrix.os }}
+    environment: ${{ github.event.inputs.environment || 'production-global' }}
 
     strategy:
       matrix:
@@ -158,6 +168,10 @@ jobs:
           MAIN_VITE_MINERU_API_KEY: ${{ secrets.MAIN_VITE_MINERU_API_KEY }}
           RENDERER_VITE_AIHUBMIX_SECRET: ${{ secrets.RENDERER_VITE_AIHUBMIX_SECRET }}
           RENDERER_VITE_PPIO_APP_SECRET: ${{ secrets.RENDERER_VITE_PPIO_APP_SECRET }}
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_USER_UI_HOST: ${{ vars.VITE_USER_UI_HOST }}
+          VITE_WEB_UI_HOST: ${{ vars.VITE_WEB_UI_HOST }}
+          APP_API_HOST: ${{ vars.APP_API_HOST }}
 
       - name: Build Mac
         if: matrix.os == 'macos-latest'
@@ -179,6 +193,10 @@ jobs:
           MAIN_VITE_MINERU_API_KEY: ${{ secrets.MAIN_VITE_MINERU_API_KEY }}
           RENDERER_VITE_AIHUBMIX_SECRET: ${{ secrets.RENDERER_VITE_AIHUBMIX_SECRET }}
           RENDERER_VITE_PPIO_APP_SECRET: ${{ secrets.RENDERER_VITE_PPIO_APP_SECRET }}
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_USER_UI_HOST: ${{ vars.VITE_USER_UI_HOST }}
+          VITE_WEB_UI_HOST: ${{ vars.VITE_WEB_UI_HOST }}
+          APP_API_HOST: ${{ vars.APP_API_HOST }}
 
       - name: Build Windows
         if: matrix.os == 'windows-2022'
@@ -192,6 +210,10 @@ jobs:
           MAIN_VITE_MINERU_API_KEY: ${{ secrets.MAIN_VITE_MINERU_API_KEY }}
           RENDERER_VITE_AIHUBMIX_SECRET: ${{ secrets.RENDERER_VITE_AIHUBMIX_SECRET }}
           RENDERER_VITE_PPIO_APP_SECRET: ${{ secrets.RENDERER_VITE_PPIO_APP_SECRET }}
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_USER_UI_HOST: ${{ vars.VITE_USER_UI_HOST }}
+          VITE_WEB_UI_HOST: ${{ vars.VITE_WEB_UI_HOST }}
+          APP_API_HOST: ${{ vars.APP_API_HOST }}
 
       - name: Release
         uses: ncipollo/release-action@v1

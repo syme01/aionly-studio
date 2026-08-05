@@ -514,17 +514,13 @@ export const APP_CONFIG_DIR = '.aionlystudio' // Hidden config directory in home
 export const HOME_CHERRY_DIR = APP_CONFIG_DIR
 export const APP_API_HOST = 'https://api.aionly.com'
 
-// 生产环境的地址
-export const USER_UI_HOST = `https://maas.${APP_PROTOCOL}.com` // 控制台地址
-export const WEB_UI_HOST = `https://${APP_PROTOCOL}.com` // 官网地址
-
-// 测试环境的地址
-// export const USER_UI_HOST = `https://hf.rhwx-ai.com:9825` // 控制台地址
-// export const WEB_UI_HOST = `https://hf.rhwx-ai.com:9820` // 官网地址
-
-// 本地环境的地址
-// export const USER_UI_HOST = `http://localhost:7023` // 控制台地址
-// export const WEB_UI_HOST = `http://localhost:7022` // 官网地址
+/**
+ * USER_UI_HOST 用户端 UI 地址，默认为 https://maas.aionly.com
+ * WEB_UI_HOST 官网地址，默认为 https://www.aionly.com
+ * 本地运行，如果要改环境地址，请临时修改，打包走的是GitHub工作流，在线上配置环境变量，线上配置参考文档：.github\ENVIRONMENT_SETUP.md
+ */
+export const USER_UI_HOST = import.meta.env.VITE_USER_UI_HOST || `https://maas.${APP_PROTOCOL}.com`
+export const WEB_UI_HOST = import.meta.env.VITE_WEB_UI_HOST || `https://www.${APP_PROTOCOL}.com`
 
 // ============ Custom Update 自动更新服务接口地址 API ============
 export const UPDATE_API_BASE_URL = WEB_UI_HOST
