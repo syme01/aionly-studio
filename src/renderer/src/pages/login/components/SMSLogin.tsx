@@ -23,6 +23,7 @@ interface LoginFormProps {
   onFormChange?: (valid: boolean) => void
   verifyRef?: any
   setLoading?: (loading: boolean) => void
+  isAccept: boolean
 }
 
 export interface SMSLoginRef {
@@ -61,6 +62,11 @@ export const SMSLogin = ({ ref, ...props }: LoginFormProps) => {
     try {
       // 先做表单验证
       await form.validateFields()
+
+      if (!props.isAccept) {
+        window.toast.error(i18n.t('login.agreements.accept_text'))
+        return
+      }
 
       const { data } = await loginApi(codeForm)
       if (data && data.access_token) {

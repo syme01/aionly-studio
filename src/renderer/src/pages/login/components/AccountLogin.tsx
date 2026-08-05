@@ -12,6 +12,7 @@ interface AccountLoginProps {
   onFormChange?: (valid: boolean) => void
   verifyRef?: any
   setLoading?: (loading: boolean) => void
+  isAccept: boolean
 }
 
 export interface AccountLoginRef {
@@ -73,6 +74,11 @@ export const AccountLogin = ({ ref, ...props }: AccountLoginProps) => {
   const login = async () => {
     // 先做表单验证
     await form.validateFields()
+
+    if (!props.isAccept) {
+      window.toast.error(i18n.t('login.agreements.accept_text'))
+      return
+    }
 
     // 调试日志：查看请求参数
     logger.debug('账号登录请求参数', { accountForm, clientId: import.meta.env.VITE_APP_CLIENT_ID })

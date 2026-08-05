@@ -11,6 +11,7 @@ interface EmailLoginProps {
   onFormChange?: (valid: boolean) => void
   verifyRef?: any
   setLoading?: (loading: boolean) => void
+  isAccept: boolean
 }
 
 export interface EmailLoginRef {
@@ -60,6 +61,11 @@ export const EmailLogin = ({ ref, ...props }: EmailLoginProps) => {
     try {
       // 先做表单验证
       await form.validateFields()
+
+      if (!props.isAccept) {
+        window.toast.error(i18n.t('login.agreements.accept_text'))
+        return
+      }
 
       const { data } = await loginApi(emailForm)
       if (data && data.access_token) {

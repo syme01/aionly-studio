@@ -124,50 +124,7 @@ export const LoginForm = (props: LoginFormProps) => {
   }
 
   const tabList: TabsProps['items'] = useMemo(() => {
-    if (APP_PROTOCOL === 'aionly') {
-      return [
-        {
-          key: '2',
-          label: '邮箱登录',
-          children: (
-            <EmailLogin
-              ref={emailLoginRef}
-              verifyRef={verifyRef}
-              onFormChange={onFormChange}
-              onSuccess={handleLoginSuccess}
-              setLoading={setLoading}
-            />
-          )
-        },
-        {
-          key: '3',
-          label: '账号登录',
-          children: (
-            <AccountLogin
-              ref={accountLoginRef}
-              verifyRef={verifyRef}
-              onFormChange={onFormChange}
-              onSuccess={handleLoginSuccess}
-              setLoading={setLoading}
-            />
-          )
-        }
-      ]
-    }
-    return [
-      {
-        key: '1',
-        label: '短信登录',
-        children: (
-          <SMSLogin
-            ref={smsLoginRef}
-            verifyRef={verifyRef}
-            onFormChange={onFormChange}
-            onSuccess={handleLoginSuccess}
-            setLoading={setLoading}
-          />
-        )
-      },
+    const base = [
       {
         key: '2',
         label: '邮箱登录',
@@ -175,6 +132,7 @@ export const LoginForm = (props: LoginFormProps) => {
           <EmailLogin
             ref={emailLoginRef}
             verifyRef={verifyRef}
+            isAccept={isAccept}
             onFormChange={onFormChange}
             onSuccess={handleLoginSuccess}
             setLoading={setLoading}
@@ -188,12 +146,33 @@ export const LoginForm = (props: LoginFormProps) => {
           <AccountLogin
             ref={accountLoginRef}
             verifyRef={verifyRef}
+            isAccept={isAccept}
             onFormChange={onFormChange}
             onSuccess={handleLoginSuccess}
             setLoading={setLoading}
           />
         )
       }
+    ]
+    if (APP_PROTOCOL === 'aionly') {
+      return base
+    }
+    return [
+      {
+        key: '1',
+        label: '短信登录',
+        children: (
+          <SMSLogin
+            ref={smsLoginRef}
+            verifyRef={verifyRef}
+            isAccept={isAccept}
+            onFormChange={onFormChange}
+            onSuccess={handleLoginSuccess}
+            setLoading={setLoading}
+          />
+        )
+      },
+      ...base
     ]
   }, [handleLoginSuccess])
 

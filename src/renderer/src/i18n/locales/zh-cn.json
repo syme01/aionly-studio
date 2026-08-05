@@ -2151,7 +2151,8 @@
       "user": "《用户协议》",
       "privacy": "《隐私政策》",
       "disclaimer": "《免责协议》",
-      "yu": "与"
+      "yu": "与",
+      "accept_text": "请勾选同意相关协议"
     },
     "email_login": {
       "email_required": "请输入邮箱",
