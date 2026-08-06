@@ -174,8 +174,19 @@ jobs:
           VITE_WEB_UI_HOST: ${{ vars.VITE_WEB_UI_HOST }}
           APP_API_HOST: ${{ vars.APP_API_HOST }}
 
+      - name: Test Network Connectivity (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          echo "=== Testing timestamp servers ==="
+          curl -v --max-time 10 http://timestamp.digicert.com || echo "digicert failed"
+          curl -v --max-time 10 http://timestamp.sectigo.com || echo "sectigo failed"
+          curl -v --max-time 10 http://timestamp.globalsign.com/tsa/r6advanced1 || echo "globalsign failed"
+          echo "=== Testing Apple notary ==="
+          curl -I --max-time 10 https://notary-api.apple.com || echo "notary failed"
+
       - name: Build Mac
         if: matrix.os == 'macos-latest'
+        timeout-minutes: 30
         run: |
           sudo -H pip install setuptools
           pnpm build:mac
