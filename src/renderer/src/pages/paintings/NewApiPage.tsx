@@ -407,7 +407,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
 
         // For edit mode we do not set content-type; browser will set multipart boundary
 
-        // TODO: v1/images/generations---Openai image
+        // TODO: 启用新接口：v1/images/generations---Openai image
         const editImageParams = {
           model: painting.model,
           input: {
@@ -415,7 +415,7 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
             images: await Promise.all(editImages.map((file) => getFileBase64(file)))
           },
           parameters: {
-            size: painting.size || 'auto',
+            size: painting.size === 'auto' ? undefined : painting.size, // 对于有的模型不支持“auto”，必须是width*height
             quality: painting.quality || 'auto',
             moderation: painting.moderation || 'auto'
           }
