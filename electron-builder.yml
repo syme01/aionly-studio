@@ -104,7 +104,7 @@ portable:
 mac:
   icon: config/global/build/icon.icns
   entitlementsInherit: build/entitlements.mac.plist
-  notarize: false
+  notarize: true  # 已启用公证
   artifactName: ${productName}-${version}-${arch}.${ext}
   extendInfo:
     - NSCameraUsageDescription: Application requests access to the device's camera.
