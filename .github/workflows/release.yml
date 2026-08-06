@@ -186,7 +186,6 @@ jobs:
 
       - name: Build Mac
         if: matrix.os == 'macos-latest'
-        timeout-minutes: 90
         run: |
           sudo -H pip install setuptools
           pnpm build:mac
