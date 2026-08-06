@@ -89,7 +89,54 @@
 
 ## 使用方法
 
-### GitHub Actions 打包（推荐）
+### 方式 1：通过 Tag 自动触发（推荐）
+
+**Tag 命名规则**：
+- 测试版：`v{version}-test`（如 `v1.0.0-test`）
+- 正式版：`v{version}`（如 `v1.0.0`）
+- cn 版本：在版本号后加 `-cn`（如 `v1.0.0-cn`、`v1.0.0-test-cn`）
+
+**发版流程**：
+
+#### 发布测试版
+```bash
+# 国际版测试
+git tag v1.0.0-test
+git push origin v1.0.0-test
+
+# 国内版测试
+git tag v1.0.0-test-cn
+git push origin v1.0.0-test-cn
+```
+**自动行为**：
+- Tag 包含 `-test` → 使用 `test` environment
+- Tag 包含 `-cn` → 构建 `AiiOnly` + 使用 `production-cn` environment（如果没有 `-test`）
+- Tag 不包含 `-cn` → 构建 `AiOnly` + 使用 `production-global` environment
+
+**结果**：
+- `v1.0.0-test` → Release `v1.0.0-test`，包含 `AiOnly-1.0.0-x64-setup.exe`（global-test）
+- `v1.0.0-test-cn` → Release `v1.0.0-test-cn`，包含 `AiiOnly-1.0.0-x64-setup.exe`（cn-test）
+
+#### 发布正式版
+```bash
+# 国际版正式
+git tag v1.0.0
+git push origin v1.0.0
+
+# 国内版正式
+git tag v1.0.0-cn
+git push origin v1.0.0-cn
+```
+
+**结果**：
+- `v1.0.0` → Release `v1.0.0`，包含 `AiOnly-1.0.0-x64-setup.exe`（global-production）
+- `v1.0.0-cn` → Release `v1.0.0-cn`，包含 `AiiOnly-1.0.0-x64-setup.exe`（cn-production）
+
+---
+
+### 方式 2：手动触发 GitHub Actions
+
+如果需要更灵活的控制（如指定不同的平台、临时打包等）：
 
 1. 进入 `Actions` 标签页
 2. 选择 `Release` workflow
@@ -102,6 +149,15 @@
 5. 点击绿色的 `Run workflow` 按钮开始构建
 
 **常用组合示例**：
+
+| 场景 | 操作方式 | 说明 |
+|---|---|---|
+| 测试国内版 | `git tag v1.0.0-test-cn && git push origin v1.0.0-test-cn` | 自动使用测试环境 + AiiOnly |
+| 测试国际版 | `git tag v1.0.0-test && git push origin v1.0.0-test` | 自动使用测试环境 + AiOnly |
+| 发布国内正式版 | `git tag v1.0.0-cn && git push origin v1.0.0-cn` | 自动使用国内生产环境 + AiiOnly |
+| 发布国际正式版 | `git tag v1.0.0 && git push origin v1.0.0` | 自动使用国际生产环境 + AiOnly |
+
+**或者手动触发**：
 
 | 场景 | flavor | environment | 说明 |
 |---|---|---|---|
