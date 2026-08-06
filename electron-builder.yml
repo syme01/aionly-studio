@@ -105,7 +105,6 @@ mac:
   icon: config/global/build/icon.icns
   entitlementsInherit: build/entitlements.mac.plist
   notarize: true  # 已启用公证
-  concurrency: 4  # 并发签名文件数，加快签名速度
   gatekeeperAssess: false
   artifactName: ${productName}-${version}-${arch}.${ext}
   extendInfo:
