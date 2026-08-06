@@ -54,7 +54,12 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'pull_request_target' && github.event.pull_request.merged == true && github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.event.pull_request.head.ref, 'release/v'))
     runs-on: ${{ matrix.os }}
-    environment: ${{ steps.environment.outputs.environment }}
+    environment: ${{
+      github.event_name == 'workflow_dispatch' && github.event.inputs.environment ||
+      contains(github.ref, '-test') && 'test' ||
+      contains(github.ref, '-cn') && 'production-cn' ||
+      'production-global'
+    }}
 
     strategy:
       matrix:
@@ -102,27 +107,6 @@ jobs:
               echo "flavor=cn" >> $GITHUB_OUTPUT
             else
               echo "flavor=global" >> $GITHUB_OUTPUT
-            fi
-          fi
-
-      - name: Determine environment
-        id: environment
-        shell: bash
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
-          else
-            TAG="${{ steps.get-tag.outputs.tag }}"
-            if [[ "$TAG" == *"-test" ]]; then
-              echo "environment=test" >> $GITHUB_OUTPUT
-            else
-              # Check flavor to determine production environment
-              FLAVOR="${{ steps.flavor.outputs.flavor }}"
-              if [ "$FLAVOR" = "cn" ]; then
-                echo "environment=production-cn" >> $GITHUB_OUTPUT
-              else
-                echo "environment=production-global" >> $GITHUB_OUTPUT
-              fi
             fi
           fi
 
