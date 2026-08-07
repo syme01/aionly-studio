@@ -180,7 +180,7 @@ jobs:
         with:
           p12-file-base64: ${{ secrets.CSC_LINK }}
           p12-password: ${{ secrets.CSC_KEY_PASSWORD }}
-          keychain: build.keychain
+          keychain: build
           keychain-password: ${{ secrets.CSC_KEY_PASSWORD }}
 
       - name: Store notarytool credentials profile (macOS)
@@ -197,12 +197,12 @@ jobs:
         run: |
           sudo -H pip install setuptools
           # 解锁 keychain 防止签名卡住
-          security unlock-keychain -p "${{ secrets.CSC_KEY_PASSWORD }}" build.keychain
-          security set-keychain-settings -lut 21600 build.keychain
+          security unlock-keychain -p "${{ secrets.CSC_KEY_PASSWORD }}" build.keychain-db
+          security set-keychain-settings -lut 21600 build.keychain-db
           pnpm build:mac
         env:
           # 新方案：Keychain Profile
-          CSC_KEYCHAIN: build.keychain
+          CSC_KEYCHAIN: build.keychain-db
           APPLE_KEYCHAIN_PROFILE: AC_PASSWORD
           # 旧方案（已注释）
           # CSC_IDENTITY_AUTO_DISCOVERY: true
