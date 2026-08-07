@@ -106,6 +106,7 @@ mac:
   entitlementsInherit: build/entitlements.mac.plist
   notarize: true  # 已启用公证
   gatekeeperAssess: false
+  timestamp: ""  # 跳过时间戳服务器，避免网络卡顿
   artifactName: ${productName}-${version}-${arch}.${ext}
   extendInfo:
     - NSCameraUsageDescription: Application requests access to the device's camera.
