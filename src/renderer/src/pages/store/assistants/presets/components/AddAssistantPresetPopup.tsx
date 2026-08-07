@@ -165,6 +165,7 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
       okText={t('assistants.presets.add.title')}
       width={600}
       transitionName="animation-move-down"
+      getContainer={() => document.body}
       centered>
       <Form
         ref={formRef}

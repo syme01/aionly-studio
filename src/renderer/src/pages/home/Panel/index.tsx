@@ -4,15 +4,16 @@ import { useTheme } from '@renderer/context/ThemeProvider'
 import { useAssistants, useDefaultAssistant } from '@renderer/hooks/useAssistant'
 import { /*useNavbarPosition,*/ useSettings } from '@renderer/hooks/useSettings'
 import { useShowTopics } from '@renderer/hooks/useStore'
+import AssistantPresetsPage from '@renderer/pages/store/assistants/presets/AssistantPresetsPage'
 import { EVENT_NAMES, EventEmitter } from '@renderer/services/EventService'
 import type { Assistant, Topic } from '@renderer/types'
 import type { Tab } from '@renderer/types/chat'
 import { classNames, uuid } from '@renderer/utils'
 import { Button } from 'antd'
-import type { FC } from 'react'
+import React, { FC } from 'react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import Assistants from '../Tabs/AssistantsTab'
@@ -45,7 +46,7 @@ const HomePanel: FC<Props> = ({
   const { defaultAssistant } = useDefaultAssistant()
   const { toggleShowTopics } = useShowTopics()
   // const { isLeftNavbar } = useNavbarPosition()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const { t } = useTranslation()
 
   const { theme } = useTheme()
@@ -78,7 +79,27 @@ const HomePanel: FC<Props> = ({
 
   // TODO: 跳转角色管理
   const handleToRole = () => {
-    navigate('/store')
+    // navigate('/store')
+    window.modal.info({
+      title: t('assistants.presets.title'),
+      okText: null,
+      cancelText: null,
+      footer: null,
+      maskClosable: true,
+      closable: true,
+      icon: null,
+      width: '80%',
+      style: {
+        top: 20
+      },
+      zIndex: 888,
+      bodyStyle: {
+        padding: 0
+        // height: 'calc(100vh - 100px)',
+        // overflowY: 'auto'
+      },
+      content: <AssistantPresetsPage showNavbar={false} />
+    })
   }
 
   useEffect(() => {

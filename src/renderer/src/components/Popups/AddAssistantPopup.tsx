@@ -235,6 +235,9 @@ const Container = styled(Scrollbar)`
 
 const AgentItem = styled.div`
   width: 110px;
+  height: 110px;
+  flex-shrink: 0;
+  flex-grow: 0;
   padding: 10px;
   border-radius: 8px;
   user-select: none;
@@ -244,6 +247,7 @@ const AgentItem = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
 
   cursor: pointer;
   overflow: hidden;
@@ -275,6 +279,14 @@ const AgentItem = styled.div`
   .name{
     margin-top: 10px;
     text-align: center;
+    width: 100%;
+    word-break: break-word;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 1.4;
+    max-height: 2.8em;
   }
 `
 

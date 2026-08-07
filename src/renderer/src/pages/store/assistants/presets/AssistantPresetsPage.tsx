@@ -26,7 +26,11 @@ import AssistantPresetCard from './components/AssistantPresetCard'
 import ImportAssistantPresetPopup from './components/ImportAssistantPresetPopup'
 import ManageAssistantPresetsPopup from './components/ManageAssistantPresetsPopup'
 
-const AssistantPresetsPage: FC = () => {
+interface Props {
+  showNavbar?: boolean
+}
+
+const AssistantPresetsPage: FC<Props> = ({ showNavbar = true }) => {
   const [search, setSearch] = useState('')
   const [searchInput, setSearchInput] = useState('')
   // const [activeGroup, setActiveGroup] = useState('我的') // 原逻辑：默认选中「我的」
@@ -230,10 +234,11 @@ const AssistantPresetsPage: FC = () => {
 
   return (
     <Container className="page-container">
-      <Navbar>
-        <NavbarCenter style={{ borderRight: 'none', justifyContent: 'space-between' }}>
-          {t('assistants.presets.title')}
-          {/* <Input
+      {showNavbar && (
+        <Navbar>
+          <NavbarCenter style={{ borderRight: 'none', justifyContent: 'space-between' }}>
+            {t('assistants.presets.title')}
+            {/* <Input
             placeholder={t('common.search')}
             className="nodrag"
             style={{ width: '30%', height: 28, borderRadius: 15, paddingLeft: 12 }}
@@ -248,9 +253,10 @@ const AssistantPresetsPage: FC = () => {
             onPressEnter={handleSearch}
             onBlur={handleSearchInputBlur}
           />*/}
-          <div style={{ width: 80 }} />
-        </NavbarCenter>
-      </Navbar>
+            <div style={{ width: 80 }} />
+          </NavbarCenter>
+        </Navbar>
+      )}
 
       <Main id="content-container">
         {/*<AgentsGroupList>
