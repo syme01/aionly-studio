@@ -180,19 +180,36 @@ jobs:
         with:
           p12-file-base64: ${{ secrets.CSC_LINK }}
           p12-password: ${{ secrets.CSC_KEY_PASSWORD }}
+          keychain: build.keychain
+          keychain-password: ${{ secrets.CSC_KEY_PASSWORD }}
+
+      - name: Store notarytool credentials profile (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          xcrun notarytool store-credentials "AC_PASSWORD" \
+            --apple-id "${{ secrets.APPLE_ID }}" \
+            --password "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}" \
+            --team-id "${{ secrets.APPLE_TEAM_ID }}"
 
       - name: Build Mac
         if: matrix.os == 'macos-latest'
+        timeout-minutes: 90
         run: |
           sudo -H pip install setuptools
+          # 解锁 keychain 防止签名卡住
+          security unlock-keychain -p "${{ secrets.CSC_KEY_PASSWORD }}" build.keychain
+          security set-keychain-settings -lut 21600 build.keychain
           pnpm build:mac
         env:
-          # 证书已通过 import-codesign-certs 导入，让 electron-builder 自动发现
-          CSC_IDENTITY_AUTO_DISCOVERY: true
-          # 公证配置（已启用）
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # 新方案：Keychain Profile
+          CSC_KEYCHAIN: build.keychain
+          APPLE_KEYCHAIN_PROFILE: AC_PASSWORD
+          # 旧方案（已注释）
+          # CSC_IDENTITY_AUTO_DISCOVERY: true
+          # APPLE_ID: ${{ secrets.APPLE_ID }}
+          # APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          # APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # 其他环境变量保持不变
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_OPTIONS: --max-old-space-size=8192
           MAIN_VITE_CHERRYAI_CLIENT_SECRET: ${{ secrets.MAIN_VITE_CHERRYAI_CLIENT_SECRET }}
