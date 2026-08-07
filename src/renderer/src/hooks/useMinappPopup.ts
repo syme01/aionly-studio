@@ -1,4 +1,4 @@
-import aiOnlyPng from '@renderer/assets/images/providers/aiOnly.png'
+import aiOnlyPng from '@renderer/assets/images/logo.png'
 import { allMinApps } from '@renderer/config/minapps'
 import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useSettings } from '@renderer/hooks/useSettings' // 使用设置中的值
