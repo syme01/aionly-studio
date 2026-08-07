@@ -1,7 +1,9 @@
 import { loggerService } from '@logger'
 import i18n from '@renderer/i18n'
-import type { CheckboxProps } from 'antd'
+import { USER_UI_HOST } from '@shared/config/constant'
+import { CheckboxProps, Modal } from 'antd'
 import { Button, Checkbox } from 'antd'
+import React from 'react'
 import styled from 'styled-components'
 
 interface AgreementsProps {
@@ -28,23 +30,52 @@ const SpanText = styled.span`
 const logger = loggerService.withContext('Agreements')
 
 export const Agreements = (props: AgreementsProps) => {
+  const WebviewStyle: React.CSSProperties = {
+    width: '100%',
+    height: 'calc(100vh - 300px)',
+    backgroundColor: 'var(--color-background)',
+    display: 'inline-flex'
+  }
+
   const onChange: CheckboxProps['onChange'] = (e) => {
     logger.debug('协议勾选状态变更', { checked: e.target.checked })
     props.onChange?.(e.target.checked)
   }
 
+  const handleShowAgreement = (appKey: string) => {
+    const url = `${USER_UI_HOST}/agreement?appKey=${appKey}`
+    const text = `login.agreements.${appKey.split('_')[1]}`
+    Modal.info({
+      title: i18n.t(text),
+      width: '80%',
+      maskClosable: true,
+      content: (
+        <webview
+          key={appKey}
+          src={url}
+          style={WebviewStyle}
+          allowpopups={'true' as any}
+          partition="persist:webview"
+          nodeintegration={false}
+          disablewebsecurity={true}
+          useragent={undefined}
+        />
+      )
+    })
+  }
+
   return (
     <div className="flex justify-center">
       <ACheckbox onChange={onChange}>{i18n.t('login.agreements.agree')}</ACheckbox>
-      <LinkButton type="link" size="small">
+      <LinkButton type="link" size="small" onClick={() => handleShowAgreement('agreement_user')}>
         {i18n.t('login.agreements.user')}{' '}
       </LinkButton>
       <SpanText>、</SpanText>
-      <LinkButton type="link" size="small">
+      <LinkButton type="link" size="small" onClick={() => handleShowAgreement('agreement_privacy')}>
         {i18n.t('login.agreements.privacy')}{' '}
       </LinkButton>
       <SpanText>{i18n.t('login.agreements.yu')}</SpanText>
-      <LinkButton type="link" size="small">
+      <LinkButton type="link" size="small" onClick={() => handleShowAgreement('agreenment_disclaimer')}>
         {i18n.t('login.agreements.disclaimer')}
       </LinkButton>
     </div>
