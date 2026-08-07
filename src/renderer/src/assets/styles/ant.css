@@ -17,7 +17,8 @@
 .ant-dropdown-menu,
 .ant-popover-content,
 .ant-tooltip-content,
-.ant-popconfirm {
+.ant-popconfirm,
+.ant-message {
   -webkit-app-region: no-drag;
 }
 

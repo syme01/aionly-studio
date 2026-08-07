@@ -107,6 +107,9 @@ const AntdProvider: FC<PropsWithChildren> = ({ children }) => {
             splitBarDraggableSize: 0,
             splitBarSize: 0.5,
             splitTriggerSize: 10
+          },
+          Message: {
+            zIndexPopup: 100000
           }
         },
         token: {
