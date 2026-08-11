@@ -60,7 +60,7 @@ const BuiltinMCPServerList: FC = () => {
                 <Tag color="processing" style={{ borderRadius: 20, margin: 0, fontWeight: 500 }}>
                   {getMcpTypeLabel(server.type ?? 'stdio')}
                 </Tag>
-                {server?.shouldConfig && (
+                {/*{server?.shouldConfig && (
                   <a
                     href="https://docs.cherry-ai.com/advanced-basic/mcp/buildin"
                     target="_blank"
@@ -69,7 +69,7 @@ const BuiltinMCPServerList: FC = () => {
                       {t('settings.mcp.requiresConfig')}
                     </Tag>
                   </a>
-                )}
+                )}*/}
               </ServerFooter>
             </ServerCard>
           )

@@ -54,7 +54,7 @@ const SelectModelPopupView: React.FC<Props> = ({ model, modelFilter, fromType, r
   }, [])
 
   const { models, loading, fetchNextPage, getFilteredModels, hasMore } = useAiOnlyModels({
-    pageSize: 10,
+    pageSize: 1000, // TODO: 临时规避分组加载数据抖动问题，后续改动，按实际使用，一次加载1000条也够用了
     autoFetch: true
   })
 

@@ -17,6 +17,7 @@
 import { loggerService } from '@logger'
 import { createSlice, nanoid, type PayloadAction } from '@reduxjs/toolkit'
 import { type BuiltinMCPServer, BuiltinMCPServerNames, type MCPConfig, type MCPServer } from '@renderer/types'
+import { APP_NAME } from '@shared/config/constant'
 
 const logger = loggerService.withContext('Store:MCP')
 const filesystemManualApprovalTools = ['write', 'edit', 'delete'] as const
@@ -96,7 +97,7 @@ export const hubMCPServer: BuiltinMCPServer = {
   name: BuiltinMCPServerNames.hub,
   type: 'inMemory',
   isActive: true,
-  provider: 'CherryAI',
+  provider: `${APP_NAME}`,
   installSource: 'builtin',
   isTrusted: true
 }
@@ -128,7 +129,7 @@ export const builtinMCPServers: BuiltinMCPServer[] = [
     command: 'npx',
     args: ['-y', '@mcpmarket/mcp-auto-install', 'connect', '--json'],
     isActive: false,
-    provider: 'CherryAI',
+    provider: `${APP_NAME}`,
     installSource: 'builtin',
     isTrusted: true
   },
@@ -142,7 +143,7 @@ export const builtinMCPServers: BuiltinMCPServer[] = [
       MEMORY_FILE_PATH: 'YOUR_MEMORY_FILE_PATH'
     },
     shouldConfig: true,
-    provider: 'CherryAI',
+    provider: `${APP_NAME}`,
     installSource: 'builtin',
     isTrusted: true
   },
@@ -151,7 +152,7 @@ export const builtinMCPServers: BuiltinMCPServer[] = [
     name: BuiltinMCPServerNames.sequentialThinking,
     type: 'inMemory',
     isActive: true,
-    provider: 'CherryAI',
+    provider: `${APP_NAME}`,
     installSource: 'builtin',
     isTrusted: true
   },
@@ -164,7 +165,7 @@ export const builtinMCPServers: BuiltinMCPServer[] = [
       BRAVE_API_KEY: 'YOUR_API_KEY'
     },
     shouldConfig: true,
-    provider: 'CherryAI',
+    provider: `${APP_NAME}`,
     installSource: 'builtin',
     isTrusted: true
   },
@@ -173,7 +174,7 @@ export const builtinMCPServers: BuiltinMCPServer[] = [
     name: BuiltinMCPServerNames.fetch,
     type: 'inMemory',
     isActive: true,
-    provider: 'CherryAI',
+    provider: `${APP_NAME}`,
     installSource: 'builtin',
     isTrusted: true
   },
@@ -185,7 +186,7 @@ export const builtinMCPServers: BuiltinMCPServer[] = [
     disabledAutoApproveTools: [...filesystemManualApprovalTools],
     shouldConfig: true,
     isActive: false,
-    provider: 'CherryAI',
+    provider: `${APP_NAME}`,
     installSource: 'builtin',
     isTrusted: true
   },
@@ -198,7 +199,7 @@ export const builtinMCPServers: BuiltinMCPServer[] = [
       DIFY_KEY: 'YOUR_DIFY_KEY'
     },
     shouldConfig: true,
-    provider: 'CherryAI',
+    provider: `${APP_NAME}`,
     installSource: 'builtin',
     isTrusted: true
   },
@@ -207,7 +208,7 @@ export const builtinMCPServers: BuiltinMCPServer[] = [
     name: BuiltinMCPServerNames.python,
     type: 'inMemory',
     isActive: false,
-    provider: 'CherryAI',
+    provider: `${APP_NAME}`,
     installSource: 'builtin',
     isTrusted: true
   },
@@ -221,7 +222,7 @@ export const builtinMCPServers: BuiltinMCPServer[] = [
       DIDI_API_KEY: 'YOUR_DIDI_API_KEY'
     },
     shouldConfig: true,
-    provider: 'CherryAI',
+    provider: `${APP_NAME}`,
     installSource: 'builtin',
     isTrusted: true
   },
@@ -230,7 +231,7 @@ export const builtinMCPServers: BuiltinMCPServer[] = [
     name: BuiltinMCPServerNames.browser,
     type: 'inMemory',
     isActive: false,
-    provider: 'CherryAI',
+    provider: `${APP_NAME}`,
     installSource: 'builtin',
     isTrusted: true
   },

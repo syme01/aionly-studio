@@ -124,7 +124,7 @@ const ModelSelector = ({
 
   /** 从接口查询文本模型 **/
   const { loading, getFilteredModels, handleScroll } = useAiOnlyModels({
-    pageSize: 10,
+    pageSize: 100, // TODO: 临时规避分组加载数据抖动问题，后续改动，按实际使用，一次加载1000条也够用了
     autoFetch: autoFetch,
     type: '1',
     modelAttribute: ModelAttribute.TextModel
