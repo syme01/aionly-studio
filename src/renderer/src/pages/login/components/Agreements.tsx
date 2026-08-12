@@ -33,7 +33,7 @@ export const Agreements = (props: AgreementsProps) => {
   const WebviewStyle: React.CSSProperties = {
     width: '100%',
     height: 'calc(100vh - 300px)',
-    backgroundColor: 'var(--color-background)',
+    // backgroundColor: 'var(--color-background)', // TODO：临时注释，待后续处理（暗黑模式下，嵌入的页面显示有问题）
     display: 'inline-flex'
   }
 

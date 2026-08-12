@@ -1,4 +1,5 @@
 import { getServiceApi } from '@renderer/api/seat'
+import bgLoginDark from '@renderer/assets/images/login/bg-login-dark.jpg'
 import bgLoginF from '@renderer/assets/images/login/bg-login-f.jpg'
 import lwImg from '@renderer/assets/images/login/lw.png'
 import i18n from '@renderer/i18n'
@@ -24,6 +25,9 @@ const LeftPanel = styled.div`
   width: 40%;
   background: url(${bgLoginF}) center center / 100% 100% no-repeat;
   position: relative;
+  [theme-mode='dark'] & {
+    background: url(${bgLoginDark}) center center / 100% 100% no-repeat;
+  }
 `
 
 const RightPanel = styled.div`
@@ -33,7 +37,6 @@ const RightPanel = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-background);
 
   .inner{
     width: 432px;

@@ -72,7 +72,6 @@ const StepOne: React.FC<Props> = ({ changeStep }) => {
 export default StepOne
 
 const Container = styled.div`
-  background: #fff;
   padding-top: 12px;
 
   .ant-form-item {
@@ -92,11 +91,14 @@ const LoginTitle = styled.div`
   color: #060a26;
   font-size: 30px;
   margin: 0 auto;
+  [theme-mode='dark'] & {
+    color: var(--color-white);
+  }
 `
 
 const SubTitle = styled.div`
   font-weight: 400;
-  color: #36445b;
+  color: var(--color-text-3);
   font-size: 12px;
   padding: 5px 0 20px;
   font-family: Source Han Sans CN;

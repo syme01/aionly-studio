@@ -7,7 +7,6 @@ import { useEffect, useImperativeHandle, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 const Container = styled.div`
-  background: var(--color-white);
   padding-top: 12px;
 `
 

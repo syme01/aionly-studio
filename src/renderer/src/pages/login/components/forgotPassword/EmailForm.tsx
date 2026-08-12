@@ -214,7 +214,18 @@ const LoginButton = styled(Button)`
   background: rgba(6, 10, 38, 1);
   border-radius: 8px;
 
-  &:not(:disabled):hover {
-    background: rgba(6, 10, 38, 0.8) !important;
+  [theme-mode='light'] & {
+    &:not(:disabled):hover {
+      background: rgba(6, 10, 38, 0.8) !important;
+    }
+  }
+
+  [theme-mode='dark'] & {
+    &:not(:disabled){
+      background: rgba(33, 51, 172, 1);
+      &:hover {
+        background: rgba(33, 51, 172, 0.8);
+      }
+    }
   }
 `

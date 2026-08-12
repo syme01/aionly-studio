@@ -27,7 +27,6 @@ export type SubAccountLoginFieldType = {
 }
 
 const Container = styled.div`
-  background: #fff;
   padding-top: 12px;
 
   .ant-form-item {
@@ -56,6 +55,9 @@ const LoginTitle = styled.div`
   font-size: 30px;
   margin: 0 auto 15px;
   text-align: center;
+  [theme-mode='dark'] & {
+    color: var(--color-white);
+  }
 `
 
 const LoginButton = styled(Button)`
@@ -64,8 +66,19 @@ const LoginButton = styled(Button)`
   background: rgba(6, 10, 38, 1);
   border-radius: 8px;
 
-  &:not(:disabled):hover {
-    background: rgba(6, 10, 38, 0.8) !important;
+  [theme-mode='light'] & {
+    &:not(:disabled):hover {
+      background: rgba(6, 10, 38, 0.8) !important;
+    }
+  }
+
+  [theme-mode='dark'] & {
+    &:not(:disabled){
+      background: rgba(33, 51, 172, 1);
+      &:hover {
+        background: rgba(33, 51, 172, 0.8);
+      }
+    }
   }
 `
 

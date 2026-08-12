@@ -38,6 +38,8 @@ const BindPhoneEmail: React.FC<Props> = ({ resolve, parentForm, navigate }) => {
   const verifyRef = useRef<any>(null)
   const [loading, setLoading] = useState(false)
   const [activeTabKey, setActiveTabKey] = useState('phone')
+  const phoneBindRef = useRef<PhoneBindRef | null>(null)
+  const emailBindRef = useRef<EmailBindRef | null>(null)
 
   /** 查询并保存用户信息 **/
   const saveUserInfo = useCallback(async () => {
@@ -58,17 +60,14 @@ const BindPhoneEmail: React.FC<Props> = ({ resolve, parentForm, navigate }) => {
     {
       key: 'phone',
       label: t('login.sub_account.bind_phone_email.phone.title'),
-      children: <PhoneBind onSuccess={handleLoginSuccess} />
+      children: <PhoneBind ref={phoneBindRef} verifyRef={verifyRef} onSuccess={handleLoginSuccess} />
     },
     {
       key: 'email',
       label: t('login.sub_account.bind_phone_email.email.title'),
-      children: <EmailBind onSuccess={handleLoginSuccess} />
+      children: <EmailBind ref={emailBindRef} verifyRef={verifyRef} onSuccess={handleLoginSuccess} />
     }
   ]
-
-  const phoneBindRef = useRef<PhoneBindRef | null>(null)
-  const emailBindRef = useRef<EmailBindRef | null>(null)
 
   // 获取当前激活 tab 对应的子组件 ref
   const getActiveRef = () => {

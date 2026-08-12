@@ -21,7 +21,6 @@ export interface EmailLoginRef {
 }
 
 const Container = styled.div`
-  background: #fff;
   padding-top: 12px;
 `
 

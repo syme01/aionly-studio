@@ -24,7 +24,6 @@ export interface PhoneBindRef {
 }
 
 const Container = styled.div`
-  background: var(--color-white);
   padding-top: 12px;
 `
 
