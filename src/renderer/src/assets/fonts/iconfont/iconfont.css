@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'iconfont'; /* Project id 5193624 */
   src:
-    url('iconfont.woff2?t=1782960114446') format('woff2'),
-    url('iconfont.woff?t=1782960114446') format('woff'),
-    url('iconfont.ttf?t=1782960114446') format('truetype');
+    url('iconfont.woff2?t=1786325615674') format('woff2'),
+    url('iconfont.woff?t=1786325615674') format('woff'),
+    url('iconfont.ttf?t=1786325615674') format('truetype');
 }
 
 .iconfont {
@@ -12,6 +12,46 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-ziyuan1:before {
+  content: '\e630';
+}
+
+.icon-ziyuan2:before {
+  content: '\e632';
+}
+
+.icon-zhuye:before {
+  content: '\e63b';
+}
+
+.icon-qiehuan1:before {
+  content: '\e607';
+}
+
+.icon-huoban:before {
+  content: '\e645';
+}
+
+.icon-qingchu:before {
+  content: '\e7ed';
+}
+
+.icon-tupianshengcheng:before {
+  content: '\e608';
+}
+
+.icon-choutishouqi:before {
+  content: '\e9c8';
+}
+
+.icon-choutizhankai:before {
+  content: '\e9c9';
+}
+
+.icon-daecundanzizhanghukaihu:before {
+  content: '\e604';
 }
 
 .icon-fasongguanli:before {

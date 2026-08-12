@@ -522,6 +522,9 @@ export const APP_API_HOST = 'https://api.aionly.com'
 export const USER_UI_HOST = import.meta.env.VITE_USER_UI_HOST || `https://maas.${APP_PROTOCOL}.com`
 export const WEB_UI_HOST = import.meta.env.VITE_WEB_UI_HOST || `https://www.${APP_PROTOCOL}.com`
 
+// export const USER_UI_HOST = `http://localhost:7023`
+// export const WEB_UI_HOST = `http://localhost:7022`
+
 // ============ Custom Update 自动更新服务接口地址 API ============
 export const UPDATE_API_BASE_URL = WEB_UI_HOST
 export const UPDATE_CHECK_PATH = '/api/base/clientVersion/latest' // GET {base}/base/clientVersion/latest/{platform}

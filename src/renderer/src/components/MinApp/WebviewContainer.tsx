@@ -216,16 +216,21 @@ const WebviewContainer = memo(
         return
       }
 
-      const target_path = url.split('?redirect=')[1]
+      const target_path = url.split('?')[1]
+
+      // console.log('url', url)
 
       if (!webviewRef.current) return
+
+      const path = target_path?.includes('redirect=') ? target_path.split('=')[1] : undefined
+      // console.log('path', path)
 
       // 发送初始化消息给目标页面
       const sendInitData = () => {
         const configData = {
           appId: appid,
           token: localStorage.getItem('token'),
-          path: target_path,
+          path,
           clientId: import.meta.env.VITE_APP_CLIENT_ID,
           config: { theme }
         }

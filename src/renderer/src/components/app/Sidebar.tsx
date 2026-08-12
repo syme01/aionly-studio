@@ -9,6 +9,8 @@ import useNavBackgroundColor from '@renderer/hooks/useNavBackgroundColor'
 import { modelGenerating, useRuntime } from '@renderer/hooks/useRuntime'
 import { useSettings } from '@renderer/hooks/useSettings'
 import { getSidebarIconLabel /*getThemeModeLabel*/ } from '@renderer/i18n/label'
+import { useAppSelector } from '@renderer/store'
+import { selectServiceInfo } from '@renderer/store/user'
 // import { ThemeMode } from '@renderer/types'
 import { Avatar /*Tooltip*/ } from 'antd'
 /*import {
@@ -27,7 +29,7 @@ import { Avatar /*Tooltip*/ } from 'antd'
   Sparkle,
   // Sun
 } from 'lucide-react'*/
-import type { FC } from 'react'
+import { FC, useMemo } from 'react'
 // import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
@@ -121,6 +123,7 @@ const MainMenus: FC = () => {
   const { minappShow } = useRuntime()
   const navigate = useNavigate()
   const { theme } = useTheme()
+  const serviceInfo = useAppSelector(selectServiceInfo)
 
   const isRoute = (path: string): string => (pathname === path && !minappShow ? 'active' : '')
   const isRoutes = (path: string): string => (pathname.startsWith(path) && path !== '/' && !minappShow ? 'active' : '')
@@ -154,38 +157,52 @@ const MainMenus: FC = () => {
   }*/
 
   // 显示在左侧的菜单
-  const showInLeftMenus = [
-    {
-      path: '/',
-      name: 'assistants',
-      icon: 'icon-duihuamoren',
-      iconActive: 'icon-duihuaxuanzhong'
-    },
-    {
-      path: '/agents',
-      name: 'agents',
-      icon: 'icon-zhinengtimoren',
-      iconActive: 'icon-zhinengtixuanzhong'
-    },
-    {
-      path: `/paintings/${defaultPaintingProvider}`,
-      name: 'paintings',
-      icon: 'icon-huihuamoren',
-      iconActive: 'icon-huihuaxuanzhong'
-    },
-    {
-      path: '/translate',
-      name: 'translate',
-      icon: 'icon-fanyimoren',
-      iconActive: 'icon-fanyixuanzhong'
-    },
-    {
-      path: '/apps',
-      name: 'minapp',
-      icon: 'icon-xiaochengxumoren',
-      iconActive: 'icon-xiaochengxuxuanzhong'
+  const showInLeftMenus = useMemo(() => {
+    const base = [
+      {
+        path: '/',
+        name: 'assistants',
+        icon: 'icon-duihuamoren',
+        iconActive: 'icon-duihuaxuanzhong'
+      },
+      {
+        path: '/agents',
+        name: 'agents',
+        icon: 'icon-zhinengtimoren',
+        iconActive: 'icon-zhinengtixuanzhong'
+      },
+      {
+        path: `/paintings/${defaultPaintingProvider}`,
+        name: 'paintings',
+        icon: 'icon-huihuamoren',
+        iconActive: 'icon-huihuaxuanzhong'
+      },
+      {
+        path: '/translate',
+        name: 'translate',
+        icon: 'icon-fanyimoren',
+        iconActive: 'icon-fanyixuanzhong'
+      },
+      {
+        path: '/apps',
+        name: 'minapp',
+        icon: 'icon-xiaochengxumoren',
+        iconActive: 'icon-xiaochengxuxuanzhong'
+      }
+    ]
+    if (serviceInfo?.planStatus == 1) {
+      return [
+        ...base,
+        {
+          path: '/tokenPlan',
+          name: 'token plan',
+          icon: 'icon-ziyuan1',
+          iconActive: 'icon-ziyuan2'
+        }
+      ]
     }
-  ]
+    return base
+  }, [defaultPaintingProvider, serviceInfo?.planStatus])
 
   // console.log('sidebarIcons', sidebarIcons)
 

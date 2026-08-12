@@ -6,6 +6,7 @@ import OpenAIAlert from '@renderer/components/Alert/OpenAIAlert'
 import { showErrorDetailPopup } from '@renderer/components/ErrorDetailModal'
 import { LoadingIcon } from '@renderer/components/Icons'
 import { HStack } from '@renderer/components/Layout'
+import TokenPlanPopup from '@renderer/components/Popups/TokenPlan/TokenPlanPopup'
 // import { ApiKeyListPopup } from '@renderer/components/Popups/ApiKeyListPopup'
 import Selector from '@renderer/components/Selector'
 // import { HelpTooltip } from '@renderer/components/TooltipIcons'
@@ -14,12 +15,14 @@ import { PROVIDER_URLS } from '@renderer/config/providers'
 import { useTheme } from '@renderer/context/ThemeProvider'
 import { useProvider /*useProviders, useAllProviders*/ } from '@renderer/hooks/useProvider'
 import { useTimer } from '@renderer/hooks/useTimer'
+import useUserTokenPlan from '@renderer/hooks/useUserTokenPlan'
 import AnthropicSettings from '@renderer/pages/settings/ProviderSettings/AnthropicSettings'
 import { ModelList } from '@renderer/pages/settings/ProviderSettings/ModelList'
 import { checkApi } from '@renderer/services/ApiService'
 import { loggerService } from '@renderer/services/LoggerService'
 import { isProviderSupportAuth } from '@renderer/services/ProviderService'
-import { useAppDispatch } from '@renderer/store'
+import { useAppDispatch, useAppSelector } from '@renderer/store'
+import { selectServiceInfo, selectUserInfo } from '@renderer/store/user'
 import { updateWebSearchProvider } from '@renderer/store/websearch'
 import type { SystemProviderId } from '@renderer/types'
 import { isSystemProviderId, SystemProviderIds } from '@renderer/types'
@@ -42,8 +45,7 @@ import { isAzureOpenAIProvider, isNewApiProvider, isVertexProvider } from '@rend
 import { Button, Flex, Input, Select, Space, Tooltip, Typography } from 'antd'
 import { debounce, isEmpty, throttle } from 'lodash'
 import { Check, Settings2, TriangleAlert } from 'lucide-react'
-import type { FC } from 'react'
-import { useEffect } from 'react'
+import { FC, useEffect } from 'react'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -109,10 +111,17 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
   const [anthropicApiHost, setAnthropicHost] = useState<string | undefined>(provider.anthropicApiHost)
   const [apiVersion, setApiVersion] = useState(provider.apiVersion)
   const [activeHostField, setActiveHostField] = useState<HostField>('apiHost')
+  const [apiKeyType, setApiKeyType] = useState('aionly') // apiKey类型 'aionly' | 'tokenPlan'
+  const [subscribePlan, setSubscribePlan] = useState<string | undefined>(undefined) // 套餐类型
+  const [userSelectedTokenPlan, setUserSelectedTokenPlan] = useState<any>(null) // 当前用户启用的tokenPlan套餐数据
+
   const { t, i18n } = useTranslation()
   const { theme } = useTheme()
   const { setTimeoutTimer } = useTimer()
   const dispatch = useAppDispatch()
+  const serviceInfo = useAppSelector(selectServiceInfo)
+  const userInfo: any = useAppSelector(selectUserInfo)
+  const { getUserEnabledPlan } = useUserTokenPlan(userInfo?.userId)
 
   const isAzureOpenAI = isAzureOpenAIProvider(provider)
   const isDmxapi = provider.id === 'dmxapi'
@@ -129,6 +138,14 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
   const configuredApiHost = providerConfig?.api?.url
 
   const fancyProviderName = getFancyProviderName(provider)
+
+  /** TODO: 是否启用了tokenPlan，后台管理配置 */
+  const tokenPlanEnabled = useMemo(() => {
+    return serviceInfo?.planStatus == 1
+  }, [serviceInfo?.planStatus])
+
+  /** 是否有用户token计划数据(由用户开启) */
+  const [hasUserTokenPlanData, setHasUserTokenPlanData] = useState<any>(getUserEnabledPlan())
 
   const [localApiKey, setLocalApiKey] = useState(provider.apiKey)
   const [apiKeyConnectivity, setApiKeyConnectivity] = useState<ApiKeyConnectivity>({
@@ -552,6 +569,14 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
     }
   }, [handleScrollInnerThrottled])
 
+  // 打开 TokenPlanModal
+  const handleOpenTokenPlanModal = async () => {
+    const res = await TokenPlanPopup.show()
+    if (res) {
+      setHasUserTokenPlanData(res.enabled)
+    }
+  }
+
   return (
     <SettingContainer theme={theme} style={{ background: 'var(--color-background)' }} onScroll={handleScroll}>
       {/*<SettingTitle>
@@ -607,6 +632,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
           {provider.authType === 'oauth' && <AnthropicSettings />}
         </>
       )}
+
       {!hideApiInput && !isAnthropicOAuth() && (
         <>
           {!hideApiKeyInput && (
@@ -618,21 +644,47 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
                   alignItems: 'center',
                   justifyContent: 'space-between'
                 }}>
-                {t('settings.provider.api_key.label')}
+                <div className="inner">
+                  <span className="title">{t('settings.provider.api_key.label')}</span>
+                  {userSelectedTokenPlan?.status == 2 && (
+                    <span className="description enabled">
+                      ({t('settings.provider.api_key.token_plan.title')}
+                      {t('settings.provider.api_key.token_plan.status.enabled')})
+                    </span>
+                  )}
+                  {userSelectedTokenPlan?.status == 1 && (
+                    <span className="description disabled">
+                      ({t('settings.provider.api_key.token_plan.title')}
+                      {t('settings.provider.api_key.token_plan.status.disabled')})
+                    </span>
+                  )}
+                </div>
 
                 {/*{provider.id !== 'copilot' && (
                   <Tooltip title={t('settings.provider.api.key.list.open')} mouseEnterDelay={0.5}>
                     <Button type="text" onClick={openApiKeyList} icon={<Settings2 size={16} />} />
                   </Tooltip>
                 )}*/}
+
                 {provider.id !== 'copilot' && (
                   <Flex gap={10}>
-                    <Button
-                      type="primary"
-                      onClick={openApiKeyList}
-                      style={{ padding: '3px 12px', height: 'auto', fontSize: 12 }}>
-                      {t('settings.provider.api.key.list.title')}
-                    </Button>
+                    {tokenPlanEnabled && (
+                      <Button
+                        type="primary"
+                        ghost={true}
+                        onClick={handleOpenTokenPlanModal}
+                        style={{ padding: '3px 12px', height: 'auto', fontSize: 12 }}>
+                        {t('settings.provider.api_key.token_plan.title')}
+                      </Button>
+                    )}
+                    {!hasUserTokenPlanData && (
+                      <Button
+                        type="primary"
+                        onClick={openApiKeyList}
+                        style={{ padding: '3px 12px', height: 'auto', fontSize: 12 }}>
+                        {t('settings.provider.api.key.list.title')}
+                      </Button>
+                    )}
                   </Flex>
                 )}
               </SettingSubtitle>

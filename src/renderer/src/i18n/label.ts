@@ -155,7 +155,8 @@ const titleKeyMap = {
   settings: 'title.settings',
   translate: 'title.translate',
   openclaw: 'openclaw.title',
-  agents: 'agent.sidebar_title'
+  agents: 'agent.sidebar_title',
+  tokenPlan: 'tokenPlan.title'
 } as const
 
 export const getTitleLabel = (key: string): string => {
@@ -198,7 +199,8 @@ const sidebarIconKeyMap = {
   openclaw: 'openclaw.title',
   settings: 'settings.title',
   identity: 'identity.title',
-  logout: 'logout.title'
+  logout: 'logout.title',
+  'token plan': 'tokenPlan.title'
 } as const
 
 export const getSidebarIconLabel = (key: string): string => {

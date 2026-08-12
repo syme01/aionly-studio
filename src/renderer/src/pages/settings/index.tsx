@@ -34,6 +34,24 @@ export const SettingSubtitle = styled.div`
   user-select: none;
   font-weight: bold;
 
+  .inner{
+    .title{
+      user-select: none;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .description{
+      padding-left: 5px;
+      font-size: 12px;
+      &.enabled{
+        color: var(--color-green-500);
+      }
+      &.disabled{
+        color: var(--color-red-500);
+      }
+    }
+  }
+
   .ant-tabs-top >.ant-tabs-nav{
     margin: 0;
   }
