@@ -42,6 +42,7 @@ import { serializeHealthCheckError } from '@renderer/utils/error'
   isVertexProvider
 } from '@renderer/utils/provider'*/
 import { isAzureOpenAIProvider, isNewApiProvider, isVertexProvider } from '@renderer/utils/provider'
+import { TOKEN_PLAN_ANTHROPIC_BASE_URL, TOKEN_PLAN_OPENAI_BASE_URL } from '@shared/config/constant'
 import { Button, Flex, Input, Select, Space, Tooltip, Typography } from 'antd'
 import { debounce, isEmpty, throttle } from 'lodash'
 import { Check, Settings2, TriangleAlert } from 'lucide-react'
@@ -111,9 +112,12 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
   const [anthropicApiHost, setAnthropicHost] = useState<string | undefined>(provider.anthropicApiHost)
   const [apiVersion, setApiVersion] = useState(provider.apiVersion)
   const [activeHostField, setActiveHostField] = useState<HostField>('apiHost')
-  const [apiKeyType, setApiKeyType] = useState('aionly') // apiKey类型 'aionly' | 'tokenPlan'
-  const [subscribePlan, setSubscribePlan] = useState<string | undefined>(undefined) // 套餐类型
-  const [userSelectedTokenPlan, setUserSelectedTokenPlan] = useState<any>(null) // 当前用户启用的tokenPlan套餐数据
+
+  /**
+   * TODO： 当前用户启用的tokenPlan套餐数据--用来判断是否已失效
+   * 需要一个接口获取当前用户启用的tokenPlan套餐数据（根据planId）
+   * **/
+  const [userSelectedTokenPlan, setUserSelectedTokenPlan] = useState<any>(null)
 
   const { t, i18n } = useTranslation()
   const { theme } = useTheme()
@@ -208,6 +212,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
     const user = user_res.data?.user
     const res = await getApikeyByUserId({ userId: user?.userId || '' })
     const secretKey = res.msg
+    localStorage.setItem('userSecretKey', secretKey)
     setLocalApiKey(secretKey)
   }
 
@@ -569,11 +574,40 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
     }
   }, [handleScrollInnerThrottled])
 
+  useEffect(() => {
+    const map = {
+      apiHost: () => {
+        const baseUrl = hasUserTokenPlanData ? TOKEN_PLAN_OPENAI_BASE_URL : provider.apiHost
+        setApiHost(baseUrl)
+      },
+      anthropicApiHost: () => {
+        const baseUrl = hasUserTokenPlanData ? TOKEN_PLAN_ANTHROPIC_BASE_URL : provider.anthropicApiHost
+        setAnthropicHost(baseUrl)
+      }
+    }
+    map[activeHostField]?.()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeHostField, hasUserTokenPlanData])
+
   // 打开 TokenPlanModal
   const handleOpenTokenPlanModal = async () => {
     const res = await TokenPlanPopup.show()
     if (res) {
       setHasUserTokenPlanData(res.enabled)
+      if (res.enabled) {
+        setLocalApiKey(res.apikey)
+        if (activeHostField === 'apiHost' && canConfigureAnthropicHost) {
+          setApiHost(TOKEN_PLAN_OPENAI_BASE_URL)
+        }
+        if (activeHostField === 'anthropicApiHost' && canConfigureAnthropicHost) {
+          setAnthropicHost(TOKEN_PLAN_ANTHROPIC_BASE_URL)
+        }
+      } else {
+        const userSecretKey = localStorage.getItem('userSecretKey') ?? ''
+        setLocalApiKey(userSecretKey)
+        setActiveHostField('apiHost')
+        setApiHost(provider.apiHost)
+      }
     }
   }
 

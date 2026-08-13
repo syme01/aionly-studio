@@ -522,6 +522,7 @@ export const APP_API_HOST = 'https://api.aionly.com'
 export const USER_UI_HOST = import.meta.env.VITE_USER_UI_HOST || `https://maas.${APP_PROTOCOL}.com`
 export const WEB_UI_HOST = import.meta.env.VITE_WEB_UI_HOST || `https://www.${APP_PROTOCOL}.com`
 
+// 本地临时修改环境
 // export const USER_UI_HOST = `http://localhost:7023`
 // export const WEB_UI_HOST = `http://localhost:7022`
 
@@ -529,3 +530,7 @@ export const WEB_UI_HOST = import.meta.env.VITE_WEB_UI_HOST || `https://www.${AP
 export const UPDATE_API_BASE_URL = WEB_UI_HOST
 export const UPDATE_CHECK_PATH = '/api/base/clientVersion/latest' // GET {base}/base/clientVersion/latest/{platform}
 // export const UPDATE_DOWNLOAD_API_BASE_URL = '/api/resource/oss/download'
+
+// token plan api地址(暂未配置到GitHub环境变量，应该不会变)
+export const TOKEN_PLAN_OPENAI_BASE_URL = `${APP_API_HOST}/chat/completions`
+export const TOKEN_PLAN_ANTHROPIC_BASE_URL = `${APP_API_HOST}/v1/messages`
