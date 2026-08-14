@@ -5555,6 +5555,9 @@
         "label": "API 密钥",
         "tip": "多个密钥使用逗号分隔",
         "token_plan": {
+          "cur_plan": {
+            "name": "套餐名称："
+          },
           "title": "TokenPlan",
           "model_title": "使用token plan",
           "subscribe_label": "选择套餐",
@@ -5562,6 +5565,8 @@
           "credits": "剩余用量(Credits)",
           "price": "定价",
           "effective": "有效期",
+          "effective_s": "起",
+          "effective_e": "止",
           "month": "月度",
           "quarter": "季度",
           "year": "年度",
@@ -5575,15 +5580,15 @@
           },
           "confirm_enable_title": "TokenPlan启用",
           "confirm_disable_title": "TokenPlan停用",
-          "confirm_enable_content": "是否启用TokenPlan套餐，启用后将切换至该套餐的tk-key并支持请求该套餐中的模型",
-          "confirm_disable_content": "是否停用TokenPlan套餐，停用后将自动切换回平台默认sk-key",
+          "confirm_enable_content": "是否启用TokenPlan套餐？启用后将切换至该套餐的tk-key并切换为该套餐中的模型",
+          "confirm_disable_content": "是否停用TokenPlan套餐？停用后将自动切换回平台默认sk-key",
           "columns": {
             "planName": "套餐名称/分类",
             "totalAmount": "定价",
             "status": "状态",
             "creditsRest": "用量(credits)",
             "effective": "有效期",
-            "action": "启用/禁用"
+            "action": "启用/停用"
           },
           "status": {
             "enabled": "生效中",

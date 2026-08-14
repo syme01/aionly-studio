@@ -193,6 +193,7 @@ export const SYSTEM_PROVIDERS_CONFIG: Record<SystemProviderId, SystemProvider> =
     type: 'openai',
     apiKey: '',
     apiHost: APP_API_HOST,
+    anthropicApiHost: APP_API_HOST,
     models: SYSTEM_MODELS.aionly,
     isSystem: true,
     enabled: true

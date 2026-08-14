@@ -76,7 +76,7 @@ const ModelSettings: FC<ModelSettingsProps> = ({
   const groupStyle = compact ? { padding: 0, border: 'none', background: 'transparent' } : undefined
 
   const { getFilteredModels, loading, handleScroll } = useAiOnlyModels({
-    pageSize: 1000,
+    pageSize: 10, // TODO: 暂时传1000，规避闪动，后续根据实际需求调整
     autoFetch: true,
     type: '1',
     modelAttribute: ModelAttribute.TextModel

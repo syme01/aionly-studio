@@ -260,6 +260,10 @@ export const getIndexTokenPlanPageListApi = (params) => {
   return http.get(`/ai/tokenPlanSubscribe/queryIndexPageList`, params, { cancel: false })
 }
 
+export const queryIndexDetail = (params: any) => {
+  return http.get(`/ai/tokenPlanSubscribe/queryIndexDetail`, params, { cancel: false })
+}
+
 export const getRacorePayReslut = (id) => {
   return http.get(`/money/recharge/getRacorePayReslut/${id}`, {}, { cancel: false })
 }

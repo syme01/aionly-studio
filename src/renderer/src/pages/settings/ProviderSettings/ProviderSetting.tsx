@@ -1,6 +1,7 @@
 import AiOnlyApiKeyListPopup from '@renderer//components/Popups/ApiKeyListPopup/aionly/popup'
 // import { adaptProvider } from '@renderer/aiCore/provider/providerConfig'
 import { addApikey, getApikeyList } from '@renderer/api/apikey'
+import { queryIndexDetail } from '@renderer/api/balance'
 import { getApikeyByUserId, getUserProfileApi } from '@renderer/api/login'
 import OpenAIAlert from '@renderer/components/Alert/OpenAIAlert'
 import { showErrorDetailPopup } from '@renderer/components/ErrorDetailModal'
@@ -42,7 +43,6 @@ import { serializeHealthCheckError } from '@renderer/utils/error'
   isVertexProvider
 } from '@renderer/utils/provider'*/
 import { isAzureOpenAIProvider, isNewApiProvider, isVertexProvider } from '@renderer/utils/provider'
-import { TOKEN_PLAN_ANTHROPIC_BASE_URL, TOKEN_PLAN_OPENAI_BASE_URL } from '@shared/config/constant'
 import { Button, Flex, Input, Select, Space, Tooltip, Typography } from 'antd'
 import { debounce, isEmpty, throttle } from 'lodash'
 import { Check, Settings2, TriangleAlert } from 'lucide-react'
@@ -113,12 +113,6 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
   const [apiVersion, setApiVersion] = useState(provider.apiVersion)
   const [activeHostField, setActiveHostField] = useState<HostField>('apiHost')
 
-  /**
-   * TODO： 当前用户启用的tokenPlan套餐数据--用来判断是否已失效
-   * 需要一个接口获取当前用户启用的tokenPlan套餐数据（根据planId）
-   * **/
-  const [userSelectedTokenPlan, setUserSelectedTokenPlan] = useState<any>(null)
-
   const { t, i18n } = useTranslation()
   const { theme } = useTheme()
   const { setTimeoutTimer } = useTimer()
@@ -126,6 +120,12 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
   const serviceInfo = useAppSelector(selectServiceInfo)
   const userInfo: any = useAppSelector(selectUserInfo)
   const { getUserEnabledPlan } = useUserTokenPlan(userInfo?.userId)
+
+  /**
+   * TODO： 当前用户启用的tokenPlan套餐数据--用来判断是否已失效
+   * 需要一个接口获取当前用户启用的tokenPlan套餐数据（根据planId）
+   * **/
+  const [userSelectedTokenPlan, setUserSelectedTokenPlan] = useState<any>(getUserEnabledPlan())
 
   const isAzureOpenAI = isAzureOpenAIProvider(provider)
   const isDmxapi = provider.id === 'dmxapi'
@@ -149,7 +149,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
   }, [serviceInfo?.planStatus])
 
   /** 是否有用户token计划数据(由用户开启) */
-  const [hasUserTokenPlanData, setHasUserTokenPlanData] = useState<any>(getUserEnabledPlan())
+  const [hasUserTokenPlanData, setHasUserTokenPlanData] = useState<any>(!!getUserEnabledPlan())
 
   const [localApiKey, setLocalApiKey] = useState(provider.apiKey)
   const [apiKeyConnectivity, setApiKeyConnectivity] = useState<ApiKeyConnectivity>({
@@ -190,9 +190,28 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
   }, [])
 
   useEffect(() => {
-    getApiKeyPageList()
-    initUserApi()
-  }, [getApiKeyPageList])
+    getApiKeyPageList().then()
+    if (!hasUserTokenPlanData) {
+      initUserApi().then()
+    }
+  }, [getApiKeyPageList, hasUserTokenPlanData])
+
+  // 查询用户tokenPlan明细接口
+  const getUserTokenPlanDetail = useCallback(async () => {
+    const res = await queryIndexDetail({
+      id: getUserEnabledPlan()?.id
+    })
+    setUserSelectedTokenPlan(res.data)
+  }, [getUserEnabledPlan])
+
+  // 查询用户tokenPlan明细---显示是否过期
+  useEffect(() => {
+    if (hasUserTokenPlanData) {
+      getUserTokenPlanDetail().then()
+    } else {
+      setUserSelectedTokenPlan(null)
+    }
+  }, [hasUserTokenPlanData])
 
   // TODO 生成密钥
   const handleGetApiKey = async () => {
@@ -207,6 +226,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
     }
   }
 
+  // 初始化查询用户密钥
   const initUserApi = async () => {
     const user_res: any = await getUserProfileApi()
     const user = user_res.data?.user
@@ -214,6 +234,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
     const secretKey = res.msg
     localStorage.setItem('userSecretKey', secretKey)
     setLocalApiKey(secretKey)
+    updateProvider({ apiKey: secretKey })
   }
 
   const updateWebSearchProviderKey = useCallback(
@@ -327,6 +348,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
 
   const openApiKeyList = async () => {
     if (localApiKey !== provider.apiKey) {
+      // console.log('localApiKey !== provider.apiKey', localApiKey, provider.apiKey)
       updateProvider({ apiKey: formatApiKeys(localApiKey) })
       await new Promise((resolve) => setTimeout(resolve, 0))
     }
@@ -542,17 +564,25 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
   )
 
   // 监听滚动事件，滚动到底部时触发分页加载
-  const handleScrollInner = useCallback((scrollTop: number, scrollHeight: number, clientHeight: number) => {
-    const distanceFromBottom = scrollHeight - scrollTop - clientHeight
-
-    // 距离底部小于 100px 时触发加载
-    if (distanceFromBottom < 50) {
-      const state = paginationStateRef.current
-      if (state && state.hasMore && !state.loading) {
-        state.fetchNextPage()
+  const handleScrollInner = useCallback(
+    (scrollTop: number, scrollHeight: number, clientHeight: number) => {
+      // 如果启用了 tokenPlan，不执行滚动加载
+      if (hasUserTokenPlanData) {
+        return
       }
-    }
-  }, [])
+
+      const distanceFromBottom = scrollHeight - scrollTop - clientHeight
+
+      // 距离底部小于 50px 时触发加载
+      if (distanceFromBottom < 50) {
+        const state = paginationStateRef.current
+        if (state && state.hasMore && !state.loading) {
+          state.fetchNextPage()
+        }
+      }
+    },
+    [hasUserTokenPlanData]
+  )
 
   const handleScrollInnerThrottled = useMemo(() => throttle(handleScrollInner, 200), [handleScrollInner])
 
@@ -574,39 +604,35 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
     }
   }, [handleScrollInnerThrottled])
 
-  useEffect(() => {
-    const map = {
-      apiHost: () => {
-        const baseUrl = hasUserTokenPlanData ? TOKEN_PLAN_OPENAI_BASE_URL : provider.apiHost
-        setApiHost(baseUrl)
-      },
-      anthropicApiHost: () => {
-        const baseUrl = hasUserTokenPlanData ? TOKEN_PLAN_ANTHROPIC_BASE_URL : provider.anthropicApiHost
-        setAnthropicHost(baseUrl)
-      }
-    }
-    map[activeHostField]?.()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeHostField, hasUserTokenPlanData])
-
-  // 打开 TokenPlanModal
+  /** 打开 TokenPlanModal */
   const handleOpenTokenPlanModal = async () => {
     const res = await TokenPlanPopup.show()
     if (res) {
       setHasUserTokenPlanData(res.enabled)
       if (res.enabled) {
         setLocalApiKey(res.apikey)
+        // 重新获取最新的 tokenPlan 详细数据
+        await getUserTokenPlanDetail()
         if (activeHostField === 'apiHost' && canConfigureAnthropicHost) {
-          setApiHost(TOKEN_PLAN_OPENAI_BASE_URL)
+          updateProvider({
+            apiKey: formatApiKeys(res.apikey)
+          })
         }
         if (activeHostField === 'anthropicApiHost' && canConfigureAnthropicHost) {
-          setAnthropicHost(TOKEN_PLAN_ANTHROPIC_BASE_URL)
+          updateProvider({
+            apiKey: formatApiKeys(res.apikey)
+          })
         }
       } else {
         const userSecretKey = localStorage.getItem('userSecretKey') ?? ''
         setLocalApiKey(userSecretKey)
         setActiveHostField('apiHost')
         setApiHost(provider.apiHost)
+        setUserSelectedTokenPlan(null)
+        updateProvider({
+          apiKey: formatApiKeys(userSecretKey),
+          apiHost: provider.apiHost
+        })
       }
     }
   }
@@ -681,13 +707,13 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
                 <div className="inner">
                   <span className="title">{t('settings.provider.api_key.label')}</span>
                   {userSelectedTokenPlan?.status == 2 && (
-                    <span className="description enabled">
-                      ({t('settings.provider.api_key.token_plan.title')}
-                      {t('settings.provider.api_key.token_plan.status.enabled')})
+                    <span className="plan-status-tag enabled">
+                      {t('settings.provider.api_key.token_plan.title')}
+                      {t('settings.provider.api_key.token_plan.status.enabled')}
                     </span>
                   )}
                   {userSelectedTokenPlan?.status == 1 && (
-                    <span className="description disabled">
+                    <span className="plan-status-tag disabled">
                       ({t('settings.provider.api_key.token_plan.title')}
                       {t('settings.provider.api_key.token_plan.status.disabled')})
                     </span>
@@ -888,7 +914,12 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
       {provider.id === 'copilot' && <GithubCopilotSettings providerId={provider.id} />}
       {provider.id === 'aws-bedrock' && <AwsBedrockSettings />}
       {provider.id === 'vertexai' && <VertexAISettings />}
-      <ModelList providerId={provider.id} onPaginationStateChange={handlePaginationStateChange} />
+      <ModelList
+        providerId={provider.id}
+        hasUserTokenPlanData={hasUserTokenPlanData}
+        userSelectedTokenPlan={userSelectedTokenPlan}
+        onPaginationStateChange={handlePaginationStateChange}
+      />
     </SettingContainer>
   )
 }

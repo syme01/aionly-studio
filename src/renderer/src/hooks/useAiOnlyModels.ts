@@ -212,6 +212,7 @@ export function modelToApiModel(model: Model): ApiModel {
 export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): {
   models: AiOnlyModel[]
   loading: boolean
+  setLoading: (loading: boolean) => void
   pageParams: ModelPageParams
   setPageParams: (pageParams: (prev: any) => any) => void
   fetchModels: (pageNum: number) => Promise<void>
@@ -323,15 +324,22 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): {
   // 滚动事件处理器，用于无限滚动加载
   const handleScroll = useCallback(
     (e: React.UIEvent<HTMLDivElement>) => {
-      // logger.info('handleScroll', { scrollEvent: e.type })
-      if (loadingRef.current || !hasMore) return
+      if (loadingRef.current || !hasMore) {
+        logger.info('handleScroll early return', {
+          reason: loadingRef.current ? 'loading' : 'no more data'
+        })
+        return
+      }
+
       const { scrollTop, scrollHeight, clientHeight } = e.currentTarget
+      const distanceToBottom = scrollHeight - scrollTop - clientHeight
+
       // 距底部 scrollThreshold 像素以内触发加载
-      if (scrollHeight - scrollTop - clientHeight < scrollThreshold) {
+      if (distanceToBottom < scrollThreshold) {
         void fetchNextPage()
       }
     },
-    [hasMore, scrollThreshold, fetchNextPage]
+    [hasMore, scrollThreshold, fetchNextPage, models.length, pageParams.total]
   )
 
   // 获取过滤后的模型列表数据
@@ -357,6 +365,7 @@ export function useAiOnlyModels(options: UseAiOnlyModelsOptions = {}): {
   return {
     models,
     loading,
+    setLoading,
     pageParams,
     setPageParams,
     fetchModels,

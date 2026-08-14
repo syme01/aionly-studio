@@ -1,12 +1,16 @@
+import { selectTokenPlanHourlyDayUsageApi } from '@renderer/api/billManagement'
 import CollapsibleSearchBar from '@renderer/components/CollapsibleSearchBar'
 import { HStack } from '@renderer/components/Layout'
 import { DynamicVirtualList, type DynamicVirtualListRef } from '@renderer/components/VirtualList'
 import { PROVIDER_URLS } from '@renderer/config/providers'
 import { transformToModel, useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels'
 import { useProvider } from '@renderer/hooks/useProvider'
+import useUserTokenPlan from '@renderer/hooks/useUserTokenPlan'
 import { getProviderLabel } from '@renderer/i18n/label'
 import { SettingHelpLink, SettingHelpText, SettingHelpTextRow, SettingSubtitle } from '@renderer/pages/settings'
 import EditModelPopup from '@renderer/pages/settings/ProviderSettings/EditModelPopup/EditModelPopup'
+import { useAppSelector } from '@renderer/store'
+import { selectUserInfo } from '@renderer/store/user'
 import { handleCacheUpdatedModels } from '@renderer/tools'
 // import AddModelPopup from '@renderer/pages/settings/ProviderSettings/ModelList/AddModelPopup'
 // import DownloadOVMSModelPopup from '@renderer/pages/settings/ProviderSettings/ModelList/DownloadOVMSModelPopup'
@@ -16,7 +20,7 @@ import type { Model } from '@renderer/types'
 import { filterModelsByKeywords } from '@renderer/utils'
 import { getDuplicateModelNames } from '@renderer/utils/model'
 // import { isNewApiProvider } from '@renderer/utils/provider'
-import type { RadioChangeEvent } from 'antd'
+import { RadioChangeEvent } from 'antd'
 import { Button, Divider, Empty, Flex, Radio, Space, Spin } from 'antd'
 import { groupBy, isEmpty, sortBy, toPairs } from 'lodash'
 import { RefreshCw } from 'lucide-react'
@@ -26,10 +30,13 @@ import styled from 'styled-components'
 
 import AiOnlyAddModelPopup from '../AiOnlyModel/add/AddModelPopup'
 import ModelListGroup from './ModelListGroup'
+import TokenPlanInfo from './TokenPlanInfo'
 import { useHealthCheck } from './useHealthCheck'
 
 interface ModelListProps {
   providerId: string
+  hasUserTokenPlanData: boolean
+  userSelectedTokenPlan?: any
   onPaginationStateChange?: (state: { fetchNextPage: () => void; loading: boolean; hasMore: boolean }) => void
 }
 
@@ -66,9 +73,9 @@ const ModelListContainer = styled.div`
 /**
  * 根据搜索文本筛选模型、分组并排序
  */
-const calculateModelGroups = (models: Model[], searchText: string): ModelGroups => {
+const calculateModelGroups = (models: Model[], searchText: string, hasUserTokenPlanData: boolean): ModelGroups => {
   // 只显示"先用后付"的模型
-  const payLaterModels = models.filter((m: any) => m.packageNum === '先用后付')
+  const payLaterModels = hasUserTokenPlanData ? models : models.filter((m: any) => m.packageNum === '先用后付')
   const filteredModels = searchText ? filterModelsByKeywords(searchText, payLaterModels) : payLaterModels
   const grouped = groupBy(filteredModels, 'group')
   return sortBy(toPairs(grouped), [0]).reduce((acc, [key, value]) => {
@@ -80,7 +87,12 @@ const calculateModelGroups = (models: Model[], searchText: string): ModelGroups 
 /**
  * 模型列表组件，用于 CRUD 操作和健康检查
  */
-const ModelList: React.FC<ModelListProps> = ({ providerId, onPaginationStateChange }) => {
+const ModelList: React.FC<ModelListProps> = ({
+  providerId,
+  hasUserTokenPlanData = false,
+  userSelectedTokenPlan = {},
+  onPaginationStateChange
+}) => {
   const { t } = useTranslation()
   // const { provider, models, removeModel } = useProvider(providerId)
   const { provider, removeModel } = useProvider(providerId)
@@ -101,18 +113,53 @@ const ModelList: React.FC<ModelListProps> = ({ providerId, onPaginationStateChan
     }
   ]
 
+  const userInfo: any = useAppSelector(selectUserInfo)
+  const { getUserEnabledPlan } = useUserTokenPlan(userInfo?.userId)
+  const [tokenPlanModels, setTokenPlanModels] = useState<any[]>([])
+  const [fullLoading, setFullLoading] = useState(false)
+
   const listRef = useRef<DynamicVirtualListRef>(null)
 
-  const { getFilteredModels, loading, fetchNextPage, reset, hasMore } = useAiOnlyModels()
+  const { getFilteredModels, loading, fetchNextPage, reset, hasMore } = useAiOnlyModels({
+    autoFetch: !hasUserTokenPlanData // 是否自动获取模型列表--启用了tokenPlan就不自动获取了
+  })
+
+  /** 查询用户启用的tokenPlan套餐模型明细数据 **/
+  const fetchSelectTokenPlanHourlyDayUsage = async () => {
+    try {
+      setFullLoading(true)
+      const userSelectedPlan: any = getUserEnabledPlan()
+      if (!userSelectedPlan) {
+        setFullLoading(false)
+        return
+      }
+      const res: any = await selectTokenPlanHourlyDayUsageApi({
+        subscribeId: userSelectedPlan.id,
+        planId: userSelectedPlan.planId
+      })
+      const resData = res.rows || []
+      setTokenPlanModels(resData)
+    } finally {
+      setFullLoading(false)
+    }
+  }
+
+  /** 监听用户启用的tokenPlan套餐数据，查询用户启用的tokenPlan套餐模型明细数据 **/
+  useEffect(() => {
+    if (hasUserTokenPlanData) {
+      fetchSelectTokenPlanHourlyDayUsage().then()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasUserTokenPlanData, userSelectedTokenPlan?.id, userSelectedTokenPlan?.planId])
 
   const models = useMemo(() => {
-    const modelList = getFilteredModels()
+    const modelList = hasUserTokenPlanData ? tokenPlanModels : getFilteredModels()
     return modelList.map((x: any) => {
       const m = transformToModel(x)
       const local = localUpdates.get(m.id)
       return local ? { ...m, ...local } : m
     })
-  }, [getFilteredModels, localUpdates])
+  }, [getFilteredModels, localUpdates, hasUserTokenPlanData, tokenPlanModels])
 
   /*  const handleDynamicListChange = (instance: any) => {
     // 检测是否滚动到底部
@@ -162,7 +209,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId, onPaginationStateChan
     if (models.length > MODEL_COUNT_THRESHOLD) {
       return null
     }
-    return calculateModelGroups(models, '')
+    return calculateModelGroups(models, '', hasUserTokenPlanData)
   })
 
   const { isChecking: isHealthChecking, modelStatuses /*runHealthCheck*/ } = useHealthCheck(provider, models)
@@ -186,10 +233,10 @@ const ModelList: React.FC<ModelListProps> = ({ providerId, onPaginationStateChan
   useEffect(() => {
     if (models.length > MODEL_COUNT_THRESHOLD) {
       startTransition(() => {
-        setDisplayedModelGroups(calculateModelGroups(models, ''))
+        setDisplayedModelGroups(calculateModelGroups(models, '', hasUserTokenPlanData))
       })
     } else {
-      setDisplayedModelGroups(calculateModelGroups(models, ''))
+      setDisplayedModelGroups(calculateModelGroups(models, '', hasUserTokenPlanData))
     }
   }, [models])
 
@@ -315,49 +362,54 @@ const ModelList: React.FC<ModelListProps> = ({ providerId, onPaginationStateChan
               </>
             )}*/}
           </HStack>
-          {actionButtons}
+          {!hasUserTokenPlanData && actionButtons}
         </HStack>
       </SettingSubtitle>
 
       <ModelListContainer>
-        <Radio.Group
-          value={activeTabKey}
-          options={typeTabs}
-          defaultValue="1"
-          optionType="button"
-          buttonStyle="solid"
-          onChange={onChange}
-        />
+        {!hasUserTokenPlanData && (
+          <Radio.Group
+            value={activeTabKey}
+            options={typeTabs}
+            defaultValue="1"
+            optionType="button"
+            buttonStyle="solid"
+            onChange={onChange}
+          />
+        )}
+        {hasUserTokenPlanData && <TokenPlanInfo userSelectedTokenPlan={userSelectedTokenPlan} />}
         {displayedModelGroups && !isEmpty(displayedModelGroups) && (
-          <DynamicVirtualList
-            ref={listRef}
-            list={Object.keys(displayedModelGroups)}
-            estimateSize={estimateSize} // 44px item + 8px padding
-            overscan={5}
-            scrollerStyle={{
-              overflowY: 'hidden',
-              height: 'auto',
-              padding: '0'
-            }}
-            itemContainerStyle={{
-              padding: '4px 0'
-            }}
-            /*onChange={handleDynamicListChange}*/
-          >
-            {(group) => (
-              <ModelListGroup
-                key={group}
-                groupName={group}
-                models={displayedModelGroups[group]}
-                duplicateModelNames={duplicateModelNames}
-                modelStatusMap={modelStatusMap}
-                defaultOpen={true}
-                onEditModel={handleEditModel}
-                onRemoveModel={removeModel}
-                onRemoveGroup={() => displayedModelGroups[group].forEach((model) => removeModel(model))}
-              />
-            )}
-          </DynamicVirtualList>
+          <Spin spinning={fullLoading}>
+            <DynamicVirtualList
+              ref={listRef}
+              list={Object.keys(displayedModelGroups)}
+              estimateSize={estimateSize} // 44px item + 8px padding
+              overscan={5}
+              scrollerStyle={{
+                overflowY: 'hidden',
+                height: 'auto',
+                padding: '0'
+              }}
+              itemContainerStyle={{
+                padding: '4px 0'
+              }}
+              /*onChange={handleDynamicListChange}*/
+            >
+              {(group) => (
+                <ModelListGroup
+                  key={group}
+                  groupName={group}
+                  models={displayedModelGroups[group]}
+                  duplicateModelNames={duplicateModelNames}
+                  modelStatusMap={modelStatusMap}
+                  defaultOpen={true}
+                  onEditModel={handleEditModel}
+                  onRemoveModel={removeModel}
+                  onRemoveGroup={() => displayedModelGroups[group].forEach((model) => removeModel(model))}
+                />
+              )}
+            </DynamicVirtualList>
+          </Spin>
         )}
 
         {!loading && isEmpty(displayedModelGroups) && (
@@ -366,7 +418,7 @@ const ModelList: React.FC<ModelListProps> = ({ providerId, onPaginationStateChan
           </Flex>
         )}
         <Spin size="small" spinning={loading} />
-        {!hasMore && !loading && !isEmpty(displayedModelGroups) && (
+        {!hasMore && !loading && !isEmpty(displayedModelGroups) && !hasUserTokenPlanData && (
           <Divider
             size="small"
             style={{

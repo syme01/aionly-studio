@@ -83,7 +83,7 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
     if (checked) {
       window.modal.confirm({
         title: t('settings.provider.api_key.token_plan.confirm_enable_title'),
-        content: t('settings.provider.api_key.token_plan.confirm_enable_content'),
+        content: <TipText>{t('settings.provider.api_key.token_plan.confirm_enable_content')}</TipText>,
         onOk: () => {
           setEnabledPlan(record)
           setUserEnabledPlan(record)
@@ -96,7 +96,7 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
     } else {
       window.modal.confirm({
         title: t('settings.provider.api_key.token_plan.confirm_disable_title'),
-        content: t('settings.provider.api_key.token_plan.confirm_disable_content'),
+        content: <TipText>{t('settings.provider.api_key.token_plan.confirm_disable_content')}</TipText>,
         onOk: () => {
           setEnabledPlan(null)
           clearUserEnabledPlan()
@@ -190,11 +190,11 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
           {record.effectiveStartTime || record.effectiveEndTime ? (
             <>
               <div className="date-row num">
-                <span className="date-tag start">起</span>
+                <span className="date-tag start">{t('settings.provider.api_key.token_plan.effective_s')}</span>
                 {record.paymentStatus == '2' ? record.effectiveStartTime || '--' : '--'}
               </div>
               <div className="date-row num">
-                <span className="date-tag end">止</span>
+                <span className="date-tag end">{t('settings.provider.api_key.token_plan.effective_e')}</span>
                 {record.paymentStatus === '2' ? record.effectiveEndTime || '--' : '--'}
               </div>
             </>
@@ -257,8 +257,6 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
   const onClose = () => {
     resolve(null)
   }
-
-  const onOk = () => {}
 
   return (
     <Modal
@@ -402,4 +400,9 @@ const SearchContainer = styled.div`
   align-items: center;
   gap: 20px;
   padding-bottom: 16px;
+`
+
+const TipText = styled.strong`
+    font-size: 14px;
+    color: var(--color-red-500);
 `

@@ -1,5 +1,9 @@
+import { selectTokenPlanHourlyDayUsageApi } from '@renderer/api/billManagement'
 import ModelAvatar from '@renderer/components/Avatar/ModelAvatar'
-import { ModelAttribute, useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels'
+import { ModelAttribute, transformToModel, useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels'
+import useUserTokenPlan from '@renderer/hooks/useUserTokenPlan'
+import { useAppSelector } from '@renderer/store'
+import { selectUserInfo } from '@renderer/store/user'
 // import { getModelUniqId } from '@renderer/services/ModelService'
 import type { Model, Provider } from '@renderer/types'
 import { matchKeywordsInString } from '@renderer/utils'
@@ -8,7 +12,7 @@ import type { SelectProps } from 'antd'
 import { Avatar, Select, Spin } from 'antd'
 // import { sortBy } from 'lodash'
 import type { BaseSelectRef } from 'rc-select'
-import React, { memo, useCallback, useMemo } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface ModelOption {
@@ -59,6 +63,11 @@ const ModelSelector = ({
   ...props
 }: ModelSelectorProps & { ref?: React.Ref<BaseSelectRef> | null }) => {
   const { t } = useTranslation()
+
+  const userInfo: any = useAppSelector(selectUserInfo)
+  const { getUserEnabledPlan } = useUserTokenPlan(userInfo?.userId)
+  const [tokenPlanModels, setTokenPlanModels] = useState<any[]>([])
+  const [userEnabledPlan] = useState<any>(getUserEnabledPlan())
 
   // 单个 provider 的模型选项
   /*const getModelOptions = useCallback(
@@ -123,12 +132,44 @@ const ModelSelector = ({
   )
 
   /** 从接口查询文本模型 **/
-  const { loading, getFilteredModels, handleScroll } = useAiOnlyModels({
-    pageSize: 100, // TODO: 临时规避分组加载数据抖动问题，后续改动，按实际使用，一次加载1000条也够用了
-    autoFetch: autoFetch,
+  // 只有 userEnabledPlan 有值时才调用 useAiOnlyModels
+  const { loading, setLoading, getFilteredModels, handleScroll } = useAiOnlyModels({
+    pageSize: 20,
+    autoFetch: autoFetch && !userEnabledPlan, // 用户启用了tokenPlan后，不需要走这个接口
     type: '1',
     modelAttribute: ModelAttribute.TextModel
   })
+
+  // TODO: 当用户启用了tokenPlan时，查询套餐下的模型数据
+  const fetchSelectTokenPlanHourlyDayUsage = async () => {
+    try {
+      setLoading(true)
+      const userSelectedPlan: any = getUserEnabledPlan()
+      if (!userSelectedPlan) {
+        setLoading(false)
+        return
+      }
+      const res: any = await selectTokenPlanHourlyDayUsageApi({
+        subscribeId: userSelectedPlan.id,
+        planId: userSelectedPlan.planId
+      })
+      const resData = res.rows || []
+      const modelList = resData.map((item: any) => {
+        return transformToModel(item)
+      })
+      setTokenPlanModels(modelList)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    const userSelectedPlan: any = getUserEnabledPlan()
+    if (!!userSelectedPlan) {
+      fetchSelectTokenPlanHourlyDayUsage().then()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userEnabledPlan?.id, userEnabledPlan?.planId])
 
   // 将 AiOnlyModel 转换为 ModelOption
   const getAiOnlyModelOption = useCallback(
@@ -157,7 +198,7 @@ const ModelSelector = ({
 
   // 构建 AiOnly 模型选项，优先使用父组件传入的 apiModels，否则从 hook 获取
   const aionlyOptions = useMemo((): SelectOption[] => {
-    let filteredModels = apiModels ?? getFilteredModels()
+    let filteredModels = !!userEnabledPlan ? tokenPlanModels : (apiModels ?? getFilteredModels())
 
     // 应用 predicate 过滤
     if (predicate) {
@@ -186,13 +227,23 @@ const ModelSelector = ({
     // 不分组，直接返回所有模型
     const result = filteredModels.map((m) => getAiOnlyModelOption(m, m.serviceName || 'Unknown'))
     return result
-  }, [apiModels, getFilteredModels, grouped, getAiOnlyModelOption, predicate])
+  }, [tokenPlanModels, apiModels, getFilteredModels, grouped, getAiOnlyModelOption, predicate, userEnabledPlan])
 
   const handlePopupRender = useCallback(
     (menu) => {
       return <Spin spinning={externalLoading ?? loading}>{menu}</Spin>
     },
     [externalLoading, loading]
+  )
+
+  // 只有在没有 userEnabledPlan 时才启用滚动加载
+  const handlePopupScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      if (!userEnabledPlan) {
+        handleScroll(e)
+      }
+    },
+    [userEnabledPlan, handleScroll]
   )
 
   return (
@@ -203,7 +254,7 @@ const ModelSelector = ({
       labelRender={labelRender}
       showSearch
       loading={loading}
-      onPopupScroll={handleScroll}
+      onPopupScroll={handlePopupScroll}
       popupRender={handlePopupRender}
       {...props}
     />

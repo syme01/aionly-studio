@@ -40,11 +40,15 @@ export const SettingSubtitle = styled.div`
       font-size: 14px;
       font-weight: bold;
     }
-    .description{
-      padding-left: 5px;
+    .plan-status-tag{
+      padding: 2px 4px;
       font-size: 12px;
+      border-radius: 4px;
+      margin-left: 5px;
+      transform: scale(0.5);
       &.enabled{
         color: var(--color-green-500);
+        background: var(--color-green-50);
       }
       &.disabled{
         color: var(--color-red-500);
