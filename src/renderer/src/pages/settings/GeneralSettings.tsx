@@ -1,10 +1,10 @@
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { HStack } from '@renderer/components/Layout'
 import Selector from '@renderer/components/Selector'
-import { InfoTooltip } from '@renderer/components/TooltipIcons'
+// import { InfoTooltip } from '@renderer/components/TooltipIcons'
 import { isMac } from '@renderer/config/constant'
 import { useTheme } from '@renderer/context/ThemeProvider'
-import { useEnableDeveloperMode, useSettings } from '@renderer/hooks/useSettings'
+import { /*useEnableDeveloperMode,*/ useSettings } from '@renderer/hooks/useSettings'
 import { useTimer } from '@renderer/hooks/useTimer'
 import i18n from '@renderer/i18n'
 import type { RootState } from '@renderer/store'
@@ -73,7 +73,7 @@ const GeneralSettings: FC = () => {
   const [proxyUrl, setProxyUrl] = useState<string | undefined>(storeProxyUrl)
   const [proxyBypassRules, setProxyBypassRules] = useState<string | undefined>(storeProxyBypassRules)
   const { theme } = useTheme()
-  const { enableDeveloperMode, setEnableDeveloperMode } = useEnableDeveloperMode()
+  // const { enableDeveloperMode, setEnableDeveloperMode } = useEnableDeveloperMode()
   const { setTimeoutTimer } = useTimer()
 
   const updateTray = (isShowTray: boolean) => {
@@ -325,10 +325,10 @@ const GeneralSettings: FC = () => {
           <Switch checked={notificationSettings.backup} onChange={(v) => handleNotificationChange('backup', v)} />
         </SettingRow>
         <SettingDivider />
-        <SettingRow>
+        {/*<SettingRow>
           <SettingRowTitle>{t('settings.notification.knowledge_embed')}</SettingRowTitle>
           <Switch checked={notificationSettings.knowledge} onChange={(v) => handleNotificationChange('knowledge', v)} />
-        </SettingRow>
+        </SettingRow>*/}
       </SettingGroup>
       <SettingGroup theme={theme}>
         <SettingTitle>{t('settings.launch.title')}</SettingTitle>
@@ -370,7 +370,7 @@ const GeneralSettings: FC = () => {
           />
         </SettingRow>
       </SettingGroup>
-      <SettingGroup theme={theme}>
+      {/*<SettingGroup theme={theme}>
         <SettingTitle>{t('settings.developer.title')}</SettingTitle>
         <SettingDivider />
         <SettingRow>
@@ -380,7 +380,7 @@ const GeneralSettings: FC = () => {
           </Flex>
           <Switch checked={enableDeveloperMode} onChange={setEnableDeveloperMode} />
         </SettingRow>
-      </SettingGroup>
+      </SettingGroup>*/}
     </SettingContainer>
   )
 }

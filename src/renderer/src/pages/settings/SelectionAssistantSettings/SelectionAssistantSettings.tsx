@@ -108,12 +108,12 @@ const SelectionAssistantSettings: FC = () => {
         <Row align="middle">
           <SettingTitle>{t('selection.name')}</SettingTitle>
           <Spacer />
-          <Button
+          {/*<Button
             type="link"
             onClick={() => window.api.openWebsite('https://github.com/CherryHQ/cherry-studio/issues/6505')}
             style={{ fontSize: 12 }}>
             {'FAQ & ' + t('settings.about.feedback.button')}
-          </Button>
+          </Button>*/}
           {isMac && <ExperimentalText>{t('selection.settings.experimental')}</ExperimentalText>}
         </Row>
         <SettingDivider />

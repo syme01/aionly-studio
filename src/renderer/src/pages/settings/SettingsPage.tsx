@@ -80,11 +80,12 @@ const SettingsPage: FC = () => {
           icon: getMenuIcon('model'),
           path: '/settings/model'
         },
-        {
+        // TODO: 临时屏蔽：全局记忆需要嵌入模型，aionly平台暂时没有嵌入模型
+        /*{
           label: t('memory.title'), // 全局记忆
           icon: getMenuIcon('memory'),
           path: '/settings/memory'
-        },
+        },*/
         {
           label: t('apiServer.title'), // API 服务
           icon: getMenuIcon('api-server'),

@@ -59,7 +59,7 @@ const DisplaySettings: FC = () => {
     windowStyle,
     setWindowStyle,
     topicPosition,
-    setTopicPosition,
+    /*setTopicPosition,*/
     clickAssistantToShowTopic,
     showTopicTime,
     pinTopicsToTop,
@@ -401,7 +401,7 @@ const DisplaySettings: FC = () => {
       <SettingGroup theme={theme}>
         <SettingTitle>{t('settings.display.topic.title')}</SettingTitle>
         <SettingDivider />
-        <SettingRow>
+        {/*<SettingRow>
           <SettingRowTitle>{t('settings.topic.position.label')}</SettingRowTitle>
           <Segmented
             value={topicPosition || 'right'}
@@ -413,7 +413,7 @@ const DisplaySettings: FC = () => {
             ]}
           />
         </SettingRow>
-        <SettingDivider />
+        <SettingDivider />*/}
         {topicPosition === 'left' && (
           <>
             <SettingRow>
