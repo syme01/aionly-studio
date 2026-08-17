@@ -43,6 +43,7 @@ import { serializeHealthCheckError } from '@renderer/utils/error'
   isVertexProvider
 } from '@renderer/utils/provider'*/
 import { isAzureOpenAIProvider, isNewApiProvider, isVertexProvider } from '@renderer/utils/provider'
+import { LOCAL_USER_SECRET_KEY } from '@shared/config/constant'
 import { Button, Flex, Input, Select, Space, Tooltip, Typography } from 'antd'
 import { debounce, isEmpty, throttle } from 'lodash'
 import { Check, Settings2, TriangleAlert } from 'lucide-react'
@@ -208,6 +209,12 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
   useEffect(() => {
     if (hasUserTokenPlanData) {
       getUserTokenPlanDetail().then()
+      if (userSelectedTokenPlan) {
+        // console.log('userSelectedTokenPlan', userSelectedTokenPlan)
+        const apiKey = userSelectedTokenPlan.apikey
+        setLocalApiKey(apiKey)
+        updateProvider({ apiKey })
+      }
     } else {
       setUserSelectedTokenPlan(null)
     }
@@ -232,7 +239,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
     const user = user_res.data?.user
     const res = await getApikeyByUserId({ userId: user?.userId || '' })
     const secretKey = res.msg
-    localStorage.setItem('userSecretKey', secretKey)
+    localStorage.setItem(LOCAL_USER_SECRET_KEY, secretKey)
     setLocalApiKey(secretKey)
     updateProvider({ apiKey: secretKey })
   }
@@ -612,7 +619,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
       if (res.enabled) {
         setLocalApiKey(res.apikey)
         // 重新获取最新的 tokenPlan 详细数据
-        await getUserTokenPlanDetail()
+        // await getUserTokenPlanDetail()
         if (activeHostField === 'apiHost' && canConfigureAnthropicHost) {
           updateProvider({
             apiKey: formatApiKeys(res.apikey)
@@ -624,7 +631,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
           })
         }
       } else {
-        const userSecretKey = localStorage.getItem('userSecretKey') ?? ''
+        const userSecretKey = localStorage.getItem(LOCAL_USER_SECRET_KEY) ?? ''
         setLocalApiKey(userSecretKey)
         setActiveHostField('apiHost')
         setApiHost(provider.apiHost)
@@ -838,7 +845,11 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
                       <Input
                         value={apiHost}
                         placeholder={t('settings.provider.api_host')}
-                        onChange={(e) => setApiHost(e.target.value)}
+                        onChange={(e) => {
+                          // Normalize Unicode dash variants to standard ASCII hyphen to prevent Punycode encoding
+                          const normalized = e.target.value.replace(/[‐‑‒–—―−﹘﹣－]/g, '-')
+                          setApiHost(normalized)
+                        }}
                         onBlur={onUpdateApiHost}
                       />
                       {isApiHostResettable && (

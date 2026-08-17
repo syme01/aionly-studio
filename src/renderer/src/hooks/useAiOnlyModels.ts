@@ -1,8 +1,10 @@
 import { loggerService } from '@logger'
+import { selectTokenPlanHourlyDayUsageApi } from '@renderer/api/billManagement'
 import { pageListApi } from '@renderer/api/openManagement'
 import { isNotSupportTextDeltaModel } from '@renderer/config/models'
-import { useAppDispatch } from '@renderer/store'
-import { setAiOnlyModels } from '@renderer/store/user'
+import useUserTokenPlan from '@renderer/hooks/useUserTokenPlan'
+import { useAppDispatch, useAppSelector } from '@renderer/store'
+import { selectUserInfo, setAiOnlyModels } from '@renderer/store/user'
 import { getDefaultEndpointTypeById } from '@renderer/tools'
 import type { ApiModel, Model, Provider } from '@renderer/types'
 import { isNewApiProvider } from '@renderer/utils/provider'
@@ -423,6 +425,8 @@ export interface FetchAndSetupModelsOptions {
   pageSize?: number
   /** Redux dispatch 函数 */
   dispatch: any
+  /** 获取用户启用tokenPlan数据*/
+  getUserEnabledPlan: () => any
   /** 设置默认模型的回调 */
   setDefaultModel?: (model: SimpleModel) => void
   /** 设置快捷模型的回调 */
@@ -438,14 +442,36 @@ export interface FetchAndSetupModelsOptions {
  * 内部函数，由 useFetchAndSetupModels hook 调用
  */
 async function fetchAndSetupModels(options: FetchAndSetupModelsOptions): Promise<Model[]> {
-  const { pageSize = 10, dispatch, setDefaultModel, setQuickModel, setTranslateModel, setAiOnlyModelsAction } = options
+  const {
+    pageSize = 10,
+    dispatch,
+    getUserEnabledPlan,
+    setDefaultModel,
+    setQuickModel,
+    setTranslateModel,
+    setAiOnlyModelsAction
+  } = options
 
   try {
-    // 1. 获取模型数据
-    const { models } = await fetchAiOnlyModelsApi({ pageSize })
+    const userTokenPlan = getUserEnabledPlan()
+    let models: any[] = []
+    /** 1. 获取模型数据
+     * 没有启用tokenPlan，则获取平台模型数据
+     * 启用tokenPlan，则获取tokenPlan对应的模型数据
+     * */
+    if (!userTokenPlan) {
+      const res = await fetchAiOnlyModelsApi({ pageSize })
+      models = res.models ?? []
+    } else {
+      const res: any = await selectTokenPlanHourlyDayUsageApi({
+        subscribeId: userTokenPlan.id,
+        planId: userTokenPlan.planId
+      })
+      models = res.rows || []
+    }
 
-    // 2. 过滤"先用后付"套餐的模型
-    const filteredModels = filterModels(models)
+    // 2. 过滤"先用后付"套餐的模型--tokenPlan启用的模型不过滤
+    const filteredModels = !userTokenPlan ? filterModels(models) : models
 
     // 3. 转换为标准 Model 格式
     const transformedModels = filteredModels.map((model) => transformToModel(model))
@@ -490,6 +516,8 @@ async function fetchAndSetupModels(options: FetchAndSetupModelsOptions): Promise
  */
 export function useFetchAndSetupModels() {
   const dispatch = useAppDispatch()
+  const userInfo: any = useAppSelector(selectUserInfo)
+  const { getUserEnabledPlan } = useUserTokenPlan(userInfo?.userId)
   const { setDefaultModel, setQuickModel, setTranslateModel } = useDefaultModel()
 
   return useCallback(
@@ -497,6 +525,7 @@ export function useFetchAndSetupModels() {
       await fetchAndSetupModels({
         pageSize,
         dispatch,
+        getUserEnabledPlan,
         setAiOnlyModelsAction: setAiOnlyModels,
         setDefaultModel,
         setQuickModel,

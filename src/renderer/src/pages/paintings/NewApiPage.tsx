@@ -15,6 +15,7 @@ import { usePaintings } from '@renderer/hooks/usePaintings'
 import { ModelAttribute, useAllProviders, useProvider } from '@renderer/hooks/useProvider'
 import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useSettings } from '@renderer/hooks/useSettings'
+import useUserTokenPlan from '@renderer/hooks/useUserTokenPlan'
 import {
   getPaintingsBackgroundOptionsLabel,
   getPaintingsImageSizeOptionsLabel,
@@ -26,11 +27,13 @@ import { DEFAULT_PAINTING, MODELS, SUPPORTED_MODELS } from '@renderer/pages/pain
 import AiOnlyAddModelPopup from '@renderer/pages/settings/ProviderSettings/AiOnlyModel/add/AddModelPopup'
 import FileManager from '@renderer/services/FileManager'
 import { translateText } from '@renderer/services/TranslateService'
-import { useAppDispatch } from '@renderer/store'
+import { useAppDispatch, useAppSelector } from '@renderer/store'
 import { setGenerating } from '@renderer/store/runtime'
+import { selectUserInfo } from '@renderer/store/user'
 import type { FileMetadata, PaintingAction, PaintingsState } from '@renderer/types'
 import { convertToBase64, getErrorMessage, uuid } from '@renderer/utils'
 import { isNewApiProvider } from '@renderer/utils/provider'
+import { LOCAL_USER_SECRET_KEY } from '@shared/config/constant'
 import type { RadioChangeEvent } from 'antd'
 import { Button, Empty, Flex, InputNumber, Radio, Select, Spin, Tooltip, Upload } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
@@ -86,6 +89,11 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
   const { autoTranslateWithSpace } = useSettings()
   const spaceClickTimer = useRef<NodeJS.Timeout>(null)
   const newApiProvider = newApiProviders.find((p) => p.id === routeName) || newApiProviders[0]
+
+  // ---------------- User Info and Token Plan ----------------
+  const userInfo: any = useAppSelector(selectUserInfo)
+  const { getUserEnabledPlan } = useUserTokenPlan(userInfo?.userId)
+  const userTokenPlan: any = getUserEnabledPlan()
 
   const filteredPaintings = useMemo(
     () => (newApiPaintings[mode] || []).filter((p) => p.providerId === newApiProvider.id),
@@ -340,8 +348,10 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
     dispatch(setGenerating(true))
 
     let body: string | FormData = ''
+    // 针对tokenPlan兼容一下
+    const apikey = !userTokenPlan ? AI.getApiKey() : localStorage.getItem(LOCAL_USER_SECRET_KEY) || AI.getApiKey()
     const headers: Record<string, string> = {
-      Authorization: `Bearer ${AI.getApiKey()}`
+      Authorization: `Bearer ${apikey}`
     }
     // NOTE: Cherry Studio当下 newapi只接受v1/images/xxx的请求
     // TODO: support gemini https://www.newapi.ai/zh/docs/api/ai-model/images/gemini/geminirelayv1beta-383837589
@@ -434,13 +444,17 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
         throw new Error(errorData.error?.message || errorData?.msg || t('paintings.generate_failed'))
       }
 
-      const data = await response.json()
-      const urls = data.data.filter((item) => item.url).map((item) => item.url)
-      const base64s = data.data
-        .filter((item) => item.b64_json || item.base64)
+      const res = await response.json()
+      // console.log('res:', res)
+      if (res.code != 200) {
+        throw new Error(res.message || res.msg || t('paintings.generate_failed'))
+      }
+      const urls = res?.data?.filter((item) => item.url).map((item) => item.url)
+      const base64s = res?.data
+        ?.filter((item) => item.b64_json || item.base64)
         .map((item) => item.b64_json || item.base64)
 
-      if (urls.length > 0) {
+      if (urls?.length > 0) {
         const validFiles = await downloadImages(urls)
         await FileManager.addFiles(validFiles)
         updatePaintingState({ files: validFiles, urls })

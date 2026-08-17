@@ -149,8 +149,7 @@ const ModelList: React.FC<ModelListProps> = ({
     if (hasUserTokenPlanData) {
       fetchSelectTokenPlanHourlyDayUsage().then()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasUserTokenPlanData, userSelectedTokenPlan?.id, userSelectedTokenPlan?.planId])
+  }, [hasUserTokenPlanData])
 
   const models = useMemo(() => {
     const modelList = hasUserTokenPlanData ? tokenPlanModels : getFilteredModels()

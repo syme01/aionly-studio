@@ -1,13 +1,14 @@
 import { loggerService } from '@logger'
+import { ENABLED_PLAN_STORAGE_KEY } from '@shared/config/constant'
 
 const useUserTokenPlan = (userId: string) => {
-  const ENABLED_PLAN_STORAGE_KEY = `enabled_plan_${userId}`
+  const KEY = `${ENABLED_PLAN_STORAGE_KEY}_${userId}`
 
   const logger = loggerService.withContext('TokenPlanCache')
 
   const getUserEnabledPlan = () => {
     try {
-      const raw = localStorage.getItem(ENABLED_PLAN_STORAGE_KEY)
+      const raw = localStorage.getItem(KEY)
       return raw ? JSON.parse(raw) : null
     } catch {
       return null
@@ -16,7 +17,7 @@ const useUserTokenPlan = (userId: string) => {
 
   const setUserEnabledPlan = (plan: any) => {
     try {
-      localStorage.setItem(ENABLED_PLAN_STORAGE_KEY, JSON.stringify(plan))
+      localStorage.setItem(KEY, JSON.stringify(plan))
     } catch {
       logger.error('Failed to store enabled plan')
     }
@@ -24,14 +25,14 @@ const useUserTokenPlan = (userId: string) => {
 
   const clearUserEnabledPlan = () => {
     try {
-      localStorage.removeItem(ENABLED_PLAN_STORAGE_KEY)
+      localStorage.removeItem(KEY)
     } catch {
       logger.error('Failed to clear enabled plan')
     }
   }
 
   return {
-    ENABLED_PLAN_STORAGE_KEY,
+    KEY,
     getUserEnabledPlan,
     setUserEnabledPlan,
     clearUserEnabledPlan

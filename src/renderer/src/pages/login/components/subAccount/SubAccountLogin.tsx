@@ -8,6 +8,7 @@ import { useProvider } from '@renderer/hooks/useProvider'
 import i18n from '@renderer/i18n'
 import { useAppDispatch } from '@renderer/store'
 import { setApiKey, setUserInfo } from '@renderer/store/user'
+import { ENABLED_PLAN_STORAGE_KEY, LOCAL_USER_SECRET_KEY } from '@shared/config/constant'
 import { Button, Flex, Form, type FormProps, Input } from 'antd'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -171,12 +172,30 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
     dispatch(setUserInfo(user_data))
     // const balance = await getFinanceInfo()
     // dispatch(setMyBalance(balance.data))
+
+    // TODO：无论用户有没有启用tokenPlan, 先使用用户id获取用户的apikey存到本地
     const api_key_res = await getApikeyByUserId({ userId: user_data?.userId || '' })
     const secretKey = api_key_res?.msg ?? ''
     dispatch(setApiKey(secretKey))
-    updateProvider({
-      apiKey: secretKey
-    })
+    localStorage.setItem(LOCAL_USER_SECRET_KEY, secretKey)
+
+    // TODO：用户启用了tokenPlan, 则需要将预存的apikey换成tokenPlan的apikey
+    const key = `${ENABLED_PLAN_STORAGE_KEY}_${user_data?.userId || ''}`
+    const user_token_plan = localStorage.getItem(key)
+    if (!!user_token_plan) {
+      const userTokenPlan = JSON.parse(user_token_plan)
+      const apiKey = userTokenPlan.apikey
+      if (!!apiKey) {
+        updateProvider({
+          apiKey
+        })
+      }
+    } else {
+      // TODO：用户没有启用tokenPlan, 则使用用户id获取用户的apikey来预存
+      updateProvider({
+        apiKey: secretKey
+      })
+    }
   }, [dispatch, updateProvider])
 
   /** 登录成功 **/

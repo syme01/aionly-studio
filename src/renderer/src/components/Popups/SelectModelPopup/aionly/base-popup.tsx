@@ -1,8 +1,12 @@
+import { selectTokenPlanHourlyDayUsageApi } from '@renderer/api/billManagement'
 import { TopView } from '@renderer/components/TopView'
 import { DynamicVirtualList, type DynamicVirtualListRef } from '@renderer/components/VirtualList'
 import { isNotSupportTextDeltaModel } from '@renderer/config/models'
-import { useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels'
+import { transformToModel, useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels'
+import useUserTokenPlan from '@renderer/hooks/useUserTokenPlan'
 import { getModelUniqId } from '@renderer/services/ModelService'
+import { useAppSelector } from '@renderer/store'
+import { selectUserInfo } from '@renderer/store/user'
 import type { Model, Provider } from '@renderer/types'
 import { classNames } from '@renderer/utils'
 import { Avatar, Empty, Modal, Spin } from 'antd'
@@ -40,6 +44,11 @@ const SelectModelPopupView: React.FC<Props> = ({ model, modelFilter, fromType, r
   const [isLoading, _setIsLoading] = useState(false)
   const listRef = useRef<DynamicVirtualListRef>(null)
 
+  const userInfo: any = useAppSelector(selectUserInfo)
+  const { getUserEnabledPlan } = useUserTokenPlan(userInfo?.userId)
+  const [tokenPlanModels, setTokenPlanModels] = useState<any[]>([])
+  const [userEnabledPlan] = useState<any>(getUserEnabledPlan())
+
   // 当前选中的模型ID
   const currentModelId = model ? getModelUniqId(model) : ''
 
@@ -53,12 +62,47 @@ const SelectModelPopupView: React.FC<Props> = ({ model, modelFilter, fromType, r
     })
   }, [])
 
-  const { models, loading, fetchNextPage, getFilteredModels, hasMore } = useAiOnlyModels({
+  const { models, loading, setLoading, fetchNextPage, getFilteredModels, hasMore } = useAiOnlyModels({
     pageSize: 1000, // TODO: 临时规避分组加载数据抖动问题，后续改动，按实际使用，一次加载1000条也够用了
-    autoFetch: true
+    autoFetch: !userEnabledPlan // TODO: 当用户启用了tokenPlan时，不自动加载模型数据
   })
 
+  // TODO: 当用户启用了tokenPlan时，查询套餐下的模型数据
+  const fetchSelectTokenPlanHourlyDayUsage = async () => {
+    try {
+      setLoading(true)
+      const userSelectedPlan: any = getUserEnabledPlan()
+      if (!userSelectedPlan) {
+        setLoading(false)
+        return
+      }
+      const res: any = await selectTokenPlanHourlyDayUsageApi({
+        subscribeId: userSelectedPlan.id,
+        planId: userSelectedPlan.planId
+      })
+      const resData = res.rows || []
+      const modelList = resData.map((item: any) => {
+        return transformToModel(item)
+      })
+      setTokenPlanModels(modelList)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    const userSelectedPlan: any = getUserEnabledPlan()
+    if (!!userSelectedPlan) {
+      fetchSelectTokenPlanHourlyDayUsage().then()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userEnabledPlan?.id, userEnabledPlan?.planId])
+
   const handleDynamicListChange = (instance: any) => {
+    // 如果启用了tokenPlan，则不进行滚动加载
+    if (!!userEnabledPlan) {
+      return
+    }
     // 检测是否滚动到底部
     const scrollElement = instance.scrollElement
     if (scrollElement) {
@@ -103,7 +147,7 @@ const SelectModelPopupView: React.FC<Props> = ({ model, modelFilter, fromType, r
   // 构建列表数据
   const { listItems, modelItems } = useMemo(() => {
     const items: FlatListItem[] = []
-    let filterModels = getFilteredModels()
+    let filterModels = !userEnabledPlan ? getFilteredModels() : tokenPlanModels
 
     // 应用 modelFilter（如果提供）
     if (modelFilter) {
@@ -111,7 +155,7 @@ const SelectModelPopupView: React.FC<Props> = ({ model, modelFilter, fromType, r
         .map((x: any) => {
           const baseItem = {
             origin_id: x.id,
-            id: x.baseId,
+            id: x.baseId || x.model,
             name: x.modelName,
             provider: 'aionly'
           }
@@ -120,20 +164,20 @@ const SelectModelPopupView: React.FC<Props> = ({ model, modelFilter, fromType, r
               ...x,
               ...baseItem,
               origin: {
-                id: `aionly:${x.baseId}`,
+                id: `aionly:${x.baseId || x.model}`,
                 object: 'model',
                 created: x.createTime,
                 name: x.modelName,
                 owned_by: 'AIOnly',
                 provider: 'aionly',
-                provider_model_id: x.baseId,
+                provider_model_id: x.baseId || x.model,
                 provider_name: 'AIOnly',
                 provider_type: 'openai',
                 // 保留原始的 AiOnly 模型信息
                 modelName: x.modelName,
                 serviceName: x.serviceName,
                 modelFileUrl: x.modelFileUrl,
-                baseId: x.baseId
+                baseId: x.baseId || x.model
               }
             }
           }
@@ -167,7 +211,7 @@ const SelectModelPopupView: React.FC<Props> = ({ model, modelFilter, fromType, r
     )
 
     // 为每个分组创建扁平化的列表项（group header + models）
-    Object.entries(groupedByService).forEach(([serviceName, serviceModels]) => {
+    Object.entries(groupedByService).forEach(([serviceName, models]) => {
       // 添加分组标题
       items.push({
         key: `group-${serviceName}`,
@@ -179,7 +223,8 @@ const SelectModelPopupView: React.FC<Props> = ({ model, modelFilter, fromType, r
       })
 
       // 添加该分组下的所有模型
-      serviceModels.forEach((model) => {
+      const typedModels = models as typeof filterModels
+      typedModels.forEach((model) => {
         items.push(createModelItem(model))
       })
     })
@@ -187,7 +232,7 @@ const SelectModelPopupView: React.FC<Props> = ({ model, modelFilter, fromType, r
     // 获取可选择的模型项（过滤掉分组标题）
     const modelItems = items.filter((item) => item.type === 'model')
     return { listItems: items, modelItems }
-  }, [models, createModelItem])
+  }, [models, createModelItem, tokenPlanModels])
 
   const listHeight = useMemo(() => {
     return Math.min(PAGE_SIZE, listItems.length) * ITEM_HEIGHT

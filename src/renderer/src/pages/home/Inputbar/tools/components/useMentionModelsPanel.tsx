@@ -1,4 +1,5 @@
 import { CrownFilled } from '@ant-design/icons'
+import { selectTokenPlanHourlyDayUsageApi } from '@renderer/api/billManagement'
 import ModelTagsWithLabel from '@renderer/components/ModelTagsWithLabel'
 import type { QuickPanelListItem } from '@renderer/components/QuickPanel'
 import { QuickPanelReservedSymbol } from '@renderer/components/QuickPanel'
@@ -6,8 +7,11 @@ import { getModelLogo, isEmbeddingModel, isRerankModel, isVisionModel } from '@r
 import db from '@renderer/databases'
 import { transformToModel, useAiOnlyModels } from '@renderer/hooks/useAiOnlyModels'
 import { useProviders } from '@renderer/hooks/useProvider'
+import useUserTokenPlan from '@renderer/hooks/useUserTokenPlan'
 import type { ToolQuickPanelApi, ToolQuickPanelController } from '@renderer/pages/home/Inputbar/types'
 import { getModelUniqId } from '@renderer/services/ModelService'
+import { useAppSelector } from '@renderer/store'
+import { selectUserInfo } from '@renderer/store/user'
 import type { FileMetadata, Model } from '@renderer/types'
 import { FILE_TYPE } from '@renderer/types'
 import { getFancyProviderName } from '@renderer/utils'
@@ -15,7 +19,7 @@ import { Avatar } from 'antd'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { first, sortBy } from 'lodash'
 import { AtSign, CircleX, Plus } from 'lucide-react'
-import type React from 'react'
+import React, { useState } from 'react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -52,6 +56,12 @@ export const useMentionModelsPanel = (params: Params, role: 'button' | 'manager'
   const hasModelActionRef = useRef(false)
   const triggerInfoRef = useRef<MentionTriggerInfo | undefined>(undefined)
   const filesRef = useRef(files)
+
+  // ----------------- user info and token plan -----------------
+  const userInfo: any = useAppSelector(selectUserInfo)
+  const { getUserEnabledPlan } = useUserTokenPlan(userInfo?.userId)
+  const [tokenPlanModels, setTokenPlanModels] = useState<any[]>([])
+  const [userEnabledPlan] = useState<any>(getUserEnabledPlan())
 
   const removeAtSymbolAndText = useCallback(
     (currentText: string, caretPosition: number, searchText?: string, fallbackPosition?: number) => {
@@ -134,11 +144,39 @@ export const useMentionModelsPanel = (params: Params, role: 'button' | 'manager'
     hasMore: hasMoreAiOnly,
     loading: aiOnlyLoading,
     getFilteredModels
-  } = useAiOnlyModels({ autoFetch: true })
+  } = useAiOnlyModels({ autoFetch: !userEnabledPlan })
+
+  // ----------------- tokenPlan models -----------------
+  const fetchSelectTokenPlanHourlyDayUsage = async () => {
+    try {
+      // setLoading(true)
+      const userSelectedPlan: any = getUserEnabledPlan()
+      if (!userSelectedPlan) {
+        // setLoading(false)
+        return
+      }
+      const res: any = await selectTokenPlanHourlyDayUsageApi({
+        subscribeId: userSelectedPlan.id,
+        planId: userSelectedPlan.planId
+      })
+      const resData = res.rows || []
+      const modelList = resData.map((item: any) => {
+        return transformToModel(item)
+      })
+      setTokenPlanModels(modelList)
+    } finally {
+      // setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchSelectTokenPlanHourlyDayUsage().then()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // 获取aionly用户开通的所有文本模型
   const aionlyModelItems = useMemo(() => {
-    const filteredModels = getFilteredModels()
+    const filteredModels = !userEnabledPlan ? getFilteredModels() : tokenPlanModels
     const items: QuickPanelListItem[] = []
 
     const pinnedAiOnlyModels = filteredModels.filter((m) => pinnedModels.includes(m.baseId || m.id))
@@ -237,6 +275,7 @@ export const useMentionModelsPanel = (params: Params, role: 'button' | 'manager'
     pinnedModels,
     removeAtSymbolAndText,
     setText,
+    tokenPlanModels,
     t
   ])
 
