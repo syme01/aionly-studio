@@ -2589,6 +2589,13 @@
   "minapp": {
     "add_to_launchpad": "Add to Launchpad",
     "add_to_sidebar": "Add to Sidebar",
+    "deepseek_harness": {
+      "install_failed": "DeepSeek Harness installation failed",
+      "install_success": "DeepSeek Harness installed successfully",
+      "installing": "Installing DeepSeek Harness, please wait…",
+      "start_failed": "Failed to start DeepSeek Harness",
+      "starting": "Starting DeepSeek Harness…"
+    },
     "popup": {
       "close": "Close MinApp",
       "devtools": "Developer Tools",

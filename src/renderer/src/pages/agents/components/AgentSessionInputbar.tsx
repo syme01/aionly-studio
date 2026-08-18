@@ -166,7 +166,7 @@ const AgentSessionInputbarInner: FC<InnerProps> = ({ assistant, agentId, session
   const scope = TopicType.Session
   const config = getInputbarConfig(scope)
 
-  console.log('<============assistant=======>', assistant)
+  // console.log('<============assistant=======>', assistant)
 
   // Use shared hooks for text and textarea management with draft persistence
   const draftCacheKey = getAgentDraftCacheKey(agentId)
@@ -417,7 +417,7 @@ const AgentSessionInputbarInner: FC<InnerProps> = ({ assistant, agentId, session
       // Calculate token usage for the user message
       const usage = await estimateUserPromptUsage({ content: text })
 
-      console.log('createMessage----assistant', assistant)
+      // console.log('createMessage----assistant', assistant)
 
       const userMessage: Message = createMessage('user', sessionTopicId, agentId, {
         id: userMessageId,

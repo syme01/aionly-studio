@@ -8,11 +8,13 @@ import { useRuntime } from '@renderer/hooks/useRuntime'
 import { useNavbarPosition } from '@renderer/hooks/useSettings'
 import { Button, Input } from 'antd'
 import { Search, SettingsIcon } from 'lucide-react'
-import { FC, useCallback, useEffect, useRef } from 'react'
+import type { FC } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
+import DeepSeekHarnessButton from './components/DeepSeekHarnessButton'
 import MinappSettingsPopup from './MiniappSettings/MinappSettingsPopup'
 // import {WEB_UI_HOST} from "@shared/config/constant";
 // import AiOnlyLogo from "@renderer/assets/images/providers/aiOnly.png";
@@ -40,9 +42,10 @@ const AppsPage: FC = () => {
 
   // Calculate the required number of lines
   const itemsPerRow = Math.floor(930 / 115) // Maximum width divided by the width of each item (including spacing)
-  const rowCount = Math.ceil((apiApps.length + 1) / itemsPerRow) // +1 for the add button
+  const rowCount = Math.ceil((apiApps.length + 1) / itemsPerRow) // +1 for the fixed DeepSeek Harness entry
   // Each line height is 85px (60px icon + 5px margin + 12px text + spacing)
-  const containerHeight = rowCount * 85 + (rowCount - 1) * 25 // 25px is the line spacing.
+  // DeepSeek Harness 名称换行占两行，其所在行（最后一行）需额外 ~16px
+  const containerHeight = rowCount * 85 + (rowCount - 1) * 25 + 16 // 25px is the line spacing.
 
   // Disable right-click menu in blank area
   const handleContextMenu = (e: React.MouseEvent) => {
@@ -127,6 +130,7 @@ const AppsPage: FC = () => {
                 {apiApps.map((app: any) => (
                   <App key={app.id} app={app} />
                 ))}
+                <DeepSeekHarnessButton />
                 {/*<NewAppButton />*/}
               </AppsContainer>
             </AppsContainerWrapper>

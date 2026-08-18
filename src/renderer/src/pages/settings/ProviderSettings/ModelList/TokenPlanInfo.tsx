@@ -1,5 +1,6 @@
 import { Progress } from 'antd'
-import { FC } from 'react'
+import type { FC } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
@@ -9,6 +10,7 @@ interface Props {
 
 const TokenPlanInfo: FC<Props> = ({ userSelectedTokenPlan }) => {
   const { t } = useTranslation()
+  const [percent, setPercent] = useState(0)
 
   const getUsagePercent = (record: any) => {
     if (!record) return 0
@@ -23,6 +25,11 @@ const TokenPlanInfo: FC<Props> = ({ userSelectedTokenPlan }) => {
     return Math.max(0, Math.min(Math.round(percent * 100) / 100, 100))
   }
 
+  useEffect(() => {
+    const usagePercent = getUsagePercent(userSelectedTokenPlan)
+    setPercent(usagePercent)
+  }, [userSelectedTokenPlan])
+
   return (
     <Container>
       <div className="item">
@@ -33,7 +40,7 @@ const TokenPlanInfo: FC<Props> = ({ userSelectedTokenPlan }) => {
       <div className="item">
         <span className="label">{t('settings.provider.api_key.token_plan.columns.creditsRest')}：</span>
         <div style={{ width: '160px' }}>
-          <Progress percent={getUsagePercent(userSelectedTokenPlan)} status="normal" size="small" />
+          <Progress percent={percent} status="normal" size="small" />
         </div>
       </div>
       {/*<div className="item">

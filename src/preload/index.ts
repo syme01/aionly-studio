@@ -717,6 +717,11 @@ const api = {
       options?: { autoUpdateToLatest?: boolean; terminal?: string }
     ): Promise<CodeToolsRunResult> =>
       ipcRenderer.invoke(IpcChannel.CodeTools_Run, cliTool, model, directory, env, options),
+    isInstalled: (cliTool: string): Promise<boolean> => ipcRenderer.invoke(IpcChannel.CodeTools_IsInstalled, cliTool),
+    install: (cliTool: string): Promise<{ success: boolean; message: string }> =>
+      ipcRenderer.invoke(IpcChannel.CodeTools_Install, cliTool),
+    startDeepSeekHarness: (): Promise<{ success: boolean; url: string | null; message: string }> =>
+      ipcRenderer.invoke(IpcChannel.CodeTools_StartDeepSeekHarness),
     getAvailableTerminals: (): Promise<TerminalConfig[]> =>
       ipcRenderer.invoke(IpcChannel.CodeTools_GetAvailableTerminals),
     setCustomTerminalPath: (terminalId: string, path: string): Promise<void> =>

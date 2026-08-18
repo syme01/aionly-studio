@@ -1,5 +1,5 @@
 import fs from 'node:fs'
-import { arch } from 'node:os'
+import { arch, homedir } from 'node:os'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 
@@ -20,7 +20,7 @@ import {
 import { handleZoomFactor } from '@main/utils/zoom'
 import type { SpanEntity, TokenUsage } from '@mcp-trace/trace-core'
 import type { UpgradeChannel } from '@shared/config/constant'
-import { MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH } from '@shared/config/constant'
+import { HOME_CHERRY_DIR, MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH } from '@shared/config/constant'
 import type { LocalTransferConnectPayload } from '@shared/config/types'
 import { IpcChannel } from '@shared/IpcChannel'
 import { extractPdfText } from '@shared/utils/pdf'
@@ -889,7 +889,13 @@ export async function registerIpc(mainWindow: BrowserWindow, app: Electron.App) 
   ipcMain.handle(IpcChannel.App_IsBinaryExist, (_, name: string) => isBinaryExists(name))
   ipcMain.handle(IpcChannel.App_GetBinaryPath, (_, name: string) => getBinaryPath(name))
   ipcMain.handle(IpcChannel.App_InstallUvBinary, () => runInstallScript('install-uv.js'))
-  ipcMain.handle(IpcChannel.App_InstallBunBinary, () => runInstallScript('install-bun.js'))
+  ipcMain.handle(IpcChannel.App_InstallBunBinary, () =>
+    runInstallScript('install-bun.js', {
+      // Install bun into this app's managed bin dir (HOME_CHERRY_DIR), which may differ
+      // from the script's built-in default directory
+      BIN_INSTALL_DIR: path.join(homedir(), HOME_CHERRY_DIR, 'bin')
+    })
+  )
   ipcMain.handle(IpcChannel.App_InstallOvmsBinary, () => runInstallScript('install-ovms.js'))
 
   //copilot
@@ -1030,6 +1036,9 @@ export async function registerIpc(mainWindow: BrowserWindow, app: Electron.App) 
 
   // CodeTools
   ipcMain.handle(IpcChannel.CodeTools_Run, codeToolsService.run)
+  ipcMain.handle(IpcChannel.CodeTools_IsInstalled, (_, cliTool: string) => codeToolsService.isPackageInstalled(cliTool))
+  ipcMain.handle(IpcChannel.CodeTools_Install, (_, cliTool: string) => codeToolsService.installPackage(cliTool))
+  ipcMain.handle(IpcChannel.CodeTools_StartDeepSeekHarness, () => codeToolsService.startDeepSeekHarnessWeb())
   ipcMain.handle(IpcChannel.CodeTools_GetAvailableTerminals, () => codeToolsService.getAvailableTerminalsForPlatform())
   ipcMain.handle(IpcChannel.CodeTools_SetCustomTerminalPath, (_, terminalId: string, path: string) =>
     codeToolsService.setCustomTerminalPath(terminalId, path)

@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import net from 'node:net'
 import os from 'node:os'
 import path from 'node:path'
 
@@ -12,6 +13,7 @@ import type { TerminalConfig, TerminalConfigWithCommand } from '@shared/config/c
 import { APP_NAME } from '@shared/config/constant'
 import {
   codeTools,
+  DSH_WEB_DEFAULTS,
   HOME_CHERRY_DIR,
   MACOS_TERMINALS,
   MACOS_TERMINALS_WITH_COMMANDS,
@@ -21,11 +23,11 @@ import {
 } from '@shared/config/constant'
 import type { CodeToolsRunResult } from '@shared/config/types'
 import { getFunctionalKeys, parseJSONC, sanitizeEnvForLogging } from '@shared/utils'
-import { spawn } from 'child_process'
+import { type ChildProcess, exec, spawn } from 'child_process'
 import semver from 'semver'
 import { promisify } from 'util'
 
-const execAsync = promisify(require('child_process').exec)
+const execAsync = promisify(exec)
 const logger = loggerService.withContext('CodeToolsService')
 
 interface VersionInfo {
@@ -49,6 +51,8 @@ class CodeToolsService {
   private readonly TERMINALS_CACHE_DURATION = 1000 * 60 * 5 // 5 minutes cache for terminals
   private openCodeCleanupTimers: Map<string, NodeJS.Timeout> = new Map() // Track cleanup timers by directory for debounce
   private openCodeConfigBackups: Map<string, string | null> = new Map() // Store raw backup content of opencode.json
+  private dshWebProcess: ChildProcess | null = null // Managed `dsh web` process (null when not started by us)
+  private dshWebUrl: string | null = null // Access URL of the running dsh Web UI
 
   constructor() {
     this.getBunPath = this.getBunPath.bind(this)
@@ -57,6 +61,8 @@ class CodeToolsService {
     this.isPackageInstalled = this.isPackageInstalled.bind(this)
     this.getVersionInfo = this.getVersionInfo.bind(this)
     this.updatePackage = this.updatePackage.bind(this)
+    this.installPackage = this.installPackage.bind(this)
+    this.startDeepSeekHarnessWeb = this.startDeepSeekHarnessWeb.bind(this)
     this.run = this.run.bind(this)
 
     if (isMac || isWin) {
@@ -102,6 +108,8 @@ class CodeToolsService {
         return 'kimi-cli' // Python package
       case codeTools.openCode:
         return 'opencode-ai'
+      case codeTools.deepseekHarness:
+        return '@deepseek-ai/dsh'
       default:
         throw new Error(`Unsupported CLI tool: ${cliTool}`)
     }
@@ -125,6 +133,8 @@ class CodeToolsService {
         return 'kimi'
       case codeTools.openCode:
         return 'opencode'
+      case codeTools.deepseekHarness:
+        return 'dsh'
       default:
         throw new Error(`Unsupported CLI tool: ${cliTool}`)
     }
@@ -683,7 +693,7 @@ class CodeToolsService {
     }
   }
 
-  private async isPackageInstalled(cliTool: string): Promise<boolean> {
+  public async isPackageInstalled(cliTool: string): Promise<boolean> {
     const executableName = await this.getCliExecutableName(cliTool)
     const binDir = path.join(os.homedir(), HOME_CHERRY_DIR, 'bin')
     const executablePath = path.join(binDir, executableName + (isWin ? '.exe' : ''))
@@ -828,37 +838,41 @@ class CodeToolsService {
   }
 
   /**
-   * Update a CLI tool to the latest version
+   * Shared bun global install used by updatePackage and installPackage
    */
-  public async updatePackage(cliTool: string): Promise<{ success: boolean; message: string }> {
-    logger.info(`Starting update process for ${cliTool}`)
+  private async runBunGlobalInstall(
+    cliTool: string,
+    logFileName: string,
+    timeout: number,
+    action: 'update' | 'install'
+  ): Promise<{ success: boolean; message: string }> {
     try {
       const packageName = await this.getPackageName(cliTool)
       const bunPath = await this.getBunPath()
       const bunInstallPath = path.join(os.homedir(), HOME_CHERRY_DIR)
       const registryUrl = await this.getNpmRegistryUrl()
 
-      // Get logs directory for update output redirection
+      // Get logs directory for install/update output redirection
       const logsDir = loggerService.getLogsDir()
-      const updateLogPath = path.join(logsDir, 'cli-tools-update.log').replace(/\\/g, '/')
+      const logPath = path.join(logsDir, logFileName).replace(/\\/g, '/')
 
       const installEnvPrefix = isWin
         ? `set "BUN_INSTALL=${bunInstallPath}" && set "NPM_CONFIG_REGISTRY=${registryUrl}" &&`
         : `export BUN_INSTALL="${bunInstallPath}" && export NPM_CONFIG_REGISTRY="${registryUrl}" &&`
 
-      // Use > to truncate log file on each update
-      const updateCommand = `${installEnvPrefix} "${bunPath}" install -g ${packageName} > "${updateLogPath}" 2>&1`
-      logger.info(`Executing update command: ${updateCommand}`)
+      // Use > to truncate log file on each run
+      const installCommand = `${installEnvPrefix} "${bunPath}" install -g ${packageName} > "${logPath}" 2>&1`
+      logger.info(`Executing ${action} command: ${installCommand}`)
 
-      await execAsync(updateCommand, { timeout: 60000 })
-      logger.info(`Successfully executed update command for ${cliTool}`)
+      await execAsync(installCommand, { timeout })
+      logger.info(`Successfully executed ${action} command for ${cliTool}`)
 
       // Clear version cache for this package
       const cacheKey = `${packageName}-latest`
       this.versionCache.delete(cacheKey)
       logger.debug(`Cleared version cache for ${packageName}`)
 
-      const successMessage = `Successfully updated ${cliTool} to the latest version`
+      const successMessage = `Successfully ${action === 'update' ? 'updated' : 'installed'} ${cliTool}`
       logger.info(successMessage)
       return {
         success: true,
@@ -866,13 +880,160 @@ class CodeToolsService {
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error)
-      const failureMessage = `Failed to update ${cliTool}: ${errorMessage}`
+      const failureMessage = `Failed to ${action} ${cliTool}: ${errorMessage}`
       logger.error(failureMessage, error as Error)
       return {
         success: false,
         message: failureMessage
       }
     }
+  }
+
+  /**
+   * Install a CLI tool that is not yet present (first-time install)
+   * Uses a longer timeout than updates because first downloads can be slow
+   */
+  public async installPackage(cliTool: string): Promise<{ success: boolean; message: string }> {
+    logger.info(`Starting install process for ${cliTool}`)
+    return this.runBunGlobalInstall(cliTool, 'cli-tools-install.log', 5 * 60 * 1000, 'install')
+  }
+
+  /**
+   * Start the DeepSeek Harness Web UI (`dsh web`).
+   *
+   * Reuses an already-running instance when possible (managed child alive, or the
+   * default port 3080 already serving — e.g. started manually or surviving an app
+   * restart), otherwise spawns a detached `dsh web` process and waits until it
+   * advertises its access URL (printed to stdout, captured in logs/dsh-web.log).
+   */
+  public async startDeepSeekHarnessWeb(): Promise<{ success: boolean; url: string | null; message: string }> {
+    const { HOST: dshHost, PORT: dshPort } = DSH_WEB_DEFAULTS
+    const dshDefaultUrl = `http://${dshHost}:${dshPort}`
+
+    // Ensure dsh is installed first
+    if (!(await this.isPackageInstalled(codeTools.deepseekHarness))) {
+      const installResult = await this.installPackage(codeTools.deepseekHarness)
+      if (!installResult.success) {
+        return { success: false, url: null, message: installResult.message }
+      }
+    }
+
+    // Already running: our managed child is still alive
+    if (this.dshWebProcess && this.dshWebProcess.exitCode === null && this.dshWebUrl) {
+      logger.info('dsh web already running (managed process)')
+      return { success: true, url: this.dshWebUrl, message: 'dsh web is already running' }
+    }
+
+    // Already running: an instance is serving on the default port
+    if (await this.isPortOpen(dshPort, dshHost)) {
+      this.dshWebUrl = dshDefaultUrl
+      logger.info('dsh web already running (default port in use)')
+      return { success: true, url: dshDefaultUrl, message: 'dsh web is already running' }
+    }
+
+    // Resolve the dsh executable installed under the app's managed bin dir
+    const executableName = await this.getCliExecutableName(codeTools.deepseekHarness)
+    const dshPath = path.join(os.homedir(), HOME_CHERRY_DIR, 'bin', executableName + (isWin ? '.exe' : ''))
+    if (!fs.existsSync(dshPath)) {
+      const message = `dsh executable not found at ${dshPath}`
+      logger.error(message)
+      return { success: false, url: null, message }
+    }
+
+    // Spawn detached so the Web UI keeps running independently of this app
+    const logsDir = loggerService.getLogsDir()
+    fs.mkdirSync(logsDir, { recursive: true })
+    const logPath = path.join(logsDir, 'dsh-web.log')
+    const logFd = fs.openSync(logPath, 'w')
+    let child: ReturnType<typeof spawn>
+    try {
+      child = spawn(dshPath, ['web'], {
+        cwd: os.homedir(),
+        detached: true,
+        stdio: ['ignore', logFd, logFd],
+        windowsHide: true
+      })
+    } catch (error) {
+      fs.closeSync(logFd)
+      const message = `Failed to spawn dsh web: ${error instanceof Error ? error.message : String(error)}`
+      logger.error(message, error as Error)
+      return { success: false, url: null, message }
+    }
+    child.unref()
+    fs.closeSync(logFd)
+    this.dshWebProcess = child
+    this.dshWebUrl = null
+    logger.info(`Launched dsh web (pid ${child.pid}), log: ${logPath}`)
+
+    // Wait for the Web UI to come up: dsh prints its access URL to stdout
+    const url = await this.waitForDshWeb(logPath, 90 * 1000)
+    if (url) {
+      this.dshWebUrl = url
+      logger.info(`dsh web is up at ${url}`)
+      return { success: true, url, message: 'dsh web started' }
+    }
+
+    const message = 'Timed out waiting for dsh web to start. See logs/dsh-web.log for details'
+    logger.error(message)
+    return { success: false, url: null, message }
+  }
+
+  /** Check whether a TCP port is accepting connections on localhost */
+  private isPortOpen(port: number, host = '127.0.0.1', timeout = 1200): Promise<boolean> {
+    return new Promise((resolve) => {
+      const sock = net.connect({ host, port })
+      sock.setTimeout(timeout)
+      sock.once('connect', () => {
+        sock.destroy()
+        resolve(true)
+      })
+      sock.once('timeout', () => {
+        sock.destroy()
+        resolve(false)
+      })
+      sock.once('error', () => resolve(false))
+    })
+  }
+
+  /**
+   * Wait for `dsh web` readiness: poll the log for an advertised URL
+   * (http://127.0.0.1:<port>) and probe the default port as a fallback.
+   */
+  private async waitForDshWeb(logPath: string, timeoutMs: number): Promise<string | null> {
+    const { HOST: dshHost, PORT: dshPort } = DSH_WEB_DEFAULTS
+    const urlRe = /https?:\/\/(?:127\.0\.0\.1|localhost|\[::1\]):\d+/
+    const deadline = Date.now() + timeoutMs
+
+    while (Date.now() < deadline) {
+      // Process died before becoming ready
+      if (this.dshWebProcess && this.dshWebProcess.exitCode !== null) {
+        logger.error(`dsh web exited with code ${this.dshWebProcess.exitCode}`)
+        return null
+      }
+
+      const log = await fs.promises.readFile(logPath, 'utf8').catch(() => '')
+      const match = log.match(urlRe)
+      if (match) {
+        const url = match[0]
+        const port = Number.parseInt(url.slice(url.lastIndexOf(':') + 1).match(/\d+/)?.[0] ?? '', 10)
+        if (Number.isInteger(port) && (await this.isPortOpen(port))) {
+          return url
+        }
+      } else if (await this.isPortOpen(dshPort, dshHost)) {
+        return `http://${dshHost}:${dshPort}`
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 600))
+    }
+    return null
+  }
+
+  /**
+   * Update a CLI tool to the latest version
+   */
+  public async updatePackage(cliTool: string): Promise<{ success: boolean; message: string }> {
+    logger.info(`Starting update process for ${cliTool}`)
+    return this.runBunGlobalInstall(cliTool, 'cli-tools-update.log', 60000, 'update')
   }
 
   async run(

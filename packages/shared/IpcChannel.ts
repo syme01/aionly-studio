@@ -391,6 +391,9 @@ export enum IpcChannel {
 
   // CodeTools
   CodeTools_Run = 'code-tools:run',
+  CodeTools_IsInstalled = 'code-tools:is-installed',
+  CodeTools_Install = 'code-tools:install',
+  CodeTools_StartDeepSeekHarness = 'code-tools:start-deepseek-harness',
   CodeTools_GetAvailableTerminals = 'code-tools:get-available-terminals',
   CodeTools_SetCustomTerminalPath = 'code-tools:set-custom-terminal-path',
   CodeTools_GetCustomTerminalPath = 'code-tools:get-custom-terminal-path',

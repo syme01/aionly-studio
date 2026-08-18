@@ -47,7 +47,8 @@ import { LOCAL_USER_SECRET_KEY } from '@shared/config/constant'
 import { Button, Flex, Input, Select, Space, Tooltip, Typography } from 'antd'
 import { debounce, isEmpty, throttle } from 'lodash'
 import { Check, Settings2, TriangleAlert } from 'lucide-react'
-import { FC, useEffect } from 'react'
+import type { FC } from 'react'
+import { useEffect } from 'react'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -122,11 +123,15 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
   const userInfo: any = useAppSelector(selectUserInfo)
   const { getUserEnabledPlan } = useUserTokenPlan(userInfo?.userId)
 
+  // console.log('getUserEnabledPlan', getUserEnabledPlan())
+
   /**
    * TODO： 当前用户启用的tokenPlan套餐数据--用来判断是否已失效
    * 需要一个接口获取当前用户启用的tokenPlan套餐数据（根据planId）
    * **/
   const [userSelectedTokenPlan, setUserSelectedTokenPlan] = useState<any>(getUserEnabledPlan())
+
+  console.log('userSelectedTokenPlan', userSelectedTokenPlan)
 
   const isAzureOpenAI = isAzureOpenAIProvider(provider)
   const isDmxapi = provider.id === 'dmxapi'
@@ -713,16 +718,16 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
                 }}>
                 <div className="inner">
                   <span className="title">{t('settings.provider.api_key.label')}</span>
-                  {userSelectedTokenPlan?.status == 2 && (
+                  {userSelectedTokenPlan && userSelectedTokenPlan.status == 2 && (
                     <span className="plan-status-tag enabled">
                       {t('settings.provider.api_key.token_plan.title')}
                       {t('settings.provider.api_key.token_plan.status.enabled')}
                     </span>
                   )}
-                  {userSelectedTokenPlan?.status == 1 && (
+                  {userSelectedTokenPlan && userSelectedTokenPlan.status != 2 && (
                     <span className="plan-status-tag disabled">
-                      ({t('settings.provider.api_key.token_plan.title')}
-                      {t('settings.provider.api_key.token_plan.status.disabled')})
+                      {t('settings.provider.api_key.token_plan.title')}
+                      {t('settings.provider.api_key.token_plan.status.disabled')}
                     </span>
                   )}
                 </div>

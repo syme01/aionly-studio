@@ -2728,6 +2728,13 @@
   "minapp": {
     "add_to_launchpad": "添加到启动台",
     "add_to_sidebar": "添加到侧边栏",
+    "deepseek_harness": {
+      "install_failed": "DeepSeek Harness 安装失败",
+      "install_success": "DeepSeek Harness 安装完成",
+      "installing": "正在安装 DeepSeek Harness，请稍候…",
+      "start_failed": "DeepSeek Harness 启动失败",
+      "starting": "正在启动 DeepSeek Harness…"
+    },
     "popup": {
       "close": "关闭小程序",
       "devtools": "开发者工具",

@@ -11,7 +11,8 @@ import { setWebviewLoaded } from '@renderer/utils/webviewStateManager'
 import { USER_UI_HOST } from '@shared/config/constant'
 import { Avatar, Tooltip } from 'antd'
 import type { WebviewTag } from 'electron'
-import { FC, useMemo, useRef, useState } from 'react'
+import type { FC } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import BeatLoader from 'react-spinners/BeatLoader'
 import styled from 'styled-components'
@@ -62,7 +63,7 @@ const TokenPlanPage: FC = () => {
 
   /** the callback function to set the webviews loaded indicator */
   const handleWebviewLoaded = (appid: string) => {
-    console.log('-------handleWebviewLoaded----->')
+    // console.log('-------handleWebviewLoaded----->')
     setWebviewLoaded(appid, true)
     const webviewElement = webviewRefs.current.get(appid)
     if (webviewElement) {

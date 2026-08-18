@@ -11,6 +11,7 @@ import { CodeStyleProvider } from './context/CodeStyleProvider'
 import { NotificationProvider } from './context/NotificationProvider'
 import StyleSheetManager from './context/StyleSheetManager'
 import { ThemeProvider } from './context/ThemeProvider'
+import { DshThemeSync } from './pages/minapps/components/DshThemeSync'
 import Router from './Router'
 
 // 创建 React Query 客户端
@@ -29,6 +30,7 @@ function App(): React.ReactElement {
       <QueryClientProvider client={queryClient}>
         <StyleSheetManager>
           <ThemeProvider>
+            <DshThemeSync />
             <AntdProvider>
               <NotificationProvider>
                 <CodeStyleProvider>

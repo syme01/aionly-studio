@@ -52,6 +52,7 @@ export const SettingSubtitle = styled.div`
       }
       &.disabled{
         color: var(--color-red-500);
+        background: var(--color-red-50);
       }
     }
   }

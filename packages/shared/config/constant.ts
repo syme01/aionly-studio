@@ -238,7 +238,16 @@ export enum codeTools {
   iFlowCli = 'iflow-cli',
   githubCopilotCli = 'github-copilot-cli',
   kimiCli = 'kimi-cli',
-  openCode = 'opencode'
+  openCode = 'opencode',
+  deepseekHarness = 'deepseek-harness'
+}
+
+// DeepSeek Harness (dsh) Web UI —— `dsh web` 默认监听端口与地址
+export const DSH_WEB_PORT = 3080
+
+export const DSH_WEB_DEFAULTS = {
+  HOST: '127.0.0.1',
+  PORT: DSH_WEB_PORT
 }
 
 export enum terminalApps {

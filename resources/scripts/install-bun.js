@@ -5,8 +5,8 @@ const { execSync } = require('child_process')
 const StreamZip = require('node-stream-zip')
 const { downloadWithRedirects } = require('./download')
 
-// Base URL for downloading bun binaries
-const BUN_RELEASE_BASE_URL = 'https://gitcode.com/CherryHQ/bun/releases/download'
+// Base URL for downloading bun binaries (npmmirror binary CDN, mirrors official bun releases)
+const BUN_RELEASE_BASE_URL = 'https://registry.npmmirror.com/-/binary/bun'
 const DEFAULT_BUN_VERSION = '1.3.1' // Default fallback version
 
 // Mapping of platform+arch to binary package name
@@ -47,7 +47,9 @@ async function downloadBunBinary(platform, arch, version = DEFAULT_BUN_VERSION, 
   }
 
   // Create output directory structure
-  const binDir = path.join(os.homedir(), '.cherrystudio', 'bin')
+  // BIN_INSTALL_DIR lets the app redirect the install into its managed bin dir
+  // Default matches the app's HOME_CHERRY_DIR (~/.aionlystudio)
+  const binDir = process.env.BIN_INSTALL_DIR || path.join(os.homedir(), '.aionlystudio', 'bin')
   // Ensure directories exist
   fs.mkdirSync(binDir, { recursive: true })
 
