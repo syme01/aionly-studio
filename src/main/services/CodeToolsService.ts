@@ -864,7 +864,9 @@ class CodeToolsService {
       const installCommand = `${installEnvPrefix} "${bunPath}" install -g ${packageName} > "${logPath}" 2>&1`
       logger.info(`Executing ${action} command: ${installCommand}`)
 
-      await execAsync(installCommand, { timeout })
+      // windowsHide: packaged GUI app has no console — without this flag cmd.exe
+      // would open a visible console window for the install command
+      await execAsync(installCommand, { timeout, windowsHide: true })
       logger.info(`Successfully executed ${action} command for ${cliTool}`)
 
       // Clear version cache for this package
@@ -940,7 +942,12 @@ class CodeToolsService {
       return { success: false, url: null, message }
     }
 
-    // Spawn detached so the Web UI keeps running independently of this app
+    // Spawn so the Web UI keeps running independently of this app.
+    // On Windows, avoid detached: true (DETACHED_PROCESS) — dsh would have no
+    // console at all, and the node.exe it spawns internally would get a new
+    // VISIBLE console window. windowsHide: true gives dsh an invisible console
+    // that its children inherit instead. Windows children survive parent exit
+    // regardless, so dsh web keeps running after the app quits either way.
     const logsDir = loggerService.getLogsDir()
     fs.mkdirSync(logsDir, { recursive: true })
     const logPath = path.join(logsDir, 'dsh-web.log')
@@ -949,7 +956,7 @@ class CodeToolsService {
     try {
       child = spawn(dshPath, ['web'], {
         cwd: os.homedir(),
-        detached: true,
+        detached: !isWin,
         stdio: ['ignore', logFd, logFd],
         windowsHide: true
       })

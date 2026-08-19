@@ -21,7 +21,10 @@ export function runInstallScript(scriptPath: string, extraEnv?: Record<string, s
     logger.info(`Running script at: ${installScriptPath}`)
 
     const nodeProcess = spawn(process.execPath, [installScriptPath], {
-      env: { ...process.env, ELECTRON_RUN_AS_NODE: '1', ...extraEnv }
+      env: { ...process.env, ELECTRON_RUN_AS_NODE: '1', ...extraEnv },
+      // Hide the console window this node-as-app process would otherwise get
+      // when spawned from the console-less packaged app on Windows
+      windowsHide: true
     })
 
     nodeProcess.stdout.on('data', (data) => {
