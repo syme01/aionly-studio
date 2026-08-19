@@ -55,13 +55,13 @@ import { useTranslation } from 'react-i18next'
 // import styled from 'styled-components'
 import { SettingContainer, SettingHelpText, SettingHelpTextRow, SettingSubtitle } from '..'
 import AwsBedrockSettings from './AwsBedrockSettings'
-import MarketOAuth from './MarketOAuth'
-import MarketSettings from './MarketSettings'
 import CustomHeaderPopup from './CustomHeaderPopup'
 import DMXAPISettings from './DMXAPISettings'
 import GithubCopilotSettings from './GithubCopilotSettings'
 import GPUStackSettings from './GPUStackSettings'
 import LMStudioSettings from './LMStudioSettings'
+import MarketOAuth from './MarketOAuth'
+import MarketSettings from './MarketSettings'
 import OVMSSettings from './OVMSSettings'
 import ProviderOAuth from './ProviderOAuth'
 import SelectProviderModelPopup from './SelectProviderModelPopup'
@@ -131,7 +131,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
    * **/
   const [userSelectedTokenPlan, setUserSelectedTokenPlan] = useState<any>(getUserEnabledPlan())
 
-  console.log('userSelectedTokenPlan', userSelectedTokenPlan)
+  // console.log('userSelectedTokenPlan', userSelectedTokenPlan)
 
   const isAzureOpenAI = isAzureOpenAIProvider(provider)
   const isDmxapi = provider.id === 'dmxapi'
@@ -741,7 +741,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
 
                 {provider.id !== 'copilot' && (
                   <Flex gap={10}>
-                    {tokenPlanEnabled && (
+                    {tokenPlanEnabled && false && (
                       <Button
                         type="primary"
                         ghost={true}
