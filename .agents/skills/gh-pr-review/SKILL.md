@@ -4,7 +4,7 @@ description: Automated code review for local branches, PRs, commits, and files. 
 ---
 
 <!-- Based on https://github.com/Tencent/tgfx/tree/main/.codebuddy/skills/cr -->
-<!-- Adapted for Claude Code Agent tool and Cherry Studio tech stack -->
+<!-- Adapted for Claude Code Agent tool and AiOnly tech stack -->
 
 # /gh-pr-review — Code Review
 

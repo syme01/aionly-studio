@@ -1,8 +1,8 @@
 [中文](docs/zh/guides/contributing.md) | [English](CONTRIBUTING.md)
 
-# Cherry Studio Contributor Guide
+# AiOnly Contributor Guide
 
-Welcome to the Cherry Studio contributor community! We are committed to making Cherry Studio a project that provides long-term value and hope to invite more developers to join us. Whether you are an experienced developer or a beginner just starting out, your contributions will help us better serve users and improve software quality.
+Welcome to the AiOnly contributor community! We are committed to making AiOnly a project that provides long-term value and hope to invite more developers to join us. Whether you are an experienced developer or a beginner just starting out, your contributions will help us better serve users and improve software quality.
 
 ## How to Contribute
 
@@ -20,7 +20,7 @@ Here are several ways you can participate:
 
 6.  **Community Maintenance**: Participate in community discussions, help answer user questions, and promote community activity.
 
-7.  **Promote Usage**: Promote Cherry Studio through blogs, social media, and other channels to attract more users and developers.
+7.  **Promote Usage**: Promote AiOnly through blogs, social media, and other channels to attract more users and developers.
 
 ## Before You Start
 
@@ -34,7 +34,7 @@ For a comprehensive overview of the project architecture, tech stack, convention
 
 ## Getting Started
 
-To help you get familiar with the codebase, we recommend tackling issues tagged with one or more of the following labels: [good-first-issue](https://github.com/CherryHQ/cherry-studio/labels/good%20first%20issue), [help-wanted](https://github.com/CherryHQ/cherry-studio/labels/help%20wanted), or [kind/bug](https://github.com/CherryHQ/cherry-studio/labels/kind%2Fbug). Any help is welcome.
+To help you get familiar with the codebase, we recommend tackling issues tagged with one or more of the following labels: [good-first-issue](https://gitee.com/myme/aionly-studio/labels/good%20first%20issue), [help-wanted](https://gitee.com/myme/aionly-studio/labels/help%20wanted), or [kind/bug](https://gitee.com/myme/aionly-studio/labels/kind%2Fbug). Any help is welcome.
 
 ### Testing
 
@@ -42,7 +42,7 @@ Features without tests are considered non-existent. To ensure code is truly effe
 
 ### Automated Testing for Pull Requests
 
-Automated tests are triggered on pull requests (PRs) opened by members of the Cherry Studio organization, except for draft PRs. PRs opened by new contributors will initially be marked with the `needs-ok-to-test` label and will not be automatically tested. Once a Cherry Studio organization member adds `/ok-to-test` to the PR, the test pipeline will be created.
+Automated tests are triggered on pull requests (PRs) opened by members of the AiOnly organization, except for draft PRs. PRs opened by new contributors will initially be marked with the `needs-ok-to-test` label and will not be automatically tested. Once a AiOnly organization member adds `/ok-to-test` to the PR, the test pipeline will be created.
 
 ### Consider Opening Your Pull Request as a Draft
 
@@ -85,7 +85,7 @@ Please review the following critical information before submitting your Pull Req
 
 ### Participate in v2 Development 🚀
 
-v2 is the next major milestone for Cherry Studio, and we invite every developer to actively participate! Whether it's new feature development, architecture optimization, or code refactoring, your contributions on the `v2` branch are welcome. Let's build a better Cherry Studio together!
+v2 is the next major milestone for AiOnly, and we invite every developer to actively participate! Whether it's new feature development, architecture optimization, or code refactoring, your contributions on the `v2` branch are welcome. Let's build a better AiOnly together!
 
 > **Note**: The `v2` branch will only accept new feature submissions after all current features have been fully refactored.
 
@@ -96,7 +96,7 @@ We appreciate your understanding and continued support during this important dev
 
 If you have any questions or suggestions, feel free to contact us through the following ways:
 
-- WeChat: kangfenmao
-- [GitHub Issues](https://github.com/CherryHQ/cherry-studio/issues)
+- WeChat: aionly-support
+- [GitHub Issues](https://gitee.com/myme/aionly-studio/issues)
 
-Thank you for your support and contributions! We look forward to working with you to make Cherry Studio a better product.
+Thank you for your support and contributions! We look forward to working with you to make AiOnly a better product.

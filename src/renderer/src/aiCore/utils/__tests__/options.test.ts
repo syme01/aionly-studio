@@ -28,7 +28,7 @@ vi.mock('@aionly/ai-core/provider', async (importOriginal) => {
           'deepseek',
           'openrouter',
           'openai-compatible',
-          'cherryin'
+          'market'
         ]
         if (baseProviders.includes(id)) {
           return { success: true, data: id }
@@ -940,83 +940,83 @@ describe('options utils', () => {
     })
 
     describe('Proxy provider custom parameters mapping', () => {
-      it('should map cherryin provider ID to actual AI SDK provider ID (Google)', async () => {
+      it('should map market provider ID to actual AI SDK provider ID (Google)', async () => {
         const { getCustomParameters } = await import('../reasoning')
 
-        // Mock Cherry In provider that uses Google SDK
-        const cherryinProvider = {
-          id: 'cherryin',
-          name: 'Cherry In',
+        // Mock market provider that uses Google SDK
+        const marketProvider = {
+          id: 'market',
+          name: 'Market',
           type: 'gemini', // Using Google SDK
           apiKey: 'test-key',
-          apiHost: 'https://cherryin.com',
+          apiHost: 'https://market.com',
           models: [] as Model[]
         } as Provider
 
         const geminiModel: Model = {
           id: 'gemini-2.0-flash-exp',
           name: 'Gemini 2.0 Flash',
-          provider: 'cherryin'
+          provider: 'market'
         } as Model
 
-        // User provides custom parameters with Cherry Studio provider ID
+        // User provides custom parameters with app provider ID
         vi.mocked(getCustomParameters).mockReturnValue({
-          cherryin: {
+          market: {
             customOption1: 'value1',
             customOption2: 'value2'
           }
         })
 
-        const result = buildProviderOptions(mockAssistant, geminiModel, cherryinProvider, {
+        const result = buildProviderOptions(mockAssistant, geminiModel, marketProvider, {
           enableReasoning: false,
           enableWebSearch: false,
           enableGenerateImage: false
         })
 
-        // Should map to 'google' AI SDK provider, not 'cherryin'
+        // Should map to 'google' AI SDK provider, not 'market'
         expect(result.providerOptions).toHaveProperty('google')
-        expect(result.providerOptions).not.toHaveProperty('cherryin')
+        expect(result.providerOptions).not.toHaveProperty('market')
         expect(result.providerOptions.google).toMatchObject({
           customOption1: 'value1',
           customOption2: 'value2'
         })
       })
 
-      it('should map cherryin provider ID to actual AI SDK provider ID (OpenAI)', async () => {
+      it('should map market provider ID to actual AI SDK provider ID (OpenAI)', async () => {
         const { getCustomParameters } = await import('../reasoning')
 
-        // Mock Cherry In provider that uses OpenAI SDK
-        const cherryinProvider = {
-          id: 'cherryin',
-          name: 'Cherry In',
+        // Mock market provider that uses OpenAI SDK
+        const marketProvider = {
+          id: 'market',
+          name: 'Market',
           type: 'openai-response', // Using OpenAI SDK
           apiKey: 'test-key',
-          apiHost: 'https://cherryin.com',
+          apiHost: 'https://market.com',
           models: [] as Model[]
         } as Provider
 
         const openaiModel: Model = {
           id: 'gpt-4',
           name: 'GPT-4',
-          provider: 'cherryin'
+          provider: 'market'
         } as Model
 
-        // User provides custom parameters with Cherry Studio provider ID
+        // User provides custom parameters with app provider ID
         vi.mocked(getCustomParameters).mockReturnValue({
-          cherryin: {
+          market: {
             customOpenAIOption: 'openai_value'
           }
         })
 
-        const result = buildProviderOptions(mockAssistant, openaiModel, cherryinProvider, {
+        const result = buildProviderOptions(mockAssistant, openaiModel, marketProvider, {
           enableReasoning: false,
           enableWebSearch: false,
           enableGenerateImage: false
         })
 
-        // Should map to 'openai' AI SDK provider, not 'cherryin'
+        // Should map to 'openai' AI SDK provider, not 'market'
         expect(result.providerOptions).toHaveProperty('openai')
-        expect(result.providerOptions).not.toHaveProperty('cherryin')
+        expect(result.providerOptions).not.toHaveProperty('market')
         expect(result.providerOptions.openai).toMatchObject({
           customOpenAIOption: 'openai_value'
         })
@@ -1142,7 +1142,7 @@ describe('options utils', () => {
       it.each([
         { providerId: 'newapi', providerName: 'NewAPI' },
         { providerId: 'aihubmix', providerName: 'AiHubMix' },
-        { providerId: 'cherryin', providerName: 'CherryIN' }
+        { providerId: 'market', providerName: 'Market' }
       ])(
         'should route Gemini models to google providerOptions through $providerName',
         async ({ providerId, providerName }) => {
@@ -1181,33 +1181,33 @@ describe('options utils', () => {
       )
 
       // Note: For proxy providers like aihubmix/newapi, users should write AI SDK provider ID (google/anthropic)
-      // instead of the Cherry Studio provider ID for custom parameters to work correctly
+      // instead of the app provider ID for custom parameters to work correctly
 
       // model.endpoint_type takes priority over the short-name heuristic so the providerOptions key
-      // stays aligned with the SDK language-model class each proxy builds. Covers CherryIN's
+      // stays aligned with the SDK language-model class each proxy builds. Covers Market's
       // mixed-routing models (e.g. `minimax/minimax-m2.7` using the Anthropic endpoint) and
       // NewAPI's endpoint_type-driven routing.
       it.each([
         {
-          providerId: 'cherryin',
+          providerId: 'market',
           modelId: 'minimax/minimax-m2.7',
           endpointType: 'anthropic' as const,
           expectedKey: 'anthropic'
         },
         {
-          providerId: 'cherryin',
+          providerId: 'market',
           modelId: 'custom-id',
           endpointType: 'gemini' as const,
           expectedKey: 'google'
         },
         {
-          providerId: 'cherryin',
+          providerId: 'market',
           modelId: 'gpt-5',
           endpointType: 'openai-response' as const,
           expectedKey: 'openai'
         },
         {
-          providerId: 'cherryin',
+          providerId: 'market',
           modelId: 'qwen-max',
           endpointType: 'openai' as const,
           expectedKey: 'openai-compatible'
@@ -1260,32 +1260,32 @@ describe('options utils', () => {
         }
       )
 
-      it('should handle cherryin fallback to openai-compatible with custom parameters', async () => {
+      it('should handle market fallback to openai-compatible with custom parameters', async () => {
         const { getCustomParameters } = await import('../reasoning')
 
-        // Mock cherryin provider with a non-Gemini/Claude/GPT/Grok model that falls back
+        // Mock market provider with a non-Gemini/Claude/GPT/Grok model that falls back
         // to openai-compatible via buildAIGatewayOptions
-        const cherryinProvider = {
-          id: 'cherryin',
-          name: 'Cherry In',
+        const marketProvider = {
+          id: 'market',
+          name: 'Market',
           type: 'openai',
           apiKey: 'test-key',
-          apiHost: 'https://cherryin.com',
+          apiHost: 'https://market.com',
           models: [] as Model[]
         } as Provider
 
         const testModel: Model = {
           id: 'some-model',
           name: 'Some Model',
-          provider: 'cherryin'
+          provider: 'market'
         } as Model
 
-        // User provides custom parameters with cherryin provider ID
+        // User provides custom parameters with market provider ID
         vi.mocked(getCustomParameters).mockReturnValue({
-          customCherryinOption: 'cherryin_value'
+          customMarketOption: 'market_value'
         })
 
-        const result = buildProviderOptions(mockAssistant, testModel, cherryinProvider, {
+        const result = buildProviderOptions(mockAssistant, testModel, marketProvider, {
           enableReasoning: false,
           enableWebSearch: false,
           enableGenerateImage: false
@@ -1294,9 +1294,9 @@ describe('options utils', () => {
         // Non-Gemini/Claude/GPT/Grok models fall back to openai-compatible via buildAIGatewayOptions.
         // User's custom params (not matching any AI SDK provider ID) merge into the primary bucket.
         expect(result.providerOptions).toHaveProperty('openai-compatible')
-        expect(result.providerOptions).not.toHaveProperty('cherryin')
+        expect(result.providerOptions).not.toHaveProperty('market')
         expect(result.providerOptions['openai-compatible']).toMatchObject({
-          customCherryinOption: 'cherryin_value'
+          customMarketOption: 'market_value'
         })
       })
 

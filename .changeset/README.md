@@ -1,6 +1,6 @@
 # Changesets
 
-This folder contains configuration and changeset files for managing package versioning and publishing in the Cherry Studio monorepo.
+This folder contains configuration and changeset files for managing package versioning and publishing in the AiOnly monorepo.
 
 ## What is Changesets?
 
@@ -47,9 +47,9 @@ See `config.json` for the changeset configuration:
 
 | Package | Description |
 | --- | --- |
-| `@cherrystudio/ai-core` | Unified AI Provider Interface |
-| `@cherrystudio/ai-sdk-provider` | AI SDK provider bundle with CherryIN routing |
-| `@cherrystudio/extension-table-plus` | Table extension for Tiptap |
+| `@aionly/ai-core` | Unified AI Provider Interface |
+| `@aionly/ai-sdk-provider` | AI SDK provider bundle with Market routing |
+| `@aionly/extension-table-plus` | Table extension for Tiptap |
 
 ### Dependency relationships
 

@@ -460,7 +460,7 @@ export default class AppUpdater {
         }
       }
 
-      // ============ Legacy Cherry Studio Update Logic (Deprecated) ============
+      // ============ Legacy Update Logic (Deprecated) ============
       /*
       await this._setFeedUrl()
 

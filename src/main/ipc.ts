@@ -6,7 +6,7 @@ import { pathToFileURL } from 'node:url'
 import type { TokenUsageData } from '@cherrystudio/analytics-client'
 import { loggerService } from '@logger'
 import { isLinux, isMac, isPortable, isWin } from '@main/constant'
-import { generateSignature } from '@main/integration/cherryai'
+import { generateSignature } from '@main/integration/marketapi'
 import anthropicService from '@main/services/AnthropicService'
 import { getIpCountry } from '@main/utils/ipService'
 import {
@@ -20,7 +20,7 @@ import {
 import { handleZoomFactor } from '@main/utils/zoom'
 import type { SpanEntity, TokenUsage } from '@mcp-trace/trace-core'
 import type { UpgradeChannel } from '@shared/config/constant'
-import { HOME_CHERRY_DIR, MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH } from '@shared/config/constant'
+import { HOME_APP_DIR, MIN_WINDOW_HEIGHT, MIN_WINDOW_WIDTH } from '@shared/config/constant'
 import type { LocalTransferConnectPayload } from '@shared/config/types'
 import { IpcChannel } from '@shared/IpcChannel'
 import { extractPdfText } from '@shared/utils/pdf'
@@ -46,7 +46,7 @@ import { apiServerService } from './services/ApiServerService'
 import appService from './services/AppService'
 import AppUpdater from './services/AppUpdater'
 import BackupManager from './services/BackupManager'
-import CherryINOAuthService from './services/CherryINOAuthService'
+import MarketOAuthService from './services/MarketOAuthService'
 import { codeToolsService } from './services/CodeToolsService'
 import { ConfigKeys, configManager } from './services/ConfigManager'
 import CopilotService from './services/CopilotService'
@@ -891,9 +891,9 @@ export async function registerIpc(mainWindow: BrowserWindow, app: Electron.App) 
   ipcMain.handle(IpcChannel.App_InstallUvBinary, () => runInstallScript('install-uv.js'))
   ipcMain.handle(IpcChannel.App_InstallBunBinary, () =>
     runInstallScript('install-bun.js', {
-      // Install bun into this app's managed bin dir (HOME_CHERRY_DIR), which may differ
+      // Install bun into this app's managed bin dir (HOME_APP_DIR), which may differ
       // from the script's built-in default directory
-      BIN_INSTALL_DIR: path.join(homedir(), HOME_CHERRY_DIR, 'bin')
+      BIN_INSTALL_DIR: path.join(homedir(), HOME_APP_DIR, 'bin')
     })
   )
   ipcMain.handle(IpcChannel.App_InstallOvmsBinary, () => runInstallScript('install-ovms.js'))
@@ -906,13 +906,13 @@ export async function registerIpc(mainWindow: BrowserWindow, app: Electron.App) 
   ipcMain.handle(IpcChannel.Copilot_Logout, CopilotService.logout.bind(CopilotService))
   ipcMain.handle(IpcChannel.Copilot_GetUser, CopilotService.getUser.bind(CopilotService))
 
-  // CherryIN OAuth
-  ipcMain.handle(IpcChannel.CherryIN_SaveToken, CherryINOAuthService.saveToken.bind(CherryINOAuthService))
-  ipcMain.handle(IpcChannel.CherryIN_HasToken, CherryINOAuthService.hasToken.bind(CherryINOAuthService))
-  ipcMain.handle(IpcChannel.CherryIN_GetBalance, CherryINOAuthService.getBalance.bind(CherryINOAuthService))
-  ipcMain.handle(IpcChannel.CherryIN_Logout, CherryINOAuthService.logout.bind(CherryINOAuthService))
-  ipcMain.handle(IpcChannel.CherryIN_StartOAuthFlow, CherryINOAuthService.startOAuthFlow.bind(CherryINOAuthService))
-  ipcMain.handle(IpcChannel.CherryIN_ExchangeToken, CherryINOAuthService.exchangeToken.bind(CherryINOAuthService))
+  // Market OAuth
+  ipcMain.handle(IpcChannel.Market_SaveToken, MarketOAuthService.saveToken.bind(MarketOAuthService))
+  ipcMain.handle(IpcChannel.Market_HasToken, MarketOAuthService.hasToken.bind(MarketOAuthService))
+  ipcMain.handle(IpcChannel.Market_GetBalance, MarketOAuthService.getBalance.bind(MarketOAuthService))
+  ipcMain.handle(IpcChannel.Market_Logout, MarketOAuthService.logout.bind(MarketOAuthService))
+  ipcMain.handle(IpcChannel.Market_StartOAuthFlow, MarketOAuthService.startOAuthFlow.bind(MarketOAuthService))
+  ipcMain.handle(IpcChannel.Market_ExchangeToken, MarketOAuthService.exchangeToken.bind(MarketOAuthService))
 
   // Obsidian service
   ipcMain.handle(IpcChannel.Obsidian_GetVaults, () => {
@@ -1088,8 +1088,8 @@ export async function registerIpc(mainWindow: BrowserWindow, app: Electron.App) 
     ipcMain.handle(IpcChannel.Ovms_StopOVMS, fallback)
   }
 
-  // CherryAI
-  ipcMain.handle(IpcChannel.Cherryai_GetSignature, (_, params) => generateSignature(params))
+  // MarketAPI
+  ipcMain.handle(IpcChannel.Market_GetSignature, (_, params) => generateSignature(params))
 
   // Global Skills
   ipcMain.handle(IpcChannel.Skill_List, async (_, agentId?: string) => {

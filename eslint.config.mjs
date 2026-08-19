@@ -64,7 +64,7 @@ export default defineConfig([
       '.conductor/**',
       'scripts/cloudflare-worker.js',
       'src/main/integration/nutstore/sso/lib/**',
-      'src/main/integration/cherryai/index.js',
+      'src/main/integration/marketapi/index.js',
       'src/main/integration/nutstore/sso/lib/**',
       'src/renderer/src/ui/**',
       'packages/**/dist'
@@ -84,7 +84,7 @@ export default defineConfig([
         {
           selector: 'CallExpression[callee.object.name="console"]',
           message:
-            '❗CherryStudio uses unified LoggerService: 📖 docs/en/guides/logging.md\n❗CherryStudio 使用统一的日志服务：📖 docs/zh/guides/logging.md\n\n'
+            '❗AiOnly uses unified LoggerService: 📖 docs/en/guides/logging.md\n❗AiOnly 使用统一的日志服务：📖 docs/zh/guides/logging.md\n\n'
         }
       ]
     }

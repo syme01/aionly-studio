@@ -15,7 +15,7 @@ export const buildProxyBootstrapPlugin = ({
   rootDir
 }: BuildProxyBootstrapPluginOptions): Plugin => {
   return {
-    name: 'cherry-build-proxy-bootstrap',
+    name: 'aionly-build-proxy-bootstrap',
     apply: 'build',
     async closeBundle() {
       await viteBuild({

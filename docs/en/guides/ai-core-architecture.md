@@ -1,10 +1,10 @@
-# Cherry Studio AI Core Architecture Documentation
+# AiOnly AI Core Architecture Documentation
 
 > **Version**: v4.0 (ToolFactory + providerToolPlugin unified tool injection)
 > **Updated**: 2026-03-20
-> **Applicable to**: Cherry Studio v1.8.1+
+> **Applicable to**: AiOnly v1.8.1+
 
-This document describes the complete data flow and architectural design from user interaction to AI SDK calls in Cherry Studio. It serves as the key documentation for understanding the application's core functionality.
+This document describes the complete data flow and architectural design from user interaction to AI SDK calls in AiOnly. It serves as the key documentation for understanding the application's core functionality.
 
 ---
 
@@ -28,7 +28,7 @@ This document describes the complete data flow and architectural design from use
 
 ### 1.1 Architectural Layers
 
-Cherry Studio's AI calls follow a clear layered architecture:
+AiOnly's AI calls follow a clear layered architecture:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -68,7 +68,7 @@ Cherry Studio's AI calls follow a clear layered architecture:
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                  Core Package Layer                          │
-│  packages/aiCore/ (@cherrystudio/ai-core)                    │
+│  packages/aiCore/ (@aionly/ai-core)                    │
 │  ┌────────────────────────────────────────────────────┐    │
 │  │ RuntimeExecutor                                     │    │
 │  │  - streamText()                                     │    │
@@ -202,7 +202,7 @@ User Input (UI)
 │    Location: src/renderer/src/aiCore/index_new.ts:116        │
 │                                                               │
 │    Step 4.1: providerToAiSdkConfig()                         │
-│    ├─ Convert Cherry Provider → AI SDK Config                │
+│    ├─ Convert AiOnly Provider → AI SDK Config                │
 │    ├─ Set providerId ('openai', 'anthropic', etc.)           │
 │    └─ Set providerSettings (apiKey, baseURL, etc.)           │
 │                                                               │
@@ -298,7 +298,7 @@ User Input (UI)
 │                                                               │
 │     Step 10.1: AiSdkToChunkAdapter.processStream()           │
 │     ├─ Listen to AI SDK's textStream                         │
-│     ├─ Convert to Cherry Chunk format                        │
+│     ├─ Convert to AiOnly Chunk format                        │
 │     ├─ Process tool calls                                    │
 │     ├─ Process reasoning blocks                              │
 │     └─ Send chunk to onChunkReceived callback                │
@@ -563,11 +563,11 @@ function getRotatedApiKey(provider: Provider): string {
 
 #### Core Responsibilities
 
-1. **Provider configuration conversion** (Cherry Provider → AI SDK Config)
+1. **Provider configuration conversion** (AiOnly Provider → AI SDK Config)
 2. **Plugin building** (based on capabilities)
 3. **Trace integration** (OpenTelemetry)
 4. **Call RuntimeExecutor**
-5. **Stream data adaptation** (AI SDK Stream → Cherry Chunk)
+5. **Stream data adaptation** (AI SDK Stream → AiOnly Chunk)
 
 #### Constructor Details
 
@@ -1602,7 +1602,7 @@ for await (const textDelta of streamResult.textStream) {
 
 ### 11.1 Test Utilities (test-utils)
 
-`@cherrystudio/ai-core` provides a complete set of testing utilities:
+`@aionly/ai-core` provides a complete set of testing utilities:
 
 ```typescript
 // packages/aiCore/test_utils/helpers/model.ts
@@ -1727,7 +1727,7 @@ Current test coverage:
 
 **A**:
 
-- **Plugin**: Feature extension at Cherry Studio level (Reasoning, ToolUse, WebSearch)
+- **Plugin**: Feature extension at AiOnly level (Reasoning, ToolUse, WebSearch)
 - **Middleware**: Request/response interceptor at AI SDK level
 
 ### Q3: When to use Legacy Provider?
@@ -1746,4 +1746,4 @@ Current test coverage:
 
 **Document Version**: v4.0
 **Last Updated**: 2026-03-20
-**Maintainer**: Cherry Studio Team
+**Maintainer**: AiOnly Team

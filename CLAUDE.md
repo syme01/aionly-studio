@@ -82,7 +82,7 @@ src/
   renderer/      # React UI (Electron renderer process)
   preload/       # Secure IPC bridge (contextBridge)
 packages/
-  aiCore/        # @cherrystudio/ai-core — AI SDK middleware & provider abstraction
+  aiCore/        # @aionly/ai-core — AI SDK middleware & provider abstraction
   shared/        # Cross-process types, constants, IPC channel definitions
   mcp-trace/     # OpenTelemetry tracing for MCP operations
   ai-sdk-provider/  # Custom AI SDK provider implementations
@@ -99,7 +99,7 @@ packages/
 | `@types` | `src/renderer/src/types/` |
 | `@logger` | `src/main/services/LoggerService` (main) / `src/renderer/src/services/LoggerService` (renderer) |
 | `@mcp-trace/trace-core` | `packages/mcp-trace/trace-core/` |
-| `@cherrystudio/ai-core` | `packages/aiCore/src/` |
+| `@aionly/ai-core` | `packages/aiCore/src/` |
 
 ### Main Process (`src/main/`)
 
@@ -109,7 +109,7 @@ Node.js backend services. Key services:
 |---|---|
 | `WindowService` | Electron window lifecycle management |
 | `MCPService` | Model Context Protocol server management |
-| `KnowledgeService` | RAG / knowledge base (via `@cherrystudio/embedjs`) |
+| `KnowledgeService` | RAG / knowledge base (via `@aionly/embedjs`) |
 | `AnthropicService` | Anthropic API integration |
 | `LoggerService` | Winston-based structured logging (daily rotate) |
 | `StoreSyncService` | Syncs Redux state to/from main process |
@@ -175,7 +175,7 @@ Slices (redux-persist enabled):
   - **BLOCKED**: Do not modify schema until v2.0.0.
 - **SQLite** (Drizzle ORM + LibSQL): `src/main/services/agents/`
   - Used for the agents subsystem
-  - DB path: `{userData}/Data/agents.db` (e.g., on macOS: `~/Library/Application Support/CherryStudioDev/Data/agents.db` in dev, `~/Library/Application Support/CherryStudio/Data/agents.db` in prod)
+  - DB path: `{userData}/Data/agents.db` (e.g., on macOS: `~/Library/Application Support/AiOnlyDev/Data/agents.db` in dev, `~/Library/Application Support/AiOnly/Data/agents.db` in prod)
 
 ### IPC Communication
 
@@ -187,7 +187,7 @@ Slices (redux-persist enabled):
 
 ### AI Core (`packages/aiCore/`)
 
-The `@cherrystudio/ai-core` package abstracts AI SDK providers:
+The `@aionly/ai-core` package abstracts AI SDK providers:
 
 ```
 src/core/
@@ -201,7 +201,7 @@ src/core/
 - Built on Vercel AI SDK v5 (`ai` package) with `LanguageModelV2Middleware`
 - `HubProvider` aggregates multiple provider backends
 - Supports: OpenAI, Anthropic, Google, Azure, Mistral, Bedrock, Vertex, Ollama, Perplexity, xAI, HuggingFace, Cerebras, OpenRouter, Copilot, and more
-- Custom fork of openai package: `@cherrystudio/openai`
+- Custom fork of openai package: `@aionly/openai`
 
 ### Multi-Window Architecture
 
@@ -243,7 +243,7 @@ logger.error("message", error);
 | UI | Ant Design 5.27, styled-components 6, TailwindCSS v4 |
 | State | Redux Toolkit, redux-persist, Dexie (IndexedDB) |
 | Rich Text | TipTap 3.2 (with Yjs collaboration) |
-| AI SDK | Vercel AI SDK v5 (`ai`), `@cherrystudio/ai-core` |
+| AI SDK | Vercel AI SDK v5 (`ai`), `@aionly/ai-core` |
 | Build | electron-vite 5 with rolldown-vite 7 (experimental) |
 | Test | Vitest 3 (unit), Playwright (e2e) |
 | Lint/Format | ESLint 9, oxlint, Biome 2 |

@@ -6,7 +6,7 @@ import './bootstrap'
 import '@main/config'
 
 import { loggerService } from '@logger'
-import { APP_BUNDLE_ID } from '@shared/config/constant'
+import { APP_BUNDLE_ID, APP_PROTOCOL } from '@shared/config/constant'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { replaceDevtoolsFont } from '@main/utils/windowUtil'
 import { app, crashReporter } from 'electron'
@@ -31,12 +31,7 @@ import { localTransferService } from './services/LocalTransferService'
 import { openClawService } from './services/OpenClawService'
 import { nodeTraceService } from './services/NodeTraceService'
 import powerMonitorService from './services/PowerMonitorService'
-import {
-  CHERRY_STUDIO_PROTOCOL,
-  handleProtocolUrl,
-  registerProtocolClient,
-  setupAppImageDeepLink
-} from './services/ProtocolClient'
+import { handleProtocolUrl, registerProtocolClient, setupAppImageDeepLink } from './services/ProtocolClient'
 import selectionService, { initSelectionService } from './services/SelectionService'
 import { registerShortcuts } from './services/ShortcutService'
 import { TrayService } from './services/TrayService'
@@ -187,7 +182,7 @@ if (!app.requestSingleInstanceLock()) {
     powerMonitorService.init()
     analyticsService.init()
 
-    // Extract bundled rtk binary to ~/.cherrystudio/bin/ on first run
+    // Extract bundled rtk binary to ~/.aionlystudio/bin/ on first run
     extractRtkBinaries().catch((error) => {
       logger.warn('Failed to extract rtk binaries (non-fatal)', {
         error: error instanceof Error ? error.message : String(error)
@@ -250,13 +245,13 @@ if (!app.requestSingleInstanceLock()) {
           await apiServerService.start()
         }
 
-        // Restore CherryClaw schedulers after services are ready
+        // Restore AionlyClaw schedulers after services are ready
         await schedulerService.restoreSchedulers()
 
         // Register IPC handlers for session stream before starting channels
         registerSessionStreamIpc()
 
-        // Start CherryClaw channel adapters (Telegram, etc.)
+        // Start AionlyClaw channel adapters (Telegram, etc.)
         await channelManager.start()
       } catch (error: any) {
         logger.error('Failed to check/start API server:', error)
@@ -274,7 +269,7 @@ if (!app.requestSingleInstanceLock()) {
   })
 
   const handleOpenUrl = (args: string[]) => {
-    const url = args.find((arg) => arg.startsWith(CHERRY_STUDIO_PROTOCOL + '://'))
+    const url = args.find((arg) => arg.startsWith(APP_PROTOCOL + '://'))
     if (url) handleProtocolUrl(url)
   }
 

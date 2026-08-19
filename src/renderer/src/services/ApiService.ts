@@ -726,7 +726,7 @@ export async function fetchGenerate({
 
 export function hasApiKey(provider: Provider) {
   if (!provider) return false
-  const allows = ['cherryai', 'aionly']
+  const allows = ['marketapi', 'aionly']
   if (allows.includes(provider.id)) return true
   if (
     (isSystemProvider(provider) && NOT_SUPPORT_API_KEY_PROVIDERS.includes(provider.id)) ||

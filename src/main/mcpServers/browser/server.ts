@@ -18,7 +18,7 @@ export class BrowserServer {
   constructor() {
     this.mcpServer = new McpServer(
       {
-        name: '@cherry/browser',
+        name: '@aionly/browser',
         version: '0.1.0'
       },
       {

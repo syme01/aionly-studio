@@ -1,10 +1,10 @@
-# Cherry Studio AI Core 架构文档
+# AiOnly AI Core 架构文档
 
 > **版本**: v4.0 (ToolFactory + providerToolPlugin 统一工具注入)
 > **更新日期**: 2026-03-20
-> **适用范围**: Cherry Studio v1.8.1+
+> **适用范围**: AiOnly v1.8.1+
 
-本文档详细描述了 Cherry Studio 从用户交互到 AI SDK 调用的完整数据流和架构设计，是理解应用核心功能的关键文档。
+本文档详细描述了 AiOnly 从用户交互到 AI SDK 调用的完整数据流和架构设计，是理解应用核心功能的关键文档。
 
 ---
 
@@ -28,7 +28,7 @@
 
 ### 1.1 架构分层
 
-Cherry Studio 的 AI 调用采用清晰的分层架构：
+AiOnly 的 AI 调用采用清晰的分层架构：
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -68,7 +68,7 @@ Cherry Studio 的 AI 调用采用清晰的分层架构：
                          ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                  Core Package Layer                          │
-│  packages/aiCore/ (@cherrystudio/ai-core)                    │
+│  packages/aiCore/ (@aionly/ai-core)                    │
 │  ┌────────────────────────────────────────────────────┐    │
 │  │ RuntimeExecutor                                     │    │
 │  │  - streamText()                                     │    │
@@ -202,7 +202,7 @@ User Input (UI)
 │    Location: src/renderer/src/aiCore/index_new.ts:116        │
 │                                                               │
 │    Step 4.1: providerToAiSdkConfig()                         │
-│    ├─ 转换 Cherry Provider → AI SDK Config                   │
+│    ├─ 转换 AiOnly Provider → AI SDK Config                   │
 │    ├─ 设置 providerId ('openai', 'anthropic', etc.)          │
 │    └─ 设置 providerSettings (apiKey, baseURL, etc.)          │
 │                                                               │
@@ -298,7 +298,7 @@ User Input (UI)
 │                                                               │
 │     Step 10.1: AiSdkToChunkAdapter.processStream()           │
 │     ├─ 监听 AI SDK 的 textStream                             │
-│     ├─ 转换为 Cherry Chunk 格式                              │
+│     ├─ 转换为 AiOnly Chunk 格式                              │
 │     ├─ 处理 tool calls                                       │
 │     ├─ 处理 reasoning blocks                                 │
 │     └─ 发送 chunk 到 onChunkReceived callback                │
@@ -563,11 +563,11 @@ function getRotatedApiKey(provider: Provider): string {
 
 #### 核心职责
 
-1. **Provider 配置转换** (Cherry Provider → AI SDK Config)
+1. **Provider 配置转换** (AiOnly Provider → AI SDK Config)
 2. **插件构建** (根据 capabilities)
 3. **Trace 集成** (OpenTelemetry)
 4. **调用 RuntimeExecutor**
-5. **流式数据适配** (AI SDK Stream → Cherry Chunk)
+5. **流式数据适配** (AI SDK Stream → AiOnly Chunk)
 
 #### 构造函数详解
 
@@ -1894,7 +1894,7 @@ const exporter = new OTLPTraceExporter({
 // 配置 Trace Provider
 const provider = new WebTracerProvider({
   resource: new Resource({
-    "service.name": "cherry-studio",
+    "service.name": "aionly",
     "service.version": app.getVersion(),
   }),
 });
@@ -2141,7 +2141,7 @@ async processStream(streamResult: StreamTextResult) {
 
 ### 11.1 测试工具 (test-utils)
 
-`@cherrystudio/ai-core` 提供了完整的测试工具集：
+`@aionly/ai-core` 提供了完整的测试工具集：
 
 ```typescript
 // packages/aiCore/test_utils/helpers/model.ts
@@ -2266,7 +2266,7 @@ describe("ProviderExtension", () => {
 
 **A**:
 
-- **Plugin**: Cherry Studio 层面的功能扩展（Reasoning, ToolUse, WebSearch）
+- **Plugin**: AiOnly 层面的功能扩展（Reasoning, ToolUse, WebSearch）
 - **Middleware**: AI SDK 层面的请求/响应拦截器
 
 ### Q3: 什么时候用 Legacy Provider？
@@ -2285,4 +2285,4 @@ describe("ProviderExtension", () => {
 
 **文档版本**: v4.0
 **最后更新**: 2026-03-20
-**维护者**: Cherry Studio Team
+**维护者**: AiOnly Team

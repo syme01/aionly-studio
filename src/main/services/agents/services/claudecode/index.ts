@@ -56,7 +56,7 @@ import { skillService } from '../../skills/SkillService'
 import { agentService } from '../AgentService'
 import { isProvisioned, provisionBuiltinAgent } from '../builtin/BuiltinAgentProvisioner'
 import { channelService } from '../ChannelService'
-import { PromptBuilder } from '../cherryclaw/prompt'
+import { PromptBuilder } from '../aionlyclaw/prompt'
 import { sessionService } from '../SessionService'
 import { buildNamespacedToolCallId } from './claude-stream-state'
 import { promptForToolApproval } from './tool-permissions'
@@ -69,7 +69,7 @@ const promptBuilder = new PromptBuilder()
 const DEFAULT_AUTO_ALLOW_TOOLS = new Set(['Read', 'Glob', 'Grep'])
 const IMAGE_MAX_DIMENSION = 2000
 const IMAGE_MAX_BYTES = 5 * 1024 * 1024 // 5MB API limit
-const shouldAutoApproveTools = process.env.CHERRY_AUTO_ALLOW_TOOLS === '1'
+const shouldAutoApproveTools = process.env.AIONLY_AUTO_ALLOW_TOOLS === '1'
 const NO_RESUME_COMMANDS = ['/clear']
 
 const getAnthropicCustomHeaders = (headers?: Record<string, string>) => {
@@ -230,7 +230,7 @@ class ClaudeCodeService implements AgentServiceInterface {
       // project-level skill loading layer — no need to point CLAUDE_CONFIG_DIR at the workspace.
       CLAUDE_CONFIG_DIR: path.join(app.getPath('userData'), '.claude'),
       ENABLE_TOOL_SEARCH: 'auto',
-      CHERRY_STUDIO_BUN_PATH: bunPath,
+      AIONLY_BUN_PATH: bunPath,
       ...(customGitBashPath ? { CLAUDE_CODE_GIT_BASH_PATH: customGitBashPath } : {})
     }
 
@@ -250,8 +250,8 @@ class ClaudeCodeService implements AgentServiceInterface {
         'CLAUDE_CONFIG_DIR',
         'CLAUDE_CODE_USE_BEDROCK',
         'CLAUDE_CODE_GIT_BASH_PATH',
-        'CHERRY_STUDIO_NODE_PROXY_RULES',
-        'CHERRY_STUDIO_NODE_PROXY_BYPASS_RULES',
+        'AIONLY_NODE_PROXY_RULES',
+        'AIONLY_NODE_PROXY_BYPASS_RULES',
         'NODE_OPTIONS',
         '__PROTO__',
         'CONSTRUCTOR',
@@ -305,7 +305,7 @@ class ClaudeCodeService implements AgentServiceInterface {
       })
 
       if (shouldAutoApproveTools) {
-        logger.debug('Auto-approving tool due to CHERRY_AUTO_ALLOW_TOOLS flag', { toolName })
+        logger.debug('Auto-approving tool due to AIONLY_AUTO_ALLOW_TOOLS flag', { toolName })
         return { behavior: 'allow', updatedInput: input }
       }
 
@@ -1097,7 +1097,7 @@ async function buildAssistantContext(): Promise<string> {
   const probeResults = await Promise.allSettled([
     probeHost('github.com'),
     probeHost('google.com'),
-    probeHost('docs.cherry-ai.com')
+    probeHost('www.aionly.com')
   ])
   const networkLines = probeResults.map((r) => {
     const v = r.status === 'fulfilled' ? r.value : { host: '?', ok: false, ms: 0 }

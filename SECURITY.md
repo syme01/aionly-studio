@@ -2,11 +2,11 @@
 
 ## 📢 Reporting a Vulnerability
 
-At Cherry Studio, we take security seriously and appreciate your efforts to responsibly disclose vulnerabilities. If you discover a security issue, please report it as soon as possible.
+At AiOnly, we take security seriously and appreciate your efforts to responsibly disclose vulnerabilities. If you discover a security issue, please report it as soon as possible.
 
 **Please do not create public issues for security-related reports.**
 
-- To report a security issue, please use the GitHub Security Advisories tab to "[Open a draft security advisory](https://github.com/CherryHQ/cherry-studio/security/advisories/new)".
+- To report a security issue, please use the GitHub Security Advisories tab to "[Open a draft security advisory](https://gitee.com/myme/aionly-studio/security/advisories/new)".
 - Include a detailed description of the issue, steps to reproduce, potential impact, and any possible mitigations.
 - If applicable, please also attach proof-of-concept code or screenshots.
 
@@ -30,7 +30,7 @@ If you are using an unsupported version, we strongly recommend updating to the l
 
 ## 💡 Security Measures
 
-Cherry Studio integrates several security best practices, including:
+AiOnly integrates several security best practices, including:
 
 - Strict dependency updates and regular vulnerability scanning.
 - TypeScript strict mode and linting to reduce potential injection or runtime issues.
@@ -50,15 +50,15 @@ Cherry Studio integrates several security best practices, including:
 
 ## 🤝 Acknowledgements
 
-We greatly appreciate contributions from the security community and strive to recognize all researchers who help keep Cherry Studio safe.
+We greatly appreciate contributions from the security community and strive to recognize all researchers who help keep AiOnly safe.
 
 ---
 
 ## 🌟 Questions?
 
 For any security-related questions not involving vulnerabilities, please reach out to:  
-**security@cherry-ai.com**
+**support@aionly-ai.com**
 
 ---
 
-Thank you for helping keep Cherry Studio and its users secure!
+Thank you for helping keep AiOnly and its users secure!

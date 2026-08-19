@@ -35,7 +35,7 @@ import {
 } from '@modelcontextprotocol/sdk/types.js'
 import { nanoid } from '@reduxjs/toolkit'
 import { APP_NAME } from '@shared/config/constant'
-import { HOME_CHERRY_DIR } from '@shared/config/constant'
+import { HOME_APP_DIR } from '@shared/config/constant'
 import type { MCPProgressEvent } from '@shared/config/types'
 import type { MCPServerLogEntry } from '@shared/config/types'
 import { IpcChannel } from '@shared/IpcChannel'
@@ -338,7 +338,7 @@ class McpService {
               requestInit: {
                 headers: {
                   ...defaultAppHeaders(),
-                  APP: 'Cherry Studio'
+                  APP: 'AiOnly'
                 }
               },
               authProvider
@@ -992,7 +992,7 @@ class McpService {
   }
 
   public async getInstallInfo() {
-    const dir = path.join(os.homedir(), HOME_CHERRY_DIR, 'bin')
+    const dir = path.join(os.homedir(), HOME_APP_DIR, 'bin')
     const uvName = await getBinaryName('uv')
     const bunName = await getBinaryName('bun')
     const uvPath = path.join(dir, uvName)

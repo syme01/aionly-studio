@@ -1,8 +1,10 @@
 import { getIndexTokenPlanPageListApi } from '@renderer/api/balance'
 import { TopView } from '@renderer/components/TopView'
+import { useProvider } from '@renderer/hooks/useProvider'
 import useUserTokenPlan from '@renderer/hooks/useUserTokenPlan'
 import { useAppSelector } from '@renderer/store'
 import { selectUserInfo } from '@renderer/store/user'
+import { LOCAL_USER_SECRET_KEY } from '@shared/config/constant'
 import type { TableProps } from 'antd'
 import { Input, Modal, Progress, Select, Switch, Table } from 'antd'
 import { useEffect, useRef, useState } from 'react'
@@ -23,6 +25,7 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
 
   const userInfo: any = useAppSelector(selectUserInfo)
   const { getUserEnabledPlan, setUserEnabledPlan, clearUserEnabledPlan } = useUserTokenPlan(userInfo.userId)
+  const { updateProvider } = useProvider('aionly')
 
   // 当前启用的套餐（全局唯一，持久化到 localStorage）
   const [enabledPlan, setEnabledPlan] = useState<any>(() => getUserEnabledPlan())
@@ -87,6 +90,10 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
         onOk: () => {
           setEnabledPlan(record)
           setUserEnabledPlan(record)
+          // 同步 aionly provider 的 apiKey，保证 agents/主进程侧使用当前套餐的 key
+          if (record.apikey) {
+            updateProvider({ apiKey: record.apikey })
+          }
           resolve({
             ...record,
             enabled: true
@@ -100,6 +107,8 @@ const PopupContainer: React.FC<Props> = ({ resolve }) => {
         onOk: () => {
           setEnabledPlan(null)
           clearUserEnabledPlan()
+          // 禁用套餐后回退到用户基础 apiKey（与登录流程 saveUserInfo 的逻辑保持一致）
+          updateProvider({ apiKey: localStorage.getItem(LOCAL_USER_SECRET_KEY) ?? '' })
           resolve({
             ...record,
             enabled: false

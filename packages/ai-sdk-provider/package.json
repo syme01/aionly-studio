@@ -1,18 +1,18 @@
 {
   "name": "@aionly/ai-sdk-provider",
   "version": "0.1.6",
-  "description": "Cherry Studio AI SDK provider bundle with CherryIN routing.",
-  "keywords": ["ai-sdk", "provider", "cherryin", "vercel-ai-sdk", "cherry-studio"],
-  "author": "Cherry Studio",
+  "description": "AiOnly AI SDK provider bundle with Market routing.",
+  "keywords": ["ai-sdk", "provider", "market", "vercel-ai-sdk", "aionly"],
+  "author": "AiOnly",
   "license": "MIT",
-  "homepage": "https://github.com/CherryHQ/cherry-studio",
+  "homepage": "https://gitee.com/myme/aionly-studio",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CherryHQ/cherry-studio.git",
+    "url": "git+https://gitee.com/myme/aionly-studio.git",
     "directory": "packages/ai-sdk-provider"
   },
   "bugs": {
-    "url": "https://github.com/CherryHQ/cherry-studio/issues"
+    "url": "https://gitee.com/myme/aionly-studio/issues"
   },
   "type": "module",
   "main": "dist/index.cjs",

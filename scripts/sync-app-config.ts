@@ -56,7 +56,7 @@ fs.writeFileSync(trayServicePath, trayService)
 // Update SKILL.md
 const skillMdPath = path.join(
   root,
-  'resources/builtin-agents/cherry-assistant/.claude/skills/cherry-assistant-guide/SKILL.md'
+  'resources/builtin-agents/aionly-assistant/.claude/skills/aionly-assistant-guide/SKILL.md'
 )
 if (fs.existsSync(skillMdPath) && USER_UI_HOST && WEB_UI_HOST) {
   let skillMd = fs.readFileSync(skillMdPath, 'utf-8')

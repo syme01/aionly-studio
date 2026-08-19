@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { isNotSupportTextDeltaModel } from '@renderer/config/models'
-import { CHERRYAI_PROVIDER } from '@renderer/config/providers'
+import { MARKETAPI_PROVIDER } from '@renderer/config/providers'
 import { getDefaultProvider } from '@renderer/services/AssistantService'
 import { type RootState, useAppDispatch, useAppSelector } from '@renderer/store'
 import {
@@ -41,8 +41,8 @@ const selectProviders = (state: RootState) => state.llm.providers
 const selectEnabledProviders = createSelector(
   selectProviders,
   (providers) => providers.map(normalizeProvider).filter((p) => p.enabled)
-  // 屏蔽 cherryai provider
-  // .concat(CHERRYAI_PROVIDER)
+  // 屏蔽 marketapi provider
+  // .concat(MARKETAPI_PROVIDER)
 )
 
 const selectSystemProviders = createSelector(selectProviders, (providers) =>
@@ -55,8 +55,8 @@ const selectUserProviders = createSelector(selectProviders, (providers) =>
 
 const selectAllProviders = createSelector(selectProviders, (providers) => providers.map(normalizeProvider))
 
-const selectAllProvidersWithCherryAI = createSelector(selectProviders, (providers) =>
-  [...providers, CHERRYAI_PROVIDER].map(normalizeProvider)
+const selectAllProvidersWithMarketAPI = createSelector(selectProviders, (providers) =>
+  [...providers, MARKETAPI_PROVIDER].map(normalizeProvider)
 )
 
 export function useProviders() {
@@ -85,7 +85,7 @@ export function useAllProviders() {
 }
 
 export function useProvider(id: string) {
-  const allProviders = useAppSelector(selectAllProvidersWithCherryAI)
+  const allProviders = useAppSelector(selectAllProvidersWithMarketAPI)
   const provider = useMemo(() => allProviders.find((p) => p.id === id) || getDefaultProvider(), [allProviders, id])
   const dispatch = useAppDispatch()
 

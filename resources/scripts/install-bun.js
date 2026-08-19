@@ -48,7 +48,7 @@ async function downloadBunBinary(platform, arch, version = DEFAULT_BUN_VERSION, 
 
   // Create output directory structure
   // BIN_INSTALL_DIR lets the app redirect the install into its managed bin dir
-  // Default matches the app's HOME_CHERRY_DIR (~/.aionlystudio)
+  // Default matches the app config dir (~/.aionlystudio)
   const binDir = process.env.BIN_INSTALL_DIR || path.join(os.homedir(), '.aionlystudio', 'bin')
   // Ensure directories exist
   fs.mkdirSync(binDir, { recursive: true })

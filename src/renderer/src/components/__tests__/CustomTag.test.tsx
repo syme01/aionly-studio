@@ -14,7 +14,7 @@ describe('CustomTag', () => {
 
   it('should render icon if provided', () => {
     render(
-      <CustomTag color={COLOR} icon={<span data-testid="icon">cherry</span>}>
+      <CustomTag color={COLOR} icon={<span data-testid="icon">sample</span>}>
         content
       </CustomTag>
     )

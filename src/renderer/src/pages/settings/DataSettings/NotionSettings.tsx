@@ -72,7 +72,7 @@ const NotionSettings: FC = () => {
     openSmartMinapp({
       id: 'notion-help',
       name: 'Notion Help',
-      url: 'https://docs.cherry-ai.com/advanced-basic/notion',
+      url: 'https://www.aionly.com/docs',
       logo: AppLogo
     })
   }

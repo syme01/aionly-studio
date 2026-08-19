@@ -28,7 +28,7 @@
       "submit": "Trimite",
       "title": "Întrebări de la Agent"
     },
-    "cherryClaw": {
+    "claw": {
       "channels": {
         "add": "Adaugă",
         "bindAgent": "Agent de legătură",
@@ -268,7 +268,7 @@
         "title": "Sarcini programate"
       },
       "warning": {
-        "bypassPermissions": "Agenții CherryClaw rulează în mod automat complet în mod implicit. Toate instrumentele se execută fără a solicita aprobare."
+        "bypassPermissions": "Agenții AionlyClaw rulează în mod automat complet în mod implicit. Toate instrumentele se execută fără a solicita aprobare."
       }
     },
     "delete": {
@@ -696,7 +696,7 @@
     },
     "authHeaderText": "Utilizează în header-ul Authorization:",
     "configuration": "Configurare",
-    "description": "Expune capacitățile AI ale Cherry Studio prin API-uri HTTP compatibile cu OpenAI",
+    "description": "Expune capacitățile AI ale AiOnly prin API-uri HTTP compatibile cu OpenAI",
     "documentation": {
       "title": "Documentație API"
     },
@@ -2589,6 +2589,13 @@
   "minapp": {
     "add_to_launchpad": "Adaugă în Launchpad",
     "add_to_sidebar": "Adaugă în bara laterală",
+    "deepseek_harness": {
+      "install_failed": "[to be translated]:DeepSeek Harness installation failed",
+      "install_success": "[to be translated]:DeepSeek Harness installed successfully",
+      "installing": "[to be translated]:Installing DeepSeek Harness, please wait…",
+      "start_failed": "[to be translated]:Failed to start DeepSeek Harness",
+      "starting": "[to be translated]:Starting DeepSeek Harness…"
+    },
     "popup": {
       "close": "Închide MinApp",
       "devtools": "Instrumente dezvoltator",
@@ -2924,21 +2931,21 @@
     },
     "skip": "Sariți",
     "toast": {
-      "connected": "Conectat cu succes la CherryIN"
+      "connected": "Conectat cu succes la Market"
     },
     "welcome": {
-      "login_cherryin": "Conectare cu CherryIN",
+      "login_market": "Conectare cu Market",
       "or_continue_with": "SAU CONTINUAȚI CU",
       "other_provider": "Alegeți alți furnizori",
       "select_other_provider": "Selectați alt furnizor",
       "setup_hint": "Vă rugăm să configurați cel puțin un furnizor pentru cea mai bună experiență",
-      "subtitle": "Bucurați-vă de servicii AI de top cu CherryIN",
-      "title": "Bun venit la Cherry Studio"
+      "subtitle": "Bucurați-vă de servicii AI de top cu Market",
+      "title": "Bun venit la AiOnly"
     }
   },
   "openclaw": {
     "checking_installation": "Verificare instalare OpenClaw...",
-    "description": "Integrează furnizorii Cherry Studio cu Gateway-ul OpenClaw pentru a permite agenților de codificare AI precum Claude Code, Qwen-Coder și alții.",
+    "description": "Integrează furnizorii AiOnly cu Gateway-ul OpenClaw pentru a permite agenților de codificare AI precum Claude Code, Qwen-Coder și alții.",
     "error": {
       "select_provider_model": "Vă rugăm să selectați mai întâi un furnizor și un model"
     },
@@ -3421,7 +3428,6 @@
     "burncloud": "BurnCloud",
     "cephalon": "Cephalon",
     "cerebras": "Cerebras AI",
-    "cherryin": "CherryIN",
     "copilot": "GitHub Copilot",
     "dashscope": "Alibaba Cloud",
     "deepseek": "DeepSeek",
@@ -3442,6 +3448,7 @@
     "lanyun": "LANYUN",
     "lmstudio": "LM Studio",
     "longcat": "LongCat AI",
+    "market": "Market",
     "mimo": "Xiaomi MiMo",
     "minimax": "MiniMax",
     "minimax-global": "MiniMax",
@@ -3783,7 +3790,7 @@
           },
           "description": {
             "0": "Asistentul de selecție necesită <strong>Permisiune de accesibilitate</strong> pentru a funcționa corect.",
-            "1": "Te rugăm să faci clic pe \"<strong>Mergi la Setări</strong>\" și să apeși butonul \"<strong>Deschide setările de sistem</strong>\" în fereastra pop-up de solicitare a permisiunii care apare ulterior. Apoi găsește \"<strong>Cherry Studio</strong>\" în lista de aplicații și activează comutatorul de permisiune.",
+            "1": "Te rugăm să faci clic pe \"<strong>Mergi la Setări</strong>\" și să apeși butonul \"<strong>Deschide setările de sistem</strong>\" în fereastra pop-up de solicitare a permisiunii care apare ulterior. Apoi găsește \"<strong>AiOnly</strong>\" în lista de aplicații și activează comutatorul de permisiune.",
             "2": "După finalizarea setărilor, te rugăm să redeschizi asistentul de selecție."
           },
           "title": "Permisiune de accesibilitate"
@@ -3795,7 +3802,7 @@
         "title": "Listă filtrare aplicații",
         "user_tips": {
           "mac": "Te rugăm să introduci Bundle ID-ul aplicației, unul pe linie, nu este sensibil la majuscule/minuscule, poate fi potrivit aproximativ. De exemplu: com.google.Chrome, com.apple.mail etc.",
-          "windows": "Te rugăm să introduci numele fișierului executabil al aplicației, unul pe linie, nu este sensibil la majuscule/minuscule, poate fi potrivit aproximativ. De exemplu: chrome.exe, weixin.exe, Cherry Studio.exe etc."
+          "windows": "Te rugăm să introduci numele fișierului executabil al aplicației, unul pe linie, nu este sensibil la majuscule/minuscule, poate fi potrivit aproximativ. De exemplu: chrome.exe, weixin.exe, AiOnly.exe etc."
         }
       },
       "linux": {
@@ -3807,7 +3814,7 @@
         "wayland_checklist_subtitle": "Asigurați-vă că sunt îndeplinite următoarele condiții pentru a optimiza experiența Wayland:",
         "wayland_description": "Vă aflați într-o sesiune Wayland. Din cauza limitărilor sistemului, bara de instrumente poate apărea doar în centrul ecranului în loc să urmărească textul selectat pe unele medii desktop. Se recomandă să treceți la o sesiune X11 pentru o experiență completă.",
         "wayland_title": "Notificare sesiune Wayland",
-        "xwayland_fail": "Nu este activat, vă rugăm să lansați Cherry Studio cu steagul `--ozone-platform=x11`",
+        "xwayland_fail": "Nu este activat, vă rugăm să lansați AiOnly cu steagul `--ozone-platform=x11`",
         "xwayland_label": "Mod XWayland:",
         "xwayland_pass": "Activat"
       },
@@ -4100,14 +4107,14 @@
             "test_message_received": "Primit pong de la {{device}}",
             "test_message_sent": "Trimis payload test hello world"
           },
-          "idle_hint": "Scanare în pauză. Începe scanarea pentru a găsi parteneri Cherry Studio în LAN.",
+          "idle_hint": "Scanare în pauză. Începe scanarea pentru a găsi parteneri AiOnly în LAN.",
           "ip_addresses": "Adrese IP",
           "last_seen": "Văzut ultima dată la {{time}}",
           "metadata": "Metadate",
-          "no_connection_warning": "Te rugăm să deschizi Transfer LAN pe mobil în Cherry Studio",
+          "no_connection_warning": "Te rugăm să deschizi Transfer LAN pe mobil în AiOnly",
           "no_devices": "Încă nu s-au găsit parteneri LAN",
           "scan_devices": "Scanează dispozitive",
-          "scanning_hint": "Se scanează rețeaua locală pentru parteneri Cherry Studio...",
+          "scanning_hint": "Se scanează rețeaua locală pentru parteneri AiOnly...",
           "send_file": "Trimite fișier",
           "status": {
             "completed": "Transfer finalizat",
@@ -4891,7 +4898,7 @@
       },
       "oauth": {
         "callback": {
-          "message": "Poți închide această pagină și te poți întoarce la Cherry Studio",
+          "message": "Poți închide această pagină și te poți întoarce la AiOnly",
           "title": "Autentificare reușită"
         }
       },
@@ -5467,13 +5474,6 @@
       "oauth": {
         "balance": "Sold",
         "button": "Conectare cu {{provider}}",
-        "cherryIn": {
-          "description": "Autentifică-te cu serverul tău auto-găzduit New-API folosind OAuth 2.0 (PKCE)",
-          "logged_in": "Conectat prin OAuth",
-          "login_button": "Conectare cu OAuth",
-          "logout_button": "Deconectare",
-          "title": "Autentificare OAuth"
-        },
         "connect": "Conectează {{provider}}",
         "description": "Acest serviciu este furnizat de <website>{{provider}}</website>",
         "error": "Autentificare eșuată",
@@ -5482,6 +5482,13 @@
         "logout_confirm": "Ești sigur că vrei să te deconectezi?",
         "logout_success": "Delogare reușită",
         "logout_warning": "Deconectat local, dar revocarea token-ului de pe server ar fi putut eșua",
+        "market": {
+          "description": "Autentifică-te cu serverul tău auto-găzduit New-API folosind OAuth 2.0 (PKCE)",
+          "logged_in": "Conectat prin OAuth",
+          "login_button": "Conectare cu OAuth",
+          "logout_button": "Deconectare",
+          "title": "Autentificare OAuth"
+        },
         "official_website": "Site oficial",
         "provided_by": "Furnizat de",
         "provided_by_suffix": "I’m ready—please provide the text you’d like translated into Romanian.",

@@ -28,7 +28,7 @@
       "submit": "提交",
       "title": "来自 Agent 的问题"
     },
-    "cherryClaw": {
+    "claw": {
       "channels": {
         "add": "添加",
         "bindAgent": "绑定 Agent",
@@ -268,7 +268,7 @@
         "title": "定时任务"
       },
       "warning": {
-        "bypassPermissions": "CherryClaw Agent 默认以全自动模式运行。所有工具执行时不会请求批准。"
+        "bypassPermissions": "AionlyClaw Agent 默认以全自动模式运行。所有工具执行时不会请求批准。"
       }
     },
     "delete": {
@@ -569,10 +569,10 @@
         }
       }
     },
-    "sidebar_title": "智能体",
     "sidebar_agent": {
       "add": "创建智能体"
     },
+    "sidebar_title": "智能体",
     "todo": {
       "panel": {
         "title": "已完成 {{completed}}/{{total}} 个任务"
@@ -1644,8 +1644,8 @@
     "image_preview": "图片预览",
     "image_url": "图片链接",
     "image_url_or_upload": "输入图片链接或上传文件",
-    "inspect": "检查",
     "input": "输入",
+    "inspect": "检查",
     "invalid_value": "无效值",
     "knowledge_base": "知识库",
     "language": "语言",
@@ -1955,11 +1955,11 @@
     "split": "分屏"
   },
   "identity": {
-    "tip": "温馨提示",
-    "title": "切换身份",
-    "confirm": "确定要切换身份吗？",
     "cancel": "取消",
-    "ok": "确定"
+    "confirm": "确定要切换身份吗？",
+    "ok": "确定",
+    "tip": "温馨提示",
+    "title": "切换身份"
   },
   "import": {
     "chatgpt": {
@@ -2142,126 +2142,6 @@
     "apps": "应用",
     "minapps": "小程序"
   },
-  "login": {
-    "account_login": {
-      "username_required": "请输入手机号或邮箱",
-      "username_invalid": "手机号或邮箱格式错误",
-      "password_required": "请输入密码",
-      "password_invalid": "请输入6-20位英文字母、数字或者符号（除空格），且字母、数字和标点符号至少包含两种"
-    },
-    "agreements": {
-      "agree": "我已阅读并同意",
-      "user": "《用户协议》",
-      "privacy": "《隐私政策》",
-      "disclaimer": "《免责协议》",
-      "yu": "与",
-      "accept_text": "请勾选同意相关协议"
-    },
-    "email_login": {
-      "email_required": "请输入邮箱",
-      "email_invalid": "邮箱格式错误",
-      "code_required": "请输入验证码",
-      "send_code": "获取验证码"
-    },
-    "forget_password": "忘记密码",
-    "login_btn_text": "登录/注册",
-    "title": "HELLO! 欢迎注册登录",
-    "new_user_gift": "新用户首次注册即送新人礼>>",
-    "sms_login": {
-      "phone_required": "请输入手机号",
-      "phone_invalid": "手机号格式错误",
-      "code_required": "请输入验证码",
-      "send_code": "获取验证码"
-    },
-    "send_code": "获取验证码",
-    "back_login": "返回登录",
-    "back_main_login": "返回主账号登录",
-    "forgot_password": {
-      "sub_title": "请输入验证的信息",
-      "next": "下一步",
-      "stepOne": {
-        "title": "身份验证"
-      },
-      "stepTwo": {
-        "title": "重置密码",
-        "sub_title": "请输入新密码",
-        "new_password_label": "新密码",
-        "new_password_required": "请输入新密码",
-        "new_password_invalid": "请输入6-20位英文字母、数字或者符号（除空格），且字母、数字和标点符号至少包含两种",
-        "confirm_password_label": "确认新密码",
-        "confirm_password_required": "请输入确认密码",
-        "password_not_match": "两次密码输入不一致"
-      },
-      "stepThree": {
-        "successful": "密码修改成功",
-        "auto_back_text": "秒后自动返回登录页"
-      },
-      "phone": {
-        "title": "手机号",
-        "phone_label": "手机号",
-        "phone_required": "请输入手机号",
-        "phone_invalid": "手机号格式错误",
-        "code_label": "验证码",
-        "code_required": "请输入验证码"
-      },
-      "email": {
-        "title": "邮箱",
-        "email_label": "邮箱",
-        "email_required": "请输入邮箱",
-        "email_invalid": "邮箱格式错误",
-        "code_label": "验证码",
-        "code_required": "请输入验证码"
-      }
-    },
-    "sub_account": {
-      "btn_text": "子账户登录",
-      "login": "登录",
-      "title": "子账户登录",
-      "phone_email_label": "主账号手机号/邮箱",
-      "phone_email_required": "请输入主账号手机号/邮箱",
-      "phone_email_invalid": "手机号或邮箱格式错误",
-      "password_label": "子账号密码",
-      "password_required": "请输入子账号密码",
-      "password_invalid": "请输入6-20位英文字母、数字或者符号（除空格），且字母、数字和标点符号至少包含两种",
-      "username_label": "子账号",
-      "username_required": "请输入子账号",
-      "back_main_login": "返回主账号登录",
-      "bind_phone_email": {
-        "title": "绑定手机号/邮箱",
-        "bind_btn_text": "绑定",
-        "bind_success": "绑定成功",
-        "phone": {
-          "title": "绑定手机号",
-          "phone_label": "手机号",
-          "required": "请输入手机号",
-          "invalid": "手机号格式错误",
-          "code_label": "验证码",
-          "send_code": "获取验证码",
-          "code_required": "请输入验证码",
-          "duplicate_phone_message": "手机号已被其他账号绑定，请重新输入",
-          "fail": "校验手机号失败，请重试"
-        },
-        "email": {
-          "code_label": "验证码",
-          "title": "绑定邮箱",
-          "email_label": "邮箱",
-          "required": "请输入邮箱",
-          "invalid": "邮箱格式错误",
-          "code_required": "请输入验证码",
-          "send_code": "获取验证码",
-          "duplicate_email_message": "邮箱已被其他账号绑定，请重新输入",
-          "fail": "校验邮箱失败，请重试"
-        }
-      }
-    }
-  },
-  "logout": {
-    "tip": "温馨提示",
-    "title": "退出登录",
-    "confirm": "确定要退出登录吗？",
-    "cancel": "取消",
-    "ok": "确定"
-  },
   "lmstudio": {
     "keep_alive_time": {
       "description": "对话后模型在内存中保持的时间（默认：5 分钟）",
@@ -2269,6 +2149,126 @@
       "title": "保持活跃时间"
     },
     "title": "LM Studio"
+  },
+  "login": {
+    "account_login": {
+      "password_invalid": "请输入6-20位英文字母、数字或者符号（除空格），且字母、数字和标点符号至少包含两种",
+      "password_required": "请输入密码",
+      "username_invalid": "手机号或邮箱格式错误",
+      "username_required": "请输入手机号或邮箱"
+    },
+    "agreements": {
+      "accept_text": "请勾选同意相关协议",
+      "agree": "我已阅读并同意",
+      "disclaimer": "《免责协议》",
+      "privacy": "《隐私政策》",
+      "user": "《用户协议》",
+      "yu": "与"
+    },
+    "back_login": "返回登录",
+    "back_main_login": "返回主账号登录",
+    "email_login": {
+      "code_required": "请输入验证码",
+      "email_invalid": "邮箱格式错误",
+      "email_required": "请输入邮箱",
+      "send_code": "获取验证码"
+    },
+    "forget_password": "忘记密码",
+    "forgot_password": {
+      "email": {
+        "code_label": "验证码",
+        "code_required": "请输入验证码",
+        "email_invalid": "邮箱格式错误",
+        "email_label": "邮箱",
+        "email_required": "请输入邮箱",
+        "title": "邮箱"
+      },
+      "next": "下一步",
+      "phone": {
+        "code_label": "验证码",
+        "code_required": "请输入验证码",
+        "phone_invalid": "手机号格式错误",
+        "phone_label": "手机号",
+        "phone_required": "请输入手机号",
+        "title": "手机号"
+      },
+      "stepOne": {
+        "title": "身份验证"
+      },
+      "stepThree": {
+        "auto_back_text": "秒后自动返回登录页",
+        "successful": "密码修改成功"
+      },
+      "stepTwo": {
+        "confirm_password_label": "确认新密码",
+        "confirm_password_required": "请输入确认密码",
+        "new_password_invalid": "请输入6-20位英文字母、数字或者符号（除空格），且字母、数字和标点符号至少包含两种",
+        "new_password_label": "新密码",
+        "new_password_required": "请输入新密码",
+        "password_not_match": "两次密码输入不一致",
+        "sub_title": "请输入新密码",
+        "title": "重置密码"
+      },
+      "sub_title": "请输入验证的信息"
+    },
+    "login_btn_text": "登录/注册",
+    "new_user_gift": "新用户首次注册即送新人礼>>",
+    "send_code": "获取验证码",
+    "sms_login": {
+      "code_required": "请输入验证码",
+      "phone_invalid": "手机号格式错误",
+      "phone_required": "请输入手机号",
+      "send_code": "获取验证码"
+    },
+    "sub_account": {
+      "back_main_login": "返回主账号登录",
+      "bind_phone_email": {
+        "bind_btn_text": "绑定",
+        "bind_success": "绑定成功",
+        "email": {
+          "code_label": "验证码",
+          "code_required": "请输入验证码",
+          "duplicate_email_message": "邮箱已被其他账号绑定，请重新输入",
+          "email_label": "邮箱",
+          "fail": "校验邮箱失败，请重试",
+          "invalid": "邮箱格式错误",
+          "required": "请输入邮箱",
+          "send_code": "获取验证码",
+          "title": "绑定邮箱"
+        },
+        "phone": {
+          "code_label": "验证码",
+          "code_required": "请输入验证码",
+          "duplicate_phone_message": "手机号已被其他账号绑定，请重新输入",
+          "fail": "校验手机号失败，请重试",
+          "invalid": "手机号格式错误",
+          "phone_label": "手机号",
+          "required": "请输入手机号",
+          "send_code": "获取验证码",
+          "title": "绑定手机号"
+        },
+        "title": "绑定手机号/邮箱"
+      },
+      "btn_text": "子账户登录",
+      "login": "登录",
+      "password_invalid": "请输入6-20位英文字母、数字或者符号（除空格），且字母、数字和标点符号至少包含两种",
+      "password_label": "子账号密码",
+      "password_required": "请输入子账号密码",
+      "phone_email_invalid": "手机号或邮箱格式错误",
+      "phone_email_label": "主账号手机号/邮箱",
+      "phone_email_required": "请输入主账号手机号/邮箱",
+      "title": "子账户登录",
+      "username_label": "子账号",
+      "username_required": "请输入子账号"
+    },
+    "title": "HELLO! 欢迎注册登录"
+  },
+  "logout": {
+    "cancel": "取消",
+    "confirm": "确定要退出登录吗？",
+    "ok": "确定",
+    "tip": "温馨提示",
+    "title": "退出登录"
   },
   "memory": {
     "actions": "操作",
@@ -2874,26 +2874,26 @@
       "free": "免费",
       "function_calling": "工具",
       "price": {
-        "title": "收费",
-        "charge_type_label": "收费方式",
-        "standard": "收费标准",
         "cache_price": "缓存价格",
         "cache_think_price": "缓存价格/思考价格",
-        "token_price": "金币/M tokens",
-        "million_tokens": "金币/百万tokens",
-        "interactive_num": "金币/张",
-        "text_tokens": "金币/次",
-        "per_count": "按次收费",
-        "per_tokens": "按tokens收费",
+        "charge_type_label": "收费方式",
         "duration": "按时长收费",
-        "per_image": "按张收费",
-        "per_character": "按字符收费",
-        "per_time": "次",
-        "ten_thousand_chars": "万字符",
-        "second": "秒",
-        "video_input_price": "视频输入价格",
+        "gold_coin": "金币",
+        "interactive_num": "金币/张",
+        "million_tokens": "金币/百万tokens",
         "output_price": "输出价格",
-        "gold_coin": "金币"
+        "per_character": "按字符收费",
+        "per_count": "按次收费",
+        "per_image": "按张收费",
+        "per_time": "次",
+        "per_tokens": "按tokens收费",
+        "second": "秒",
+        "standard": "收费标准",
+        "ten_thousand_chars": "万字符",
+        "text_tokens": "金币/次",
+        "title": "收费",
+        "token_price": "金币/M tokens",
+        "video_input_price": "视频输入价格"
       },
       "reasoning": "推理",
       "rerank": "重排",
@@ -3096,6 +3096,7 @@
     },
     "welcome": {
       "login_cherryin": "登录 AiOnly",
+      "login_market": "登录 AiOnly",
       "or_continue_with": "或使用其他方式",
       "other_provider": "选择其他服务商",
       "select_other_provider": "选择其他服务商",
@@ -3444,6 +3445,9 @@
     "seed_random": "随机",
     "seed_tip": "相同的种子和提示词可以生成相似的图片",
     "select_model": "选择模型",
+    "settings": {
+      "title": "功能设置"
+    },
     "style_type": "风格",
     "style_types": {
       "3d": "3D",
@@ -3452,9 +3456,6 @@
       "design": "设计",
       "general": "通用",
       "realistic": "写实"
-    },
-    "settings": {
-      "title": "功能设置"
     },
     "text_desc_required": "请先输入图片描述",
     "title": "绘画",
@@ -3592,7 +3593,6 @@
     "burncloud": "BurnCloud",
     "cephalon": "Cephalon",
     "cerebras": "Cerebras AI",
-    "cherryin": "CherryIN",
     "copilot": "GitHub Copilot",
     "dashscope": "阿里云百炼",
     "deepseek": "深度求索",
@@ -3613,6 +3613,7 @@
     "lanyun": "蓝耘科技",
     "lmstudio": "LM Studio",
     "longcat": "龙猫",
+    "market": "Market",
     "mimo": "Xiaomi MiMo",
     "minimax": "MiniMax",
     "minimax-global": "MiniMax 海外版",
@@ -5186,14 +5187,14 @@
       "model": {
         "title": "模型能力"
       },
-      "system": {
-        "title": "系统设置"
+      "other": {
+        "title": "其他"
       },
       "quick": {
         "title": "快捷工具"
       },
-      "other": {
-        "title": "其他"
+      "system": {
+        "title": "系统设置"
       }
     },
     "messages": {
@@ -5290,14 +5291,11 @@
     },
     "model": "默认模型",
     "models": {
-      "text_model": "文本模型",
-      "image_model": "图片生成",
       "add": {
-        "add_model": "添加模型",
-        "activate_model": "开通",
         "activate_desc": "使用模型调用等服务前需要进行模型的开通，开通模式为先用后付，使用则按照模型的刊例价服务计费，不使用则不产生费用。",
+        "activate_model": "开通",
+        "add_model": "添加模型",
         "batch_add_models": "批量添加模型",
-        "search_placeholder": "输入模型名称或服务商名称",
         "endpoint_type": {
           "label": "端点类型",
           "placeholder": "选择端点类型",
@@ -5322,6 +5320,7 @@
           "placeholder": "例如 GPT-4",
           "tooltip": "例如 GPT-4"
         },
+        "search_placeholder": "输入模型名称或服务商名称",
         "supported_text_delta": {
           "label": "支持增量文本输出",
           "tooltip": "模型每次返回文本增量，而不是一次性返回所有文本，默认开启，如果模型不支持，请关闭"
@@ -5357,17 +5356,18 @@
       "default_assistant_model": "默认角色模型",
       "default_assistant_model_description": "创建新角色时使用的模型，如果角色未设置模型，则使用此模型",
       "empty": "没有模型",
+      "image_model": "图片生成",
       "manage": {
         "add_listed": {
           "confirm": "确定要添加所有模型到列表吗？",
           "label": "添加列表中的模型"
         },
+        "add_model": "添加模型",
         "add_whole_group": "添加整个分组",
         "fetch_list": "获取模型列表",
         "refetch_list": "重新获取模型列表",
         "remove_listed": "移除列表中的模型",
         "remove_model": "移除模型",
-        "add_model": "添加模型",
         "remove_whole_group": "移除整个分组"
       },
       "provider_id": "服务商 ID",
@@ -5390,6 +5390,7 @@
         "setting_title": "快速模型设置",
         "tooltip": "建议选择轻量模型，不建议选择思考模型"
       },
+      "text_model": "文本模型",
       "topic_naming": {
         "auto": "对话自动重命名",
         "label": "对话命名",
@@ -5503,12 +5504,12 @@
             "title": "API 密钥管理"
           },
           "new_key": {
-            "confirm": "确定",
             "cancel": "取消",
+            "confirm": "确定",
+            "editing_tip": "请先完成当前编辑",
             "limit_over_tip": "密钥最多可创建200个，请删除部分密钥",
-            "placeholder": "输入一个或多个密钥",
             "name_placeholder": "请输入密钥名称",
-            "editing_tip": "请先完成当前编辑"
+            "placeholder": "输入一个或多个密钥"
           }
         },
         "options": {
@@ -5558,50 +5559,50 @@
       "api_host_preview": "预览：{{url}}",
       "api_host_tooltip": "仅在服务商需要自定义的 OpenAI 兼容地址时覆盖。",
       "api_key": {
-        "max_tip": "最多可创建200个",
         "label": "API 密钥",
+        "max_tip": "最多可创建200个",
         "tip": "多个密钥使用逗号分隔",
         "token_plan": {
+          "columns": {
+            "action": "启用/停用",
+            "creditsRest": "用量(credits)",
+            "effective": "有效期",
+            "planName": "套餐名称/分类",
+            "status": "状态",
+            "totalAmount": "定价"
+          },
+          "confirm_disable_content": "是否停用TokenPlan套餐？停用后将自动切换回平台默认sk-key",
+          "confirm_disable_title": "TokenPlan停用",
+          "confirm_enable_content": "是否启用TokenPlan套餐？启用后将切换至该套餐的tk-key并切换为该套餐中的模型",
+          "confirm_enable_title": "TokenPlan启用",
+          "credits": "剩余用量(Credits)",
           "cur_plan": {
             "name": "套餐名称："
           },
-          "title": "TokenPlan",
-          "model_title": "使用token plan",
-          "subscribe_label": "选择套餐",
-          "subscribe_placeholder": "请选择套餐",
-          "credits": "剩余用量(Credits)",
-          "price": "定价",
-          "effective": "有效期",
-          "effective_s": "起",
-          "effective_e": "止",
-          "month": "月度",
-          "quarter": "季度",
-          "year": "年度",
-          "total": "共",
-          "remaining": "剩",
           "custom": "天",
+          "effective": "有效期",
+          "effective_e": "止",
+          "effective_s": "起",
+          "model_title": "使用token plan",
+          "month": "月度",
+          "price": "定价",
           "price_type": "￥",
+          "quarter": "季度",
+          "remaining": "剩",
           "search": {
             "planName": "请输入套餐名称",
             "status_placeholder": "请选择状态"
           },
-          "confirm_enable_title": "TokenPlan启用",
-          "confirm_disable_title": "TokenPlan停用",
-          "confirm_enable_content": "是否启用TokenPlan套餐？启用后将切换至该套餐的tk-key并切换为该套餐中的模型",
-          "confirm_disable_content": "是否停用TokenPlan套餐？停用后将自动切换回平台默认sk-key",
-          "columns": {
-            "planName": "套餐名称/分类",
-            "totalAmount": "定价",
-            "status": "状态",
-            "creditsRest": "用量(credits)",
-            "effective": "有效期",
-            "action": "启用/停用"
-          },
           "status": {
-            "enabled": "生效中",
             "disabled": "已失效",
+            "enabled": "生效中",
             "wait_pay": "待付款"
-          }
+          },
+          "subscribe_label": "选择套餐",
+          "subscribe_placeholder": "请选择套餐",
+          "title": "TokenPlan",
+          "total": "共",
+          "year": "年度"
         }
       },
       "api_version": "API 版本",
@@ -5709,13 +5710,6 @@
       "oauth": {
         "balance": "余额",
         "button": "使用 {{provider}} 账号登录",
-        "cherryIn": {
-          "description": "使用 OAuth 2.0 登录 CherryIN",
-          "logged_in": "已通过 OAuth 登录",
-          "login_button": "OAuth 登录",
-          "logout_button": "退出登录",
-          "title": "OAuth 登录"
-        },
         "connect": "关联 {{provider}} 账号",
         "description": "本服务由 <website>{{provider}}</website> 提供",
         "error": "认证失败",
@@ -5724,6 +5718,13 @@
         "logout_confirm": "确定要退出登录吗？",
         "logout_success": "已成功退出登录",
         "logout_warning": "已在本地退出登录，但服务器端令牌撤销可能失败",
+        "market": {
+          "description": "使用 OAuth 2.0 登录 Market",
+          "logged_in": "已通过 OAuth 登录",
+          "login_button": "OAuth 登录",
+          "logout_button": "退出登录",
+          "title": "OAuth 登录"
+        },
         "official_website": "官方网站",
         "provided_by": "本服务由",
         "provided_by_suffix": " 提供",
@@ -6296,9 +6297,9 @@
   },
   "user": {
     "limit": {
-      "title": "额度",
       "limit_day": "每日额度",
-      "rest": "剩余额度"
+      "rest": "剩余额度",
+      "title": "额度"
     }
   },
   "warning": {

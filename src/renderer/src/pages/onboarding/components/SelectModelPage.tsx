@@ -7,12 +7,12 @@ import { useTranslation } from 'react-i18next'
 import type { OnboardingStep } from '../OnboardingPage'
 
 interface SelectModelPageProps {
-  cherryInLoggedIn: boolean
+  marketLoggedIn: boolean
   setStep: (step: OnboardingStep) => void
   onComplete: () => void
 }
 
-const SelectModelPage: FC<SelectModelPageProps> = ({ cherryInLoggedIn, setStep, onComplete }) => {
+const SelectModelPage: FC<SelectModelPageProps> = ({ marketLoggedIn, setStep, onComplete }) => {
   const { t } = useTranslation()
 
   const handleBack = () => {
@@ -21,7 +21,7 @@ const SelectModelPage: FC<SelectModelPageProps> = ({ cherryInLoggedIn, setStep, 
 
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center">
-      {!cherryInLoggedIn && (
+      {!marketLoggedIn && (
         <Button
           type="text"
           icon={<ArrowLeft size={18} />}

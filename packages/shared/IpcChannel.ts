@@ -138,13 +138,13 @@ export enum IpcChannel {
   Copilot_Logout = 'copilot:logout',
   Copilot_GetUser = 'copilot:get-user',
 
-  // CherryIN OAuth
-  CherryIN_SaveToken = 'cherryin:save-token',
-  CherryIN_HasToken = 'cherryin:has-token',
-  CherryIN_GetBalance = 'cherryin:get-balance',
-  CherryIN_Logout = 'cherryin:logout',
-  CherryIN_StartOAuthFlow = 'cherryin:start-oauth-flow',
-  CherryIN_ExchangeToken = 'cherryin:exchange-token',
+  // Market OAuth
+  Market_SaveToken = 'market:save-token',
+  Market_HasToken = 'market:has-token',
+  Market_GetBalance = 'market:get-balance',
+  Market_Logout = 'market:logout',
+  Market_StartOAuthFlow = 'market:start-oauth-flow',
+  Market_ExchangeToken = 'market:exchange-token',
 
   // obsidian
   Obsidian_GetVaults = 'obsidian:get-vaults',
@@ -413,8 +413,8 @@ export enum IpcChannel {
   Ovms_RunOVMS = 'ovms:run-ovms',
   Ovms_StopOVMS = 'ovms:stop-ovms',
 
-  // CherryAI
-  Cherryai_GetSignature = 'cherryai:get-signature',
+  // MarketAPI
+  Market_GetSignature = 'marketapi:get-signature',
 
   // Global Skills
   Skill_List = 'skill:list',

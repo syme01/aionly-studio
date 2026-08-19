@@ -55,8 +55,8 @@ import { useTranslation } from 'react-i18next'
 // import styled from 'styled-components'
 import { SettingContainer, SettingHelpText, SettingHelpTextRow, SettingSubtitle } from '..'
 import AwsBedrockSettings from './AwsBedrockSettings'
-import CherryINOAuth from './CherryINOAuth'
-import CherryINSettings from './CherryINSettings'
+import MarketOAuth from './MarketOAuth'
+import MarketSettings from './MarketSettings'
 import CustomHeaderPopup from './CustomHeaderPopup'
 import DMXAPISettings from './DMXAPISettings'
 import GithubCopilotSettings from './GithubCopilotSettings'
@@ -85,7 +85,7 @@ const ANTHROPIC_COMPATIBLE_PROVIDER_IDS = [
   SystemProviderIds.modelscope,
   SystemProviderIds.aihubmix,
   SystemProviderIds.grok,
-  SystemProviderIds.cherryin,
+  SystemProviderIds.market,
   SystemProviderIds.longcat,
   SystemProviderIds.minimax,
   SystemProviderIds.silicon,
@@ -135,7 +135,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
 
   const isAzureOpenAI = isAzureOpenAIProvider(provider)
   const isDmxapi = provider.id === 'dmxapi'
-  const isCherryIN = provider.id === 'cherryin'
+  const isMarket = provider.id === 'market'
   const isChineseUser = i18n.language.startsWith('zh')
   const noAPIInputProviders = ['aws-bedrock'] as const satisfies SystemProviderId[]
   const hideApiInput = noAPIInputProviders.some((id) => id === provider.id)
@@ -437,9 +437,10 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
     }
   }
 
+  // 重置API Host
   const onReset = useCallback(() => {
     setApiHost(configuredApiHost)
-    updateProvider({ apiHost: configuredApiHost })
+    updateProvider({ apiHost: configuredApiHost, anthropicApiHost: configuredApiHost })
   }, [configuredApiHost, updateProvider])
 
   const isApiHostResettable = useMemo(() => {
@@ -516,7 +517,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
   }, [provider.anthropicApiHost])
 
   const canConfigureAnthropicHost = useMemo(() => {
-    if (isCherryIN) {
+    if (isMarket) {
       return false
     }
     if (isNewApiProvider(provider)) {
@@ -525,7 +526,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
     return (
       provider.type !== 'anthropic' && isSystemProviderId(provider.id) && isAnthropicCompatibleProviderId(provider.id)
     )
-  }, [isCherryIN, provider])
+  }, [isMarket, provider])
 
   /*  const anthropicHostPreview = useMemo(() => {
     const rawHost = anthropicApiHost ?? provider.anthropicApiHost
@@ -685,7 +686,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
       {isProviderSupportAuth(provider) && (
         <ProviderOAuth providerId={provider.id} fancyProviderName={fancyProviderName} />
       )}
-      {isCherryIN && <CherryINOAuth providerId={provider.id} />}
+      {isMarket && <MarketOAuth providerId={provider.id} />}
       {provider.id === 'openai' && <OpenAIAlert />}
       {provider.id === 'ovms' && <OVMSSettings />}
       {isDmxapi && <DMXAPISettings providerId={provider.id} />}
@@ -843,8 +844,8 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
               </SettingSubtitle>
               {activeHostField === 'apiHost' && (
                 <>
-                  {isCherryIN && isChineseUser ? (
-                    <CherryINSettings providerId={provider.id} apiHost={apiHost} setApiHost={setApiHost} />
+                  {isMarket && isChineseUser ? (
+                    <MarketSettings providerId={provider.id} apiHost={apiHost} setApiHost={setApiHost} />
                   ) : (
                     <Space.Compact style={{ width: '100%', marginTop: 5 }}>
                       <Input

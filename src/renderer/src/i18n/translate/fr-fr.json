@@ -28,7 +28,7 @@
       "submit": "Soumettre",
       "title": "Questions de l'agent"
     },
-    "cherryClaw": {
+    "claw": {
       "channels": {
         "add": "Ajouter",
         "bindAgent": "Agent Lier",
@@ -268,7 +268,7 @@
         "title": "Tâches planifiées"
       },
       "warning": {
-        "bypassPermissions": "Les agents CherryClaw fonctionnent en mode automatique complet par défaut. Tous les outils s'exécutent sans demander d'approbation."
+        "bypassPermissions": "Les agents AionlyClaw fonctionnent en mode automatique complet par défaut. Tous les outils s'exécutent sans demander d'approbation."
       }
     },
     "delete": {
@@ -696,7 +696,7 @@
     },
     "authHeaderText": "Utiliser dans l'en-tête d'autorisation :",
     "configuration": "Configuration",
-    "description": "Expose les capacités IA de Cherry Studio via des APIs HTTP compatibles OpenAI",
+    "description": "Expose les capacités IA de AiOnly via des APIs HTTP compatibles OpenAI",
     "documentation": {
       "title": "Documentation API"
     },
@@ -2589,6 +2589,13 @@
   "minapp": {
     "add_to_launchpad": "Ajouter au tableau de bord",
     "add_to_sidebar": "Ajouter à la barre latérale",
+    "deepseek_harness": {
+      "install_failed": "[to be translated]:DeepSeek Harness installation failed",
+      "install_success": "[to be translated]:DeepSeek Harness installed successfully",
+      "installing": "[to be translated]:Installing DeepSeek Harness, please wait…",
+      "start_failed": "[to be translated]:Failed to start DeepSeek Harness",
+      "starting": "[to be translated]:Starting DeepSeek Harness…"
+    },
     "popup": {
       "close": "Закрыть мини-программу",
       "devtools": "Инструменты разработчика",
@@ -2924,21 +2931,21 @@
     },
     "skip": "Passer",
     "toast": {
-      "connected": "Connecté avec succès à CherryIN"
+      "connected": "Connecté avec succès à Market"
     },
     "welcome": {
-      "login_cherryin": "Se connecter avec CherryIN",
+      "login_market": "Se connecter avec Market",
       "or_continue_with": "OU CONTINUER AVEC",
       "other_provider": "Choisir d'autres fournisseurs",
       "select_other_provider": "Sélectionner un autre fournisseur",
       "setup_hint": "Veuillez configurer au moins un fournisseur pour une meilleure expérience",
-      "subtitle": "Profitez de services d'IA de premier ordre avec CherryIN",
-      "title": "Bienvenue à Cherry Studio"
+      "subtitle": "Profitez de services d'IA de premier ordre avec Market",
+      "title": "Bienvenue à AiOnly"
     }
   },
   "openclaw": {
     "checking_installation": "Vérification de l'installation d'OpenClaw...",
-    "description": "Intégrer les fournisseurs Cherry Studio avec la passerelle OpenClaw pour permettre aux agents de codage IA comme Claude Code, Qwen-Coder, et bien d'autres.",
+    "description": "Intégrer les fournisseurs AiOnly avec la passerelle OpenClaw pour permettre aux agents de codage IA comme Claude Code, Qwen-Coder, et bien d'autres.",
     "error": {
       "select_provider_model": "Veuillez d'abord sélectionner un fournisseur et un modèle"
     },
@@ -2976,7 +2983,7 @@
       "title": "Configuration du modèle"
     },
     "node_missing": {
-      "description": "OpenClaw nécessite Node.js/npm. Veuillez d'abord installer Node.js, puis redémarrez Cherry Studio.",
+      "description": "OpenClaw nécessite Node.js/npm. Veuillez d'abord installer Node.js, puis redémarrez AiOnly.",
       "download_button": "Télécharger Node.js",
       "hint": "macOS : brew install node | Windows : Télécharger la version LTS depuis nodejs.org",
       "title": "Node.js requis"
@@ -3421,7 +3428,6 @@
     "burncloud": "BurnCloud",
     "cephalon": "Cephalon",
     "cerebras": "Cerebras AI",
-    "cherryin": "CherryIN",
     "copilot": "GitHub Copilote",
     "dashscope": "AliCloud BaiLian",
     "deepseek": "DeepSeek",
@@ -3442,6 +3448,7 @@
     "lanyun": "Technologie Lan Yun",
     "lmstudio": "Studio LM",
     "longcat": "Mon voisin Totoro",
+    "market": "Market",
     "mimo": "Xiaomi MiMo",
     "minimax": "MiniMax CN",
     "minimax-global": "MiniMax",
@@ -3783,7 +3790,7 @@
           },
           "description": {
             "0": "L'assistant de sélection de texte a besoin de l'autorisation de « <strong>fonctionnalités d'accessibilité</strong> » pour fonctionner correctement.",
-            "1": "Veuillez cliquer sur « <strong>aller aux paramètres</strong> », puis dans la fenêtre contextuelle de demande d'autorisation qui apparaîtra ensuite, cliquez sur le bouton « <strong>ouvrir les paramètres système</strong> », recherchez ensuite « <strong>Cherry Studio</strong> » dans la liste des applications qui suit, puis activez l'interrupteur d'autorisation.",
+            "1": "Veuillez cliquer sur « <strong>aller aux paramètres</strong> », puis dans la fenêtre contextuelle de demande d'autorisation qui apparaîtra ensuite, cliquez sur le bouton « <strong>ouvrir les paramètres système</strong> », recherchez ensuite « <strong>AiOnly</strong> » dans la liste des applications qui suit, puis activez l'interrupteur d'autorisation.",
             "2": "Une fois la configuration terminée, veuillez réactiver l'assistant de sélection de texte."
           },
           "title": "Autorisations d'accessibilité"
@@ -3795,7 +3802,7 @@
         "title": "Liste de sélection des applications",
         "user_tips": {
           "mac": "Veuillez saisir l'ID de bundle de l'application, un par ligne, sans sensibilité à la casse, correspondance floue possible. Par exemple : com.google.Chrome, com.apple.mail, etc.",
-          "windows": "Veuillez saisir le nom du fichier exécutable de l'application, un par ligne, sans sensibilité à la casse, correspondance floue possible. Par exemple : chrome.exe, weixin.exe, Cherry Studio.exe, etc."
+          "windows": "Veuillez saisir le nom du fichier exécutable de l'application, un par ligne, sans sensibilité à la casse, correspondance floue possible. Par exemple : chrome.exe, weixin.exe, AiOnly.exe, etc."
         }
       },
       "linux": {
@@ -3807,7 +3814,7 @@
         "wayland_checklist_subtitle": "Assurez-vous que les conditions suivantes sont remplies pour optimiser l’expérience Wayland :",
         "wayland_description": "Vous êtes dans une session Wayland. En raison de limitations système, la barre d’outils peut apparaître uniquement au centre de l’écran au lieu de suivre le texte sélectionné sur certains environnements de bureau. Il est recommandé de passer à une session X11 pour bénéficier de l’expérience complète.",
         "wayland_title": "Avis de session Wayland",
-        "xwayland_fail": "Non activé, veuillez lancer Cherry Studio avec le drapeau `--ozone-platform=x11`",
+        "xwayland_fail": "Non activé, veuillez lancer AiOnly avec le drapeau `--ozone-platform=x11`",
         "xwayland_label": "Mode XWayland :",
         "xwayland_pass": "Activé"
       },
@@ -4074,7 +4081,7 @@
           "button": "Démarrer le transfert",
           "connected": "Connecté",
           "connection_failed": "Échec de la connexion",
-          "content": "Assurez-vous que l'ordinateur et le téléphone sont connectés au même réseau pour utiliser le transfert en réseau local. Ouvrez l'application Cherry Studio et scannez ce code QR.",
+          "content": "Assurez-vous que l'ordinateur et le téléphone sont connectés au même réseau pour utiliser le transfert en réseau local. Ouvrez l'application AiOnly et scannez ce code QR.",
           "device_list_title": "Périphériques réseau locaux",
           "discovered_devices": "Appareils découverts",
           "error": {
@@ -4100,14 +4107,14 @@
             "test_message_received": "Pong reçu de {{device}}",
             "test_message_sent": "Envoyé la charge utile de test hello world"
           },
-          "idle_hint": "Analyse en pause. Lancez l’analyse pour détecter les pairs Cherry Studio sur votre réseau local.",
+          "idle_hint": "Analyse en pause. Lancez l’analyse pour détecter les pairs AiOnly sur votre réseau local.",
           "ip_addresses": "Adresses IP",
           "last_seen": "Vu pour la dernière fois à {{time}}",
           "metadata": "Métadonnées",
-          "no_connection_warning": "Veuillez ouvrir le transfert LAN sur l'application mobile Cherry Studio.",
+          "no_connection_warning": "Veuillez ouvrir le transfert LAN sur l'application mobile AiOnly.",
           "no_devices": "Aucun pair LAN trouvé pour l'instant",
           "scan_devices": "Analyser les appareils",
-          "scanning_hint": "Analyse de votre réseau local à la recherche d’homologues Cherry Studio…",
+          "scanning_hint": "Analyse de votre réseau local à la recherche d’homologues AiOnly…",
           "send_file": "Envoyer le fichier",
           "status": {
             "completed": "Transfert terminé",
@@ -4494,12 +4501,12 @@
         },
         "root_path": "Корневой путь документа",
         "root_path_placeholder": "Например: /AiOnlyStudio",
-        "title": "Настройка CherryNote",
+        "title": "Настройка AiOnlyNote",
         "token": {
-          "help": "Получить в разделе CherryNote -> Настройки -> О программе",
+          "help": "Получить в разделе AiOnlyNote -> Настройки -> О программе",
           "label": "Токен API"
         },
-        "token_placeholder": "Введите токен CherryNote"
+        "token_placeholder": "Введите токен AiOnlyNote"
       },
       "title": "Paramètres des données",
       "webdav": {
@@ -4891,7 +4898,7 @@
       },
       "oauth": {
         "callback": {
-          "message": "Vous pouvez fermer cette page et retourner à Cherry Studio",
+          "message": "Vous pouvez fermer cette page et retourner à AiOnly",
           "title": "Authentification Réussie"
         }
       },
@@ -5467,13 +5474,6 @@
       "oauth": {
         "balance": "Solde",
         "button": "Войти через аккаунт {{provider}}",
-        "cherryIn": {
-          "description": "Connectez-vous à votre serveur New-API auto-hébergé à l'aide d'OAuth 2.0 (PKCE)",
-          "logged_in": "Connecté via OAuth",
-          "login_button": "Se connecter avec OAuth",
-          "logout_button": "Déconnexion",
-          "title": "Connexion OAuth"
-        },
         "connect": "Connecter {{provider}}",
         "description": "Этот сервис предоставляется <website>{{provider}}</website>",
         "error": "Échec de l'authentification",
@@ -5482,6 +5482,13 @@
         "logout_confirm": "Êtes-vous sûr de vouloir vous déconnecter ?",
         "logout_success": "Déconnexion réussie",
         "logout_warning": "Déconnecté localement, mais la révocation du jeton serveur a peut-être échoué",
+        "market": {
+          "description": "Connectez-vous à votre serveur New-API auto-hébergé à l'aide d'OAuth 2.0 (PKCE)",
+          "logged_in": "Connecté via OAuth",
+          "login_button": "Se connecter avec OAuth",
+          "logout_button": "Déconnexion",
+          "title": "Connexion OAuth"
+        },
         "official_website": "Официальный сайт",
         "provided_by": "Fourni par",
         "provided_by_suffix": "I'm ready to translate. Please provide the text you'd like me to translate into French.",

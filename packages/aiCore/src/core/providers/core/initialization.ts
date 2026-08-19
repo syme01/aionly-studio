@@ -19,8 +19,8 @@ import { createOpenAICompatible } from '@ai-sdk/openai-compatible'
 import type { ProviderV3 } from '@ai-sdk/provider'
 import type { XaiProvider, XaiProviderSettings } from '@ai-sdk/xai'
 import { createXai } from '@ai-sdk/xai'
-import type { CherryInProvider, CherryInProviderSettings } from '@aionly/ai-sdk-provider'
-import { createCherryIn } from '@aionly/ai-sdk-provider'
+import type { MarketProvider, MarketProviderSettings } from '@aionly/ai-sdk-provider'
+import { createMarket } from '@aionly/ai-sdk-provider'
 import type { OpenRouterProviderSettings } from '@openrouter/ai-sdk-provider'
 import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { customProvider } from 'ai'
@@ -119,15 +119,15 @@ const AzureExtension = ProviderExtension.create({
   ] as const
 } as const satisfies ProviderExtensionConfig<AzureOpenAIProviderSettings, AzureOpenAIProvider, 'azure'>)
 
-const CherryInExtension = ProviderExtension.create({
-  name: 'cherryin',
+const MarketExtension = ProviderExtension.create({
+  name: 'market',
   supportsImageGeneration: true,
-  create: createCherryIn,
+  create: createMarket,
 
   variants: [
     {
       suffix: 'chat',
-      name: 'CherryIN Chat',
+      name: 'Market Chat',
       transform: (provider) =>
         customProvider({
           fallbackProvider: {
@@ -137,7 +137,7 @@ const CherryInExtension = ProviderExtension.create({
         })
     }
   ] as const
-} as const satisfies ProviderExtensionConfig<CherryInProviderSettings, CherryInProvider, 'cherryin'>)
+} as const satisfies ProviderExtensionConfig<MarketProviderSettings, MarketProvider, 'market'>)
 
 const DeepSeekExtension = ProviderExtension.create({
   name: 'deepseek',
@@ -255,7 +255,7 @@ export const coreExtensions = [
   DeepSeekExtension,
   OpenRouterExtension,
   OpenAICompatibleExtension,
-  CherryInExtension
+  MarketExtension
 ] as const
 
 /**

@@ -12,14 +12,14 @@ import type { BuiltinAgentInitResult } from '../AgentService'
 import { agentService } from '../AgentService'
 import { schedulerService } from '../SchedulerService'
 import { sessionService } from '../SessionService'
-import { CHERRY_ASSISTANT_AGENT_ID, CHERRY_CLAW_AGENT_ID } from './BuiltinAgentIds'
+import { ASSISTANT_AGENT_ID, CLAW_AGENT_ID } from './BuiltinAgentIds'
 import { provisionBuiltinAgent } from './BuiltinAgentProvisioner'
 
 const logger = loggerService.withContext('BuiltinAgentBootstrap')
 const RETRY_DELAYS_MS = [5000, 15000, 30000]
 const retryAttempts = new Map<string, number>()
 const retryTimers = new Map<string, NodeJS.Timeout>()
-const showInit = false // TODO：暂时屏蔽掉自动创建cherry的智能体
+const showInit = false // TODO：暂时屏蔽掉自动创建内置智能体
 
 /**
  * Initialize all built-in skills and agents. Safe to call multiple times (idempotent).
@@ -35,7 +35,7 @@ export async function bootstrapBuiltinAgents(): Promise<void> {
   }
 
   if (showInit) {
-    await Promise.all([initCherryClaw(), initCherryAssistant()])
+    await Promise.all([initAionlyClaw(), initAionlyAssistant()])
   }
 }
 
@@ -108,10 +108,10 @@ async function handleInitResult(
 
 // ── AionlyClaw ──────────────────────────────────────────────────────
 
-async function initCherryClaw(): Promise<void> {
+async function initAionlyClaw(): Promise<void> {
   try {
-    const result = await agentService.initDefaultCherryClawAgent()
-    await handleInitResult(CHERRY_CLAW_AGENT_ID, 'AionlyClaw', result, initCherryClaw, async (agentId) => {
+    const result = await agentService.initDefaultClawAgent()
+    await handleInitResult(CLAW_AGENT_ID, 'AionlyClaw', result, initAionlyClaw, async (agentId) => {
       await schedulerService.ensureHeartbeatTask(agentId, 30)
     })
   } catch (error) {
@@ -121,16 +121,16 @@ async function initCherryClaw(): Promise<void> {
 
 // ── Aionly Assistant ────────────────────────────────────────────────
 
-export { CHERRY_ASSISTANT_AGENT_ID }
+export { ASSISTANT_AGENT_ID }
 
-async function initCherryAssistant(): Promise<void> {
+async function initAionlyAssistant(): Promise<void> {
   try {
     const result = await agentService.initBuiltinAgent({
-      id: CHERRY_ASSISTANT_AGENT_ID,
+      id: ASSISTANT_AGENT_ID,
       builtinRole: 'assistant',
       provisionWorkspace: provisionBuiltinAgent
     })
-    await handleInitResult(CHERRY_ASSISTANT_AGENT_ID, 'Aionly Assistant', result, initCherryAssistant)
+    await handleInitResult(ASSISTANT_AGENT_ID, 'Aionly Assistant', result, initAionlyAssistant)
   } catch (error) {
     logger.warn('Failed to init Aionly Assistant agent:', error as Error)
   }

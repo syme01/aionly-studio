@@ -61,13 +61,13 @@ export const processLatexBrackets = (text: string) => {
     .replace(/(```[\s\S]*?```|`[^`]*`)/g, (match) => {
       const index = protectedItems.length
       protectedItems.push(match)
-      return `__CHERRY_STUDIO_PROTECTED_${index}__`
+      return `__AIONLY_PROTECTED_${index}__`
     })
     // 保护链接 [text](url)
     .replace(/\[([^[\]]*(?:\[[^\]]*\][^[\]]*)*)\]\([^)]*?\)/g, (match) => {
       const index = protectedItems.length
       protectedItems.push(match)
-      return `__CHERRY_STUDIO_PROTECTED_${index}__`
+      return `__AIONLY_PROTECTED_${index}__`
     })
 
   // LaTeX 括号转换函数
@@ -95,7 +95,7 @@ export const processLatexBrackets = (text: string) => {
   result = processMath(result, '\\(', '\\)', '$')
 
   // 还原被保护的内容
-  result = result.replace(/__CHERRY_STUDIO_PROTECTED_(\d+)__/g, (match, indexStr) => {
+  result = result.replace(/__AIONLY_PROTECTED_(\d+)__/g, (match, indexStr) => {
     const index = parseInt(indexStr, 10)
     // 添加边界检查，防止数组越界
     if (index >= 0 && index < protectedItems.length) {

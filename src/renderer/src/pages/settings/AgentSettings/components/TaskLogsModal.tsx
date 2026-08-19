@@ -17,14 +17,14 @@ const TaskLogsModal: FC<TaskLogsModalProps> = ({ open, taskId, taskName, onClose
 
   const columns = [
     {
-      title: t('agent.cherryClaw.tasks.logs.runAt'),
+      title: t('agent.claw.tasks.logs.runAt'),
       dataIndex: 'run_at',
       key: 'run_at',
       width: 180,
       render: (val: string) => new Date(val).toLocaleString(locale)
     },
     {
-      title: t('agent.cherryClaw.tasks.logs.duration'),
+      title: t('agent.claw.tasks.logs.duration'),
       dataIndex: 'duration_ms',
       key: 'duration_ms',
       width: 100,
@@ -35,14 +35,14 @@ const TaskLogsModal: FC<TaskLogsModalProps> = ({ open, taskId, taskName, onClose
       }
     },
     {
-      title: t('agent.cherryClaw.tasks.logs.status'),
+      title: t('agent.claw.tasks.logs.status'),
       dataIndex: 'status',
       key: 'status',
       width: 80,
       render: (val: string) => <Tag color={val === 'success' ? 'green' : 'red'}>{val}</Tag>
     },
     {
-      title: t('agent.cherryClaw.tasks.logs.result'),
+      title: t('agent.claw.tasks.logs.result'),
       dataIndex: 'result',
       key: 'result',
       ellipsis: true,
@@ -54,7 +54,7 @@ const TaskLogsModal: FC<TaskLogsModalProps> = ({ open, taskId, taskName, onClose
   return (
     <Modal
       open={open}
-      title={`${t('agent.cherryClaw.tasks.logs.label')} — ${taskName}`}
+      title={`${t('agent.claw.tasks.logs.label')} — ${taskName}`}
       onCancel={onClose}
       footer={null}
       width={700}
@@ -65,7 +65,7 @@ const TaskLogsModal: FC<TaskLogsModalProps> = ({ open, taskId, taskName, onClose
           <Spin />
         </div>
       ) : logs.length === 0 ? (
-        <div className="py-8 text-center text-gray-400">{t('agent.cherryClaw.tasks.logs.empty')}</div>
+        <div className="py-8 text-center text-gray-400">{t('agent.claw.tasks.logs.empty')}</div>
       ) : (
         <Table dataSource={logs} columns={columns} rowKey="id" size="small" pagination={false} scroll={{ y: 400 }} />
       )}

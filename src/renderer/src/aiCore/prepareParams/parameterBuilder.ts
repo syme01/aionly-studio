@@ -25,7 +25,7 @@ import {
 import { getHubModeSystemPrompt } from '@renderer/config/prompts-code-mode'
 import { DEFAULT_ASSISTANT_SETTINGS, getDefaultModel } from '@renderer/services/AssistantService'
 import store from '@renderer/store'
-import type { CherryWebSearchConfig } from '@renderer/store/websearch'
+import type { AiWebSearchConfig } from '@renderer/store/websearch'
 import type { Model } from '@renderer/types'
 import { type Assistant, getEffectiveMcpMode, type MCPTool, type Provider, SystemProviderIds } from '@renderer/types'
 import type { StreamTextParams } from '@renderer/types/aiCoreTypes'
@@ -98,7 +98,7 @@ export async function buildStreamTextParams(
     mcpTools?: MCPTool[]
     allowedTools?: string[]
     webSearchProviderId?: string
-    webSearchConfig?: CherryWebSearchConfig
+    webSearchConfig?: AiWebSearchConfig
     requestOptions?: {
       signal?: AbortSignal
       timeout?: number
@@ -158,7 +158,7 @@ export async function buildStreamTextParams(
   const tools = setupToolsConfig(mcpTools, options.allowedTools)
 
   // 构建真正的 providerOptions
-  const webSearchConfig: CherryWebSearchConfig = {
+  const webSearchConfig: AiWebSearchConfig = {
     maxResults: store.getState().websearch.maxResults,
     excludeDomains: store.getState().websearch.excludeDomains,
     searchWithTime: store.getState().websearch.searchWithTime

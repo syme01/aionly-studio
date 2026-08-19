@@ -60,9 +60,9 @@ const TaskListItem: FC<TaskListItemProps> = ({ task, onEdit, onToggleStatus, onD
     const now = Date.now()
     const diff = now - d.getTime()
 
-    if (diff < 60_000) return t('agent.cherryClaw.tasks.logs.justNow', 'just now')
-    if (diff < 3600_000) return t('agent.cherryClaw.tasks.time.minutesAgo', { count: Math.floor(diff / 60_000) })
-    if (diff < 86400_000) return t('agent.cherryClaw.tasks.time.hoursAgo', { count: Math.floor(diff / 3600_000) })
+    if (diff < 60_000) return t('agent.claw.tasks.logs.justNow', 'just now')
+    if (diff < 3600_000) return t('agent.claw.tasks.time.minutesAgo', { count: Math.floor(diff / 60_000) })
+    if (diff < 86400_000) return t('agent.claw.tasks.time.hoursAgo', { count: Math.floor(diff / 3600_000) })
     return d.toLocaleDateString(locale)
   }
 
@@ -97,35 +97,31 @@ const TaskListItem: FC<TaskListItemProps> = ({ task, onEdit, onToggleStatus, onD
       </div>
       <div className="ml-3 flex shrink-0 items-center gap-0.5">
         {!isCompleted && (
-          <IconButton icon={<Play size={14} />} tooltip={t('agent.cherryClaw.tasks.run')} onClick={() => onRun(task)} />
+          <IconButton icon={<Play size={14} />} tooltip={t('agent.claw.tasks.run')} onClick={() => onRun(task)} />
         )}
         <IconButton
           icon={<History size={14} />}
-          tooltip={t('agent.cherryClaw.tasks.logs.label')}
+          tooltip={t('agent.claw.tasks.logs.label')}
           onClick={() => onViewLogs(task)}
         />
         {!isCompleted && (
-          <IconButton
-            icon={<Edit2 size={14} />}
-            tooltip={t('agent.cherryClaw.tasks.edit')}
-            onClick={() => onEdit(task)}
-          />
+          <IconButton icon={<Edit2 size={14} />} tooltip={t('agent.claw.tasks.edit')} onClick={() => onEdit(task)} />
         )}
         {!isCompleted && (
           <IconButton
             icon={<Pause size={14} />}
-            tooltip={task.status === 'active' ? t('agent.cherryClaw.tasks.pause') : t('agent.cherryClaw.tasks.resume')}
+            tooltip={task.status === 'active' ? t('agent.claw.tasks.pause') : t('agent.claw.tasks.resume')}
             onClick={() => onToggleStatus(task)}
           />
         )}
         <Popconfirm
-          title={t('agent.cherryClaw.tasks.delete.confirm')}
+          title={t('agent.claw.tasks.delete.confirm')}
           onConfirm={() => onDelete(task.id)}
-          okText={t('agent.cherryClaw.tasks.delete.label')}
-          cancelText={t('agent.cherryClaw.tasks.cancel')}>
+          okText={t('agent.claw.tasks.delete.label')}
+          cancelText={t('agent.claw.tasks.cancel')}>
           <IconButton
             icon={<Trash2 size={14} />}
-            tooltip={t('agent.cherryClaw.tasks.delete.label')}
+            tooltip={t('agent.claw.tasks.delete.label')}
             onClick={() => {}}
             danger
           />

@@ -175,7 +175,7 @@ https://github.com/你的用户名/aionly-studio/settings/secrets/actions
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_OPTIONS: --max-old-space-size=8192
-          MAIN_VITE_CHERRYAI_CLIENT_SECRET: ${{ secrets.MAIN_VITE_CHERRYAI_CLIENT_SECRET }}
+          MAIN_VITE_MARKETAPI_CLIENT_SECRET: ${{ secrets.MAIN_VITE_MARKETAPI_CLIENT_SECRET }}
           MAIN_VITE_MINERU_API_KEY: ${{ secrets.MAIN_VITE_MINERU_API_KEY }}
           RENDERER_VITE_AIHUBMIX_SECRET: ${{ secrets.RENDERER_VITE_AIHUBMIX_SECRET }}
           RENDERER_VITE_PPIO_APP_SECRET: ${{ secrets.RENDERER_VITE_PPIO_APP_SECRET }}
@@ -314,9 +314,9 @@ where.exe signtool
 
 ```bash
 WIN_SIGN=true
-CHERRY_CERT_PATH=C:\path\to\your\certificate.pfx
-CHERRY_CERT_KEY=YourCertificateName
-CHERRY_CERT_CSP=Microsoft Enhanced RSA and AES Cryptographic Provider
+AIONLY_CERT_PATH=C:\path\to\your\certificate.pfx
+AIONLY_CERT_KEY=YourCertificateName
+AIONLY_CERT_CSP=Microsoft Enhanced RSA and AES Cryptographic Provider
 ```
 
 **查找证书参数：**
@@ -350,9 +350,9 @@ pnpm build
 
 ```bash
 WIN_SIGN=true
-CHERRY_CERT_PATH=
-CHERRY_CERT_KEY=YourTokenKeyName
-CHERRY_CERT_CSP=YubiKey Smart Card Key Storage Provider
+AIONLY_CERT_PATH=
+AIONLY_CERT_KEY=YourTokenKeyName
+AIONLY_CERT_CSP=YubiKey Smart Card Key Storage Provider
 ```
 
 **查找 Token 信息：**
@@ -389,9 +389,9 @@ certutil -csplist | Select-String -Pattern "Smart"
 | Secret Name | Value | 说明 |
 |-------------|-------|------|
 | `WIN_SIGN` | `true` | 启用 Windows 签名 |
-| `CHERRY_CERT_PATH` | 证书文件路径或留空 | 本地路径或 base64（需配合 Actions） |
-| `CHERRY_CERT_KEY` | 证书容器名称 | 从 `certutil -key` 获取 |
-| `CHERRY_CERT_CSP` | CSP 提供商名称 | 如 `Microsoft Enhanced RSA and AES...` |
+| `AIONLY_CERT_PATH` | 证书文件路径或留空 | 本地路径或 base64（需配合 Actions） |
+| `AIONLY_CERT_KEY` | 证书容器名称 | 从 `certutil -key` 获取 |
+| `AIONLY_CERT_CSP` | CSP 提供商名称 | 如 `Microsoft Enhanced RSA and AES...` |
 | `WIN_CERT_PASSWORD` | 证书密码（可选） | PFX 文件密码 |
 
 #### 步骤 3：修改 GitHub Actions 配置
@@ -407,9 +407,9 @@ certutil -csplist | Select-String -Pattern "Smart"
         env:
           # Windows 代码签名配置
           WIN_SIGN: ${{ secrets.WIN_SIGN }}
-          CHERRY_CERT_PATH: ${{ secrets.CHERRY_CERT_PATH }}
-          CHERRY_CERT_KEY: ${{ secrets.CHERRY_CERT_KEY }}
-          CHERRY_CERT_CSP: ${{ secrets.CHERRY_CERT_CSP }}
+          AIONLY_CERT_PATH: ${{ secrets.AIONLY_CERT_PATH }}
+          AIONLY_CERT_KEY: ${{ secrets.AIONLY_CERT_KEY }}
+          AIONLY_CERT_CSP: ${{ secrets.AIONLY_CERT_CSP }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_OPTIONS: --max-old-space-size=8192
           # ... 其他环境变量保持不变
@@ -510,7 +510,7 @@ certutil -key -user
 # Provider = Microsoft Software Key Storage Provider
 ```
 
-使用输出中的 "Container name" 作为 `CHERRY_CERT_KEY` 的值。
+使用输出中的 "Container name" 作为 `AIONLY_CERT_KEY` 的值。
 
 ### 通用问题
 
@@ -680,7 +680,7 @@ StatusMessage        : Signature verified.
 - [ ] 已安装 Windows SDK（signtool.exe）
 - [ ] 已查找证书容器名称和 CSP
 - [ ] 本地测试签名成功（`signtool verify`）
-- [ ] 已在 GitHub 添加 `WIN_SIGN`、`CHERRY_CERT_*` secrets
+- [ ] 已在 GitHub 添加 `WIN_SIGN`、`AIONLY_CERT_*` secrets
 - [ ] 已修改 `.github/workflows/release.yml`
 - [ ] 已确认 `scripts/win-sign.js` 存在
 - [ ] 已提交代码并触发构建

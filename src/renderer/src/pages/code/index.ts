@@ -39,9 +39,9 @@ export const CLI_TOOLS = [
   { value: codeTools.openCode, label: 'OpenCode' }
 ]
 
-export const GEMINI_SUPPORTED_PROVIDERS = ['aihubmix', 'dmxapi', 'new-api', 'cherryin']
+export const GEMINI_SUPPORTED_PROVIDERS = ['aihubmix', 'dmxapi', 'new-api', 'market']
 
-export const OPENAI_CODEX_SUPPORTED_PROVIDERS = ['openai', 'openrouter', 'aihubmix', 'new-api', 'cherryin']
+export const OPENAI_CODEX_SUPPORTED_PROVIDERS = ['openai', 'openrouter', 'aihubmix', 'new-api', 'market']
 
 // Provider 过滤映射
 export const CLI_TOOL_PROVIDER_MAP: Record<string, (providers: Provider[]) => Provider[]> = {
@@ -182,10 +182,10 @@ export const generateToolEnvironment = ({
       env.OPENAI_MODEL = model.id
       break
     case codeTools.openaiCodex:
-      env.CHERRY_CODEX_API_KEY = apiKey
-      env.CHERRY_CODEX_BASE_URL = formattedBaseUrl
-      env.CHERRY_CODEX_PROVIDER_ID = modelProvider.id
-      env.CHERRY_CODEX_PROVIDER_NAME = sanitizeProviderName(getFancyProviderName(modelProvider))
+      env.AIONLY_CODEX_API_KEY = apiKey
+      env.AIONLY_CODEX_BASE_URL = formattedBaseUrl
+      env.AIONLY_CODEX_PROVIDER_ID = modelProvider.id
+      env.AIONLY_CODEX_PROVIDER_NAME = sanitizeProviderName(getFancyProviderName(modelProvider))
       break
 
     case codeTools.iFlowCli:
@@ -236,9 +236,9 @@ export const generateToolEnvironment = ({
         env.OPENCODE_PROVIDER_NAME = providerName
         const envVarKey = `OPENCODE_API_KEY_${providerName.toUpperCase().replace(/[-.]/g, '_')}`
         env[envVarKey] = apiKey
-        // opencode's auto-update check can't detect Cherry Studio's bun install,
+        // opencode's auto-update check can't detect AiOnly's bun install,
         // causing a confusing "Update Available" dialog that always fails.
-        // Cherry Studio manages opencode updates via its own autoUpdateToLatest.
+        // AiOnly manages opencode updates via its own autoUpdateToLatest.
         env.OPENCODE_DISABLE_AUTOUPDATE = 'true'
       }
       break

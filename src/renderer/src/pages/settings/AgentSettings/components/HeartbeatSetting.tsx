@@ -41,11 +41,11 @@ export const HeartbeatSetting = ({ base: agentBase, update }: HeartbeatSettingPr
       <SettingsItem inline>
         <SettingsTitle
           contentAfter={
-            <Tooltip title={t('agent.cherryClaw.heartbeat.enabledHelper')} placement="right">
+            <Tooltip title={t('agent.claw.heartbeat.enabledHelper')} placement="right">
               <Info size={16} className="text-foreground-400" />
             </Tooltip>
           }>
-          {t('agent.cherryClaw.heartbeat.enabled')}
+          {t('agent.claw.heartbeat.enabled')}
         </SettingsTitle>
         <Switch checked={enabled} size="small" onChange={(checked) => updateConfig({ heartbeat_enabled: checked })} />
       </SettingsItem>
@@ -53,11 +53,11 @@ export const HeartbeatSetting = ({ base: agentBase, update }: HeartbeatSettingPr
         <SettingsItem inline>
           <SettingsTitle
             contentAfter={
-              <Tooltip title={t('agent.cherryClaw.heartbeat.intervalHelper')} placement="right">
+              <Tooltip title={t('agent.claw.heartbeat.intervalHelper')} placement="right">
                 <Info size={16} className="text-foreground-400" />
               </Tooltip>
             }>
-            {t('agent.cherryClaw.heartbeat.interval')}
+            {t('agent.claw.heartbeat.interval')}
           </SettingsTitle>
           <InputNumber
             size="small"

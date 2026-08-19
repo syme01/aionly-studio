@@ -357,7 +357,7 @@ describe('BackupManager.deleteLanTransferBackup - Security Tests', () => {
       vi.mocked(fs.pathExists).mockResolvedValue(true as never)
       vi.mocked(fs.remove).mockResolvedValue(undefined as never)
 
-      const validPath = '/tmp/cherry-studio/lan-transfer/backup.zip'
+      const validPath = '/tmp/aionly/lan-transfer/backup.zip'
       const result = await backupManager.deleteLanTransferBackup({} as Electron.IpcMainInvokeEvent, validPath)
 
       expect(result).toBe(true)
@@ -369,7 +369,7 @@ describe('BackupManager.deleteLanTransferBackup - Security Tests', () => {
       vi.mocked(fs.pathExists).mockResolvedValue(true as never)
       vi.mocked(fs.remove).mockResolvedValue(undefined as never)
 
-      const nestedPath = '/tmp/cherry-studio/lan-transfer/sub/dir/file.zip'
+      const nestedPath = '/tmp/aionly/lan-transfer/sub/dir/file.zip'
       const result = await backupManager.deleteLanTransferBackup({} as Electron.IpcMainInvokeEvent, nestedPath)
 
       expect(result).toBe(true)
@@ -379,7 +379,7 @@ describe('BackupManager.deleteLanTransferBackup - Security Tests', () => {
     it('should return false when file does not exist', async () => {
       vi.mocked(fs.pathExists).mockResolvedValue(false as never)
 
-      const missingPath = '/tmp/cherry-studio/lan-transfer/missing.zip'
+      const missingPath = '/tmp/aionly/lan-transfer/missing.zip'
       const result = await backupManager.deleteLanTransferBackup({} as Electron.IpcMainInvokeEvent, missingPath)
 
       expect(result).toBe(false)
@@ -389,7 +389,7 @@ describe('BackupManager.deleteLanTransferBackup - Security Tests', () => {
 
   describe('Path Traversal Attacks', () => {
     it('should block basic directory traversal attack (../../../../etc/passwd)', async () => {
-      const attackPath = '/tmp/cherry-studio/lan-transfer/../../../../etc/passwd'
+      const attackPath = '/tmp/aionly/lan-transfer/../../../../etc/passwd'
       const result = await backupManager.deleteLanTransferBackup({} as Electron.IpcMainInvokeEvent, attackPath)
 
       expect(result).toBe(false)
@@ -408,7 +408,7 @@ describe('BackupManager.deleteLanTransferBackup - Security Tests', () => {
     })
 
     it('should block traversal with multiple slashes', async () => {
-      const attackPath = '/tmp/cherry-studio/lan-transfer/../../../etc/passwd'
+      const attackPath = '/tmp/aionly/lan-transfer/../../../etc/passwd'
       const result = await backupManager.deleteLanTransferBackup({} as Electron.IpcMainInvokeEvent, attackPath)
 
       expect(result).toBe(false)
@@ -424,7 +424,7 @@ describe('BackupManager.deleteLanTransferBackup - Security Tests', () => {
     })
 
     it('should block traversal to parent directory', async () => {
-      const attackPath = '/tmp/cherry-studio/lan-transfer/../backup/secret.zip'
+      const attackPath = '/tmp/aionly/lan-transfer/../backup/secret.zip'
       const result = await backupManager.deleteLanTransferBackup({} as Electron.IpcMainInvokeEvent, attackPath)
 
       expect(result).toBe(false)
@@ -434,7 +434,7 @@ describe('BackupManager.deleteLanTransferBackup - Security Tests', () => {
 
   describe('Prefix Attacks', () => {
     it('should block similar prefix attack (lan-transfer-evil)', async () => {
-      const attackPath = '/tmp/cherry-studio/lan-transfer-evil/file.zip'
+      const attackPath = '/tmp/aionly/lan-transfer-evil/file.zip'
       const result = await backupManager.deleteLanTransferBackup({} as Electron.IpcMainInvokeEvent, attackPath)
 
       expect(result).toBe(false)
@@ -443,7 +443,7 @@ describe('BackupManager.deleteLanTransferBackup - Security Tests', () => {
     })
 
     it('should block path without separator (lan-transferx)', async () => {
-      const attackPath = '/tmp/cherry-studio/lan-transferx'
+      const attackPath = '/tmp/aionly/lan-transferx'
       const result = await backupManager.deleteLanTransferBackup({} as Electron.IpcMainInvokeEvent, attackPath)
 
       expect(result).toBe(false)
@@ -451,7 +451,7 @@ describe('BackupManager.deleteLanTransferBackup - Security Tests', () => {
     })
 
     it('should block different temp directory prefix', async () => {
-      const attackPath = '/tmp-evil/cherry-studio/lan-transfer/file.zip'
+      const attackPath = '/tmp-evil/aionly/lan-transfer/file.zip'
       const result = await backupManager.deleteLanTransferBackup({} as Electron.IpcMainInvokeEvent, attackPath)
 
       expect(result).toBe(false)
@@ -464,7 +464,7 @@ describe('BackupManager.deleteLanTransferBackup - Security Tests', () => {
       vi.mocked(fs.pathExists).mockResolvedValue(true as never)
       vi.mocked(fs.remove).mockRejectedValue(new Error('EACCES: permission denied') as never)
 
-      const validPath = '/tmp/cherry-studio/lan-transfer/file.zip'
+      const validPath = '/tmp/aionly/lan-transfer/file.zip'
       const result = await backupManager.deleteLanTransferBackup({} as Electron.IpcMainInvokeEvent, validPath)
 
       expect(result).toBe(false)
@@ -474,7 +474,7 @@ describe('BackupManager.deleteLanTransferBackup - Security Tests', () => {
     it('should return false on fs.pathExists error', async () => {
       vi.mocked(fs.pathExists).mockRejectedValue(new Error('ENOENT') as never)
 
-      const validPath = '/tmp/cherry-studio/lan-transfer/file.zip'
+      const validPath = '/tmp/aionly/lan-transfer/file.zip'
       const result = await backupManager.deleteLanTransferBackup({} as Electron.IpcMainInvokeEvent, validPath)
 
       expect(result).toBe(false)
@@ -494,7 +494,7 @@ describe('BackupManager.deleteLanTransferBackup - Security Tests', () => {
       vi.mocked(fs.pathExists).mockResolvedValue(true as never)
       vi.mocked(fs.remove).mockResolvedValue(undefined as never)
 
-      const tempDir = '/tmp/cherry-studio/lan-transfer'
+      const tempDir = '/tmp/aionly/lan-transfer'
       const result = await backupManager.deleteLanTransferBackup({} as Electron.IpcMainInvokeEvent, tempDir)
 
       expect(result).toBe(true)
@@ -505,7 +505,7 @@ describe('BackupManager.deleteLanTransferBackup - Security Tests', () => {
       vi.mocked(fs.pathExists).mockResolvedValue(true as never)
       vi.mocked(fs.remove).mockResolvedValue(undefined as never)
 
-      const pathWithSlash = '/tmp/cherry-studio/lan-transfer/sub/'
+      const pathWithSlash = '/tmp/aionly/lan-transfer/sub/'
       const result = await backupManager.deleteLanTransferBackup({} as Electron.IpcMainInvokeEvent, pathWithSlash)
 
       // path.normalize removes trailing slash
@@ -516,7 +516,7 @@ describe('BackupManager.deleteLanTransferBackup - Security Tests', () => {
       vi.mocked(fs.pathExists).mockResolvedValue(true as never)
       vi.mocked(fs.remove).mockResolvedValue(undefined as never)
 
-      const specialPath = '/tmp/cherry-studio/lan-transfer/file with spaces & (special).zip'
+      const specialPath = '/tmp/aionly/lan-transfer/file with spaces & (special).zip'
       const result = await backupManager.deleteLanTransferBackup({} as Electron.IpcMainInvokeEvent, specialPath)
 
       expect(result).toBe(true)
@@ -527,7 +527,7 @@ describe('BackupManager.deleteLanTransferBackup - Security Tests', () => {
       vi.mocked(fs.pathExists).mockResolvedValue(true as never)
       vi.mocked(fs.remove).mockResolvedValue(undefined as never)
 
-      const doubleSlashPath = '/tmp/cherry-studio//lan-transfer//file.zip'
+      const doubleSlashPath = '/tmp/aionly//lan-transfer//file.zip'
       const result = await backupManager.deleteLanTransferBackup({} as Electron.IpcMainInvokeEvent, doubleSlashPath)
 
       // path.normalize handles double slashes

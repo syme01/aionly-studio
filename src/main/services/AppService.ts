@@ -30,7 +30,7 @@ export class AppService {
     } else if (isLinux) {
       try {
         const autostartDir = path.join(os.homedir(), '.config', 'autostart')
-        const desktopFile = path.join(autostartDir, isDev ? 'cherry-studio-dev.desktop' : 'cherry-studio.desktop')
+        const desktopFile = path.join(autostartDir, isDev ? 'aionly-dev.desktop' : 'aionly.desktop')
 
         if (isLaunchOnBoot) {
           // Ensure autostart directory exists
@@ -53,7 +53,7 @@ export class AppService {
   Name=${APP_NAME}
   Comment=A powerful AI assistant for producer.
   Exec=${executablePath}
-  Icon=cherrystudio
+  Icon=${APP_NAME}
   Terminal=false
   StartupNotify=false
   Categories=Development;Utility;

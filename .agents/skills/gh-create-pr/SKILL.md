@@ -15,8 +15,8 @@ description: Create or update GitHub pull requests using the repository-required
    git push -u <remote> <head-branch>
    ```
 4. Determine the base branch:
-   - For official repo(CherryHQ/cherry-studio) as `origin`: default base is `main` from `origin`, but allow the user to explicitly indicate a base branch.
-   - For fork repo as `origin`: check available remotes with `git remote -v`, default base may be `upstream/main` or another remote. Always assume that user wants to merge head to CherryHQ/cherry-studio/main, unless the user explicitly indicates a base branch.
+   - For official repo(myme/aionly-studio) as `origin`: default base is `main` from `origin`, but allow the user to explicitly indicate a base branch.
+   - For fork repo as `origin`: check available remotes with `git remote -v`, default base may be `upstream/main` or another remote. Always assume that user wants to merge head to myme/aionly-studio/main, unless the user explicitly indicates a base branch.
    - Ask the user to confirm the base branch if it's not the default.
 5. Create a temp file and write the PR body:
    - Use `pr_body_file="$(mktemp /tmp/gh-pr-body-XXXXXX).md"`

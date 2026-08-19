@@ -3,7 +3,7 @@ import type { Model, SystemProviderId } from '@renderer/types'
 export const qwenModel: Model = {
   id: 'qwen',
   name: 'Qwen',
-  provider: 'cherryai',
+  provider: 'marketapi',
   group: 'Qwen'
 }
 
@@ -36,7 +36,7 @@ export const SYSTEM_MODELS: Record<SystemProviderId | 'defaultModel', Model[]> =
     // Default quick assistant model
     aionlyModel
   ],
-  cherryin: [],
+  market: [],
   vertexai: [],
   sophnet: [],
   '302ai': [

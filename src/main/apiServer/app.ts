@@ -113,7 +113,7 @@ app.get('/health', (_req, res) => {
  *               properties:
  *                 name:
  *                   type: string
- *                   example: Cherry Studio API
+ *                   example: AiOnly API
  *                 version:
  *                   type: string
  *                   example: 1.0.0

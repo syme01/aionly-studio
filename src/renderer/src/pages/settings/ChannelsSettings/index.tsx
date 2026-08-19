@@ -35,7 +35,7 @@ const ChannelsSettings: FC = () => {
                     <img src={iconSrc} alt={ch.name} className="h-5.5 w-5.5 rounded object-contain" />
                   ) : undefined
                 }
-                subtitle={ch.available ? t(ch.description) : t('agent.cherryClaw.channels.comingSoon')}
+                subtitle={ch.available ? t(ch.description) : t('agent.claw.channels.comingSoon')}
                 titleStyle={TITLE_STYLE}
               />
             )

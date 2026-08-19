@@ -5,7 +5,7 @@
   },
   "access": "public",
   "baseBranch": "main",
-  "changelog": ["@changesets/changelog-github", { "repo": "CherryHQ/cherry-studio" }],
+  "changelog": ["@changesets/changelog-github", { "repo": "myme/aionly-studio" }],
   "commit": false,
   "fixed": [],
   "ignore": [],

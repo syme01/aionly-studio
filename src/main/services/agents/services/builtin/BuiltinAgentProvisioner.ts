@@ -30,7 +30,7 @@ function resolveLocalizedField(value: unknown): string | undefined {
 }
 
 const ROLE_TO_TEMPLATE: Record<string, string> = {
-  assistant: 'cherry-assistant',
+  assistant: 'aionly-assistant',
   'skill-creator': 'skill-creator'
 }
 

@@ -78,7 +78,7 @@ const CodeToolsPage: FC = () => {
         return false
       }
 
-      if (m.provider === 'cherryai') {
+      if (m.provider === 'marketapi') {
         return false
       }
 

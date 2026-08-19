@@ -10,8 +10,6 @@
  * Any non-critical changes will conflict with the ongoing work.
  *
  * 🔗 Context & Status:
- * - Contribution Hold: https://github.com/CherryHQ/cherry-studio/issues/10954
- * - v2 Refactor PR   : https://github.com/CherryHQ/cherry-studio/pull/10162
  * --------------------------------------------------------------------------
  */
 import { loggerService } from '@logger'
@@ -2290,8 +2288,8 @@ const migrateConfig = {
   },
   '139': (state: RootState) => {
     try {
-      addProvider(state, 'cherryin')
-      state.llm.providers = moveProvider(state.llm.providers, 'cherryin', 1)
+      addProvider(state, 'market')
+      state.llm.providers = moveProvider(state.llm.providers, 'market', 1)
 
       const zhipuProvider = state.llm.providers.find((p) => p.id === 'zhipu')
 
@@ -2564,45 +2562,45 @@ const migrateConfig = {
       addProvider(state, 'aionly')
       state.llm.providers = moveProvider(state.llm.providers, 'aionly', 10)
 
-      const cherryinProvider = state.llm.providers.find((provider) => provider.id === 'cherryin')
+      const marketProvider = state.llm.providers.find((provider) => provider.id === 'market')
 
-      if (cherryinProvider) {
-        updateProvider(state, 'cherryin', {
+      if (marketProvider) {
+        updateProvider(state, 'market', {
           apiHost: 'https://open.cherryin.ai',
           models: []
         })
       }
 
-      if (state.llm.defaultModel?.provider === 'cherryin') {
-        state.llm.defaultModel.provider = 'cherryai'
+      if (state.llm.defaultModel?.provider === 'market') {
+        state.llm.defaultModel.provider = 'marketapi'
       }
 
-      if (state.llm.quickModel?.provider === 'cherryin') {
-        state.llm.quickModel.provider = 'cherryai'
+      if (state.llm.quickModel?.provider === 'market') {
+        state.llm.quickModel.provider = 'marketapi'
       }
 
-      if (state.llm.translateModel?.provider === 'cherryin') {
-        state.llm.translateModel.provider = 'cherryai'
+      if (state.llm.translateModel?.provider === 'market') {
+        state.llm.translateModel.provider = 'marketapi'
       }
 
       state.assistants.assistants.forEach((assistant) => {
-        if (assistant.model?.provider === 'cherryin') {
-          assistant.model.provider = 'cherryai'
+        if (assistant.model?.provider === 'market') {
+          assistant.model.provider = 'marketapi'
         }
-        if (assistant.defaultModel?.provider === 'cherryin') {
-          assistant.defaultModel.provider = 'cherryai'
+        if (assistant.defaultModel?.provider === 'market') {
+          assistant.defaultModel.provider = 'marketapi'
         }
       })
 
       // @ts-ignore
       state.agents.agents.forEach((agent) => {
         // @ts-ignore model is not defined in Agent
-        if (agent.model?.provider === 'cherryin') {
+        if (agent.model?.provider === 'market') {
           // @ts-ignore model is not defined in Agent
-          agent.model.provider = 'cherryai'
+          agent.model.provider = 'marketapi'
         }
-        if (agent.defaultModel?.provider === 'cherryin') {
-          agent.defaultModel.provider = 'cherryai'
+        if (agent.defaultModel?.provider === 'market') {
+          agent.defaultModel.provider = 'marketapi'
         }
       })
       return state
@@ -2613,7 +2611,7 @@ const migrateConfig = {
   },
   '158': (state: RootState) => {
     try {
-      state.llm.providers = state.llm.providers.filter((provider) => provider.id !== 'cherryin')
+      state.llm.providers = state.llm.providers.filter((provider) => provider.id !== 'market')
       addProvider(state, 'longcat')
       return state
     } catch (error) {
@@ -2636,8 +2634,8 @@ const migrateConfig = {
       removeMiniAppFromState(state, 'nm-search')
       removeMiniAppFromState(state, 'hika')
       removeMiniAppFromState(state, 'hugging-chat')
-      addProvider(state, 'cherryin')
-      state.llm.providers = moveProvider(state.llm.providers, 'cherryin', 1)
+      addProvider(state, 'market')
+      state.llm.providers = moveProvider(state.llm.providers, 'market', 1)
       return state
     } catch (error) {
       logger.error('migrate 161 error', error as Error)
@@ -2683,7 +2681,7 @@ const migrateConfig = {
     try {
       addProvider(state, 'sophnet')
       state.llm.providers = moveProvider(state.llm.providers, 'sophnet', 17)
-      state.settings.defaultPaintingProvider = 'cherryin'
+      state.settings.defaultPaintingProvider = 'market'
       return state
     } catch (error) {
       logger.error('migrate 170 error', error as Error)
@@ -2791,7 +2789,7 @@ const migrateConfig = {
           case 'grok':
             provider.anthropicApiHost = 'https://api.x.ai'
             break
-          case 'cherryin':
+          case 'market':
             provider.anthropicApiHost = 'https://open.cherryin.net'
             break
           case 'longcat':
@@ -2961,7 +2959,7 @@ const migrateConfig = {
   '183': (state: RootState) => {
     try {
       state.llm.providers.forEach((provider) => {
-        if (provider.id === SystemProviderIds.cherryin) {
+        if (provider.id === SystemProviderIds.market) {
           provider.apiHost = 'https://open.cherryin.cc'
           provider.anthropicApiHost = 'https://open.cherryin.cc'
         }
@@ -3162,20 +3160,20 @@ const migrateConfig = {
   '194': (state: RootState) => {
     try {
       const GLM_4_5_FLASH_MODEL = 'glm-4.5-flash'
-      if (state.llm.defaultModel?.provider === 'cherryai' && state.llm.defaultModel?.id === GLM_4_5_FLASH_MODEL) {
+      if (state.llm.defaultModel?.provider === 'marketapi' && state.llm.defaultModel?.id === GLM_4_5_FLASH_MODEL) {
         state.llm.defaultModel = qwenModel
       }
-      if (state.llm.quickModel?.provider === 'cherryai' && state.llm.quickModel?.id === GLM_4_5_FLASH_MODEL) {
+      if (state.llm.quickModel?.provider === 'marketapi' && state.llm.quickModel?.id === GLM_4_5_FLASH_MODEL) {
         state.llm.quickModel = qwenModel
       }
-      if (state.llm.translateModel?.provider === 'cherryai' && state.llm.translateModel?.id === GLM_4_5_FLASH_MODEL) {
+      if (state.llm.translateModel?.provider === 'marketapi' && state.llm.translateModel?.id === GLM_4_5_FLASH_MODEL) {
         state.llm.translateModel = qwenModel
       }
       state.assistants.assistants.forEach((assistant) => {
-        if (assistant.model?.provider === 'cherryai' && assistant.model?.id === GLM_4_5_FLASH_MODEL) {
+        if (assistant.model?.provider === 'marketapi' && assistant.model?.id === GLM_4_5_FLASH_MODEL) {
           assistant.model = qwenModel
         }
-        if (assistant.defaultModel?.provider === 'cherryai' && assistant.defaultModel?.id === GLM_4_5_FLASH_MODEL) {
+        if (assistant.defaultModel?.provider === 'marketapi' && assistant.defaultModel?.id === GLM_4_5_FLASH_MODEL) {
           assistant.defaultModel = qwenModel
         }
       })
@@ -3345,20 +3343,20 @@ const migrateConfig = {
   },
   '204': (state: RootState) => {
     try {
-      if (state.llm.defaultModel?.provider === 'cherryai') {
+      if (state.llm.defaultModel?.provider === 'marketapi') {
         state.llm.defaultModel = qwenModel
       }
-      if (state.llm.quickModel?.provider === 'cherryai') {
+      if (state.llm.quickModel?.provider === 'marketapi') {
         state.llm.quickModel = qwenModel
       }
-      if (state.llm.translateModel?.provider === 'cherryai') {
+      if (state.llm.translateModel?.provider === 'marketapi') {
         state.llm.translateModel = qwenModel
       }
       state.assistants.assistants.forEach((assistant) => {
-        if (assistant.model?.provider === 'cherryai') {
+        if (assistant.model?.provider === 'marketapi') {
           assistant.model = qwenModel
         }
-        if (assistant.defaultModel?.provider === 'cherryai') {
+        if (assistant.defaultModel?.provider === 'marketapi') {
           assistant.defaultModel = qwenModel
         }
       })

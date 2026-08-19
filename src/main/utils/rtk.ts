@@ -5,7 +5,7 @@ import path from 'node:path'
 import { promisify } from 'node:util'
 
 import { loggerService } from '@logger'
-import { HOME_CHERRY_DIR } from '@shared/config/constant'
+import { HOME_APP_DIR } from '@shared/config/constant'
 import { gte as semverGte } from 'semver'
 
 import { isWin } from '../constant'
@@ -39,11 +39,11 @@ function getBundledBinariesDir(): string {
 }
 
 function getUserBinDir(): string {
-  return path.join(os.homedir(), HOME_CHERRY_DIR, 'bin')
+  return path.join(os.homedir(), HOME_APP_DIR, 'bin')
 }
 
 /**
- * Extract bundled rtk binary to ~/.cherrystudio/bin/ if not already present or outdated.
+ * Extract bundled rtk binary to ~/.aionlystudio/bin/ if not already present or outdated.
  * Called once at app startup.
  */
 export async function extractRtkBinaries(): Promise<void> {

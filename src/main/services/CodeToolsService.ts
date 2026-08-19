@@ -14,7 +14,7 @@ import { APP_NAME } from '@shared/config/constant'
 import {
   codeTools,
   DSH_WEB_DEFAULTS,
-  HOME_CHERRY_DIR,
+  HOME_APP_DIR,
   MACOS_TERMINALS,
   MACOS_TERMINALS_WITH_COMMANDS,
   terminalApps,
@@ -84,7 +84,7 @@ class CodeToolsService {
   }
 
   public async getBunPath() {
-    const dir = path.join(os.homedir(), HOME_CHERRY_DIR, 'bin')
+    const dir = path.join(os.homedir(), HOME_APP_DIR, 'bin')
     const bunName = await getBinaryName('bun')
     const bunPath = path.join(dir, bunName)
     return bunPath
@@ -149,7 +149,7 @@ class CodeToolsService {
    * We use Bun to run cli-wrapper.cjs, which works on all platforms.
    */
   private async getClaudeCodeCommand(bunPath: string): Promise<string> {
-    const globalInstallDir = path.join(os.homedir(), HOME_CHERRY_DIR, 'install', 'global')
+    const globalInstallDir = path.join(os.homedir(), HOME_APP_DIR, 'install', 'global')
     const cliWrapperPath = path.join(
       globalInstallDir,
       'node_modules',
@@ -164,7 +164,7 @@ class CodeToolsService {
     }
 
     // Fallback: try to execute the binary directly (works if postinstall ran correctly)
-    const binDir = path.join(os.homedir(), HOME_CHERRY_DIR, 'bin')
+    const binDir = path.join(os.homedir(), HOME_APP_DIR, 'bin')
     const executableName = await this.getCliExecutableName(codeTools.claudeCode)
     const executablePath = path.join(binDir, executableName + (isWin ? '.exe' : ''))
     logger.warn(`cli-wrapper.cjs not found at ${cliWrapperPath}, falling back to direct execution: ${executablePath}`)
@@ -178,7 +178,7 @@ class CodeToolsService {
    * while opencode-ai's postinstall places the real executable under the package.
    */
   private async getOpenCodeCommand(): Promise<string> {
-    const globalInstallDir = path.join(os.homedir(), HOME_CHERRY_DIR, 'install', 'global')
+    const globalInstallDir = path.join(os.homedir(), HOME_APP_DIR, 'install', 'global')
     const openCodeExecutablePath = path.join(globalInstallDir, 'node_modules', 'opencode-ai', 'bin', 'opencode.exe')
 
     if (fs.existsSync(openCodeExecutablePath)) {
@@ -187,7 +187,7 @@ class CodeToolsService {
     }
 
     // Fallback: try to execute the Bun global bin directly.
-    const binDir = path.join(os.homedir(), HOME_CHERRY_DIR, 'bin')
+    const binDir = path.join(os.homedir(), HOME_APP_DIR, 'bin')
     const executableName = await this.getCliExecutableName(codeTools.openCode)
     const executablePath = path.join(binDir, executableName + (isWin ? '.exe' : ''))
     logger.warn(
@@ -200,7 +200,7 @@ class CodeToolsService {
    * Generate opencode.json config file for OpenCode CLI
    * Merge approach:
    * 1. Parse existing config (if any) with JSONC support
-   * 2. Merge CherryStudio provider into provider object
+   * 2. Merge AiOnly provider into provider object
    * 3. Preserve other fields like $schema, model, etc.
    */
   private async generateOpenCodeConfig(
@@ -250,22 +250,22 @@ class CodeToolsService {
     }
 
     // Dynamic provider key to avoid race conditions between different providers
-    const dynamicProviderKey = `Cherry-${providerName}`
-    const dynamicProviderName = `Cherry-${providerName}`
+    const dynamicProviderKey = `AiOnly-${providerName}`
+    const dynamicProviderName = `AiOnly-${providerName}`
 
     // Parse existing config (if any) with JSONC support
     let existingConfig: Record<string, any> | null = null
     let backupContent: string | null = null
     if (fs.existsSync(configPath)) {
       const rawContent = fs.readFileSync(configPath, 'utf8')
-      // Parse and clean backup to only preserve non-Cherry content
+      // Parse and clean backup to only preserve non-app content
       const existingConfigForBackup = parseJSONC(rawContent)
       if (existingConfigForBackup && typeof existingConfigForBackup === 'object') {
-        // Remove any existing Cherry-* providers from backup
+        // Remove any existing app-managed providers (legacy or current prefix) from backup
         if (existingConfigForBackup.provider && typeof existingConfigForBackup.provider === 'object') {
           const providers = existingConfigForBackup.provider as Record<string, any>
-          const cherryKeys = Object.keys(providers).filter((key) => key.startsWith('Cherry-'))
-          for (const key of cherryKeys) {
+          const managedKeys = Object.keys(providers).filter((key) => /^(Cherry|AiOnly)-/.test(key))
+          for (const key of managedKeys) {
             delete providers[key]
           }
           // If provider object becomes empty, remove it
@@ -277,7 +277,7 @@ class CodeToolsService {
           if (functionalKeys.length > 0) {
             backupContent = JSON.stringify(existingConfigForBackup, null, 2)
           } else {
-            backupContent = null // Backup was all Cherry content, nothing to preserve
+            backupContent = null // Backup was all app-managed content, nothing to preserve
           }
         } else {
           backupContent = rawContent
@@ -290,9 +290,9 @@ class CodeToolsService {
     }
     this.openCodeConfigBackups.set(configPath, backupContent)
 
-    // config with env variable Build CherryStudio provider reference for security
+    // config with env variable Build provider reference for security
     const envVarKey = `OPENCODE_API_KEY_${providerName.toUpperCase().replace(/[-.]/g, '_')}`
-    const cherryProviderConfig = {
+    const appProviderConfig = {
       npm: npmPackage,
       name: dynamicProviderName,
       options: { apiKey: `{env:${envVarKey}}`, baseURL: baseUrl },
@@ -302,22 +302,22 @@ class CodeToolsService {
     // Merge into existing config or create new one
     let finalConfig: Record<string, any>
     if (existingConfig && typeof existingConfig === 'object') {
-      // Deep merge: preserve existing fields, add Cherry provider
+      // Deep merge: preserve existing fields, add app provider
       finalConfig = { ...existingConfig }
       if (!finalConfig.provider || typeof finalConfig.provider !== 'object') {
         finalConfig.provider = {}
       }
-      // Merge Cherry provider into existing providers
+      // Merge app provider into existing providers
       finalConfig.provider = {
         ...finalConfig.provider,
-        [dynamicProviderKey]: cherryProviderConfig
+        [dynamicProviderKey]: appProviderConfig
       }
     } else {
       // No existing config, create fresh one
       finalConfig = {
         $schema: 'https://opencode.ai/config.json',
         provider: {
-          [dynamicProviderKey]: cherryProviderConfig
+          [dynamicProviderKey]: appProviderConfig
         }
       }
     }
@@ -332,7 +332,7 @@ class CodeToolsService {
    * Schedule cleanup of opencode.json config file after 60 seconds (debounce mode)
    * Precise cleanup approach:
    * - Parse current config
-   * - Remove only providers starting with "Cherry-"
+   * - Remove only app-managed providers (Cherry- or AiOnly- prefixed)
    * - Keep all other providers and fields
    * - If provider object becomes empty, remove it
    */
@@ -377,10 +377,10 @@ class CodeToolsService {
             return
           }
 
-          // Remove Cherry-* providers from current config
+          // Remove app-managed providers from current config
           if (currentConfig.provider && typeof currentConfig.provider === 'object') {
             const providers = currentConfig.provider as Record<string, any>
-            const keysToDelete = Object.keys(providers).filter((key) => key.startsWith('Cherry-'))
+            const keysToDelete = Object.keys(providers).filter((key) => /^(Cherry|AiOnly)-/.test(key))
 
             if (keysToDelete.length > 0) {
               for (const key of keysToDelete) {
@@ -422,10 +422,10 @@ class CodeToolsService {
               } else {
                 // Write back the cleaned config
                 fs.writeFileSync(configPath, JSON.stringify(currentConfig, null, 2), 'utf8')
-                logger.info(`Removed ${keysToDelete.length} Cherry-* provider(s) from opencode.json: ${configPath}`)
+                logger.info(`Removed ${keysToDelete.length} app-managed provider(s) from opencode.json: ${configPath}`)
               }
             } else {
-              logger.info(`No Cherry-* providers found in opencode.json: ${configPath}`)
+              logger.info(`No app-managed providers found in opencode.json: ${configPath}`)
             }
           } else {
             logger.info(`No provider object in opencode.json: ${configPath}`)
@@ -695,7 +695,7 @@ class CodeToolsService {
 
   public async isPackageInstalled(cliTool: string): Promise<boolean> {
     const executableName = await this.getCliExecutableName(cliTool)
-    const binDir = path.join(os.homedir(), HOME_CHERRY_DIR, 'bin')
+    const binDir = path.join(os.homedir(), HOME_APP_DIR, 'bin')
     const executablePath = path.join(binDir, executableName + (isWin ? '.exe' : ''))
 
     // Ensure bin directory exists
@@ -732,7 +732,7 @@ class CodeToolsService {
           versionCommand = await this.getOpenCodeCommand()
         } else {
           const executableName = await this.getCliExecutableName(cliTool)
-          const binDir = path.join(os.homedir(), HOME_CHERRY_DIR, 'bin')
+          const binDir = path.join(os.homedir(), HOME_APP_DIR, 'bin')
           const executablePath = path.join(binDir, executableName + (isWin ? '.exe' : ''))
           versionCommand = `"${executablePath}"`
         }
@@ -849,7 +849,7 @@ class CodeToolsService {
     try {
       const packageName = await this.getPackageName(cliTool)
       const bunPath = await this.getBunPath()
-      const bunInstallPath = path.join(os.homedir(), HOME_CHERRY_DIR)
+      const bunInstallPath = path.join(os.homedir(), HOME_APP_DIR)
       const registryUrl = await this.getNpmRegistryUrl()
 
       // Get logs directory for install/update output redirection
@@ -933,7 +933,7 @@ class CodeToolsService {
 
     // Resolve the dsh executable installed under the app's managed bin dir
     const executableName = await this.getCliExecutableName(codeTools.deepseekHarness)
-    const dshPath = path.join(os.homedir(), HOME_CHERRY_DIR, 'bin', executableName + (isWin ? '.exe' : ''))
+    const dshPath = path.join(os.homedir(), HOME_APP_DIR, 'bin', executableName + (isWin ? '.exe' : ''))
     if (!fs.existsSync(dshPath)) {
       const message = `dsh executable not found at ${dshPath}`
       logger.error(message)
@@ -1062,7 +1062,7 @@ class CodeToolsService {
     const packageName = await this.getPackageName(cliTool)
     const bunPath = await this.getBunPath()
     const executableName = await this.getCliExecutableName(cliTool)
-    const binDir = path.join(os.homedir(), HOME_CHERRY_DIR, 'bin')
+    const binDir = path.join(os.homedir(), HOME_APP_DIR, 'bin')
     const executablePath = path.join(binDir, executableName + (isWin ? '.exe' : ''))
 
     logger.debug(`Package name: ${packageName}`)
@@ -1201,19 +1201,19 @@ class CodeToolsService {
     }
 
     // Add configuration parameters for OpenAI Codex using command line args
-    if (cliTool === codeTools.openaiCodex && env.CHERRY_CODEX_PROVIDER_ID) {
-      const providerId = env.CHERRY_CODEX_PROVIDER_ID
-      const providerName = env.CHERRY_CODEX_PROVIDER_NAME || providerId
-      const normalizedBaseUrl = env.CHERRY_CODEX_BASE_URL.replace(/\/$/, '')
+    if (cliTool === codeTools.openaiCodex && env.AIONLY_CODEX_PROVIDER_ID) {
+      const providerId = env.AIONLY_CODEX_PROVIDER_ID
+      const providerName = env.AIONLY_CODEX_PROVIDER_NAME || providerId
+      const normalizedBaseUrl = env.AIONLY_CODEX_BASE_URL.replace(/\/$/, '')
       const model = _model
-      // All Codex providers use Cherry- prefix to avoid conflicts with built-in provider IDs
-      const cherryProviderKey = `Cherry-${providerName.replace(/\./g, '-')}`
+      // All Codex providers use the AiOnly- prefix to avoid conflicts with built-in provider IDs
+      const appProviderKey = `AiOnly-${providerName.replace(/\./g, '-')}`
       const configParams = [
-        `--config model_provider="${cherryProviderKey}"`,
-        `--config model_providers.${cherryProviderKey}.name="${providerName}"`,
-        `--config model_providers.${cherryProviderKey}.base_url="${normalizedBaseUrl}"`,
-        `--config model_providers.${cherryProviderKey}.env_key="CHERRY_CODEX_API_KEY"`,
-        `--config model_providers.${cherryProviderKey}.wire_api="responses"`,
+        `--config model_provider="${appProviderKey}"`,
+        `--config model_providers.${appProviderKey}.name="${providerName}"`,
+        `--config model_providers.${appProviderKey}.base_url="${normalizedBaseUrl}"`,
+        `--config model_providers.${appProviderKey}.env_key="AIONLY_CODEX_API_KEY"`,
+        `--config model_providers.${appProviderKey}.wire_api="responses"`,
         `--config model="${model}"`
       ]
       baseCommand = `${baseCommand} ${configParams.join(' ')}`
@@ -1245,10 +1245,10 @@ class CodeToolsService {
       this.scheduleOpenCodeConfigCleanup(configPath)
 
       // Add --model flag with dynamic provider prefix to avoid race conditions
-      baseCommand = `${baseCommand} --model Cherry-${providerName}/${modelId}`
+      baseCommand = `${baseCommand} --model AiOnly-${providerName}/${modelId}`
     }
 
-    const bunInstallPath = path.join(os.homedir(), HOME_CHERRY_DIR)
+    const bunInstallPath = path.join(os.homedir(), HOME_APP_DIR)
 
     // Special handling for kimi-cli: uvx handles installation automatically
     if (cliTool === codeTools.kimiCli) {
@@ -1314,7 +1314,7 @@ class CodeToolsService {
         const command = envPrefix ? `${envPrefix} && ${baseCommand}` : baseCommand
 
         // Create temp bat file for debugging and avoid complex command line escaping issues
-        const tempDir = path.join(os.tmpdir(), 'cherrystudio')
+        const tempDir = path.join(os.tmpdir(), 'aionly')
         const timestamp = Date.now()
         const batFileName = `launch_${cliTool}_${timestamp}.bat`
         const batFilePath = path.join(tempDir, batFileName)

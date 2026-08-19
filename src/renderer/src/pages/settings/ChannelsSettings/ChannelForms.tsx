@@ -10,7 +10,7 @@ import type { ChannelData } from './channelTypes'
 // --------------- Permission mode ---------------
 
 const PERMISSION_MODE_OPTIONS: Array<{ value: PermissionMode | ''; labelKey: string }> = [
-  { value: '', labelKey: 'agent.cherryClaw.channels.security.inheritFromAgent' },
+  { value: '', labelKey: 'agent.claw.channels.security.inheritFromAgent' },
   { value: 'default', labelKey: 'agent.settings.tooling.permissionMode.default.title' },
   { value: 'acceptEdits', labelKey: 'agent.settings.tooling.permissionMode.acceptEdits.title' },
   { value: 'bypassPermissions', labelKey: 'agent.settings.tooling.permissionMode.bypassPermissions.title' },
@@ -53,7 +53,7 @@ const ChannelPermissionMode: FC<ChannelFormProps> = ({ channel, onConfigChange }
   const { t } = useTranslation()
   return (
     <div className="flex flex-col gap-1">
-      <label className="font-medium text-xs">{t('agent.cherryClaw.channels.security.permissionMode')}</label>
+      <label className="font-medium text-xs">{t('agent.claw.channels.security.permissionMode')}</label>
       <Select
         value={channel.permissionMode ?? ''}
         onChange={(value) => onConfigChange({ permissionMode: value === '' ? undefined : value })}
@@ -147,9 +147,7 @@ const ChannelFieldsForm: FC<ChannelFieldsFormProps> = ({
           />
           <span className="mt-1 block text-gray-400 text-xs">{chatIdsConfig.hint}</span>
           {!chatIds.trim() && idsKey === 'allowed_chat_ids' && (
-            <span className="mt-1 block text-orange-400 text-xs">
-              {t('agent.cherryClaw.channels.chatIdsAutoTrackHint')}
-            </span>
+            <span className="mt-1 block text-orange-400 text-xs">{t('agent.claw.channels.chatIdsAutoTrackHint')}</span>
           )}
           {chatIdsConfig.extraHint && (
             <span className="mt-1 block text-blue-400 text-xs">{chatIdsConfig.extraHint}</span>
@@ -172,15 +170,15 @@ export const TelegramForm: FC<ChannelFormProps> = ({ channel, onConfigChange }) 
       fields={[
         {
           key: 'bot_token',
-          label: t('agent.cherryClaw.channels.telegram.botToken'),
-          placeholder: t('agent.cherryClaw.channels.telegram.botTokenPlaceholder'),
+          label: t('agent.claw.channels.telegram.botToken'),
+          placeholder: t('agent.claw.channels.telegram.botTokenPlaceholder'),
           secret: true
         }
       ]}
       chatIds={{
-        label: t('agent.cherryClaw.channels.telegram.chatIds'),
-        placeholder: t('agent.cherryClaw.channels.telegram.chatIdsPlaceholder'),
-        hint: t('agent.cherryClaw.channels.telegram.chatIdsHint')
+        label: t('agent.claw.channels.telegram.chatIds'),
+        placeholder: t('agent.claw.channels.telegram.chatIdsPlaceholder'),
+        hint: t('agent.claw.channels.telegram.chatIdsHint')
       }}
     />
   )
@@ -191,15 +189,15 @@ const FeishuDomainSelector: FC<ChannelFormProps> = ({ channel, onConfigChange })
   const cfg = channel.config
   return (
     <div>
-      <label className="mb-1 block font-medium text-xs">{t('agent.cherryClaw.channels.feishu.domain')}</label>
+      <label className="mb-1 block font-medium text-xs">{t('agent.claw.channels.feishu.domain')}</label>
       <Select<FeishuDomain>
         value={(cfg.domain as FeishuDomain) ?? 'feishu'}
         onChange={(value) => onConfigChange({ config: { ...cfg, domain: value } })}
         size="small"
         className="w-full"
         options={[
-          { value: 'feishu', label: t('agent.cherryClaw.channels.feishu.domainFeishu') },
-          { value: 'lark', label: t('agent.cherryClaw.channels.feishu.domainLark') }
+          { value: 'feishu', label: t('agent.claw.channels.feishu.domainFeishu') },
+          { value: 'lark', label: t('agent.claw.channels.feishu.domainLark') }
         ]}
       />
     </div>
@@ -239,23 +237,23 @@ export const FeishuForm: FC<ChannelFormProps> = ({ channel, onConfigChange }) =>
       {!hasCredentials && (
         <div className="flex items-center gap-2">
           {status === 'pending' && (
-            <span className="text-blue-400 text-xs">{t('agent.cherryClaw.channels.feishu.qrHint')}</span>
+            <span className="text-blue-400 text-xs">{t('agent.claw.channels.feishu.qrHint')}</span>
           )}
           {status === 'expired' && (
             <>
               <span className="inline-block h-2 w-2 rounded-full bg-red-500" />
-              <span className="text-red-500 text-xs">{t('agent.cherryClaw.channels.feishu.qrExpired')}</span>
+              <span className="text-red-500 text-xs">{t('agent.claw.channels.feishu.qrExpired')}</span>
             </>
           )}
           {status === 'idle' && (
-            <span className="text-blue-400 text-xs">{t('agent.cherryClaw.channels.feishu.loginHint')}</span>
+            <span className="text-blue-400 text-xs">{t('agent.claw.channels.feishu.loginHint')}</span>
           )}
         </div>
       )}
       {hasCredentials && (
         <div className="flex items-center gap-2">
           <span className="inline-block h-2 w-2 rounded-full bg-green-500" />
-          <span className="text-green-600 text-xs">{t('agent.cherryClaw.channels.feishu.connected')}</span>
+          <span className="text-green-600 text-xs">{t('agent.claw.channels.feishu.connected')}</span>
         </div>
       )}
       <ChannelFieldsForm
@@ -264,39 +262,39 @@ export const FeishuForm: FC<ChannelFormProps> = ({ channel, onConfigChange }) =>
         fields={[
           {
             key: 'app_id',
-            label: t('agent.cherryClaw.channels.feishu.appId'),
-            placeholder: t('agent.cherryClaw.channels.feishu.appIdPlaceholder')
+            label: t('agent.claw.channels.feishu.appId'),
+            placeholder: t('agent.claw.channels.feishu.appIdPlaceholder')
           },
           {
             key: 'app_secret',
-            label: t('agent.cherryClaw.channels.feishu.appSecret'),
-            placeholder: t('agent.cherryClaw.channels.feishu.appSecretPlaceholder'),
+            label: t('agent.claw.channels.feishu.appSecret'),
+            placeholder: t('agent.claw.channels.feishu.appSecretPlaceholder'),
             secret: true
           },
           {
             key: 'encrypt_key',
-            label: t('agent.cherryClaw.channels.feishu.encryptKey'),
-            placeholder: t('agent.cherryClaw.channels.feishu.encryptKeyPlaceholder'),
+            label: t('agent.claw.channels.feishu.encryptKey'),
+            placeholder: t('agent.claw.channels.feishu.encryptKeyPlaceholder'),
             secret: true
           },
           {
             key: 'verification_token',
-            label: t('agent.cherryClaw.channels.feishu.verificationToken'),
-            placeholder: t('agent.cherryClaw.channels.feishu.verificationTokenPlaceholder'),
+            label: t('agent.claw.channels.feishu.verificationToken'),
+            placeholder: t('agent.claw.channels.feishu.verificationTokenPlaceholder'),
             secret: true
           }
         ]}
         extraContent={<FeishuDomainSelector channel={channel} onConfigChange={onConfigChange} />}
         chatIds={{
-          label: t('agent.cherryClaw.channels.feishu.chatIds'),
-          placeholder: t('agent.cherryClaw.channels.feishu.chatIdsPlaceholder'),
-          hint: t('agent.cherryClaw.channels.feishu.chatIdsHint')
+          label: t('agent.claw.channels.feishu.chatIds'),
+          placeholder: t('agent.claw.channels.feishu.chatIdsPlaceholder'),
+          hint: t('agent.claw.channels.feishu.chatIdsHint')
         }}
       />
 
       <Modal
         open={!!qrUrl}
-        title={t('agent.cherryClaw.channels.feishu.qrTitle')}
+        title={t('agent.claw.channels.feishu.qrTitle')}
         footer={null}
         onCancel={() => {
           setQrUrl(null)
@@ -306,9 +304,7 @@ export const FeishuForm: FC<ChannelFormProps> = ({ channel, onConfigChange }) =>
         width={360}>
         <div className="flex flex-col items-center gap-4 py-4">
           {qrUrl && <QRCodeSVG value={qrUrl} size={240} level="M" />}
-          <span className="text-center text-foreground-500 text-xs">
-            {t('agent.cherryClaw.channels.feishu.qrScanHint')}
-          </span>
+          <span className="text-center text-foreground-500 text-xs">{t('agent.claw.channels.feishu.qrScanHint')}</span>
         </div>
       </Modal>
     </div>
@@ -324,17 +320,17 @@ export const DiscordForm: FC<ChannelFormProps> = ({ channel, onConfigChange }) =
       fields={[
         {
           key: 'bot_token',
-          label: t('agent.cherryClaw.channels.discord.botToken'),
-          placeholder: t('agent.cherryClaw.channels.discord.botTokenPlaceholder'),
+          label: t('agent.claw.channels.discord.botToken'),
+          placeholder: t('agent.claw.channels.discord.botTokenPlaceholder'),
           secret: true,
           span: 2
         }
       ]}
       chatIds={{
-        label: t('agent.cherryClaw.channels.discord.channelIds'),
-        placeholder: t('agent.cherryClaw.channels.discord.channelIdsPlaceholder'),
-        hint: t('agent.cherryClaw.channels.discord.channelIdsHint'),
-        extraHint: t('agent.cherryClaw.channels.discord.whoamiTip'),
+        label: t('agent.claw.channels.discord.channelIds'),
+        placeholder: t('agent.claw.channels.discord.channelIdsPlaceholder'),
+        hint: t('agent.claw.channels.discord.channelIdsHint'),
+        extraHint: t('agent.claw.channels.discord.whoamiTip'),
         fullWidth: true,
         configKey: 'allowed_channel_ids'
       }}
@@ -351,21 +347,21 @@ export const QQForm: FC<ChannelFormProps> = ({ channel, onConfigChange }) => {
       fields={[
         {
           key: 'app_id',
-          label: t('agent.cherryClaw.channels.qq.appId'),
-          placeholder: t('agent.cherryClaw.channels.qq.appIdPlaceholder')
+          label: t('agent.claw.channels.qq.appId'),
+          placeholder: t('agent.claw.channels.qq.appIdPlaceholder')
         },
         {
           key: 'client_secret',
-          label: t('agent.cherryClaw.channels.qq.clientSecret'),
-          placeholder: t('agent.cherryClaw.channels.qq.clientSecretPlaceholder'),
+          label: t('agent.claw.channels.qq.clientSecret'),
+          placeholder: t('agent.claw.channels.qq.clientSecretPlaceholder'),
           secret: true
         }
       ]}
       chatIds={{
-        label: t('agent.cherryClaw.channels.qq.chatIds'),
-        placeholder: t('agent.cherryClaw.channels.qq.chatIdsPlaceholder'),
-        hint: t('agent.cherryClaw.channels.qq.chatIdsHint'),
-        extraHint: t('agent.cherryClaw.channels.qq.whoamiTip'),
+        label: t('agent.claw.channels.qq.chatIds'),
+        placeholder: t('agent.claw.channels.qq.chatIdsPlaceholder'),
+        hint: t('agent.claw.channels.qq.chatIdsHint'),
+        extraHint: t('agent.claw.channels.qq.whoamiTip'),
         fullWidth: true
       }}
     />
@@ -416,17 +412,17 @@ export const WeChatForm: FC<ChannelFormProps & { onRemove?: () => void }> = ({ c
           {status === 'confirmed' && (
             <>
               <span className="inline-block h-2 w-2 rounded-full bg-green-500" />
-              <span className="text-green-600 text-xs">{t('agent.cherryClaw.channels.wechat.connected')}</span>
+              <span className="text-green-600 text-xs">{t('agent.claw.channels.wechat.connected')}</span>
             </>
           )}
           {status === 'disconnected' && (
             <>
               <span className="inline-block h-2 w-2 rounded-full bg-red-500" />
-              <span className="text-red-500 text-xs">{t('agent.cherryClaw.channels.wechat.disconnected')}</span>
+              <span className="text-red-500 text-xs">{t('agent.claw.channels.wechat.disconnected')}</span>
             </>
           )}
           {(status === 'idle' || status === 'pending') && (
-            <span className="text-blue-400 text-xs">{t('agent.cherryClaw.channels.wechat.loginHint')}</span>
+            <span className="text-blue-400 text-xs">{t('agent.claw.channels.wechat.loginHint')}</span>
           )}
         </div>
         {loginUserId && status === 'confirmed' && (
@@ -440,7 +436,7 @@ export const WeChatForm: FC<ChannelFormProps & { onRemove?: () => void }> = ({ c
 
       <Modal
         open={!!qrUrl}
-        title={t('agent.cherryClaw.channels.wechat.qrTitle')}
+        title={t('agent.claw.channels.wechat.qrTitle')}
         footer={null}
         onCancel={() => {
           setQrUrl(null)
@@ -450,9 +446,7 @@ export const WeChatForm: FC<ChannelFormProps & { onRemove?: () => void }> = ({ c
         width={360}>
         <div className="flex flex-col items-center gap-4 py-4">
           {qrUrl && <QRCodeSVG value={qrUrl} size={240} level="M" />}
-          <span className="text-center text-foreground-500 text-xs">
-            {t('agent.cherryClaw.channels.wechat.qrHint')}
-          </span>
+          <span className="text-center text-foreground-500 text-xs">{t('agent.claw.channels.wechat.qrHint')}</span>
         </div>
       </Modal>
     </div>
@@ -468,24 +462,24 @@ export const SlackForm: FC<ChannelFormProps> = ({ channel, onConfigChange }) => 
       fields={[
         {
           key: 'bot_token',
-          label: t('agent.cherryClaw.channels.slack.botToken'),
-          placeholder: t('agent.cherryClaw.channels.slack.botTokenPlaceholder'),
+          label: t('agent.claw.channels.slack.botToken'),
+          placeholder: t('agent.claw.channels.slack.botTokenPlaceholder'),
           secret: true,
           span: 2
         },
         {
           key: 'app_token',
-          label: t('agent.cherryClaw.channels.slack.appToken'),
-          placeholder: t('agent.cherryClaw.channels.slack.appTokenPlaceholder'),
+          label: t('agent.claw.channels.slack.appToken'),
+          placeholder: t('agent.claw.channels.slack.appTokenPlaceholder'),
           secret: true,
           span: 2
         }
       ]}
       chatIds={{
-        label: t('agent.cherryClaw.channels.slack.channelIds'),
-        placeholder: t('agent.cherryClaw.channels.slack.channelIdsPlaceholder'),
-        hint: t('agent.cherryClaw.channels.slack.channelIdsHint'),
-        extraHint: t('agent.cherryClaw.channels.slack.whoamiTip'),
+        label: t('agent.claw.channels.slack.channelIds'),
+        placeholder: t('agent.claw.channels.slack.channelIdsPlaceholder'),
+        hint: t('agent.claw.channels.slack.channelIdsHint'),
+        extraHint: t('agent.claw.channels.slack.whoamiTip'),
         fullWidth: true,
         configKey: 'allowed_channel_ids'
       }}

@@ -6,12 +6,12 @@ import * as ipaddr from 'ipaddr.js'
 import { ProxyAgent } from 'proxy-agent'
 import { Dispatcher, EnvHttpProxyAgent, getGlobalDispatcher, setGlobalDispatcher } from 'undici'
 
-export const CHERRY_NODE_PROXY_RULES_ENV = 'CHERRY_STUDIO_NODE_PROXY_RULES'
-export const CHERRY_NODE_PROXY_BYPASS_RULES_ENV = 'CHERRY_STUDIO_NODE_PROXY_BYPASS_RULES'
+export const APP_NODE_PROXY_RULES_ENV = 'AIONLY_NODE_PROXY_RULES'
+export const APP_NODE_PROXY_BYPASS_RULES_ENV = 'AIONLY_NODE_PROXY_BYPASS_RULES'
 
 const NODE_PROXY_ENV_KEYS = [
-  CHERRY_NODE_PROXY_RULES_ENV,
-  CHERRY_NODE_PROXY_BYPASS_RULES_ENV,
+  APP_NODE_PROXY_RULES_ENV,
+  APP_NODE_PROXY_BYPASS_RULES_ENV,
   'HTTP_PROXY',
   'HTTPS_PROXY',
   'http_proxy',
@@ -272,7 +272,7 @@ export const getProxyEnvironment = (env: NodeJS.ProcessEnv = process.env): Recor
 export const getNodeProxyConfigFromEnvironment = (env: NodeJS.ProcessEnv = process.env): NodeProxyConfig | null => {
   const proxyEnv = getProxyEnvironment(env)
   const proxyRules =
-    proxyEnv[CHERRY_NODE_PROXY_RULES_ENV] ||
+    proxyEnv[APP_NODE_PROXY_RULES_ENV] ||
     proxyEnv.ALL_PROXY ||
     proxyEnv.all_proxy ||
     proxyEnv.SOCKS_PROXY ||
@@ -288,7 +288,7 @@ export const getNodeProxyConfigFromEnvironment = (env: NodeJS.ProcessEnv = proce
 
   return {
     proxyRules,
-    proxyBypassRules: proxyEnv[CHERRY_NODE_PROXY_BYPASS_RULES_ENV] || proxyEnv.NO_PROXY || proxyEnv.no_proxy
+    proxyBypassRules: proxyEnv[APP_NODE_PROXY_BYPASS_RULES_ENV] || proxyEnv.NO_PROXY || proxyEnv.no_proxy
   }
 }
 
@@ -404,8 +404,8 @@ export const buildNodeProxyEnvironment = (config: NodeProxyConfig): Record<strin
   const normalizedByPassRules = normalizeProxyBypassRules(config.proxyBypassRules)
   const proxyProtocol = getProxyProtocol(proxyUrl)
   const env: Record<string, string> = {
-    [CHERRY_NODE_PROXY_RULES_ENV]: proxyUrl,
-    [CHERRY_NODE_PROXY_BYPASS_RULES_ENV]: normalizedByPassRules.join(',')
+    [APP_NODE_PROXY_RULES_ENV]: proxyUrl,
+    [APP_NODE_PROXY_BYPASS_RULES_ENV]: normalizedByPassRules.join(',')
   }
 
   if (normalizedByPassRules.length > 0) {
@@ -515,8 +515,8 @@ export class NodeProxyController {
   }
 
   private setEnvironment(url: string | undefined, normalizedByPassRules: string[]): void {
-    delete process.env[CHERRY_NODE_PROXY_RULES_ENV]
-    delete process.env[CHERRY_NODE_PROXY_BYPASS_RULES_ENV]
+    delete process.env[APP_NODE_PROXY_RULES_ENV]
+    delete process.env[APP_NODE_PROXY_BYPASS_RULES_ENV]
     delete process.env.HTTP_PROXY
     delete process.env.HTTPS_PROXY
     delete process.env.grpc_proxy

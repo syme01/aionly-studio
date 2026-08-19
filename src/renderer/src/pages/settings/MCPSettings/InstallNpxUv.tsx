@@ -102,7 +102,7 @@ const InstallNpxUv: FC<Props> = ({ mini = false }) => {
   }
 
   const onHelp = () => {
-    window.open('https://docs.cherry-ai.com/advanced-basic/mcp', '_blank')
+    window.open('https://www.aionly.com/docs', '_blank')
   }
 
   return (

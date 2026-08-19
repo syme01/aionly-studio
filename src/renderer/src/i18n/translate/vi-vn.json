@@ -28,7 +28,7 @@
       "submit": "Gửi",
       "title": "Câu hỏi từ Đại lý"
     },
-    "cherryClaw": {
+    "claw": {
       "channels": {
         "add": "Thêm",
         "bindAgent": "Ràng buộc Đại lý",
@@ -268,7 +268,7 @@
         "title": "Các Tác Vụ Đã Lên Lịch"
       },
       "warning": {
-        "bypassPermissions": "Các tác nhân CherryClaw hoạt động ở chế độ Tự động hoàn toàn theo mặc định. Mọi công cụ đều thực thi mà không yêu cầu phê duyệt."
+        "bypassPermissions": "Các tác nhân AionlyClaw hoạt động ở chế độ Tự động hoàn toàn theo mặc định. Mọi công cụ đều thực thi mà không yêu cầu phê duyệt."
       }
     },
     "delete": {
@@ -696,7 +696,7 @@
     },
     "authHeaderText": "Sử dụng trong tiêu đề Ủy quyền:",
     "configuration": "Konfiguracja",
-    "description": "Phơi bày khả năng AI của Cherry Studio qua các API HTTP tương thích với OpenAI",
+    "description": "Phơi bày khả năng AI của AiOnly qua các API HTTP tương thích với OpenAI",
     "documentation": {
       "title": "API Documentación"
     },
@@ -2589,6 +2589,13 @@
   "minapp": {
     "add_to_launchpad": "Ajouter à Launchpad",
     "add_to_sidebar": "Thêm vào thanh bên",
+    "deepseek_harness": {
+      "install_failed": "[to be translated]:DeepSeek Harness installation failed",
+      "install_success": "[to be translated]:DeepSeek Harness installed successfully",
+      "installing": "[to be translated]:Installing DeepSeek Harness, please wait…",
+      "start_failed": "[to be translated]:Failed to start DeepSeek Harness",
+      "starting": "[to be translated]:Starting DeepSeek Harness…"
+    },
     "popup": {
       "close": "Đóng MinApp",
       "devtools": "Công cụ dành cho nhà phát triển",
@@ -2924,21 +2931,21 @@
     },
     "skip": "Bỏ qua",
     "toast": {
-      "connected": "Đã kết nối thành công với CherryIN"
+      "connected": "Đã kết nối thành công với Market"
     },
     "welcome": {
-      "login_cherryin": "Đăng nhập bằng CherryIN",
+      "login_market": "Đăng nhập bằng Market",
       "or_continue_with": "HOẶC TIẾP TỤC VỚI",
       "other_provider": "Chọn Nhà Cung Cấp Khác",
       "select_other_provider": "Chọn Nhà Cung Cấp Khác",
       "setup_hint": "Vui lòng cấu hình ít nhất một nhà cung cấp để có trải nghiệm tốt nhất",
-      "subtitle": "Tận hưởng các dịch vụ AI hàng đầu với CherryIN",
-      "title": "Chào mừng bạn đến với Cherry Studio"
+      "subtitle": "Tận hưởng các dịch vụ AI hàng đầu với Market",
+      "title": "Chào mừng bạn đến với AiOnly"
     }
   },
   "openclaw": {
     "checking_installation": "Đang kiểm tra cài đặt OpenClaw...",
-    "description": "Sử dụng các nhà cung cấp Cherry Studio để cấp nguồn cho OpenClaw, trợ lý AI cá nhân của bạn hoạt động trên WhatsApp, Telegram, Slack, Discord và nhiều nền tảng khác.",
+    "description": "Sử dụng các nhà cung cấp AiOnly để cấp nguồn cho OpenClaw, trợ lý AI cá nhân của bạn hoạt động trên WhatsApp, Telegram, Slack, Discord và nhiều nền tảng khác.",
     "error": {
       "select_provider_model": "Vui lòng chọn nhà cung cấp và mô hình trước"
     },
@@ -3421,7 +3428,6 @@
     "burncloud": "BurnCloud",
     "cephalon": "cephalon",
     "cerebras": "Cerebras AI",
-    "cherryin": "CherryIN",
     "copilot": "GitHub Copilot",
     "dashscope": "Alibaba Cloud",
     "deepseek": "DeepSeek",
@@ -3442,6 +3448,7 @@
     "lanyun": "LANYUN",
     "lmstudio": "LM Studio",
     "longcat": "LongCat AI",
+    "market": "Market",
     "mimo": "Xiaomi MiMo",
     "minimax": "MiniMax Trung Quốc",
     "minimax-global": "MiniMax",
@@ -3783,7 +3790,7 @@
           },
           "description": {
             "0": "Trợ lý Lựa chọn yêu cầu <strong>Quyền Trợ năng</strong> để hoạt động bình thường.",
-            "1": "Vui lòng nhấp vào \"<strong>Đi tới Cài đặt</strong>\" và nhấp vào nút \"<strong>Mở Cài đặt Hệ thống</strong>\" trong cửa sổ yêu cầu quyền xuất hiện sau đó. Sau đó, tìm \"<strong>Cherry Studio</strong>\" trong danh sách ứng dụng xuất hiện và bật công tắc quyền.",
+            "1": "Vui lòng nhấp vào \"<strong>Đi tới Cài đặt</strong>\" và nhấp vào nút \"<strong>Mở Cài đặt Hệ thống</strong>\" trong cửa sổ yêu cầu quyền xuất hiện sau đó. Sau đó, tìm \"<strong>AiOnly</strong>\" trong danh sách ứng dụng xuất hiện và bật công tắc quyền.",
             "2": "Sau khi hoàn tất cài đặt, vui lòng mở lại trợ lý lựa chọn."
           },
           "title": "Quyền truy cập"
@@ -3795,7 +3802,7 @@
         "title": "Danh sách Bộ lọc Ứng dụng",
         "user_tips": {
           "mac": "Vui lòng nhập Bundle ID của ứng dụng, mỗi dòng một cái, không phân biệt chữ hoa chữ thường, có thể khớp mờ. Ví dụ: com.google.Chrome, com.apple.mail, v.v.",
-          "windows": "Vui lòng nhập tên tệp thực thi của ứng dụng, mỗi dòng một cái, không phân biệt chữ hoa chữ thường, có thể khớp mờ. Ví dụ: chrome.exe, weixin.exe, Cherry Studio.exe, v.v."
+          "windows": "Vui lòng nhập tên tệp thực thi của ứng dụng, mỗi dòng một cái, không phân biệt chữ hoa chữ thường, có thể khớp mờ. Ví dụ: chrome.exe, weixin.exe, AiOnly.exe, v.v."
         }
       },
       "linux": {
@@ -3807,7 +3814,7 @@
         "wayland_checklist_subtitle": "Đảm bảo các điều kiện sau được thỏa mãn để tối ưu hóa trải nghiệm Wayland:",
         "wayland_description": "Bạn đang ở trong phiên Wayland. Do giới hạn của hệ thống, thanh công cụ có thể chỉ xuất hiện ở giữa màn hình thay vì theo văn bản được chọn trên một số môi trường máy tính để bàn. Khuyến nghị chuyển sang phiên X11 để có trải nghiệm đầy đủ.",
         "wayland_title": "Thông báo phiên Wayland",
-        "xwayland_fail": "Chưa được kích hoạt, vui lòng khởi chạy Cherry Studio với cờ `--ozone-platform=x11`",
+        "xwayland_fail": "Chưa được kích hoạt, vui lòng khởi chạy AiOnly với cờ `--ozone-platform=x11`",
         "xwayland_label": "Chế độ XWayland:",
         "xwayland_pass": "Đã bật"
       },
@@ -4100,14 +4107,14 @@
             "test_message_received": "Đã nhận pong từ {{device}}",
             "test_message_sent": "Gửi tải trọng kiểm tra hello world"
           },
-          "idle_hint": "Quét đã tạm dừng. Bắt đầu quét để tìm các máy ngang hàng Cherry Studio trong mạng LAN của bạn.",
+          "idle_hint": "Quét đã tạm dừng. Bắt đầu quét để tìm các máy ngang hàng AiOnly trong mạng LAN của bạn.",
           "ip_addresses": "Địa chỉ IP",
           "last_seen": "Lần cuối thấy tại {{time}}",
           "metadata": "Siêu dữ liệu",
-          "no_connection_warning": "Vui lòng mở LAN Transfer trên ứng dụng Cherry Studio di động",
+          "no_connection_warning": "Vui lòng mở LAN Transfer trên ứng dụng AiOnly di động",
           "no_devices": "Chưa tìm thấy thiết bị LAN nào",
           "scan_devices": "Quét thiết bị",
-          "scanning_hint": "Đang quét mạng cục bộ của bạn để tìm các máy ngang hàng Cherry Studio...",
+          "scanning_hint": "Đang quét mạng cục bộ của bạn để tìm các máy ngang hàng AiOnly...",
           "send_file": "Gửi tệp",
           "status": {
             "completed": "Chuyển khoản hoàn tất",
@@ -4891,7 +4898,7 @@
       },
       "oauth": {
         "callback": {
-          "message": "Bạn có thể đóng trang này và quay lại Cherry Studio",
+          "message": "Bạn có thể đóng trang này và quay lại AiOnly",
           "title": "Autenticación exitosa"
         }
       },
@@ -5467,13 +5474,6 @@
       "oauth": {
         "balance": "Cân bằng",
         "button": "Iniciar sesión con {{provider}}",
-        "cherryIn": {
-          "description": "Đăng nhập vào CherryIN bằng OAuth 2.0",
-          "logged_in": "Đã đăng nhập qua OAuth",
-          "login_button": "Đăng nhập bằng OAuth",
-          "logout_button": "Keluar",
-          "title": "Đăng nhập OAuth"
-        },
         "connect": "Kết nối {{provider}}",
         "description": "Dịch vụ này được cung cấp bởi <website>{{provider}}</website>",
         "error": "Autentificación fallida",
@@ -5482,6 +5482,13 @@
         "logout_confirm": "Bạn có chắc chắn muốn đăng xuất?",
         "logout_success": "Berhasil keluar",
         "logout_warning": "Đã đăng xuất cục bộ, nhưng việc thu hồi mã thông báo từ máy chủ có thể đã thất bại",
+        "market": {
+          "description": "Đăng nhập vào Market bằng OAuth 2.0",
+          "logged_in": "Đã đăng nhập qua OAuth",
+          "login_button": "Đăng nhập bằng OAuth",
+          "logout_button": "Keluar",
+          "title": "Đăng nhập OAuth"
+        },
         "official_website": "Trang web chính thức",
         "provided_by": "Được cung cấp bởi",
         "provided_by_suffix": "I’m ready—please provide the text you’d like me to translate.",

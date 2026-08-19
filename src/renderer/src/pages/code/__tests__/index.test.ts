@@ -179,7 +179,7 @@ describe('generateToolEnvironment', () => {
       baseUrl: 'https://api.openai.com'
     })
 
-    expect(env.CHERRY_CODEX_BASE_URL).toBe('https://api.openai.com/v1')
+    expect(env.AIONLY_CODEX_BASE_URL).toBe('https://api.openai.com/v1')
   })
 
   it('should format baseUrl with /v1 for iFlowCli when missing', () => {

@@ -90,7 +90,7 @@ const PopupContainer: React.FC<Props> = ({ model, apiFilter, modelFilter, showTa
         loading={isLoading}
         showTagFilter={showTagFilter}
         showPinnedModels={false}
-        prioritizedProviderIds={['cherryin']}
+        prioritizedProviderIds={['market']}
         resolve={(value) => {
           if (value && isAdaptedApiModel(value)) {
             resolve(value.origin)

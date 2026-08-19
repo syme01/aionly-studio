@@ -45,7 +45,7 @@ const StepThree: React.FC = () => {
     <Container>
       <Result>
         <img className="result-img" src={successImage} alt="success" />
-        <div className="text-[16px] font-medium">{t('login.forgot_password.stepThree.successful')}</div>
+        <div className="font-medium text-[16px]">{t('login.forgot_password.stepThree.successful')}</div>
       </Result>
       <LoginButton type="primary" block onClick={handleNext}>
         {t('login.back_login')}

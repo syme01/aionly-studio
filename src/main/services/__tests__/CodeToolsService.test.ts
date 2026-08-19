@@ -19,7 +19,7 @@ vi.mock('@main/utils/ipService', () => ({
 vi.mock('@main/utils/process', () => ({
   findCommandInShellEnv: vi.fn(),
   getBinaryName: vi.fn((name: string) => Promise.resolve(name)),
-  getBinaryPath: vi.fn(() => Promise.resolve('/mock/cherry/bin')),
+  getBinaryPath: vi.fn(() => Promise.resolve('/mock/app/bin')),
   isBinaryExists: vi.fn(() => Promise.resolve(false))
 }))
 

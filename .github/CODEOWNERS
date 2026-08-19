@@ -3,19 +3,19 @@
 /src/main/services/ConfigManager.ts @0xfullex @DeJeune
 /packages/shared/IpcChannel.ts @0xfullex @DeJeune
 /src/main/ipc.ts @0xfullex @DeJeune
-/app-upgrade-config.json @kangfenmao
+/app-upgrade-config.json @zhanglvhai
 
 # Privacy policy ownership
-/PRIVACY.md @kangfenmao
-/resources/cherry-studio/privacy-en.html @kangfenmao
-/resources/cherry-studio/privacy-zh.html @kangfenmao
-/src/main/services/AnalyticsService.ts @kangfenmao
-/src/main/services/ConfigManager.ts @kangfenmao
-/src/renderer/src/components/Popups/PrivacyPopup.tsx @kangfenmao
-/src/renderer/src/components/app/PrivacyPolicyUpdateNotice.tsx @kangfenmao
-/src/renderer/src/config/constant.ts @kangfenmao
-/src/renderer/src/hooks/useAppInit.ts @kangfenmao
-/src/renderer/src/pages/onboarding/OnboardingPage.tsx @kangfenmao
-/src/renderer/src/store/migrate.ts @kangfenmao
-/src/renderer/src/store/settings.ts @kangfenmao
-/src/renderer/src/utils/analytics.ts @kangfenmao
+/PRIVACY.md @zhanglvhai
+/resources/aionly/privacy-en.html @zhanglvhai
+/resources/aionly/privacy-zh.html @zhanglvhai
+/src/main/services/AnalyticsService.ts @zhanglvhai
+/src/main/services/ConfigManager.ts @zhanglvhai
+/src/renderer/src/components/Popups/PrivacyPopup.tsx @zhanglvhai
+/src/renderer/src/components/app/PrivacyPolicyUpdateNotice.tsx @zhanglvhai
+/src/renderer/src/config/constant.ts @zhanglvhai
+/src/renderer/src/hooks/useAppInit.ts @zhanglvhai
+/src/renderer/src/pages/onboarding/OnboardingPage.tsx @zhanglvhai
+/src/renderer/src/store/migrate.ts @zhanglvhai
+/src/renderer/src/store/settings.ts @zhanglvhai
+/src/renderer/src/utils/analytics.ts @zhanglvhai

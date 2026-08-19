@@ -26,10 +26,10 @@ export function getProviderByModel(model?: Model) {
   const id = model?.provider
   const provider = getStoreProviders().find((p) => p.id === id)
 
-  if (provider?.id === 'cherryai') {
+  if (provider?.id === 'marketapi') {
     const map = {
-      'Qwen/Qwen3-8B': 'cherryin',
-      'Qwen/Qwen3-Next-80B-A3B-Instruct': 'cherryin'
+      'Qwen/Qwen3-8B': 'market',
+      'Qwen/Qwen3-Next-80B-A3B-Instruct': 'market'
     }
 
     const providerId = map[model?.id as keyof typeof map]

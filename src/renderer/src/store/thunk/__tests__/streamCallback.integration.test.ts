@@ -63,7 +63,7 @@ vi.mock('@renderer/config/models', async (importOriginal) => {
     qwen3Model: {
       id: 'qwen',
       name: 'Qwen',
-      provider: 'cherryai',
+      provider: 'marketapi',
       group: 'Qwen'
     },
     SYSTEM_MODELS: {

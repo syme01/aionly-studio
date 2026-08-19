@@ -1,9 +1,9 @@
 import { loggerService } from '@logger'
-import CherryStudioLogo from '@renderer/assets/images/logo.png'
+import AiOnlyLogo from '@renderer/assets/images/logo.png'
 import { useProvider } from '@renderer/hooks/useProvider'
 import { fetchModels } from '@renderer/services/ApiService'
 import { useAppStore } from '@renderer/store'
-import { oauthWithCherryIn } from '@renderer/utils/oauth'
+import { oauthWithMarket } from '@renderer/utils/oauth'
 import { APP_NAME } from '@shared/config/constant'
 import { Button, Divider } from 'antd'
 import type { FC } from 'react'
@@ -15,22 +15,22 @@ import ProviderPopup from './ProviderPopup'
 
 const logger = loggerService.withContext('WelcomePage')
 
-const CHERRYIN_OAUTH_SERVER = 'https://open.cherryin.ai'
+const MARKET_OAUTH_SERVER = 'https://open.cherryin.ai'
 
 interface WelcomePageProps {
   setStep: (step: OnboardingStep) => void
-  setCherryInLoggedIn: (loggedIn: boolean) => void
+  setMarketLoggedIn: (loggedIn: boolean) => void
 }
 
-const WelcomePage: FC<WelcomePageProps> = ({ setStep, setCherryInLoggedIn }) => {
+const WelcomePage: FC<WelcomePageProps> = ({ setStep, setMarketLoggedIn }) => {
   const { t } = useTranslation()
-  const { provider, updateProvider, addModel } = useProvider('cherryin')
+  const { provider, updateProvider, addModel } = useProvider('market')
   const store = useAppStore()
   const [isAddingModels, setIsAddingModels] = useState(false)
 
-  const handleCherryInLogin = useCallback(async () => {
+  const handleMarketLogin = useCallback(async () => {
     try {
-      await oauthWithCherryIn(
+      await oauthWithMarket(
         async (apiKeys: string) => {
           updateProvider({ apiKey: apiKeys, enabled: true })
 
@@ -42,7 +42,7 @@ const WelcomePage: FC<WelcomePageProps> = ({ setStep, setCherryInLoggedIn }) => 
             const models = await fetchModels(updatedProvider)
             if (models.length > 0) {
               models.forEach((model) => addModel(model))
-              logger.info(`Auto-added ${models.length} models from CherryIN`)
+              logger.info(`Auto-added ${models.length} models from Market`)
             }
           } catch (fetchError) {
             logger.warn('Failed to auto-fetch models:', fetchError as Error)
@@ -50,18 +50,18 @@ const WelcomePage: FC<WelcomePageProps> = ({ setStep, setCherryInLoggedIn }) => 
             setIsAddingModels(false)
           }
 
-          setCherryInLoggedIn(true)
+          setMarketLoggedIn(true)
           window.toast.success(t('onboarding.toast.connected'))
           setStep('select-model')
         },
         {
-          oauthServer: CHERRYIN_OAUTH_SERVER
+          oauthServer: MARKET_OAUTH_SERVER
         }
       )
     } catch (error) {
       logger.error('OAuth Error:', error as Error)
     }
-  }, [provider, updateProvider, addModel, setCherryInLoggedIn, setStep, t])
+  }, [provider, updateProvider, addModel, setMarketLoggedIn, setStep, t])
 
   const handleSelectProvider = async () => {
     await ProviderPopup.show()
@@ -72,7 +72,7 @@ const WelcomePage: FC<WelcomePageProps> = ({ setStep, setCherryInLoggedIn }) => 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
       <div className="flex flex-col items-center gap-6">
-        <img src={CherryStudioLogo} alt={APP_NAME} className="h-16 w-16 rounded-xl" />
+        <img src={AiOnlyLogo} alt={APP_NAME} className="h-16 w-16 rounded-xl" />
 
         <div className="flex flex-col items-center gap-2">
           <h1 className="m-0 font-semibold text-(--color-text) text-2xl">{t('onboarding.welcome.title')}</h1>
@@ -86,8 +86,8 @@ const WelcomePage: FC<WelcomePageProps> = ({ setStep, setCherryInLoggedIn }) => 
             block
             loading={isAddingModels}
             className="h-12 rounded-lg"
-            onClick={handleCherryInLogin}>
-            {t('onboarding.welcome.login_cherryin')}
+            onClick={handleMarketLogin}>
+            {t('onboarding.welcome.login_market')}
           </Button>
 
           <Divider className="my-1!">

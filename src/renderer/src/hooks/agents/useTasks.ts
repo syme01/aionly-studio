@@ -48,7 +48,7 @@ export const useCreateTask = () => {
         return result
       } catch (error) {
         window.toast.error(
-          formatErrorMessageWithPrefix(error, t('agent.cherryClaw.tasks.error.createFailed', 'Failed to create task'))
+          formatErrorMessageWithPrefix(error, t('agent.claw.tasks.error.createFailed', 'Failed to create task'))
         )
         return undefined
       }
@@ -72,7 +72,7 @@ export const useUpdateTask = () => {
         return result
       } catch (error) {
         window.toast.error(
-          formatErrorMessageWithPrefix(error, t('agent.cherryClaw.tasks.error.updateFailed', 'Failed to update task'))
+          formatErrorMessageWithPrefix(error, t('agent.claw.tasks.error.updateFailed', 'Failed to update task'))
         )
         return undefined
       }
@@ -92,11 +92,11 @@ export const useRunTask = () => {
       try {
         await client.runTask(taskId)
         void mutate(TASKS_LIST_KEY)
-        window.toast.success({ key: 'run-task', title: t('agent.cherryClaw.tasks.runTriggered') })
+        window.toast.success({ key: 'run-task', title: t('agent.claw.tasks.runTriggered') })
         return true
       } catch (error) {
         window.toast.error(
-          formatErrorMessageWithPrefix(error, t('agent.cherryClaw.tasks.error.runFailed', 'Failed to run task'))
+          formatErrorMessageWithPrefix(error, t('agent.claw.tasks.error.runFailed', 'Failed to run task'))
         )
         return false
       }
@@ -120,7 +120,7 @@ export const useDeleteTask = () => {
         return true
       } catch (error) {
         window.toast.error(
-          formatErrorMessageWithPrefix(error, t('agent.cherryClaw.tasks.error.deleteFailed', 'Failed to delete task'))
+          formatErrorMessageWithPrefix(error, t('agent.claw.tasks.error.deleteFailed', 'Failed to delete task'))
         )
         return false
       }

@@ -10,8 +10,6 @@
  * Any non-critical changes will conflict with the ongoing work.
  *
  * 🔗 Context & Status:
- * - Contribution Hold: https://github.com/CherryHQ/cherry-studio/issues/10954
- * - v2 Refactor PR   : https://github.com/CherryHQ/cherry-studio/pull/10162
  * --------------------------------------------------------------------------
  */
 import store, { useAppDispatch, useAppSelector } from '@renderer/store'
@@ -57,7 +55,7 @@ export function useAssistantsTabSortType() {
 }
 
 export function getStoreProviders() {
-  // 屏蔽 cherryai provider
-  // return store.getState().llm.providers.concat([CHERRYAI_PROVIDER])
+  // 屏蔽 marketapi provider
+  // return store.getState().llm.providers.concat([MARKETAPI_PROVIDER])
   return store.getState().llm.providers
 }

@@ -10,8 +10,6 @@
  * Any non-critical changes will conflict with the ongoing work.
  *
  * 🔗 Context & Status:
- * - Contribution Hold: https://github.com/CherryHQ/cherry-studio/issues/10954
- * - v2 Refactor PR   : https://github.com/CherryHQ/cherry-studio/pull/10162
  * --------------------------------------------------------------------------
  */
 import type { Stats } from 'node:fs'
@@ -54,8 +52,8 @@ interface ProgressData {
 }
 
 class BackupManager {
-  private tempDir = path.join(app.getPath('temp'), 'cherry-studio', 'backup', 'temp')
-  private backupDir = path.join(app.getPath('temp'), 'cherry-studio', 'backup')
+  private tempDir = path.join(app.getPath('temp'), 'aionly', 'backup', 'temp')
+  private backupDir = path.join(app.getPath('temp'), 'aionly', 'backup')
 
   // Cached instance to avoid recreating
   private s3Storage: S3Storage | null = null
@@ -456,7 +454,7 @@ class BackupManager {
    * @returns Result from WebDAV upload operation
    */
   async backupToWebdav(_: Electron.IpcMainInvokeEvent, webdavConfig: WebDavConfig) {
-    const filename = webdavConfig.fileName || 'cherry-studio.backup.zip'
+    const filename = webdavConfig.fileName || 'aionly.backup.zip'
     const backupedFilePath = await this.backup(_, filename, undefined, webdavConfig.skipBackupFile)
     const webdavClient = this.getWebDavInstance(webdavConfig)
     try {
@@ -493,7 +491,7 @@ class BackupManager {
       .toISOString()
       .replace(/[-:T.Z]/g, '')
       .slice(0, 14)
-    const filename = s3Config.fileName || `cherry-studio.backup.${deviceName}.${timestamp}.zip`
+    const filename = s3Config.fileName || `aionly.backup.${deviceName}.${timestamp}.zip`
 
     logger.debug(`[backupToS3] Starting S3 backup to ${filename}`)
 
@@ -581,7 +579,7 @@ class BackupManager {
       const metadataPath = path.join(this.tempDir, 'metadata.json')
       const metadata = await fs.readJson(metadataPath)
 
-      // Validate appName to ensure backup is from Cherry Studio
+      // Validate appName to ensure backup is from this app
       if (metadata.appName !== APP_NAME) {
         throw new Error(`This backup file is not from ${APP_NAME} and cannot be restored`)
       }
@@ -747,7 +745,7 @@ class BackupManager {
    * @returns Result from restore operation
    */
   async restoreFromWebdav(_: Electron.IpcMainInvokeEvent, webdavConfig: WebDavConfig) {
-    const filename = webdavConfig.fileName || 'cherry-studio.backup.zip'
+    const filename = webdavConfig.fileName || 'aionly.backup.zip'
     const webdavClient = this.getWebDavInstance(webdavConfig)
     try {
       const retrievedFile = await webdavClient.getFileContents(filename)
@@ -782,7 +780,7 @@ class BackupManager {
    * @returns Result from restore operation
    */
   async restoreFromS3(_: Electron.IpcMainInvokeEvent, s3Config: S3Config) {
-    const filename = s3Config.fileName || 'cherry-studio.backup.zip'
+    const filename = s3Config.fileName || 'aionly.backup.zip'
 
     logger.debug(`Starting restore from S3: ${filename}`)
 
@@ -1240,8 +1238,8 @@ class BackupManager {
       .replace(/[-:T.Z]/g, '')
       .slice(0, 14)
 
-    const fileName = `cherry-studio.${timestamp}.zip`
-    const tempPath = path.join(app.getPath('temp'), 'cherry-studio', 'lan-transfer')
+    const fileName = `aionly.${timestamp}.zip`
+    const tempPath = path.join(app.getPath('temp'), 'aionly', 'lan-transfer')
     const targetPath = destinationPath || tempPath
 
     // Ensure temp directory exists
@@ -1261,7 +1259,7 @@ class BackupManager {
   async deleteLanTransferBackup(_: Electron.IpcMainInvokeEvent, filePath: string): Promise<boolean> {
     try {
       // Security check: only allow deletion within temp directory
-      const tempBase = path.normalize(path.join(app.getPath('temp'), 'cherry-studio', 'lan-transfer'))
+      const tempBase = path.normalize(path.join(app.getPath('temp'), 'aionly', 'lan-transfer'))
       const resolvedPath = path.normalize(path.resolve(filePath))
 
       // Use normalized paths with trailing separator to prevent prefix attacks (e.g., /temp-evil)

@@ -1,7 +1,7 @@
 import type { WebSearchPluginConfig } from '@aionly/ai-core/core/plugins/built-in/webSearchPlugin'
 import type { AppProviderId } from '@renderer/aiCore/types'
 import { isOpenAIDeepResearchModel, isOpenAIWebSearchChatCompletionOnlyModel } from '@renderer/config/models'
-import type { CherryWebSearchConfig } from '@renderer/store/websearch'
+import type { AiWebSearchConfig } from '@renderer/store/websearch'
 import type { Model } from '@renderer/types'
 import { mapRegexToPatterns } from '@renderer/utils/blacklistMatchPattern'
 
@@ -50,7 +50,7 @@ function mapMaxResultToOpenAIContextSize(
 
 export function buildProviderBuiltinWebSearchConfig(
   providerId: AppProviderId,
-  webSearchConfig: CherryWebSearchConfig,
+  webSearchConfig: AiWebSearchConfig,
   model?: Model
 ): WebSearchPluginConfig | undefined {
   switch (providerId) {
@@ -113,7 +113,7 @@ export function buildProviderBuiltinWebSearchConfig(
         }
       }
     }
-    case 'cherryin': {
+    case 'market': {
       const _providerId =
         { 'openai-response': 'openai', openai: 'openai-chat' }[model?.endpoint_type ?? ''] ?? model?.endpoint_type
       return buildProviderBuiltinWebSearchConfig(_providerId, webSearchConfig, model)

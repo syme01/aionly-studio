@@ -115,8 +115,8 @@ const PopupContainer: React.FC<Props> = ({ releaseInfo, resolve }) => {
 ```typescript
 // 可用的更新服务器
 export enum FeedUrl {
-  PRODUCTION = 'https://releases.cherry-ai.com',  // 自建服务器
-  GITHUB_LATEST = 'https://github.com/CherryHQ/cherry-studio/releases/latest/download'
+  PRODUCTION = 'https://aionly.com',  // 自建服务器
+  GITHUB_LATEST = 'https://gitee.com/myme/aionly-studio/releases/latest/download'
 }
 
 // 支持的镜像源
@@ -127,8 +127,8 @@ export enum UpdateMirror {
 
 // 更新配置文件地址
 export enum UpdateConfigUrl {
-  GITHUB = 'https://raw.githubusercontent.com/CherryHQ/cherry-studio/.../app-upgrade-config.json',
-  GITCODE = 'https://raw.gitcode.com/CherryHQ/cherry-studio/.../app-upgrade-config.json'
+  GITHUB = 'https://gitee.com/myme/aionly-studio/.../app-upgrade-config.json',
+  GITCODE = 'https://raw.gitee.com/myme/aionly-studio/.../app-upgrade-config.json'
 }
 ```
 
@@ -263,9 +263,9 @@ certUtil -hashfile app-1.0.0.exe SHA512
 ### 5.2 查看日志
 
 更新相关日志位于：
-- Windows: `%APPDATA%/CherryStudio/logs/`
-- macOS: `~/Library/Logs/CherryStudio/`
-- Linux: `~/.config/CherryStudio/logs/`
+- Windows: `%APPDATA%/AiOnly/logs/`
+- macOS: `~/Library/Logs/AiOnly/`
+- Linux: `~/.config/AiOnly/logs/`
 
 搜索关键词：`AppUpdater`、`update available`、`update downloaded`
 

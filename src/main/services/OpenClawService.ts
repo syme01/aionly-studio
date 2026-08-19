@@ -24,7 +24,7 @@ const logger = loggerService.withContext('OpenClawService')
 const OPENCLAW_CONFIG_DIR = path.join(os.homedir(), '.openclaw')
 const OPENCLAW_CONFIG_PATH = path.join(OPENCLAW_CONFIG_DIR, 'openclaw.json')
 const OPENCLAW_CONFIG_BAK_PATH = path.join(OPENCLAW_CONFIG_DIR, 'openclaw.json.bak')
-const OPENCLAW_LEGACY_CONFIG_PATH = path.join(OPENCLAW_CONFIG_DIR, 'openclaw.cherry.json')
+const OPENCLAW_LEGACY_CONFIG_PATH = path.join(OPENCLAW_CONFIG_DIR, 'openclaw.aionly.json')
 const SYMLINK_PATH = '/usr/local/bin/openclaw'
 const DEFAULT_GATEWAY_PORT = 18790
 
@@ -150,7 +150,7 @@ class OpenClawService {
 
   /**
    * Check if OpenClaw is installed.
-   * Only recognizes the local binary (~/.cherrystudio/bin/). If openclaw is found
+   * Only recognizes the local binary (~/.aionlystudio/bin/). If openclaw is found
    * in PATH but not locally, it's likely an old npm-installed version (possibly a
    * third-party fork with ads) and needs migration.
    */
@@ -168,7 +168,7 @@ class OpenClawService {
   }
 
   /**
-   * Find the openclaw executable. Only uses the local binary (~/.cherrystudio/bin/).
+   * Find the openclaw executable. Only uses the local binary (~/.aionlystudio/bin/).
    * Never falls back to PATH to avoid running old npm-installed versions.
    */
   private async findOpenClawBinary(): Promise<string | null> {
@@ -287,7 +287,7 @@ class OpenClawService {
   }
 
   /**
-   * Uninstall OpenClaw by removing the binary from ~/.cherrystudio/bin/.
+   * Uninstall OpenClaw by removing the binary from ~/.aionlystudio/bin/.
    */
   public async uninstall(): Promise<OperationResult> {
     // Stop the gateway before removing binary
@@ -735,7 +735,7 @@ class OpenClawService {
   }
 
   /**
-   * Sync Cherry Studio Provider configuration to OpenClaw
+   * Sync app provider configuration to OpenClaw
    */
   public async syncProviderConfig(
     _: Electron.IpcMainInvokeEvent,
@@ -748,14 +748,14 @@ class OpenClawService {
         fs.mkdirSync(OPENCLAW_CONFIG_DIR, { recursive: true })
       }
 
-      // Migrate legacy openclaw.cherry.json → openclaw.json
+      // Migrate legacy openclaw.aionly.json → openclaw.json
       if (fs.existsSync(OPENCLAW_LEGACY_CONFIG_PATH)) {
         if (fs.existsSync(OPENCLAW_CONFIG_PATH)) {
           fs.renameSync(OPENCLAW_CONFIG_PATH, OPENCLAW_CONFIG_BAK_PATH)
           logger.info('Migrated openclaw.json → openclaw.json.bak')
         }
         fs.renameSync(OPENCLAW_LEGACY_CONFIG_PATH, OPENCLAW_CONFIG_PATH)
-        logger.info('Migrated openclaw.cherry.json → openclaw.json')
+        logger.info('Migrated openclaw.aionly.json → openclaw.json')
       }
 
       // Read existing config
@@ -769,11 +769,15 @@ class OpenClawService {
         }
       }
 
-      // Build provider key
-      const providerKey = `cherry-${provider.id}`
+      // Build provider key (clean up legacy-prefixed key for the same provider, if any)
+      const providerKey = `aionly-${provider.id}`
+      const legacyProviderKey = `cherry-${provider.id}`
+      if (config.models?.providers && legacyProviderKey in config.models.providers) {
+        delete config.models.providers[legacyProviderKey]
+      }
 
       // Determine the API type based on model, not provider type
-      // Mixed providers (cherryin, aihubmix, etc.) can have both OpenAI and Anthropic endpoints
+      // Mixed providers (market, aihubmix, etc.) can have both OpenAI and Anthropic endpoints
       const apiType = this.determineApiType(provider, primaryModel)
       const baseUrl = this.getBaseUrlForApiType(provider, apiType)
 
@@ -991,7 +995,7 @@ class OpenClawService {
 
   /**
    * Determine the API type based on model and provider
-   * This supports mixed providers (cherryin, aihubmix, new-api, etc.) that have both OpenAI and Anthropic endpoints
+   * This supports mixed providers (market, aihubmix, new-api, etc.) that have both OpenAI and Anthropic endpoints
    *
    * Priority order:
    * 1. Provider type (anthropic, vertex-anthropic always use Anthropic API)

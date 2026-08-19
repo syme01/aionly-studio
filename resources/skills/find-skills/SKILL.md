@@ -39,19 +39,19 @@ Before running any `npx skills` command, check if `npx` is available:
 which npx
 ```
 
-If `npx` is **not found**, fall back to the bundled bun shipped with Cherry Studio.
-Cherry Studio sets the `CHERRY_STUDIO_BUN_PATH` environment variable pointing to its
+If `npx` is **not found**, fall back to the bundled bun shipped with AiOnly.
+AiOnly sets the `AIONLY_BUN_PATH` environment variable pointing to its
 bundled bun binary. Use it as follows:
 
 ```bash
-if [ -n "$CHERRY_STUDIO_BUN_PATH" ] && [ -x "$CHERRY_STUDIO_BUN_PATH" ]; then
-  "$CHERRY_STUDIO_BUN_PATH" x skills <subcommand> [args]
+if [ -n "$AIONLY_BUN_PATH" ] && [ -x "$AIONLY_BUN_PATH" ]; then
+  "$AIONLY_BUN_PATH" x skills <subcommand> [args]
 else
-  echo "Error: Neither npx nor bundled bun found. Install Node.js or run Cherry Studio's bun installer."
+  echo "Error: Neither npx nor bundled bun found. Install Node.js or run AiOnly's bun installer."
 fi
 ```
 
-For example, `npx skills find react` becomes `"$CHERRY_STUDIO_BUN_PATH" x skills find react`.
+For example, `npx skills find react` becomes `"$AIONLY_BUN_PATH" x skills find react`.
 
 Always try `npx` first. Only use the bun fallback when npx is unavailable.
 

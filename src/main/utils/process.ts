@@ -1,6 +1,6 @@
 import { loggerService } from '@logger'
 import type { GitBashPathInfo, GitBashPathSource } from '@shared/config/constant'
-import { HOME_CHERRY_DIR } from '@shared/config/constant'
+import { HOME_APP_DIR } from '@shared/config/constant'
 import chardet from 'chardet'
 import { type ChildProcess, execFileSync, spawn, type SpawnOptions } from 'child_process'
 import fs from 'fs'
@@ -53,11 +53,11 @@ export async function getBinaryName(name: string): Promise<string> {
 
 export async function getBinaryPath(name?: string): Promise<string> {
   if (!name) {
-    return path.join(os.homedir(), HOME_CHERRY_DIR, 'bin')
+    return path.join(os.homedir(), HOME_APP_DIR, 'bin')
   }
 
   const binaryName = await getBinaryName(name)
-  const binariesDir = path.join(os.homedir(), HOME_CHERRY_DIR, 'bin')
+  const binariesDir = path.join(os.homedir(), HOME_APP_DIR, 'bin')
   const binariesDirExists = fs.existsSync(binariesDir)
   return binariesDirExists ? path.join(binariesDir, binaryName) : binaryName
 }

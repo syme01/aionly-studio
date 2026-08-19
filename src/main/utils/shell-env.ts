@@ -3,6 +3,7 @@ import path from 'node:path'
 
 import { loggerService } from '@logger'
 import { isMac, isWin } from '@main/constant'
+import { HOME_APP_DIR } from '@shared/config/constant'
 import { execFileSync, spawn } from 'child_process'
 
 const logger = loggerService.withContext('ShellEnv')
@@ -11,13 +12,13 @@ const logger = loggerService.withContext('ShellEnv')
 const SHELL_ENV_TIMEOUT_MS = 15_000
 
 /**
- * Ensures the Cherry Studio bin directory is appended to the user's PATH while
+ * Ensures the app bin directory is appended to the user's PATH while
  * preserving the original key casing and avoiding duplicate segments.
  */
-const appendCherryBinToPath = (env: Record<string, string>) => {
+const appendAppBinToPath = (env: Record<string, string>) => {
   const pathSeparator = isWin ? ';' : ':'
   const homeDirFromEnv = env.HOME || env.Home || env.USERPROFILE || env.UserProfile || os.homedir()
-  const cherryBinPath = path.join(homeDirFromEnv, '.cherrystudio', 'bin')
+  const appBinPath = path.join(homeDirFromEnv, HOME_APP_DIR, 'bin')
   const pathKeys = Object.keys(env).filter((key) => key.toLowerCase() === 'path')
   const canonicalPathKey = pathKeys[0] || (isWin ? 'Path' : 'PATH')
   const existingPathValue = env[canonicalPathKey] || env.PATH || ''
@@ -45,7 +46,7 @@ const appendCherryBinToPath = (env: Record<string, string>) => {
     .map((segment) => segment.trim())
     .forEach(pushIfUnique)
 
-  pushIfUnique(cherryBinPath)
+  pushIfUnique(appBinPath)
 
   const updatedPath = uniqueSegments.join(pathSeparator)
 
@@ -134,7 +135,7 @@ function getWindowsEnvironment(): Record<string, string> {
     logger.warn('Could not read PATH from Windows registry, keeping process.env PATH')
   }
 
-  appendCherryBinToPath(env)
+  appendAppBinToPath(env)
   return env
 }
 
@@ -288,7 +289,7 @@ function getLoginShellEnvironment(): Promise<Record<string, string>> {
         logger.warn(`Raw output from shell:\n${output}`)
       }
 
-      appendCherryBinToPath(env)
+      appendAppBinToPath(env)
 
       resolveOnce(env)
     })
@@ -302,12 +303,12 @@ async function fetchShellEnv(): Promise<Record<string, string>> {
     return await getLoginShellEnvironment()
   } catch (error) {
     logger.error('Failed to get shell environment, falling back to process.env', { error })
-    // Fallback to current process environment with cherry studio bin path
+    // Fallback to current process environment with app bin path
     const fallbackEnv: Record<string, string> = {}
     for (const key in process.env) {
       fallbackEnv[key] = process.env[key] || ''
     }
-    appendCherryBinToPath(fallbackEnv)
+    appendAppBinToPath(fallbackEnv)
     return fallbackEnv
   }
 }

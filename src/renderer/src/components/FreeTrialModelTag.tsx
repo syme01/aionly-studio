@@ -18,18 +18,18 @@ interface Props {
 export const FreeTrialModelTag: FC<Props> = ({ model, showLabel = true }) => {
   const { t } = useTranslation()
 
-  if (model.provider !== 'cherryai') {
+  if (model.provider !== 'marketapi') {
     return null
   }
 
   let providerId
 
   if (model.id === 'Qwen/Qwen3-8B') {
-    providerId = 'cherryin'
+    providerId = 'market'
   }
 
   if (model.id === 'Qwen/Qwen3-Next-80B-A3B-Instruct') {
-    providerId = 'cherryin'
+    providerId = 'market'
   }
 
   const onSelectProvider = () => {

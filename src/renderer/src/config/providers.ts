@@ -13,7 +13,7 @@ import BailianProviderLogo from '@renderer/assets/images/providers/bailian.png'
 import BurnCloudProviderLogo from '@renderer/assets/images/providers/burncloud.png'
 import CephalonProviderLogo from '@renderer/assets/images/providers/cephalon.jpeg'
 import CerebrasProviderLogo from '@renderer/assets/images/providers/cerebras.webp'
-import CherryInProviderLogo from '@renderer/assets/images/providers/cherryin.png'
+import MarketProviderLogo from '@renderer/assets/images/providers/market.png'
 import DeepSeekProviderLogo from '@renderer/assets/images/providers/deepseek.png'
 import DmxapiProviderLogo from '@renderer/assets/images/providers/DMXAPI.png'
 import FireworksProviderLogo from '@renderer/assets/images/providers/fireworks.png'
@@ -68,9 +68,9 @@ import { APP_API_HOST, APP_PROTOCOL } from '@shared/config/constant'
 import { TOKENFLUX_HOST } from './constant'
 import { qwenModel, SYSTEM_MODELS } from './models'
 
-export const CHERRYAI_PROVIDER: SystemProvider = {
-  id: 'cherryai' as SystemProviderId,
-  name: 'CherryAI',
+export const MARKETAPI_PROVIDER: SystemProvider = {
+  id: 'marketapi' as SystemProviderId,
+  name: 'MarketAPI',
   type: 'openai',
   apiKey: '',
   apiHost: 'https://api.cherry-ai.com',
@@ -80,9 +80,9 @@ export const CHERRYAI_PROVIDER: SystemProvider = {
 }
 
 export const SYSTEM_PROVIDERS_CONFIG: Record<SystemProviderId, SystemProvider> = {
-  cherryin: {
-    id: 'cherryin',
-    name: 'CherryIN',
+  market: {
+    id: 'market',
+    name: 'Market',
     type: 'openai',
     apiKey: '',
     apiHost: 'https://open.cherryin.cc',
@@ -747,7 +747,7 @@ export const INITIAL_STATE_EXCLUDED_PROVIDER_IDS = ['cephalon', 'tokenflux'] as 
 export const SYSTEM_PROVIDERS: SystemProvider[] = Object.values(SYSTEM_PROVIDERS_CONFIG)
 
 export const PROVIDER_LOGO_MAP: AtLeast<SystemProviderId, string> = {
-  cherryin: CherryInProviderLogo,
+  market: MarketProviderLogo,
   ph8: Ph8ProviderLogo,
   '302ai': Ai302ProviderLogo,
   openai: OpenAiProviderLogo,
@@ -836,7 +836,7 @@ type ProviderUrls = {
 }
 
 export const PROVIDER_URLS: Record<SystemProviderId, ProviderUrls> = {
-  cherryin: {
+  market: {
     api: {
       url: 'https://open.cherryin.net'
     },
@@ -907,11 +907,10 @@ export const PROVIDER_URLS: Record<SystemProviderId, ProviderUrls> = {
       url: 'https://api.ppinfra.com/v3/openai'
     },
     websites: {
-      official: 'https://ppio.com/user/register?invited_by=JYT9GD&utm_source=github_cherry-studio&redirect=/',
-      apiKey:
-        'https://ppio.com/user/register?invited_by=JYT9GD&utm_source=github_cherry-studio&redirect=/settings/key-management',
-      docs: 'https://docs.cherry-ai.com/pre-basic/providers/ppio?invited_by=JYT9GD&utm_source=github_cherry-studio',
-      models: 'https://ppio.com/model-api/product/llm-api?invited_by=JYT9GD&utm_source=github_cherry-studio'
+      official: 'https://ppio.com/user/register?redirect=/',
+      apiKey: 'https://ppio.com/user/register?redirect=/settings/key-management',
+      docs: 'https://www.aionly.com/docs',
+      models: 'https://ppio.com/model-api/product/llm-api'
     }
   },
   gemini: {
@@ -1155,10 +1154,10 @@ export const PROVIDER_URLS: Record<SystemProviderId, ProviderUrls> = {
       url: 'https://deepseek.alayanew.com'
     },
     websites: {
-      official: 'https://www.alayanew.com/backend/register?id=cherrystudio',
-      apiKey: ' https://www.alayanew.com/backend/register?id=cherrystudio',
-      docs: 'https://docs.alayanew.com/docs/modelService/interview?utm_source=cherrystudio',
-      models: 'https://www.alayanew.com/product/deepseek?id=cherrystudio'
+      official: 'https://www.alayanew.com/backend/register',
+      apiKey: ' https://www.alayanew.com/backend/register',
+      docs: 'https://docs.alayanew.com/docs/modelService/interview',
+      models: 'https://www.alayanew.com/product/deepseek'
     }
   },
   openrouter: {
@@ -1453,7 +1452,7 @@ export const PROVIDER_URLS: Record<SystemProviderId, ProviderUrls> = {
   },
   aionly: {
     api: {
-      url: `https://api.${APP_PROTOCOL}.com`
+      url: `${APP_API_HOST}`
     },
     websites: {
       official: `https://www.${APP_PROTOCOL}.com`,

@@ -5,7 +5,7 @@ import os from 'node:os'
 import path from 'node:path'
 
 import { loggerService } from '@logger'
-import { audioExts, documentExts, HOME_CHERRY_DIR, imageExts, MB, textExts, videoExts } from '@shared/config/constant'
+import { audioExts, documentExts, HOME_APP_DIR, imageExts, MB, textExts, videoExts } from '@shared/config/constant'
 import type { FileMetadata, FileType, NotesTreeNode } from '@types'
 import { FILE_TYPE } from '@types'
 import chardet from 'chardet'
@@ -162,7 +162,7 @@ export function getAllFiles(dirPath: string, arrayOfFiles: FileMetadata[] = []):
 }
 
 export function getTempDir() {
-  return path.join(app.getPath('temp'), 'CherryStudio')
+  return path.join(app.getPath('temp'), 'AiOnly')
 }
 
 export function getFilesDir() {
@@ -179,7 +179,7 @@ export function getNotesDir() {
 }
 
 export function getConfigDir() {
-  return path.join(os.homedir(), HOME_CHERRY_DIR, 'config')
+  return path.join(os.homedir(), HOME_APP_DIR, 'config')
 }
 
 export function getCacheDir() {
@@ -191,7 +191,7 @@ export function getAppConfigDir(name: string) {
 }
 
 export function getMcpDir() {
-  return path.join(os.homedir(), HOME_CHERRY_DIR, 'mcp')
+  return path.join(os.homedir(), HOME_APP_DIR, 'mcp')
 }
 
 /**

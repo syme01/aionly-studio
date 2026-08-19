@@ -115,7 +115,7 @@ export const getUserInfoVo = () => {
   return http.get(`/bus/userProfile/getUserInfoVo`, {}, { loading: false })
 }
 
-// cherry-studio登录
+// AiOnly 登录
 export const getApikeyByUserId = (params) => {
   return http.get(`/bus/apikey/getApikeyByUserId`, params, { loading: false })
 }

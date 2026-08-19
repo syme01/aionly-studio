@@ -41,7 +41,7 @@ const TaskChannelSelector: FC<{
     <>
       <SettingDivider />
       <SettingRow style={{ flexDirection: 'column', alignItems: 'stretch' }}>
-        <SettingRowTitle>{t('agent.cherryClaw.tasks.channels.label')}</SettingRowTitle>
+        <SettingRowTitle>{t('agent.claw.tasks.channels.label')}</SettingRowTitle>
         <Select
           mode="multiple"
           size="small"
@@ -49,7 +49,7 @@ const TaskChannelSelector: FC<{
           value={channelIds}
           disabled={disabled}
           onChange={onChange}
-          placeholder={t('agent.cherryClaw.tasks.channels.placeholder')}
+          placeholder={t('agent.claw.tasks.channels.placeholder')}
           options={channels.map((ch) => ({
             value: ch.id,
             label: (
@@ -66,7 +66,7 @@ const TaskChannelSelector: FC<{
           <Alert
             type="warning"
             showIcon
-            message={t('agent.cherryClaw.tasks.channels.noActiveChatIds')}
+            message={t('agent.claw.tasks.channels.noActiveChatIds')}
             className="mt-2"
             style={{ fontSize: 12 }}
           />
@@ -93,14 +93,14 @@ const TaskDetail: FC<{
   const isCompleted = task.status === 'completed'
   const statusColors: Record<string, string> = { active: 'green', paused: 'orange', completed: 'blue' }
   const statusLabels: Record<string, string> = {
-    active: t('agent.cherryClaw.tasks.status.active'),
-    paused: t('agent.cherryClaw.tasks.status.paused'),
-    completed: t('agent.cherryClaw.tasks.status.completed')
+    active: t('agent.claw.tasks.status.active'),
+    paused: t('agent.claw.tasks.status.paused'),
+    completed: t('agent.claw.tasks.status.completed')
   }
   const scheduleTypeLabels: Record<string, string> = {
-    cron: t('agent.cherryClaw.tasks.scheduleType.cron'),
-    interval: t('agent.cherryClaw.tasks.scheduleType.interval'),
-    once: t('agent.cherryClaw.tasks.scheduleType.once')
+    cron: t('agent.claw.tasks.scheduleType.cron'),
+    interval: t('agent.claw.tasks.scheduleType.interval'),
+    once: t('agent.claw.tasks.scheduleType.once')
   }
   const agentName = agents.find((a) => a.id === task.agent_id)?.name ?? task.agent_id
 
@@ -148,7 +148,7 @@ const TaskDetail: FC<{
 
   const formatScheduleValue = () => {
     if (task.schedule_type === 'cron') return task.schedule_value
-    if (task.schedule_type === 'interval') return `${task.schedule_value} ${t('agent.cherryClaw.tasks.intervalUnit')}`
+    if (task.schedule_type === 'interval') return `${task.schedule_value} ${t('agent.claw.tasks.intervalUnit')}`
     if (task.schedule_type === 'once' && task.schedule_value) {
       return formatDateTime(task.schedule_value)
     }
@@ -170,7 +170,7 @@ const TaskDetail: FC<{
                 size="small"
                 icon={<Play size={14} />}
                 onClick={() => onRun(task.id)}
-                title={t('agent.cherryClaw.tasks.run')}
+                title={t('agent.claw.tasks.run')}
               />
             )}
             {!isCompleted && (
@@ -178,16 +178,14 @@ const TaskDetail: FC<{
                 size="small"
                 icon={<Pause size={14} />}
                 onClick={() => onToggleStatus(task.id, task.status === 'active' ? 'paused' : 'active')}
-                title={
-                  task.status === 'active' ? t('agent.cherryClaw.tasks.pause') : t('agent.cherryClaw.tasks.resume')
-                }
+                title={task.status === 'active' ? t('agent.claw.tasks.pause') : t('agent.claw.tasks.resume')}
               />
             )}
             <Popconfirm
-              title={t('agent.cherryClaw.tasks.delete.confirm')}
+              title={t('agent.claw.tasks.delete.confirm')}
               onConfirm={() => onDelete(task.id)}
-              okText={t('agent.cherryClaw.tasks.delete.label')}
-              cancelText={t('agent.cherryClaw.tasks.cancel')}>
+              okText={t('agent.claw.tasks.delete.label')}
+              cancelText={t('agent.claw.tasks.cancel')}>
               <Button size="small" danger icon={<Trash2 size={14} />} />
             </Popconfirm>
           </div>
@@ -204,13 +202,13 @@ const TaskDetail: FC<{
           {task.last_run && (
             <span className="inline-flex items-center gap-1 text-(--color-text-3)">
               <History size={12} />
-              {t('agent.cherryClaw.tasks.lastRun')}: {formatDateTime(task.last_run)}
+              {t('agent.claw.tasks.lastRun')}: {formatDateTime(task.last_run)}
             </span>
           )}
           {task.next_run && (
             <span className="inline-flex items-center gap-1 text-(--color-text-3)">
               <CalendarClock size={12} />
-              {t('agent.cherryClaw.tasks.nextRun')}: {formatDateTime(task.next_run)}
+              {t('agent.claw.tasks.nextRun')}: {formatDateTime(task.next_run)}
             </span>
           )}
         </div>
@@ -221,7 +219,7 @@ const TaskDetail: FC<{
         <SettingTitle>{t('settings.general.title')}</SettingTitle>
         <SettingDivider />
         <SettingRow style={{ flexDirection: 'column', alignItems: 'stretch' }}>
-          <SettingRowTitle>{t('agent.cherryClaw.tasks.name.label')}</SettingRowTitle>
+          <SettingRowTitle>{t('agent.claw.tasks.name.label')}</SettingRowTitle>
           <Input
             size="small"
             value={name}
@@ -234,7 +232,7 @@ const TaskDetail: FC<{
         {agents.length > 1 && (
           <>
             <SettingRow style={{ flexDirection: 'column', alignItems: 'stretch' }}>
-              <SettingRowTitle>{t('agent.cherryClaw.channels.bindAgent')}</SettingRowTitle>
+              <SettingRowTitle>{t('agent.claw.channels.bindAgent')}</SettingRowTitle>
               <Select
                 size="small"
                 className="w-full"
@@ -252,9 +250,9 @@ const TaskDetail: FC<{
         )}
         <SettingRow style={{ flexDirection: 'column', alignItems: 'stretch' }}>
           <div className="flex items-center justify-between">
-            <SettingRowTitle>{t('agent.cherryClaw.tasks.prompt.label')}</SettingRowTitle>
+            <SettingRowTitle>{t('agent.claw.tasks.prompt.label')}</SettingRowTitle>
             {!isCompleted && (
-              <Tooltip title={t('agent.cherryClaw.tasks.prompt.expand')}>
+              <Tooltip title={t('agent.claw.tasks.prompt.expand')}>
                 <Button
                   type="text"
                   size="small"
@@ -276,7 +274,7 @@ const TaskDetail: FC<{
         <SettingDivider />
         <div className="grid grid-cols-3 gap-3">
           <div>
-            <SettingRowTitle>{t('agent.cherryClaw.tasks.scheduleType.label')}</SettingRowTitle>
+            <SettingRowTitle>{t('agent.claw.tasks.scheduleType.label')}</SettingRowTitle>
             <Select
               size="small"
               className="w-full"
@@ -288,14 +286,14 @@ const TaskDetail: FC<{
                 saveField({ schedule_type: value, schedule_value: '' })
               }}
               options={[
-                { value: 'cron', label: t('agent.cherryClaw.tasks.scheduleType.cron') },
-                { value: 'interval', label: t('agent.cherryClaw.tasks.scheduleType.interval') },
-                { value: 'once', label: t('agent.cherryClaw.tasks.scheduleType.once') }
+                { value: 'cron', label: t('agent.claw.tasks.scheduleType.cron') },
+                { value: 'interval', label: t('agent.claw.tasks.scheduleType.interval') },
+                { value: 'once', label: t('agent.claw.tasks.scheduleType.once') }
               ]}
             />
           </div>
           <div>
-            <SettingRowTitle>{t('agent.cherryClaw.tasks.scheduleValue')}</SettingRowTitle>
+            <SettingRowTitle>{t('agent.claw.tasks.scheduleValue')}</SettingRowTitle>
             {scheduleType === 'cron' && (
               <Input
                 size="small"
@@ -306,7 +304,7 @@ const TaskDetail: FC<{
                   scheduleValue !== task.schedule_value &&
                   saveField({ schedule_value: scheduleValue.trim() })
                 }
-                placeholder={t('agent.cherryClaw.tasks.cronPlaceholder')}
+                placeholder={t('agent.claw.tasks.cronPlaceholder')}
                 disabled={isCompleted}
               />
             )}
@@ -322,8 +320,8 @@ const TaskDetail: FC<{
                   scheduleValue !== task.schedule_value &&
                   saveField({ schedule_value: scheduleValue.trim() })
                 }
-                placeholder={t('agent.cherryClaw.tasks.intervalPlaceholder')}
-                suffix={t('agent.cherryClaw.tasks.intervalUnit')}
+                placeholder={t('agent.claw.tasks.intervalPlaceholder')}
+                suffix={t('agent.claw.tasks.intervalUnit')}
                 disabled={isCompleted}
               />
             )}
@@ -345,7 +343,7 @@ const TaskDetail: FC<{
             )}
           </div>
           <div>
-            <SettingRowTitle>{t('agent.cherryClaw.tasks.timeout.label')}</SettingRowTitle>
+            <SettingRowTitle>{t('agent.claw.tasks.timeout.label')}</SettingRowTitle>
             <Input
               size="small"
               type="number"
@@ -357,8 +355,8 @@ const TaskDetail: FC<{
                 const prev = task.timeout_minutes ?? null
                 if (val !== prev) saveField({ timeout_minutes: val })
               }}
-              placeholder={t('agent.cherryClaw.tasks.timeout.placeholder')}
-              suffix={t('agent.cherryClaw.tasks.intervalUnit')}
+              placeholder={t('agent.claw.tasks.timeout.placeholder')}
+              suffix={t('agent.claw.tasks.intervalUnit')}
               disabled={isCompleted}
             />
           </div>
@@ -376,13 +374,13 @@ const TaskDetail: FC<{
 
       {/* Logs card */}
       <SettingGroup theme={theme}>
-        <SettingTitle>{t('agent.cherryClaw.tasks.logs.label')}</SettingTitle>
+        <SettingTitle>{t('agent.claw.tasks.logs.label')}</SettingTitle>
         <SettingDivider />
         <TaskLogsInline taskId={task.id} agentId={task.agent_id} />
       </SettingGroup>
 
       <Modal
-        title={t('agent.cherryClaw.tasks.prompt.label')}
+        title={t('agent.claw.tasks.prompt.label')}
         open={promptModalOpen}
         onCancel={() => {
           if (prompt.trim() && prompt !== task.prompt) {
@@ -437,7 +435,7 @@ const TaskLogsInline: FC<{ taskId: string; agentId: string }> = ({ taskId, agent
 
   const columns = [
     {
-      title: t('agent.cherryClaw.tasks.logs.runAt'),
+      title: t('agent.claw.tasks.logs.runAt'),
       dataIndex: 'run_at',
       key: 'run_at',
       width: 160,
@@ -451,7 +449,7 @@ const TaskLogsInline: FC<{ taskId: string; agentId: string }> = ({ taskId, agent
         })
     },
     {
-      title: t('agent.cherryClaw.tasks.logs.duration'),
+      title: t('agent.claw.tasks.logs.duration'),
       dataIndex: 'duration_ms',
       key: 'duration_ms',
       width: 80,
@@ -463,29 +461,29 @@ const TaskLogsInline: FC<{ taskId: string; agentId: string }> = ({ taskId, agent
       }
     },
     {
-      title: t('agent.cherryClaw.tasks.logs.status'),
+      title: t('agent.claw.tasks.logs.status'),
       dataIndex: 'status',
       key: 'status',
       width: 70,
       render: (val: string) => {
         const color = val === 'success' ? 'green' : val === 'running' ? 'processing' : 'red'
         const logStatusLabels: Record<string, string> = {
-          success: t('agent.cherryClaw.tasks.logs.success'),
-          running: t('agent.cherryClaw.tasks.logs.running'),
-          error: t('agent.cherryClaw.tasks.logs.error')
+          success: t('agent.claw.tasks.logs.success'),
+          running: t('agent.claw.tasks.logs.running'),
+          error: t('agent.claw.tasks.logs.error')
         }
         return <Tag color={color}>{logStatusLabels[val] ?? val}</Tag>
       }
     },
     {
-      title: t('agent.cherryClaw.tasks.logs.result'),
+      title: t('agent.claw.tasks.logs.result'),
       dataIndex: 'result',
       key: 'result',
       ellipsis: true,
       render: (val: string | null, record: TaskRunLogEntity) => {
         const text =
           record.status === 'running'
-            ? t('agent.cherryClaw.tasks.logs.running', 'Running...')
+            ? t('agent.claw.tasks.logs.running', 'Running...')
             : record.status === 'error'
               ? record.error
               : (val ?? '-')
@@ -499,7 +497,7 @@ const TaskLogsInline: FC<{ taskId: string; agentId: string }> = ({ taskId, agent
               {text}
             </span>
             {hasSession && (
-              <Tooltip title={t('agent.cherryClaw.tasks.logs.viewSession', 'View session')}>
+              <Tooltip title={t('agent.claw.tasks.logs.viewSession', 'View session')}>
                 <Button
                   type="text"
                   size="small"
@@ -524,7 +522,7 @@ const TaskLogsInline: FC<{ taskId: string; agentId: string }> = ({ taskId, agent
   }
 
   if (logs.length === 0) {
-    return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={t('agent.cherryClaw.tasks.logs.empty')} />
+    return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={t('agent.claw.tasks.logs.empty')} />
   }
 
   return (
@@ -532,7 +530,7 @@ const TaskLogsInline: FC<{ taskId: string; agentId: string }> = ({ taskId, agent
       <Input
         size="small"
         prefix={<Search size={12} className="text-(--color-text-3)" />}
-        placeholder={t('agent.cherryClaw.tasks.logs.search', 'Search logs...')}
+        placeholder={t('agent.claw.tasks.logs.search', 'Search logs...')}
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
         allowClear
@@ -607,19 +605,19 @@ const CreateForm: FC<{
   return (
     <SettingContainer theme={theme}>
       <SettingGroup theme={theme}>
-        <SettingTitle>{t('agent.cherryClaw.tasks.add')}</SettingTitle>
+        <SettingTitle>{t('agent.claw.tasks.add')}</SettingTitle>
         <SettingDivider />
 
         {agents.length > 1 && (
           <>
             <SettingRow style={{ flexDirection: 'column', alignItems: 'stretch' }}>
-              <SettingRowTitle>{t('agent.cherryClaw.channels.bindAgent')}</SettingRowTitle>
+              <SettingRowTitle>{t('agent.claw.channels.bindAgent')}</SettingRowTitle>
               <Select
                 size="small"
                 className="w-full"
                 value={agentId}
                 onChange={setAgentId}
-                placeholder={t('agent.cherryClaw.channels.selectAgent')}
+                placeholder={t('agent.claw.channels.selectAgent')}
                 options={agents.map((a) => ({ value: a.id, label: a.name }))}
               />
             </SettingRow>
@@ -628,20 +626,20 @@ const CreateForm: FC<{
         )}
 
         <SettingRow style={{ flexDirection: 'column', alignItems: 'stretch' }}>
-          <SettingRowTitle>{t('agent.cherryClaw.tasks.name.label')}</SettingRowTitle>
+          <SettingRowTitle>{t('agent.claw.tasks.name.label')}</SettingRowTitle>
           <Input
             size="small"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder={t('agent.cherryClaw.tasks.name.placeholder')}
+            placeholder={t('agent.claw.tasks.name.placeholder')}
           />
         </SettingRow>
         <SettingDivider />
 
         <SettingRow style={{ flexDirection: 'column', alignItems: 'stretch' }}>
           <div className="flex items-center justify-between">
-            <SettingRowTitle>{t('agent.cherryClaw.tasks.prompt.label')}</SettingRowTitle>
-            <Tooltip title={t('agent.cherryClaw.tasks.prompt.expand')}>
+            <SettingRowTitle>{t('agent.claw.tasks.prompt.label')}</SettingRowTitle>
+            <Tooltip title={t('agent.claw.tasks.prompt.expand')}>
               <Button
                 type="text"
                 size="small"
@@ -655,13 +653,13 @@ const CreateForm: FC<{
             autoSize={{ minRows: 3, maxRows: 8 }}
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder={t('agent.cherryClaw.tasks.prompt.placeholder')}
+            placeholder={t('agent.claw.tasks.prompt.placeholder')}
           />
         </SettingRow>
         <SettingDivider />
 
         <Modal
-          title={t('agent.cherryClaw.tasks.prompt.label')}
+          title={t('agent.claw.tasks.prompt.label')}
           open={promptModalOpen}
           onCancel={() => setPromptModalOpen(false)}
           footer={null}
@@ -670,14 +668,14 @@ const CreateForm: FC<{
             autoSize={{ minRows: 12, maxRows: 30 }}
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder={t('agent.cherryClaw.tasks.prompt.placeholder')}
+            placeholder={t('agent.claw.tasks.prompt.placeholder')}
             style={{ marginTop: 8 }}
           />
         </Modal>
 
         <div className="grid grid-cols-3 gap-3">
           <div>
-            <SettingRowTitle>{t('agent.cherryClaw.tasks.scheduleType.label')}</SettingRowTitle>
+            <SettingRowTitle>{t('agent.claw.tasks.scheduleType.label')}</SettingRowTitle>
             <Select
               size="small"
               className="w-full"
@@ -687,20 +685,20 @@ const CreateForm: FC<{
                 setScheduleValue('')
               }}
               options={[
-                { value: 'cron', label: t('agent.cherryClaw.tasks.scheduleType.cron') },
-                { value: 'interval', label: t('agent.cherryClaw.tasks.scheduleType.interval') },
-                { value: 'once', label: t('agent.cherryClaw.tasks.scheduleType.once') }
+                { value: 'cron', label: t('agent.claw.tasks.scheduleType.cron') },
+                { value: 'interval', label: t('agent.claw.tasks.scheduleType.interval') },
+                { value: 'once', label: t('agent.claw.tasks.scheduleType.once') }
               ]}
             />
           </div>
           <div>
-            <SettingRowTitle>{t('agent.cherryClaw.tasks.scheduleValue')}</SettingRowTitle>
+            <SettingRowTitle>{t('agent.claw.tasks.scheduleValue')}</SettingRowTitle>
             {scheduleType === 'cron' && (
               <Input
                 size="small"
                 value={scheduleValue}
                 onChange={(e) => setScheduleValue(e.target.value)}
-                placeholder={t('agent.cherryClaw.tasks.cronPlaceholder')}
+                placeholder={t('agent.claw.tasks.cronPlaceholder')}
               />
             )}
             {scheduleType === 'interval' && (
@@ -710,7 +708,7 @@ const CreateForm: FC<{
                 min={1}
                 value={scheduleValue}
                 onChange={(e) => setScheduleValue(e.target.value)}
-                placeholder={t('agent.cherryClaw.tasks.intervalPlaceholder')}
+                placeholder={t('agent.claw.tasks.intervalPlaceholder')}
                 suffix="min"
               />
             )}
@@ -729,14 +727,14 @@ const CreateForm: FC<{
             )}
           </div>
           <div>
-            <SettingRowTitle>{t('agent.cherryClaw.tasks.timeout.label')}</SettingRowTitle>
+            <SettingRowTitle>{t('agent.claw.tasks.timeout.label')}</SettingRowTitle>
             <Input
               size="small"
               type="number"
               min={1}
               value={timeoutMinutes}
               onChange={(e) => setTimeoutMinutes(e.target.value)}
-              placeholder={t('agent.cherryClaw.tasks.timeout.placeholder')}
+              placeholder={t('agent.claw.tasks.timeout.placeholder')}
               suffix="min"
             />
           </div>
@@ -746,10 +744,10 @@ const CreateForm: FC<{
 
         <div className="flex gap-2">
           <Button size="small" onClick={onCancel}>
-            {t('agent.cherryClaw.tasks.cancel')}
+            {t('agent.claw.tasks.cancel')}
           </Button>
           <Button type="primary" size="small" disabled={!isValid} loading={saving} onClick={handleCreate}>
-            {t('agent.cherryClaw.tasks.save')}
+            {t('agent.claw.tasks.save')}
           </Button>
         </div>
       </SettingGroup>
@@ -818,9 +816,9 @@ const TasksSettings: FC = () => {
 
   const getAgentName = useCallback((agentId: string) => agents.find((a) => a.id === agentId)?.name ?? agentId, [agents])
   const scheduleTypeLabelsMap: Record<string, string> = {
-    cron: t('agent.cherryClaw.tasks.scheduleType.cron'),
-    interval: t('agent.cherryClaw.tasks.scheduleType.interval'),
-    once: t('agent.cherryClaw.tasks.scheduleType.once')
+    cron: t('agent.claw.tasks.scheduleType.cron'),
+    interval: t('agent.claw.tasks.scheduleType.interval'),
+    once: t('agent.claw.tasks.scheduleType.once')
   }
 
   const handleStartCreate = useCallback(() => {

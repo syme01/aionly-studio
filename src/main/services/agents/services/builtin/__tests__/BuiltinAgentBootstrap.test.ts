@@ -62,7 +62,7 @@ describe('bootstrapBuiltinAgents', () => {
   it('retries built-in bootstrap when no model is available yet', async () => {
     mockInitDefaultAionlyClawAgent
       .mockResolvedValueOnce({ agentId: null, skippedReason: 'no_model' })
-      .mockResolvedValueOnce({ agentId: 'cherry-claw-default' })
+      .mockResolvedValueOnce({ agentId: 'aionly-claw-default' })
     mockInitBuiltinAgent.mockResolvedValue({ agentId: null, skippedReason: 'deleted' })
 
     const { bootstrapBuiltinAgents } = await import('../BuiltinAgentBootstrap')
@@ -74,9 +74,9 @@ describe('bootstrapBuiltinAgents', () => {
     await vi.advanceTimersByTimeAsync(5000)
 
     expect(mockInitDefaultAionlyClawAgent).toHaveBeenCalledTimes(2)
-    expect(mockListSessions).toHaveBeenCalledWith('cherry-claw-default', { limit: 1 })
-    expect(mockCreateSession).toHaveBeenCalledWith('cherry-claw-default', {})
-    expect(mockEnsureHeartbeatTask).toHaveBeenCalledWith('cherry-claw-default', 30)
+    expect(mockListSessions).toHaveBeenCalledWith('aionly-claw-default', { limit: 1 })
+    expect(mockCreateSession).toHaveBeenCalledWith('aionly-claw-default', {})
+    expect(mockEnsureHeartbeatTask).toHaveBeenCalledWith('aionly-claw-default', 30)
   })
 
   it('does not retry built-in agents deleted by the user', async () => {

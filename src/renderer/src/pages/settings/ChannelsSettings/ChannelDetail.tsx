@@ -124,7 +124,7 @@ const ChannelLogModal: FC<{
       open={open}
       title={
         <div className="flex items-center gap-2">
-          <span>{`${channelName} — ${t('agent.cherryClaw.channels.logs')}`}</span>
+          <span>{`${channelName} — ${t('agent.claw.channels.logs')}`}</span>
           {logs.length > 0 && <CopyButton textToCopy={logsText} size={14} />}
         </div>
       }
@@ -136,7 +136,7 @@ const ChannelLogModal: FC<{
       centered>
       <div className="max-h-100 overflow-y-auto rounded-[6px] bg-(--color-background-soft) p-2 font-mono text-[11px] leading-[1.6]">
         {logs.length === 0 && (
-          <div className="py-8 text-center text-foreground-400 text-xs">{t('agent.cherryClaw.channels.noLogs')}</div>
+          <div className="py-8 text-center text-foreground-400 text-xs">{t('agent.claw.channels.noLogs')}</div>
         )}
         {logs.map((entry, i) => (
           <div key={i} className="flex gap-2 whitespace-pre-wrap py-px">
@@ -223,21 +223,21 @@ const ChannelEditModal: FC<
             <Input value={name} onChange={(e) => setName(e.target.value)} onBlur={handleNameBlur} size="small" />
           </div>
           <div>
-            <label className="mb-1 block font-medium text-xs">{t('agent.cherryClaw.channels.bindAgent')}</label>
+            <label className="mb-1 block font-medium text-xs">{t('agent.claw.channels.bindAgent')}</label>
             <Select
               value={agentId}
               onChange={handleAgentChange}
               size="small"
               className="w-full"
               allowClear
-              placeholder={t('agent.cherryClaw.channels.selectAgent')}
+              placeholder={t('agent.claw.channels.selectAgent')}
               options={agents.map((a) => ({ value: a.id, label: a.name }))}
             />
             {showSoulModeWarning && (
               <Alert
                 type="warning"
                 showIcon
-                message={t('agent.cherryClaw.channels.soulModeRequired')}
+                message={t('agent.claw.channels.soulModeRequired')}
                 className="mt-2"
                 style={{ fontSize: 12 }}
               />
@@ -277,7 +277,7 @@ const ChannelInstanceRow: FC<{
       statusColor = 'bg-green-500'
       statusTag = (
         <Tag color="success" className="text-[10px] leading-3.5">
-          {t('agent.cherryClaw.channels.connected')}
+          {t('agent.claw.channels.connected')}
         </Tag>
       )
     } else if (hasError) {
@@ -285,7 +285,7 @@ const ChannelInstanceRow: FC<{
       statusTag = (
         <Tooltip title={hasError}>
           <Tag color="error" className="text-[10px] leading-3.5">
-            {t('agent.cherryClaw.channels.error')}
+            {t('agent.claw.channels.error')}
           </Tag>
         </Tooltip>
       )
@@ -305,14 +305,14 @@ const ChannelInstanceRow: FC<{
           {summary}
         </div>
       </div>
-      <Tooltip title={t('agent.cherryClaw.channels.logs')}>
+      <Tooltip title={t('agent.claw.channels.logs')}>
         <Button type="text" size="small" icon={<FileTextOutlined />} onClick={onShowLogs} />
       </Tooltip>
       <Tooltip title={t('common.edit')}>
         <Button type="text" size="small" icon={<EditOutlined />} onClick={onEdit} />
       </Tooltip>
       <Popconfirm
-        title={t('agent.cherryClaw.channels.deleteConfirm', { name: channel.name })}
+        title={t('agent.claw.channels.deleteConfirm', { name: channel.name })}
         onConfirm={onDelete}
         okText={t('common.confirm')}
         cancelText={t('common.cancel')}>
@@ -458,11 +458,11 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channelDef }) => {
             icon={<PlusOutlined />}
             disabled={!channelDef.available}
             onClick={handleAdd}>
-            {t('agent.cherryClaw.channels.add')}
+            {t('agent.claw.channels.add')}
           </Button>
         </SettingTitle>
         <p className="mt-1.5 mb-0 text-(--color-text-3) text-xs">
-          {channelDef.available ? t(channelDef.description) : t('agent.cherryClaw.channels.comingSoon')}
+          {channelDef.available ? t(channelDef.description) : t('agent.claw.channels.comingSoon')}
         </p>
       </div>
       <SettingDivider style={{ margin: '0 0 4px 0' }} />
@@ -470,7 +470,7 @@ const ChannelDetail: FC<ChannelDetailProps> = ({ channelDef }) => {
         {channelList.length === 0 && (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description={t('agent.cherryClaw.channels.noInstances', { type: channelDef.name })}
+            description={t('agent.claw.channels.noInstances', { type: channelDef.name })}
           />
         )}
         {channelList.map((ch) => (

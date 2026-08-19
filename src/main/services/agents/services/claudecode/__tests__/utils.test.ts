@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { isCherryInOfficialHost, isDeepSeekOfficialHost, isMiMoOfficialHost, with1mContextSuffix } from '../utils'
+import { isMarketOfficialHost, isDeepSeekOfficialHost, isMiMoOfficialHost, with1mContextSuffix } from '../utils'
 
 describe('isDeepSeekOfficialHost', () => {
   it('matches the canonical DeepSeek Anthropic endpoint', () => {
@@ -53,30 +53,30 @@ describe('isMiMoOfficialHost', () => {
   })
 })
 
-describe('isCherryInOfficialHost', () => {
-  it('matches CherryIN official endpoints', () => {
-    expect(isCherryInOfficialHost('https://open.cherryin.cc')).toBe(true)
-    expect(isCherryInOfficialHost('https://open.cherryin.net/anthropic')).toBe(true)
-    expect(isCherryInOfficialHost('  https://open.cherryin.ai/v1  ')).toBe(true)
-    expect(isCherryInOfficialHost('https://open.cherryin.dev')).toBe(true)
+describe('isMarketOfficialHost', () => {
+  it('matches Market official endpoints', () => {
+    expect(isMarketOfficialHost('https://open.cherryin.cc')).toBe(true)
+    expect(isMarketOfficialHost('https://open.cherryin.net/anthropic')).toBe(true)
+    expect(isMarketOfficialHost('  https://open.cherryin.ai/v1  ')).toBe(true)
+    expect(isMarketOfficialHost('https://open.cherryin.dev')).toBe(true)
   })
 
   it('rejects third-party and lookalike hosts', () => {
-    expect(isCherryInOfficialHost('https://openrouter.ai/api/v1')).toBe(false)
-    expect(isCherryInOfficialHost('https://open.cherryin.net.evil.com')).toBe(false)
-    expect(isCherryInOfficialHost('https://notopen.cherryin.net')).toBe(false)
+    expect(isMarketOfficialHost('https://openrouter.ai/api/v1')).toBe(false)
+    expect(isMarketOfficialHost('https://open.cherryin.net.evil.com')).toBe(false)
+    expect(isMarketOfficialHost('https://notopen.cherryin.net')).toBe(false)
   })
 
   it('handles missing or malformed hosts gracefully', () => {
-    expect(isCherryInOfficialHost(undefined)).toBe(false)
-    expect(isCherryInOfficialHost('')).toBe(false)
-    expect(isCherryInOfficialHost('not a url')).toBe(false)
+    expect(isMarketOfficialHost(undefined)).toBe(false)
+    expect(isMarketOfficialHost('')).toBe(false)
+    expect(isMarketOfficialHost('not a url')).toBe(false)
   })
 })
 
 describe('with1mContextSuffix', () => {
   const deepSeekHost = 'https://api.deepseek.com/anthropic'
-  const cherryInHost = 'https://open.cherryin.cc'
+  const marketHost = 'https://open.cherryin.cc'
   const mimoHost = 'https://api.xiaomimimo.com/anthropic'
   const thirdPartyHost = 'https://openrouter.ai/api/v1'
 
@@ -91,11 +91,11 @@ describe('with1mContextSuffix', () => {
     expect(with1mContextSuffix('deepseek-v5-flash', deepSeekHost)).toBe('deepseek-v5-flash[1m]')
   })
 
-  it('appends [1m] to CherryIN DeepSeek V4+ agent models', () => {
-    expect(with1mContextSuffix('agent/deepseek-v4-flash', cherryInHost)).toBe('agent/deepseek-v4-flash[1m]')
-    expect(with1mContextSuffix('deepseek/deepseek-v4-flash', cherryInHost)).toBe('deepseek/deepseek-v4-flash[1m]')
-    expect(with1mContextSuffix('agent/deepseek-v4-pro', cherryInHost)).toBe('agent/deepseek-v4-pro[1m]')
-    expect(with1mContextSuffix('deepseek/deepseek-v4-pro', cherryInHost)).toBe('deepseek/deepseek-v4-pro[1m]')
+  it('appends [1m] to Market DeepSeek V4+ agent models', () => {
+    expect(with1mContextSuffix('agent/deepseek-v4-flash', marketHost)).toBe('agent/deepseek-v4-flash[1m]')
+    expect(with1mContextSuffix('deepseek/deepseek-v4-flash', marketHost)).toBe('deepseek/deepseek-v4-flash[1m]')
+    expect(with1mContextSuffix('agent/deepseek-v4-pro', marketHost)).toBe('agent/deepseek-v4-pro[1m]')
+    expect(with1mContextSuffix('deepseek/deepseek-v4-pro', marketHost)).toBe('deepseek/deepseek-v4-pro[1m]')
   })
 
   it('appends [1m] to MiMo V2.5+ Pro/base models on the official host', () => {

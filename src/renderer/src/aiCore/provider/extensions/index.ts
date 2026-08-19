@@ -1,5 +1,5 @@
 /**
- * Cherry Studio 项目特定的 Provider Extensions
+ * AiOnly 项目特定的 Provider Extensions
  * 用于支持运行时动态导入的 AI Providers
  */
 

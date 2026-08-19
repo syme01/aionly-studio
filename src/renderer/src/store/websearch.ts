@@ -10,8 +10,6 @@
  * Any non-critical changes will conflict with the ongoing work.
  *
  * 🔗 Context & Status:
- * - Contribution Hold: https://github.com/CherryHQ/cherry-studio/issues/10954
- * - v2 Refactor PR   : https://github.com/CherryHQ/cherry-studio/pull/10162
  * --------------------------------------------------------------------------
  */
 import type { PayloadAction } from '@reduxjs/toolkit'
@@ -58,7 +56,7 @@ export interface WebSearchState {
   providerConfig: Record<string, any>
 }
 
-export type CherryWebSearchConfig = Pick<WebSearchState, 'searchWithTime' | 'maxResults' | 'excludeDomains'>
+export type AiWebSearchConfig = Pick<WebSearchState, 'searchWithTime' | 'maxResults' | 'excludeDomains'>
 
 export const initialState: WebSearchState = {
   defaultProvider: 'local-bing',

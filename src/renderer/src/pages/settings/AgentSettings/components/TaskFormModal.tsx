@@ -83,7 +83,7 @@ const TaskFormModal: FC<TaskFormModalProps> = ({
           <Input
             value={form.schedule_value}
             onChange={(e) => setForm((f) => ({ ...f, schedule_value: e.target.value }))}
-            placeholder={t('agent.cherryClaw.tasks.cronPlaceholder')}
+            placeholder={t('agent.claw.tasks.cronPlaceholder')}
           />
         )
       case 'interval':
@@ -93,7 +93,7 @@ const TaskFormModal: FC<TaskFormModalProps> = ({
             min={1}
             value={form.schedule_value}
             onChange={(e) => setForm((f) => ({ ...f, schedule_value: e.target.value }))}
-            placeholder={t('agent.cherryClaw.tasks.intervalPlaceholder')}
+            placeholder={t('agent.claw.tasks.intervalPlaceholder')}
             suffix="min"
           />
         )
@@ -113,64 +113,64 @@ const TaskFormModal: FC<TaskFormModalProps> = ({
   return (
     <Modal
       open={open}
-      title={isEdit ? t('agent.cherryClaw.tasks.edit') : t('agent.cherryClaw.tasks.add')}
+      title={isEdit ? t('agent.claw.tasks.edit') : t('agent.claw.tasks.add')}
       onOk={handleSave}
       onCancel={onCancel}
-      okText={t('agent.cherryClaw.tasks.save')}
-      cancelText={t('agent.cherryClaw.tasks.cancel')}
+      okText={t('agent.claw.tasks.save')}
+      cancelText={t('agent.claw.tasks.cancel')}
       transitionName="animation-move-down"
       confirmLoading={loading}
       okButtonProps={{ disabled: !isValid }}>
       <div className="flex flex-col gap-4 py-2">
         {agentSelector}
         <div>
-          <label className="mb-1 block font-medium text-sm">{t('agent.cherryClaw.tasks.name.label')}</label>
+          <label className="mb-1 block font-medium text-sm">{t('agent.claw.tasks.name.label')}</label>
           <Input
             value={form.name}
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-            placeholder={t('agent.cherryClaw.tasks.name.placeholder')}
+            placeholder={t('agent.claw.tasks.name.placeholder')}
           />
         </div>
 
         <div>
-          <label className="mb-1 block font-medium text-sm">{t('agent.cherryClaw.tasks.prompt.label')}</label>
+          <label className="mb-1 block font-medium text-sm">{t('agent.claw.tasks.prompt.label')}</label>
           <TextArea
             value={form.prompt}
             onChange={(e) => setForm((f) => ({ ...f, prompt: e.target.value }))}
-            placeholder={t('agent.cherryClaw.tasks.prompt.placeholder')}
+            placeholder={t('agent.claw.tasks.prompt.placeholder')}
             rows={4}
           />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="mb-1 block font-medium text-sm">{t('agent.cherryClaw.tasks.scheduleType.label')}</label>
+            <label className="mb-1 block font-medium text-sm">{t('agent.claw.tasks.scheduleType.label')}</label>
             <Select
               value={form.schedule_type}
               onChange={(value) => setForm((f) => ({ ...f, schedule_type: value, schedule_value: '' }))}
               className="w-full"
               options={[
-                { value: 'cron', label: t('agent.cherryClaw.tasks.scheduleType.cron') },
-                { value: 'interval', label: t('agent.cherryClaw.tasks.scheduleType.interval') },
-                { value: 'once', label: t('agent.cherryClaw.tasks.scheduleType.once') }
+                { value: 'cron', label: t('agent.claw.tasks.scheduleType.cron') },
+                { value: 'interval', label: t('agent.claw.tasks.scheduleType.interval') },
+                { value: 'once', label: t('agent.claw.tasks.scheduleType.once') }
               ]}
             />
           </div>
           <div>
-            <label className="mb-1 block font-medium text-sm">{t('agent.cherryClaw.tasks.scheduleValue')}</label>
+            <label className="mb-1 block font-medium text-sm">{t('agent.claw.tasks.scheduleValue')}</label>
             {renderScheduleInput()}
           </div>
         </div>
 
         {channels.length > 0 && (
           <div>
-            <label className="mb-1 block font-medium text-sm">{t('agent.cherryClaw.tasks.channels.label')}</label>
+            <label className="mb-1 block font-medium text-sm">{t('agent.claw.tasks.channels.label')}</label>
             <Select
               mode="multiple"
               value={form.channel_ids}
               onChange={(value) => setForm((f) => ({ ...f, channel_ids: value }))}
               className="w-full"
-              placeholder={t('agent.cherryClaw.tasks.channels.placeholder')}
+              placeholder={t('agent.claw.tasks.channels.placeholder')}
               options={channels.map((ch) => ({ value: ch.id, label: ch.name }))}
             />
           </div>

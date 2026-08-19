@@ -71,7 +71,7 @@ const AboutSettings: FC = () => {
     openSmartMinapp({
       id: 'aionly-releases',
       name: t('settings.about.releases.title'),
-      url: `file://${appPath}/resources/cherry-studio/releases.html?theme=${theme === ThemeMode.dark ? 'dark' : 'light'}&updateApiUrl=${encodeURIComponent(updateApiUrl)}`,
+      url: `file://${appPath}/resources/aionly/releases.html?theme=${theme === ThemeMode.dark ? 'dark' : 'light'}&updateApiUrl=${encodeURIComponent(updateApiUrl)}`,
       logo: AppLogo
     })
   }
@@ -97,7 +97,7 @@ const AboutSettings: FC = () => {
         <SettingTitle>
           {t('settings.about.title')}
           {/*<HStack alignItems="center">
-            <Link to="https://github.com/CherryHQ/cherry-studio">
+            <Link to="https://www.aionly.com">
               <GithubOutlined style={{ marginRight: 4, color: 'var(--color-text)', fontSize: 20 }} />
             </Link>
           </HStack>*/}
@@ -215,7 +215,7 @@ const AboutSettings: FC = () => {
             {t('settings.about.website.title')}
           </SettingRowTitle>
           <ChevronRight size={20} />
-          {/*<Button onClick={() => onOpenWebsite('https://cherry-ai.com')}>{t('settings.about.website.button')}</Button>*/}
+          {/*<Button onClick={() => onOpenWebsite('https://www.aionly.com')}>{t('settings.about.website.button')}</Button>*/}
         </SettingRow>
         {/*<SettingDivider />
         <SettingRow>
@@ -223,7 +223,7 @@ const AboutSettings: FC = () => {
             <Github size={18} />
             {t('settings.about.feedback.title')}
           </SettingRowTitle>
-          <Button onClick={() => onOpenWebsite('https://github.com/CherryHQ/cherry-studio/issues/new/choose')}>
+          <Button onClick={() => onOpenWebsite('https://www.aionly.com')}>
             {t('settings.about.feedback.button')}
           </Button>
         </SettingRow>
@@ -249,7 +249,7 @@ const AboutSettings: FC = () => {
             <Briefcase size={18} />
             {t('settings.about.careers.title')}
           </SettingRowTitle>
-          <Button onClick={() => onOpenWebsite('https://www.cherry-ai.com/careers')}>
+          <Button onClick={() => onOpenWebsite('https://www.aionly.com')}>
             {t('settings.about.careers.button')}
           </Button>
         </SettingRow>

@@ -29,7 +29,7 @@ export class McpOAuthClientProvider implements OAuthClientProvider {
       callbackPath: options.callbackPath || '/oauth/callback',
       configDir: options.configDir || configDir,
       clientName: options.clientName || APP_NAME,
-      clientUri: options.clientUri || 'https://github.com/CherryHQ/cherry-studio'
+      clientUri: options.clientUri || 'https://aionly.com'
     }
     this.storage = new JsonFileStorage(this.config.serverUrlHash, this.config.configDir)
   }

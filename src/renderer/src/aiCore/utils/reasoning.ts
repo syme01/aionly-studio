@@ -378,7 +378,7 @@ export function getReasoningEffort(assistant: Assistant, model: Model): Reasonin
           }
         // TODO: 支持 new-api类型
         case SystemProviderIds['new-api']:
-        case SystemProviderIds.cherryin: {
+        case SystemProviderIds.market: {
           return {
             extra_body: {
               thinking: {
@@ -731,7 +731,7 @@ export function getAnthropicReasoningParams(
   if (isSupportedThinkingTokenClaudeModel(model)) {
     // Claude 4.7: adaptive thinking + native 'xhigh' effort.
     // Also requires thinking.display: 'summarized' — API defaults to 'omitted'
-    // (no reasoning text in response), which would break Cherry's thinking UI.
+    // (no reasoning text in response), which would break the thinking UI.
     if (isClaude47SeriesModel(model)) {
       const effort47Map = {
         default: undefined,

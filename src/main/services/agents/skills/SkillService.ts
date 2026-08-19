@@ -824,7 +824,7 @@ export class SkillService {
   }
 
   private async createTempDir(prefix: string): Promise<string> {
-    const tempDir = path.join(app.getPath('temp'), 'cherry-studio', 'skill-install', `${prefix}-${Date.now()}`)
+    const tempDir = path.join(app.getPath('temp'), 'aionly', 'skill-install', `${prefix}-${Date.now()}`)
     await fs.promises.mkdir(tempDir, { recursive: true })
     return tempDir
   }

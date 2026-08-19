@@ -28,7 +28,7 @@
       "submit": "Einreichen",
       "title": "Fragen vom Agenten"
     },
-    "cherryClaw": {
+    "claw": {
       "channels": {
         "add": "Hinzufügen",
         "bindAgent": "Bind-Agent",
@@ -268,7 +268,7 @@
         "title": "Geplante Aufgaben"
       },
       "warning": {
-        "bypassPermissions": "CherryClaw-Agenten laufen standardmäßig im Vollautomatikmodus. Alle Tools werden ohne Genehmigungsanfrage ausgeführt."
+        "bypassPermissions": "AionlyClaw-Agenten laufen standardmäßig im Vollautomatikmodus. Alle Tools werden ohne Genehmigungsanfrage ausgeführt."
       }
     },
     "delete": {
@@ -696,7 +696,7 @@
     },
     "authHeaderText": "Im Autorisierungs-Header verwenden:",
     "configuration": "Konfiguration",
-    "description": "Stellen Sie die KI-Funktionen von Cherry Studio über eine OpenAI-kompatible HTTP-API bereit",
+    "description": "Stellen Sie die KI-Funktionen von AiOnly über eine OpenAI-kompatible HTTP-API bereit",
     "documentation": {
       "title": "API-Dokumentation"
     },
@@ -2589,6 +2589,13 @@
   "minapp": {
     "add_to_launchpad": "Zu Launchpad hinzufügen",
     "add_to_sidebar": "Zur Seitenleiste hinzufügen",
+    "deepseek_harness": {
+      "install_failed": "[to be translated]:DeepSeek Harness installation failed",
+      "install_success": "[to be translated]:DeepSeek Harness installed successfully",
+      "installing": "[to be translated]:Installing DeepSeek Harness, please wait…",
+      "start_failed": "[to be translated]:Failed to start DeepSeek Harness",
+      "starting": "[to be translated]:Starting DeepSeek Harness…"
+    },
     "popup": {
       "close": "Mini-App schließen",
       "devtools": "Entwicklertools",
@@ -2924,21 +2931,21 @@
     },
     "skip": "Überspringen",
     "toast": {
-      "connected": "Erfolgreich mit CherryIN verbunden"
+      "connected": "Erfolgreich mit Market verbunden"
     },
     "welcome": {
-      "login_cherryin": "Mit CherryIN anmelden",
+      "login_market": "Mit Market anmelden",
       "or_continue_with": "ODER WEITER MIT",
       "other_provider": "Andere Anbieter auswählen",
       "select_other_provider": "Wählen Sie einen anderen Anbieter",
       "setup_hint": "Bitte konfigurieren Sie mindestens einen Anbieter für die beste Erfahrung.",
-      "subtitle": "Genießen Sie erstklassige KI-Dienste mit CherryIN",
-      "title": "Willkommen bei Cherry Studio"
+      "subtitle": "Genießen Sie erstklassige KI-Dienste mit Market",
+      "title": "Willkommen bei AiOnly"
     }
   },
   "openclaw": {
     "checking_installation": "Überprüfe OpenClaw-Installation...",
-    "description": "Integriere Cherry Studio-Anbieter mit OpenClaw Gateway, um KI-Coding-Agenten wie Claude Code, Qwen-Coder und weitere zu ermöglichen.",
+    "description": "Integriere AiOnly-Anbieter mit OpenClaw Gateway, um KI-Coding-Agenten wie Claude Code, Qwen-Coder und weitere zu ermöglichen.",
     "error": {
       "select_provider_model": "Bitte wählen Sie zuerst einen Anbieter und ein Modell aus."
     },
@@ -3421,7 +3428,6 @@
     "burncloud": "BurnCloud",
     "cephalon": "Cephalon",
     "cerebras": "Cerebras AI",
-    "cherryin": "CherryIN",
     "copilot": "GitHub Copilot",
     "dashscope": "Alibaba Cloud Bailian",
     "deepseek": "DeepSeek",
@@ -3442,6 +3448,7 @@
     "lanyun": "Lanyun Technologie",
     "lmstudio": "LM Studio",
     "longcat": "Meißner Riesenhamster",
+    "market": "Market",
     "mimo": "Xiaomi MiMo",
     "minimax": "MiniMax CN",
     "minimax-global": "MiniMax",
@@ -3783,7 +3790,7 @@
           },
           "description": {
             "0": "Der Textauswahl-Assistent benötigt <strong>Bedienungshilfen-Berechtigungen</strong>, um ordnungsgemäß zu funktionieren.",
-            "1": "Klicken Sie auf <strong>Zu Einstellungen</strong> und anschließend im Berechtigungsdialog auf <strong>Systemeinstellungen öffnen</strong>. Suchen Sie danach in der App-Liste <strong>Cherry Studio</strong> und aktivieren Sie den Schalter.",
+            "1": "Klicken Sie auf <strong>Zu Einstellungen</strong> und anschließend im Berechtigungsdialog auf <strong>Systemeinstellungen öffnen</strong>. Suchen Sie danach in der App-Liste <strong>AiOnly</strong> und aktivieren Sie den Schalter.",
             "2": "Nach Abschluss der Einrichtung Textauswahl-Assistent erneut aktivieren."
           },
           "title": "Bedienungshilfen-Berechtigung"
@@ -3795,7 +3802,7 @@
         "title": "App-Filterliste anwenden",
         "user_tips": {
           "mac": "Bitte geben Sie die Bundle-ID der App ein, eine pro Zeile, Groß-/Kleinschreibung egal, unscharfe Übereinstimmung möglich. Z. B.: com.google.Chrome, com.apple.mail",
-          "windows": "Bitte geben Sie den ausführbaren Dateinamen der App ein, eine pro Zeile, Groß-/Kleinschreibung egal, unscharfe Übereinstimmung möglich. Z. B.: chrome.exe, weixin.exe, Cherry Studio.exe"
+          "windows": "Bitte geben Sie den ausführbaren Dateinamen der App ein, eine pro Zeile, Groß-/Kleinschreibung egal, unscharfe Übereinstimmung möglich. Z. B.: chrome.exe, weixin.exe, AiOnly.exe"
         }
       },
       "linux": {
@@ -3807,7 +3814,7 @@
         "wayland_checklist_subtitle": "Stellen Sie sicher, dass die folgenden Bedingungen erfüllt sind, um das Wayland-Erlebnis zu optimieren:",
         "wayland_description": "Sie befinden sich in einer Wayland-Sitzung. Aufgrund von Systemeinschränkungen kann die Symbolleiste auf einigen Desktop-Umgebungen nur in der Bildschirmmitte erscheinen, anstatt dem ausgewählten Text zu folgen. Es wird empfohlen, zu einer X11-Sitzung zu wechseln, um die volle Funktionalität zu erhalten.",
         "wayland_title": "Wayland-Sitzungshinweis",
-        "xwayland_fail": "Nicht aktiviert, bitte starten Sie Cherry Studio mit dem Flag `--ozone-platform=x11`",
+        "xwayland_fail": "Nicht aktiviert, bitte starten Sie AiOnly mit dem Flag `--ozone-platform=x11`",
         "xwayland_label": "XWayland-Modus:",
         "xwayland_pass": "Aktiviert"
       },
@@ -4074,7 +4081,7 @@
           "button": "Übertragung starten",
           "connected": "Verbunden",
           "connection_failed": "Verbindung fehlgeschlagen",
-          "content": "Bitte stelle sicher, dass sich dein Computer und dein Telefon im selben Netzwerk befinden, um eine LAN-Übertragung durchzuführen. Öffne die Cherry Studio App, um diesen QR-Code zu scannen.",
+          "content": "Bitte stelle sicher, dass sich dein Computer und dein Telefon im selben Netzwerk befinden, um eine LAN-Übertragung durchzuführen. Öffne die AiOnly App, um diesen QR-Code zu scannen.",
           "device_list_title": "Lokale Netzwerkgeräte",
           "discovered_devices": "Entdeckte Geräte",
           "error": {
@@ -4891,7 +4898,7 @@
       },
       "oauth": {
         "callback": {
-          "message": "Sie können diese Seite schließen und zu Cherry Studio zurückkehren",
+          "message": "Sie können diese Seite schließen und zu AiOnly zurückkehren",
           "title": "Authentifizierung erfolgreich"
         }
       },
@@ -5467,13 +5474,6 @@
       "oauth": {
         "balance": "Guthaben",
         "button": "Mit {{provider}}-Konto anmelden",
-        "cherryIn": {
-          "description": "Melden Sie sich mit Ihrem selbst gehosteten New-API-Server über OAuth 2.0 (PKCE) an.",
-          "logged_in": "Über OAuth angemeldet",
-          "login_button": "Mit OAuth anmelden",
-          "logout_button": "Abmelden",
-          "title": "OAuth-Anmeldung"
-        },
         "connect": "Verbinde {{provider}}",
         "description": "Dienst wird von <website>{{provider}}</website> bereitgestellt",
         "error": "Authentifizierung fehlgeschlagen",
@@ -5482,6 +5482,13 @@
         "logout_confirm": "Bist du sicher, dass du dich abmelden willst?",
         "logout_success": "Erfolgreich abgemeldet",
         "logout_warning": "Lokal abgemeldet, aber die Server-Token-Widerrufung ist möglicherweise fehlgeschlagen",
+        "market": {
+          "description": "Melden Sie sich mit Ihrem selbst gehosteten New-API-Server über OAuth 2.0 (PKCE) an.",
+          "logged_in": "Über OAuth angemeldet",
+          "login_button": "Mit OAuth anmelden",
+          "logout_button": "Abmelden",
+          "title": "OAuth-Anmeldung"
+        },
         "official_website": "Offizielle Website",
         "provided_by": "Bereitgestellt von",
         "provided_by_suffix": "I’m ready—please provide the text you’d like translated into German.",

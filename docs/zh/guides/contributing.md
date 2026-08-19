@@ -1,8 +1,8 @@
-# Cherry Studio 贡献者指南
+# AiOnly 贡献者指南
 
 [**English**](../../../CONTRIBUTING.md) | **中文**
 
-欢迎来到 Cherry Studio 的贡献者社区！我们致力于将 Cherry Studio 打造成一个长期提供价值的项目，并希望邀请更多的开发者加入我们的行列。无论您是经验丰富的开发者还是刚刚起步的初学者，您的贡献都将帮助我们更好地服务用户，提升软件质量。
+欢迎来到 AiOnly 的贡献者社区！我们致力于将 AiOnly 打造成一个长期提供价值的项目，并希望邀请更多的开发者加入我们的行列。无论您是经验丰富的开发者还是刚刚起步的初学者，您的贡献都将帮助我们更好地服务用户，提升软件质量。
 
 ## 如何贡献
 
@@ -20,7 +20,7 @@
 
 6. **社区维护**：参与社区讨论，帮助解答用户问题，促进社区活跃。
 
-7. **推广使用**：通过博客、社交媒体等渠道推广 Cherry Studio，吸引更多用户和开发者。
+7. **推广使用**：通过博客、社交媒体等渠道推广 AiOnly，吸引更多用户和开发者。
 
 ## 开始之前
 
@@ -34,7 +34,7 @@
 
 ## 开始贡献
 
-为了让您更熟悉代码，建议您处理一些标记有以下标签之一或多个的问题：[good-first-issue](https://github.com/CherryHQ/cherry-studio/labels/good%20first%20issue)、[help-wanted](https://github.com/CherryHQ/cherry-studio/labels/help%20wanted) 或 [kind/bug](https://github.com/CherryHQ/cherry-studio/labels/kind%2Fbug)。任何帮助都会收到欢迎。
+为了让您更熟悉代码，建议您处理一些标记有以下标签之一或多个的问题：[good-first-issue](https://gitee.com/myme/aionly-studio/labels/good%20first%20issue)、[help-wanted](https://gitee.com/myme/aionly-studio/labels/help%20wanted) 或 [kind/bug](https://gitee.com/myme/aionly-studio/labels/kind%2Fbug)。任何帮助都会收到欢迎。
 
 ### 测试
 
@@ -42,7 +42,7 @@
 
 ### 拉取请求的自动化测试
 
-自动化测试会在 Cherry Studio 组织成员开启的拉取请求（PR）上触发，草稿 PR 除外。新贡献者开启的 PR 最初会标记为 needs-ok-to-test 标签且不自动测试。待 Cherry Studio 组织成员在 PR 上添加 /ok-to-test 后，测试通道将被创建。
+自动化测试会在 AiOnly 组织成员开启的拉取请求（PR）上触发，草稿 PR 除外。新贡献者开启的 PR 最初会标记为 needs-ok-to-test 标签且不自动测试。待 AiOnly 组织成员在 PR 上添加 /ok-to-test 后，测试通道将被创建。
 
 ### 考虑将您的拉取请求作为草稿打开
 
@@ -89,7 +89,7 @@ git commit --signoff -m "Your commit message"
 
 ### 🚀 参与 v2 开发
 
-v2 是 Cherry Studio 的下一个重要里程碑，我们诚邀每一位开发者积极参与！无论是新功能开发、架构优化还是代码重构，都欢迎在 `v2` 分支上贡献力量。让我们一起打造更好的 Cherry Studio！
+v2 是 AiOnly 的下一个重要里程碑，我们诚邀每一位开发者积极参与！无论是新功能开发、架构优化还是代码重构，都欢迎在 `v2` 分支上贡献力量。让我们一起打造更好的 AiOnly！
 
 > **注意**：`v2` 分支仅在当前功能全部重构完成后，才会接受新功能的提交。
 
@@ -101,6 +101,6 @@ v2 是 Cherry Studio 的下一个重要里程碑，我们诚邀每一位开发�
 如果您有任何问题或建议，欢迎通过以下方式联系我们：
 
 - 微信：kangfenmao
-- [GitHub Issues](https://github.com/CherryHQ/cherry-studio/issues)
+- [GitHub Issues](https://gitee.com/myme/aionly-studio/issues)
 
-感谢您的支持和贡献！我们期待与您一起将 Cherry Studio 打造成更好的产品。
+感谢您的支持和贡献！我们期待与您一起将 AiOnly 打造成更好的产品。

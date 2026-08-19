@@ -28,7 +28,7 @@ class AnalyticsService {
 
     this.client = new AnalyticsClient({
       clientId: configManager.getClientId(),
-      channel: 'cherry-studio',
+      channel: 'aionly',
       onError: (error) => logger.error('Analytics error:', error),
       headers: {
         'User-Agent': generateUserAgent(),

@@ -1,7 +1,7 @@
 {
   "name": "@aionly/ai-core",
   "version": "2.0.1",
-  "description": "Cherry Studio AI Core - Unified AI Provider Interface Based on Vercel AI SDK",
+  "description": "AiOnly AI Core - Unified AI Provider Interface Based on Vercel AI SDK",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -19,17 +19,17 @@
     "test:watch": "vitest",
     "prepublishOnly": "pnpm build"
   },
-  "keywords": ["ai", "sdk", "openai", "anthropic", "google", "cherry-studio", "vercel-ai-sdk"],
-  "author": "Cherry Studio",
+  "keywords": ["ai", "sdk", "openai", "anthropic", "google", "aionly", "vercel-ai-sdk"],
+  "author": "AiOnly",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CherryHQ/cherry-studio.git"
+    "url": "git+https://gitee.com/myme/aionly-studio.git"
   },
   "bugs": {
-    "url": "https://github.com/CherryHQ/cherry-studio/issues"
+    "url": "https://gitee.com/myme/aionly-studio/issues"
   },
-  "homepage": "https://github.com/CherryHQ/cherry-studio#readme",
+  "homepage": "https://gitee.com/myme/aionly-studio#readme",
   "peerDependencies": {
     "@ai-sdk/google": "^3.0.64",
     "@ai-sdk/openai": "^3.0.53",

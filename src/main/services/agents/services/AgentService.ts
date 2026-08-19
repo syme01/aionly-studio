@@ -24,8 +24,8 @@ import {
 } from '../database/schema'
 import type { AgentModelField } from '../errors'
 import { skillService } from '../skills/SkillService'
-import { CHERRY_CLAW_AGENT_ID, isBuiltinAgentId } from './builtin/BuiltinAgentIds'
-import { seedWorkspaceTemplates } from './cherryclaw/seedWorkspace'
+import { CLAW_AGENT_ID, isBuiltinAgentId } from './builtin/BuiltinAgentIds'
+import { seedWorkspaceTemplates } from './aionlyclaw/seedWorkspace'
 
 const logger = loggerService.withContext('AgentService')
 
@@ -34,7 +34,7 @@ export type BuiltinAgentInitResult =
   | { agentId: null; skippedReason: 'deleted' | 'no_model' }
 
 export class AgentService extends BaseService {
-  static readonly DEFAULT_AGENT_ID = CHERRY_CLAW_AGENT_ID
+  static readonly DEFAULT_AGENT_ID = CLAW_AGENT_ID
 
   private static instance: AgentService | null = null
   private readonly modelFields: AgentModelField[] = ['model', 'plan_model', 'small_model']
@@ -305,7 +305,7 @@ export class AgentService extends BaseService {
    * Called once at app startup. Safe to call multiple times — skips if the agent already exists.
    * Returns the agent ID if created or already present, or null if no compatible model is available yet.
    */
-  async initDefaultCherryClawAgent(): Promise<BuiltinAgentInitResult> {
+  async initDefaultClawAgent(): Promise<BuiltinAgentInitResult> {
     const id = AgentService.DEFAULT_AGENT_ID
     try {
       const database = await this.getDatabase()
