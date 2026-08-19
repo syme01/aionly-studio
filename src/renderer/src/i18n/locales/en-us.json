@@ -2731,6 +2731,7 @@
     "deepseek_harness": {
       "install_failed": "DeepSeek Harness installation failed",
       "install_success": "DeepSeek Harness installed successfully",
+      "install_timeout": "DeepSeek Harness installation timed out, please retry",
       "installing": "Installing DeepSeek Harness, please wait…",
       "start_failed": "Failed to start DeepSeek Harness",
       "starting": "Starting DeepSeek Harness…"

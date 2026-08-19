@@ -53,6 +53,7 @@ class CodeToolsService {
   private openCodeConfigBackups: Map<string, string | null> = new Map() // Store raw backup content of opencode.json
   private dshWebProcess: ChildProcess | null = null // Managed `dsh web` process (null when not started by us)
   private dshWebUrl: string | null = null // Access URL of the running dsh Web UI
+  private installingPackages: Map<string, Promise<{ success: boolean; message: string }>> = new Map() // Track ongoing installation promises
 
   constructor() {
     this.getBunPath = this.getBunPath.bind(this)
@@ -852,13 +853,19 @@ class CodeToolsService {
       const bunInstallPath = path.join(os.homedir(), HOME_APP_DIR)
       const registryUrl = await this.getNpmRegistryUrl()
 
+      // Log the registry URL being used
+      logger.info(`Using npm registry: ${registryUrl}`)
+      console.log(`[CodeToolsService] Using npm registry: ${registryUrl}`)
+
       // Get logs directory for install/update output redirection
       const logsDir = loggerService.getLogsDir()
       const logPath = path.join(logsDir, logFileName).replace(/\\/g, '/')
 
+      // Bun-specific registry configuration
+      // Set multiple mirror environment variables for better compatibility
       const installEnvPrefix = isWin
-        ? `set "BUN_INSTALL=${bunInstallPath}" && set "NPM_CONFIG_REGISTRY=${registryUrl}" &&`
-        : `export BUN_INSTALL="${bunInstallPath}" && export NPM_CONFIG_REGISTRY="${registryUrl}" &&`
+        ? `set "BUN_INSTALL=${bunInstallPath}" && set "BUN_CONFIG_REGISTRY=${registryUrl}" && set "NPM_CONFIG_REGISTRY=${registryUrl}" &&`
+        : `export BUN_INSTALL="${bunInstallPath}" && export BUN_CONFIG_REGISTRY="${registryUrl}" && export NPM_CONFIG_REGISTRY="${registryUrl}" &&`
 
       // Use > to truncate log file on each run
       const installCommand = `${installEnvPrefix} "${bunPath}" install -g ${packageName} > "${logPath}" 2>&1`
@@ -894,10 +901,33 @@ class CodeToolsService {
   /**
    * Install a CLI tool that is not yet present (first-time install)
    * Uses a longer timeout than updates because first downloads can be slow
+   * If already installing, waits for the existing installation to complete
    */
   public async installPackage(cliTool: string): Promise<{ success: boolean; message: string }> {
+    // Check if already installing - wait for existing installation
+    const existingInstall = this.installingPackages.get(cliTool)
+    if (existingInstall) {
+      logger.info(`${cliTool} is already being installed, waiting for completion`)
+      return existingInstall
+    }
+
     logger.info(`Starting install process for ${cliTool}`)
-    return this.runBunGlobalInstall(cliTool, 'cli-tools-install.log', 5 * 60 * 1000, 'install')
+
+    // Create installation promise
+    const installPromise = (async () => {
+      try {
+        const result = await this.runBunGlobalInstall(cliTool, 'cli-tools-install.log', 5 * 60 * 1000, 'install')
+        return result
+      } finally {
+        // Always remove from installing map
+        this.installingPackages.delete(cliTool)
+      }
+    })()
+
+    // Store the promise so concurrent calls can wait for it
+    this.installingPackages.set(cliTool, installPromise)
+
+    return installPromise
   }
 
   /**

@@ -2731,6 +2731,7 @@
     "deepseek_harness": {
       "install_failed": "DeepSeek Harness 安装失败",
       "install_success": "DeepSeek Harness 安装完成",
+      "install_timeout": "DeepSeek Harness 安装超时，请重试",
       "installing": "正在安装 DeepSeek Harness，请稍候…",
       "start_failed": "DeepSeek Harness 启动失败",
       "starting": "正在启动 DeepSeek Harness…"
