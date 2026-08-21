@@ -172,7 +172,7 @@ jobs:
           VITE_API_URL: ${{ vars.VITE_API_URL }}
           VITE_USER_UI_HOST: ${{ vars.VITE_USER_UI_HOST }}
           VITE_WEB_UI_HOST: ${{ vars.VITE_WEB_UI_HOST }}
-          APP_API_HOST: ${{ vars.APP_API_HOST }}
+          VITE_APP_API_HOST: ${{ vars.VITE_APP_API_HOST }}
 
       - name: Import Code-Signing Certificates (macOS)
         if: matrix.os == 'macos-latest'
@@ -219,7 +219,7 @@ jobs:
           VITE_API_URL: ${{ vars.VITE_API_URL }}
           VITE_USER_UI_HOST: ${{ vars.VITE_USER_UI_HOST }}
           VITE_WEB_UI_HOST: ${{ vars.VITE_WEB_UI_HOST }}
-          APP_API_HOST: ${{ vars.APP_API_HOST }}
+          APP_API_HOST: ${{ vars.VITE_APP_API_HOST }}
 
       - name: Build Windows
         if: matrix.os == 'windows-2022'
@@ -236,7 +236,7 @@ jobs:
           VITE_API_URL: ${{ vars.VITE_API_URL }}
           VITE_USER_UI_HOST: ${{ vars.VITE_USER_UI_HOST }}
           VITE_WEB_UI_HOST: ${{ vars.VITE_WEB_UI_HOST }}
-          APP_API_HOST: ${{ vars.APP_API_HOST }}
+          VITE_APP_API_HOST: ${{ vars.VITE_APP_API_HOST }}
 
       - name: Release
         uses: ncipollo/release-action@v1

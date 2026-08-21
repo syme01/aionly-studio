@@ -182,7 +182,7 @@ https://github.com/你的用户名/aionly-studio/settings/secrets/actions
           VITE_API_URL: ${{ vars.VITE_API_URL }}
           VITE_USER_UI_HOST: ${{ vars.VITE_USER_UI_HOST }}
           VITE_WEB_UI_HOST: ${{ vars.VITE_WEB_UI_HOST }}
-          APP_API_HOST: ${{ vars.APP_API_HOST }}
+          VITE_APP_API_HOST: ${{ vars.VITE_APP_API_HOST }}
 ```
 
 **删除以下行：**

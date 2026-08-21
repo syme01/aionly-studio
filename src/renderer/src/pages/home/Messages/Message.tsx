@@ -233,43 +233,48 @@ const MessageItem: FC<Props> = ({
               {!isMultiSelectMode && message.role === 'assistant' && showMessageOutline && (
                 <MessageOutline message={message} />
               )}
-              <MessageContentContainer
-                className="message-content-container"
-                style={{
-                  fontFamily: messageFont === 'serif' ? 'var(--font-family-serif)' : 'var(--font-family)',
-                  fontSize,
-                  overflowY: isHorizontalMultiModelLayout ? 'auto' : 'visible'
-                }}>
-                <MessageErrorBoundary>
-                  <MessageContent message={message} />
-                </MessageErrorBoundary>
-              </MessageContentContainer>
-              {showMenubar && (
-                <MessageFooter className="MessageFooter">
-                  <HorizontalScrollContainer
-                    classNames={{
-                      content: cn(
-                        'flex-1 items-center justify-between',
-                        /*shouldReverseFooter ? 'flex-row-reverse' : 'flex-row'*/
-                        isAssistantMessage ? 'flex-row-reverse' : 'flex-row'
-                      )
-                    }}>
-                    <MessageMenubar
-                      message={message}
-                      assistant={assistant}
-                      model={model}
-                      index={index}
-                      topic={topic}
-                      isLastMessage={isLastMessage}
-                      isAssistantMessage={isAssistantMessage}
-                      isGrouped={isGrouped}
-                      messageContainerRef={messageContainerRef as React.RefObject<HTMLDivElement>}
-                      setModel={setModel}
-                      onUpdateUseful={onUpdateUseful}
-                    />
-                  </HorizontalScrollContainer>
-                </MessageFooter>
+              {message.role === 'assistant' && message.model?.name && (
+                <div className="model-name">{message.model?.name}</div>
               )}
+              <MessageInnerWrapper className="message-inner-wrapper">
+                <MessageContentContainer
+                  className="message-content-container"
+                  style={{
+                    fontFamily: messageFont === 'serif' ? 'var(--font-family-serif)' : 'var(--font-family)',
+                    fontSize,
+                    overflowY: isHorizontalMultiModelLayout ? 'auto' : 'visible'
+                  }}>
+                  <MessageErrorBoundary>
+                    <MessageContent message={message} />
+                  </MessageErrorBoundary>
+                </MessageContentContainer>
+                {showMenubar && (
+                  <MessageFooter className="MessageFooter">
+                    <HorizontalScrollContainer
+                      classNames={{
+                        content: cn(
+                          'flex-1 items-center justify-between',
+                          /*shouldReverseFooter ? 'flex-row-reverse' : 'flex-row'*/
+                          isAssistantMessage ? 'flex-row-reverse' : 'flex-row'
+                        )
+                      }}>
+                      <MessageMenubar
+                        message={message}
+                        assistant={assistant}
+                        model={model}
+                        index={index}
+                        topic={topic}
+                        isLastMessage={isLastMessage}
+                        isAssistantMessage={isAssistantMessage}
+                        isGrouped={isGrouped}
+                        messageContainerRef={messageContainerRef as React.RefObject<HTMLDivElement>}
+                        setModel={setModel}
+                        onUpdateUseful={onUpdateUseful}
+                      />
+                    </HorizontalScrollContainer>
+                  </MessageFooter>
+                )}
+              </MessageInnerWrapper>
             </div>
           </MessageInfoWrapper>
         )}
@@ -313,12 +318,16 @@ const MessageContainer = styled.div`
         right: 0;
     }
     .main{
-      border-radius: 8px 0 8px 8px;
+      //border-radius: 8px 0 8px 8px;
       width: fit-content;
       min-width: 25%;
       max-width: 100%;
       margin-right: 55px;
+      //background-color: var(--color-list-item);
+    }
+    .message-inner-wrapper{
       background-color: var(--color-list-item);
+      border-radius: 8px 0 8px 8px;
     }
   }
 `
@@ -329,9 +338,9 @@ const MessageInfoWrapper = styled.div`
   .main{
     //width: calc(100% - 100px);
     margin-left: 45px;
-    padding: 16px;
-    background-color: var(--color-gray-5);
-    border-radius: 0 8px 8px 8px;
+    //padding: 16px;
+    //background-color: var(--color-gray-5);
+    //border-radius: 0 8px 8px 8px;
     &:not(.is-grouped){
       width: calc(100% - 100px);
     }
@@ -339,6 +348,10 @@ const MessageInfoWrapper = styled.div`
   .message-header{
     position: absolute;
     top: 0;
+  }
+  .model-name{
+    font-weight: 600;
+    padding-bottom: 6px;
   }
 `
 
@@ -364,6 +377,12 @@ const NewContextMessage = styled.div<{ isMultiSelectMode: boolean }>`
   flex: 1;
 
   ${({ isMultiSelectMode }) => isMultiSelectMode && 'cursor: default;'}
+`
+
+const MessageInnerWrapper = styled.div`
+  background-color: var(--color-gray-5);
+  padding: 16px;
+  border-radius: 0 8px 8px 8px;
 `
 
 export default memo(MessageItem)

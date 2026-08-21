@@ -521,7 +521,7 @@ export const APP_DIR_NAME = 'AiOnlyStudio' // User data directory name
 export const APP_CONFIG_DIR = '.aionlystudio' // Hidden config directory in home
 // resources/scripts should be maintained manually
 export const HOME_APP_DIR = APP_CONFIG_DIR
-export const APP_API_HOST = 'https://api.aionly.com'
+export const APP_API_HOST = import.meta.env.VITE_APP_API_HOST || 'https://api.aionly.com'
 
 /**
  * USER_UI_HOST 用户端 UI 地址，默认为 https://maas.aionly.com
@@ -532,7 +532,7 @@ export const USER_UI_HOST = import.meta.env.VITE_USER_UI_HOST || `https://maas.$
 export const WEB_UI_HOST = import.meta.env.VITE_WEB_UI_HOST || `https://www.${APP_PROTOCOL}.com`
 
 // 本地临时修改环境
-// export const USER_UI_HOST = `http://localhost:7023`
+// export const USER_UI_HOST = `https://hf.rhwx-ai.com:9825`
 // export const WEB_UI_HOST = `http://localhost:7022`
 
 // ============ Custom Update 自动更新服务接口地址 API ============

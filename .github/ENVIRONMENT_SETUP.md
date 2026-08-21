@@ -46,7 +46,7 @@
 | `VITE_API_URL` | `https://hf.rhwx-ai.com:9825/api` |
 | `VITE_USER_UI_HOST` | `https://hf.rhwx-ai.com:9825` |
 | `VITE_WEB_UI_HOST` | `https://hf.rhwx-ai.com:9820` |
-| `APP_API_HOST` | `https://hf.rhwx-ai.com:9820/api/ai/v1/chat/completions` |
+| `VITE_APP_API_HOST` | `https://hf.rhwx-ai.com:9820/api/ai` |
 
 ### 2. production-cn（生产环境-国内）
 
@@ -59,7 +59,7 @@
 | `VITE_API_URL` | `https://www.aiionly.com/api` |
 | `VITE_USER_UI_HOST` | `https://maas.aiionly.com` |
 | `VITE_WEB_UI_HOST` | `https://www.aiionly.com` |
-| `APP_API_HOST` | `https://llm.aiionly.com` |
+| `VITE_APP_API_HOST` | `https://llm.aiionly.com` |
 
 ### 3. production-global（生产环境-国际）
 
@@ -72,7 +72,7 @@
 | `VITE_API_URL` | `https://www.aionly.com/api` |
 | `VITE_USER_UI_HOST` | `https://maas.aionly.com` |
 | `VITE_WEB_UI_HOST` | `https://www.aionly.com` |
-| `APP_API_HOST` | `https://api.aionly.com` |
+| `VITE_APP_API_HOST` | `https://api.aionly.com` |
 
 ---
 
@@ -82,7 +82,7 @@
 
 - [ ] 已创建 3 个 environments：`test`、`production-cn`、`production-global`
 - [ ] 每个 environment 都有 4 个 variables（共 12 个变量）
-- [ ] 变量名完全一致（区分大小写）：`VITE_API_URL`、`VITE_USER_UI_HOST`、`VITE_WEB_UI_HOST`、`APP_API_HOST`
+- [ ] 变量名完全一致（区分大小写）：`VITE_API_URL`、`VITE_USER_UI_HOST`、`VITE_WEB_UI_HOST`、`VITE_APP_API_HOST`
 - [ ] URL 值无多余空格或换行符
 
 ---
@@ -177,7 +177,7 @@ git push origin v1.0.0-cn
 $env:VITE_API_URL="https://hf.rhwx-ai.com:9825/api"
 $env:VITE_USER_UI_HOST="https://hf.rhwx-ai.com:9825"
 $env:VITE_WEB_UI_HOST="https://hf.rhwx-ai.com:9820"
-$env:APP_API_HOST="https://hf.rhwx-ai.com:9820/api/ai/v1/chat/completions"
+$env:VITE_APP_API_HOST="https://hf.rhwx-ai.com:9820/api/ai"
 pnpm flavor:cn
 pnpm build:win
 ```
@@ -187,7 +187,7 @@ pnpm build:win
 set VITE_API_URL=https://hf.rhwx-ai.com:9825/api
 set VITE_USER_UI_HOST=https://hf.rhwx-ai.com:9825
 set VITE_WEB_UI_HOST=https://hf.rhwx-ai.com:9820
-set APP_API_HOST=https://hf.rhwx-ai.com:9820/api/ai/v1/chat/completions
+set VITE_APP_API_HOST=https://hf.rhwx-ai.com:9820/api/ai
 pnpm flavor:cn
 pnpm build:win
 ```
@@ -197,7 +197,7 @@ pnpm build:win
 export VITE_API_URL=https://hf.rhwx-ai.com:9825/api
 export VITE_USER_UI_HOST=https://hf.rhwx-ai.com:9825
 export VITE_WEB_UI_HOST=https://hf.rhwx-ai.com:9820
-export APP_API_HOST=https://hf.rhwx-ai.com:9820/api/ai/v1/chat/completions
+export VITE_APP_API_HOST=https://hf.rhwx-ai.com:9820/api/ai
 pnpm flavor:cn
 pnpm build:mac
 ```

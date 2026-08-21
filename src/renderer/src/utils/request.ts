@@ -92,6 +92,8 @@ class RequestHttp {
         if (data.code == '401') {
           localStorage.removeItem('token')
           message.warning('登录过期请重新登录！')
+          // 跳转到登录页
+          window.location.hash = '/login'
           return Promise.resolve()
         }
         // 全局错误信息拦截（防止下载文件的时候返回数据流，没有 code 直接报错）
