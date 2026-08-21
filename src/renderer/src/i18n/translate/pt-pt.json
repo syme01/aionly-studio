@@ -569,6 +569,9 @@
         }
       }
     },
+    "sidebar_agent": {
+      "add": "Criar agente"
+    },
     "sidebar_title": "Agentes",
     "todo": {
       "panel": {
@@ -1475,6 +1478,8 @@
       },
       "move_to": "Mover para",
       "new": "Começar nova conversa",
+      "no_model": "A conta atual não possui modelos disponíveis no momento",
+      "open_model_text": "Ativar",
       "pin": "Fixar tópico",
       "prompt": {
         "edit": {
@@ -1495,7 +1500,8 @@
       "warning": {
         "openai": "O modelo GPT5 com intensidade mínima de pensamento não suporta pesquisa na web"
       }
-    }
+    },
+    "welcome": "Pronto para começar?"
   },
   "code": {
     "auto_update_to_latest": "Verificar atualizações e instalar a versão mais recente",
@@ -1600,7 +1606,7 @@
     "copy_failed": "Falha ao copiar",
     "current": "Atual",
     "cut": "Cortar",
-    "decline": "[to be translated]:Decline",
+    "decline": "Recusar",
     "default": "Padrão",
     "delete": "Excluir",
     "delete_confirm": "Tem certeza de que deseja excluir?",
@@ -1638,6 +1644,7 @@
     "image_preview": "Pré-visualização da imagem",
     "image_url": "URL da imagem",
     "image_url_or_upload": "Insira o URL da imagem ou carregue o arquivo",
+    "input": "Entrada",
     "inspect": "Verificar",
     "invalid_value": "Valor inválido",
     "knowledge_base": "Base de Conhecimento",
@@ -1648,12 +1655,17 @@
     "more": "Mais",
     "name": "Nome",
     "next_match": "Próxima partida",
+    "no_more": "Não há mais",
     "no_results": "Nenhum resultado",
     "none": "Nenhum",
     "off": "Desligado",
     "on": "Ligado",
     "open": "Abrir",
     "open_in": "Abrir em {{name}}",
+    "output": "Saída",
+    "pagination": {
+      "total": "Total de {{total}} itens"
+    },
     "paste": "Colar",
     "placeholders": {
       "select": {
@@ -1942,6 +1954,13 @@
     "preview": "Visualizar",
     "split": "Dividir"
   },
+  "identity": {
+    "cancel": "Cancelar",
+    "confirm": "Tem certeza de que deseja mudar de identidade?",
+    "ok": "Confirmar",
+    "tip": "Lembrete amigável",
+    "title": "Alternar identidade"
+  },
   "import": {
     "chatgpt": {
       "assistant_name": "Importação do ChatGPT",
@@ -2130,6 +2149,126 @@
       "title": "Manter tempo ativo"
     },
     "title": "LM Studio"
+  },
+  "login": {
+    "account_login": {
+      "password_invalid": "Insira entre 6 e 20 caracteres, usando letras, números ou símbolos (exceto espaço), contendo pelo menos dois tipos entre letras, números e sinais de pontuação.",
+      "password_required": "Digite a senha",
+      "username_invalid": "Formato de número de celular ou e-mail inválido",
+      "username_required": "Insira o número de telefone ou e-mail"
+    },
+    "agreements": {
+      "accept_text": "Por favor, marque a caixa para concordar com os termos relevantes.",
+      "agree": "Li e concordo",
+      "disclaimer": "《Acordo de Isenção de Responsabilidade》",
+      "privacy": "《Política de Privacidade》",
+      "user": "《Acordo do Usuário》",
+      "yu": "e"
+    },
+    "back_login": "Voltar ao login",
+    "back_main_login": "Voltar ao login da conta principal",
+    "email_login": {
+      "code_required": "Por favor, insira o código de verificação",
+      "email_invalid": "Formato de e-mail inválido",
+      "email_required": "Por favor, insira o e-mail",
+      "send_code": "Obter código de verificação"
+    },
+    "forget_password": "Esqueceu a senha?",
+    "forgot_password": {
+      "email": {
+        "code_label": "Código de verificação",
+        "code_required": "Por favor, insira o código de verificação",
+        "email_invalid": "Formato de e-mail inválido",
+        "email_label": "E-mail",
+        "email_required": "Por favor, insira o e-mail",
+        "title": "E-mail"
+      },
+      "next": "Próximo passo",
+      "phone": {
+        "code_label": "código de verificação",
+        "code_required": "Por favor, insira o código de verificação",
+        "phone_invalid": "Formato de número de celular inválido",
+        "phone_label": "Número de celular",
+        "phone_required": "Por favor, insira o número do celular",
+        "title": "Número de celular"
+      },
+      "stepOne": {
+        "title": "Autenticação"
+      },
+      "stepThree": {
+        "auto_back_text": "Retorno automático à página de login em segundos",
+        "successful": "Senha alterada com sucesso"
+      },
+      "stepTwo": {
+        "confirm_password_label": "Confirmar nova senha",
+        "confirm_password_required": "Insira a senha de confirmação",
+        "new_password_invalid": "Insira de 6 a 20 caracteres, compostos por letras, números ou símbolos (exceto espaço), incluindo pelo menos dois tipos entre letras, números e sinais de pontuação.",
+        "new_password_label": "Nova senha",
+        "new_password_required": "Digite a nova senha",
+        "password_not_match": "As duas senhas inseridas não coincidem",
+        "sub_title": "Digite a nova senha",
+        "title": "Redefinir senha"
+      },
+      "sub_title": "Por favor, insira as informações de verificação"
+    },
+    "login_btn_text": "Entrar/Registrar",
+    "new_user_gift": "Novos usuários ganham um presente de boas-vindas ao se registrarem pela primeira vez>>",
+    "send_code": "Obter código de verificação",
+    "sms_login": {
+      "code_required": "Por favor, insira o código de verificação",
+      "phone_invalid": "Formato de número de celular inválido",
+      "phone_required": "Por favor, insira o número de celular",
+      "send_code": "Obter código de verificação"
+    },
+    "sub_account": {
+      "back_main_login": "Voltar para o login da conta principal",
+      "bind_phone_email": {
+        "bind_btn_text": "Vinculação",
+        "bind_success": "Vinculação bem-sucedida",
+        "email": {
+          "code_label": "Código de verificação",
+          "code_required": "Por favor, insira o código de verificação",
+          "duplicate_email_message": "O e-mail já está vinculado a outra conta, insira novamente.",
+          "email_label": "caixa de correio",
+          "fail": "Falha ao verificar o e-mail. Tente novamente.",
+          "invalid": "Formato de e-mail inválido",
+          "required": "Insira o endereço de e-mail",
+          "send_code": "Obter código de verificação",
+          "title": "Vincular e-mail"
+        },
+        "phone": {
+          "code_label": "Código de verificação",
+          "code_required": "Por favor, insira o código de verificação",
+          "duplicate_phone_message": "O número de celular já está vinculado a outra conta. Por favor, digite novamente.",
+          "fail": "Falha ao verificar o número de celular. Tente novamente.",
+          "invalid": "Formato do número de celular inválido",
+          "phone_label": "Número de celular",
+          "required": "Por favor, insira o número de celular",
+          "send_code": "Obter código de verificação",
+          "title": "Vincular número de celular"
+        },
+        "title": "Vincular número de celular/e-mail"
+      },
+      "btn_text": "Login de subconta",
+      "login": "Entrar",
+      "password_invalid": "Por favor, insira de 6 a 20 letras, números ou símbolos (exceto espaços), contendo pelo menos dois tipos entre letras, números e sinais de pontuação.",
+      "password_label": "Senha da subconta",
+      "password_required": "Por favor, insira a senha da subconta",
+      "phone_email_invalid": "Formato inválido de número de celular ou e-mail",
+      "phone_email_label": "Número de celular/e-mail da conta principal",
+      "phone_email_required": "Insira o número de celular/e-mail da conta principal",
+      "title": "Login de subconta",
+      "username_label": "Subconta",
+      "username_required": "Insira a subconta"
+    },
+    "title": "OLÁ! Bem-vindo ao cadastro e login"
+  },
+  "logout": {
+    "cancel": "Cancelar",
+    "confirm": "Tem a certeza de que pretende terminar sessão?",
+    "ok": "Confirmar",
+    "tip": "Lembrete amigável",
+    "title": "Sair"
   },
   "memory": {
     "actions": "Ações",
@@ -2590,11 +2729,12 @@
     "add_to_launchpad": "Adicionar ao Painel de Inicialização",
     "add_to_sidebar": "Adicionar à Barra Lateral",
     "deepseek_harness": {
-      "install_failed": "[to be translated]:DeepSeek Harness installation failed",
-      "install_success": "[to be translated]:DeepSeek Harness installed successfully",
-      "installing": "[to be translated]:Installing DeepSeek Harness, please wait…",
-      "start_failed": "[to be translated]:Failed to start DeepSeek Harness",
-      "starting": "[to be translated]:Starting DeepSeek Harness…"
+      "install_failed": "Falha na instalação do DeepSeek Harness",
+      "install_success": "DeepSeek Harness instalado com sucesso",
+      "install_timeout": "A instalação do DeepSeek Harness expirou, tente novamente",
+      "installing": "Instalando o DeepSeek Harness, aguarde…",
+      "start_failed": "Falha ao iniciar o DeepSeek Harness",
+      "starting": "Iniciando DeepSeek Harness…"
     },
     "popup": {
       "close": "Fechar aplicativo",
@@ -2734,6 +2874,28 @@
       "embedding": "inserção",
       "free": "Grátis",
       "function_calling": "chamada de função",
+      "price": {
+        "cache_price": "Preço de cache",
+        "cache_think_price": "Preço de cache/Preço de raciocínio",
+        "charge_type_label": "Forma de cobrança",
+        "duration": "Cobrança por duração",
+        "gold_coin": "moedas de ouro",
+        "interactive_num": "Moedas de ouro/unidade",
+        "million_tokens": "Moedas/milhão de tokens",
+        "output_price": "Preço de saída",
+        "per_character": "Cobrança por caractere",
+        "per_count": "Cobrança por uso",
+        "per_image": "Cobrança por folha",
+        "per_time": "vez",
+        "per_tokens": "Cobrança por tokens",
+        "second": "segundo",
+        "standard": "Tabela de preços",
+        "ten_thousand_chars": "10 mil caracteres",
+        "text_tokens": "moedas/vez",
+        "title": "Taxa",
+        "token_price": "Moedas de ouro/M tokens",
+        "video_input_price": "Preço de entrada de vídeo"
+      },
       "reasoning": "raciocínio",
       "rerank": "Reclassificar",
       "select": "Tipos de modelo",
@@ -2916,9 +3078,9 @@
     "title": "Ollama"
   },
   "onboarding": {
-    "newUserGift": "[to be translated]:New users will receive a welcome gift upon their first registration>>",
+    "newUserGift": "Novos usuários receberão um presente de boas-vindas no primeiro cadastro>>",
     "privacy": {
-      "accept_and_continue": "[to be translated]:Accept and Continue",
+      "accept_and_continue": "Aceitar e Continuar",
       "notice": "Ao continuar, você confirma que leu e concorda com",
       "period": ".",
       "policy": "Política de Privacidade"
@@ -3283,6 +3445,9 @@
     "seed_random": "Aleatório",
     "seed_tip": "A mesma semente e palavra-chave podem gerar imagens semelhantes",
     "select_model": "Selecionar modelo",
+    "settings": {
+      "title": "Configurações de recursos"
+    },
     "style_type": "Estilo",
     "style_types": {
       "3d": "3D",
@@ -3402,12 +3567,12 @@
     "zoom_out": "reduzir"
   },
   "privacy_policy": {
-    "title": "[to be translated]:Privacy Policy"
+    "title": "Política de Privacidade"
   },
   "privacy_policy_update": {
-    "description_before_link": "[to be translated]:We have updated the privacy policy. Please review the latest ",
-    "policy": "[to be translated]:Privacy Policy",
-    "title": "[to be translated]:Privacy Policy Updated"
+    "description_before_link": "Atualizamos a política de privacidade. Por favor, revise a versão mais recente",
+    "policy": "Política de Privacidade",
+    "title": "Política de Privacidade Atualizada"
   },
   "prompts": {
     "explanation": "Ajude-me a explicar este conceito",
@@ -4621,7 +4786,7 @@
       },
       "custom": {
         "css": {
-          "cherrycss": "Obter do cherrycss.com",
+          "gallery": "Obter mais temas",
           "label": "CSS personalizado",
           "placeholder": "/* Escreva seu CSS personalizado aqui */"
         }
@@ -5018,6 +5183,20 @@
       "url": "URL",
       "user": "Usuário"
     },
+    "menus": {
+      "model": {
+        "title": "Capacidade do modelo"
+      },
+      "other": {
+        "title": "Outros"
+      },
+      "quick": {
+        "title": "Ferramentas rápidas"
+      },
+      "system": {
+        "title": "Configurações do Sistema"
+      }
+    },
     "messages": {
       "divider": {
         "label": "Divisor de mensagens",
@@ -5113,6 +5292,8 @@
     "model": "Modelo padrão",
     "models": {
       "add": {
+        "activate_desc": "Antes de usar serviços como a invocação de modelos, é necessário ativar o modelo; o modo de ativação é de uso primeiro e pagamento depois: se houver uso, a cobrança é feita com base no preço de tabela do serviço do modelo; se não houver uso, nenhuma taxa será gerada.",
+        "activate_model": "Ativar",
         "add_model": "Adicionar modelo",
         "batch_add_models": "Adicionar Modelos em Lote",
         "endpoint_type": {
@@ -5139,10 +5320,12 @@
           "placeholder": "Exemplo: GPT-3.5",
           "tooltip": "Por exemplo, GPT-4"
         },
+        "search_placeholder": "Insira o nome do modelo ou do provedor de serviços",
         "supported_text_delta": {
           "label": "saída de texto incremental",
           "tooltip": "Quando o modelo não for suportado, desative este botão"
-        }
+        },
+        "tips": "Antes de ativar, certifique-se de que o saldo de moedas de ouro da conta é maior que 0; caso contrário, não será possível ativar."
       },
       "api_key": "Chave API",
       "base_url": "URL Base",
@@ -5173,11 +5356,13 @@
       "default_assistant_model": "Modelo de assistente padrão",
       "default_assistant_model_description": "Modelo usado ao criar um novo assistente, se o assistente não tiver um modelo definido, este será usado",
       "empty": "Sem modelos",
+      "image_model": "Geração de imagens",
       "manage": {
         "add_listed": {
           "confirm": "Tem a certeza de que deseja adicionar todos os modelos à lista?",
           "label": "Adicionar modelo da lista"
         },
+        "add_model": "Adicionar modelo",
         "add_whole_group": "Adicionar todo o grupo",
         "fetch_list": "Buscar lista de modelos",
         "refetch_list": "Obter novamente a lista de modelos",
@@ -5205,6 +5390,7 @@
         "setting_title": "Configuração rápida do modelo",
         "tooltip": "Sugere-se escolher um modelo leve e não se recomenda escolher um modelo de raciocínio"
       },
+      "text_model": "Modelo de texto",
       "topic_naming": {
         "auto": "Renomeação automática de tópicos",
         "label": "Nomeação do tópico",
@@ -5283,7 +5469,7 @@
         "auth_failed": "Falha na autenticação da Anthropic",
         "auth_method": "Método de autenticação",
         "auth_success": "Autenticação OAuth da Anthropic bem-sucedida",
-        "authenticated": "[retranslating]: Verificado",
+        "authenticated": "Autenticado",
         "authenticating": "A autenticar",
         "cancel": "Cancelar",
         "code_error": "Código de autorização inválido, tente novamente",
@@ -5313,10 +5499,16 @@
             "empty": "A chave API não pode estar vazia"
           },
           "list": {
+            "more": "Mais",
             "open": "Abrir interface de gerenciamento",
             "title": "Gerenciamento de Chaves API"
           },
           "new_key": {
+            "cancel": "Cancelar",
+            "confirm": "Confirmar",
+            "editing_tip": "Por favor, conclua a edição atual primeiro.",
+            "limit_over_tip": "É possível criar no máximo 200 chaves. Exclua algumas chaves.",
+            "name_placeholder": "Insira o nome da chave",
             "placeholder": "Insira uma ou mais chaves"
           }
         },
@@ -5353,7 +5545,8 @@
           "verbosity": {
             "help": "Se o provedor suporta o parâmetro de verbosidade",
             "label": "Suportar verbosidade"
-          }
+          },
+          "website": "Acesse o site oficial"
         },
         "url": {
           "preview": "Pré-visualização: {{url}}",
@@ -5367,7 +5560,50 @@
       "api_host_tooltip": "Substituir apenas quando o fornecedor necessita de um endereço compatível com OpenAI personalizado.",
       "api_key": {
         "label": "Chave API",
-        "tip": "Use vírgula para separar várias chaves"
+        "max_tip": "É possível criar até 200.",
+        "tip": "Use vírgula para separar várias chaves",
+        "token_plan": {
+          "columns": {
+            "action": "Ativar/Desativar",
+            "creditsRest": "Uso (créditos)",
+            "effective": "Prazo de validade",
+            "planName": "Nome do pacote/categoria",
+            "status": "Estado",
+            "totalAmount": "Precificação"
+          },
+          "confirm_disable_content": "Desativar o plano TokenPlan? Após a desativação, ele retornará automaticamente para a sk-key padrão da plataforma.",
+          "confirm_disable_title": "TokenPlan desativado",
+          "confirm_enable_content": "Ativar o plano TokenPlan? Após a ativação, será feita a alteração para a tk-key deste plano e para os modelos deste plano.",
+          "confirm_enable_title": "Ativação do TokenPlan",
+          "credits": "Saldo restante (Credits)",
+          "cur_plan": {
+            "name": "Nome do pacote:"
+          },
+          "custom": "Dia",
+          "effective": "Validade",
+          "effective_e": "Até",
+          "effective_s": "De",
+          "model_title": "Usar plano de tokens",
+          "month": "mensal",
+          "price": "Precificação",
+          "price_type": "￥",
+          "quarter": "trimestre",
+          "remaining": "Restante",
+          "search": {
+            "planName": "Insira o nome do pacote",
+            "status_placeholder": "Selecione o status"
+          },
+          "status": {
+            "disabled": "Expirado",
+            "enabled": "Em vigor",
+            "wait_pay": "Pagamento pendente"
+          },
+          "subscribe_label": "Selecionar pacote",
+          "subscribe_placeholder": "Selecione o pacote",
+          "title": "TokenPlan",
+          "total": "Total",
+          "year": "ano"
+        }
       },
       "api_version": "Versão da API",
       "aws-bedrock": {
@@ -5455,7 +5691,7 @@
         "platform_official": "www.DMXAPI.cn (CNY)",
         "select_platform": "Selecionar Plataforma"
       },
-      "docs_check": "Verificar",
+      "docs_check": "Ver",
       "docs_more_details": "Obter mais detalhes",
       "filter": {
         "agent": "Suportado por Agente",
@@ -5491,7 +5727,7 @@
         },
         "official_website": "Site Oficial",
         "provided_by": "Fornecido por",
-        "provided_by_suffix": "I'm ready to translate. Please provide the text you'd like me to translate into Portuguese.",
+        "provided_by_suffix": "",
         "requests": "Solicitações",
         "topup": "Recarregar",
         "usage_title": "Uso"
@@ -5895,6 +6131,9 @@
     "store": "Biblioteca de assistentes",
     "translate": "Traduzir"
   },
+  "tokenPlan": {
+    "title": "plano de tokens"
+  },
   "trace": {
     "backList": "Voltar à lista",
     "edasSupport": "Desenvolvido pela Alibaba Cloud EDAS",
@@ -6055,6 +6294,13 @@
     "noReleaseNotes": "Sem notas de versão",
     "saveDataError": "Falha ao salvar os dados, tente novamente",
     "title": "Atualização"
+  },
+  "user": {
+    "limit": {
+      "limit_day": "Limite diário",
+      "rest": "Cota restante",
+      "title": "cota"
+    }
   },
   "warning": {
     "missing_provider": "O fornecedor não existe; foi revertido para o fornecedor predefinido {{provider}}. Isto pode causar problemas."

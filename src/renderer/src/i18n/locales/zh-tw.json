@@ -2729,11 +2729,12 @@
     "add_to_launchpad": "新增到啟動台",
     "add_to_sidebar": "新增到側邊欄",
     "deepseek_harness": {
-      "install_failed": "[to be translated]:DeepSeek Harness installation failed",
-      "install_success": "[to be translated]:DeepSeek Harness installed successfully",
-      "installing": "[to be translated]:Installing DeepSeek Harness, please wait…",
-      "start_failed": "[to be translated]:Failed to start DeepSeek Harness",
-      "starting": "[to be translated]:Starting DeepSeek Harness…"
+      "install_failed": "DeepSeek Harness 安裝失敗",
+      "install_success": "DeepSeek Harness 安裝成功",
+      "install_timeout": "DeepSeek Harness 安裝逾時，請重試",
+      "installing": "正在安裝 DeepSeek Harness，請稍候…",
+      "start_failed": "無法啟動 DeepSeek Harness",
+      "starting": "正在啟動 DeepSeek Harness…"
     },
     "popup": {
       "close": "關閉小工具",
@@ -3095,7 +3096,6 @@
       "connected": "成功連接到 Market"
     },
     "welcome": {
-      "login_cherryin": "登录 AiOnly",
       "login_market": "使用 Market 登入",
       "or_continue_with": "或繼續使用",
       "other_provider": "選擇其他供應商",
@@ -4786,7 +4786,7 @@
       },
       "custom": {
         "css": {
-          "cherrycss": "從 cherrycss.com 取得",
+          "gallery": "取得更多主題樣式",
           "label": "自訂 CSS",
           "placeholder": "/* 這裡寫自訂 CSS */"
         }

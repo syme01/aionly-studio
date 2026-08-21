@@ -3078,7 +3078,7 @@
     "title": "Ollama"
   },
   "onboarding": {
-    "newUserGift": "[to be translated]:New users will receive a welcome gift upon their first registration>>",
+    "newUserGift": "新用户首次注册即可获得欢迎礼包>>",
     "privacy": {
       "accept_and_continue": "同意并继续",
       "notice": "继续即表示你已阅读并同意",
@@ -3096,7 +3096,6 @@
       "connected": "成功连接 AiOnly"
     },
     "welcome": {
-      "login_cherryin": "登录 AiOnly",
       "login_market": "登录 AiOnly",
       "or_continue_with": "或使用其他方式",
       "other_provider": "选择其他服务商",
@@ -4787,7 +4786,7 @@
       },
       "custom": {
         "css": {
-          "cherrycss": "从 cherrycss.com 获取",
+          "gallery": "获取更多主题样式",
           "label": "自定义 CSS",
           "placeholder": "/* 这里写自定义 CSS */"
         }

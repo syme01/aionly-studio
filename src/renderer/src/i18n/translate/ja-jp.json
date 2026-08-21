@@ -569,6 +569,9 @@
         }
       }
     },
+    "sidebar_agent": {
+      "add": "エージェントを作成"
+    },
     "sidebar_title": "エージェント",
     "todo": {
       "panel": {
@@ -1475,6 +1478,8 @@
       },
       "move_to": "移動先",
       "new": "新しいトピック",
+      "no_model": "現在のアカウントでは利用可能なモデルがありません",
+      "open_model_text": "開通に進む",
       "pin": "トピックを固定",
       "prompt": {
         "edit": {
@@ -1495,7 +1500,8 @@
       "warning": {
         "openai": "GPT5モデルの最小思考強度ではネット検索はサポートされません"
       }
-    }
+    },
+    "welcome": "始める準備はできましたか？"
   },
   "code": {
     "auto_update_to_latest": "最新バージョンを自動的に更新する",
@@ -1600,7 +1606,7 @@
     "copy_failed": "コピーに失敗しました",
     "current": "現在",
     "cut": "切り取り",
-    "decline": "[to be translated]:Decline",
+    "decline": "辞退",
     "default": "デフォルト",
     "delete": "削除",
     "delete_confirm": "削除してもよろしいですか？",
@@ -1638,6 +1644,7 @@
     "image_preview": "画像プレビュー",
     "image_url": "画像URL",
     "image_url_or_upload": "画像のURLを入力するか、ファイルをアップロードしてください",
+    "input": "入力",
     "inspect": "検査",
     "invalid_value": "無効な値",
     "knowledge_base": "ナレッジベース",
@@ -1648,12 +1655,17 @@
     "more": "もっと",
     "name": "名前",
     "next_match": "次の試合",
+    "no_more": "これ以上ありません",
     "no_results": "検索結果なし",
     "none": "無",
     "off": "オフ",
     "on": "オン",
     "open": "開く",
     "open_in": "{{name}}で開く",
+    "output": "出力",
+    "pagination": {
+      "total": "合計{{total}}件"
+    },
     "paste": "貼り付け",
     "placeholders": {
       "select": {
@@ -1942,6 +1954,13 @@
     "preview": "プレビュー",
     "split": "分割"
   },
+  "identity": {
+    "cancel": "キャンセル",
+    "confirm": "身分を切り替えてよろしいですか？",
+    "ok": "確定",
+    "tip": "ご案内",
+    "title": "IDを切り替え"
+  },
   "import": {
     "chatgpt": {
       "assistant_name": "ChatGPTインポート",
@@ -2130,6 +2149,126 @@
       "title": "保持時間"
     },
     "title": "LM Studio"
+  },
+  "login": {
+    "account_login": {
+      "password_invalid": "6～20文字の英字、数字、または記号（スペースを除く）を入力してください。また、英字、数字、記号のうち少なくとも2種類を含めてください。",
+      "password_required": "パスワードを入力してください",
+      "username_invalid": "電話番号またはメールアドレスの形式が正しくありません",
+      "username_required": "電話番号またはメールアドレスを入力してください"
+    },
+    "agreements": {
+      "accept_text": "関連する規約への同意にチェックを入れてください",
+      "agree": "内容を確認し、同意します",
+      "disclaimer": "《免責合意書》",
+      "privacy": "《プライバシーポリシー》",
+      "user": "《利用規約》",
+      "yu": "と"
+    },
+    "back_login": "ログインに戻る",
+    "back_main_login": "メインアカウントのログインに戻る",
+    "email_login": {
+      "code_required": "認証コードを入力してください",
+      "email_invalid": "メールアドレスの形式が正しくありません",
+      "email_required": "メールアドレスを入力してください",
+      "send_code": "認証コードを取得"
+    },
+    "forget_password": "パスワードをお忘れですか？",
+    "forgot_password": {
+      "email": {
+        "code_label": "認証コード",
+        "code_required": "認証コードを入力してください",
+        "email_invalid": "メールアドレスの形式が正しくありません",
+        "email_label": "メールアドレス",
+        "email_required": "メールアドレスを入力してください",
+        "title": "メールアドレス"
+      },
+      "next": "次のステップ",
+      "phone": {
+        "code_label": "認証コード",
+        "code_required": "認証コードを入力してください",
+        "phone_invalid": "携帯電話番号の形式が正しくありません",
+        "phone_label": "携帯電話番号",
+        "phone_required": "携帯電話番号を入力してください",
+        "title": "携帯電話番号"
+      },
+      "stepOne": {
+        "title": "本人確認"
+      },
+      "stepThree": {
+        "auto_back_text": "秒後に自動的にログインページに戻ります",
+        "successful": "パスワードが正常に変更されました"
+      },
+      "stepTwo": {
+        "confirm_password_label": "新しいパスワードの確認",
+        "confirm_password_required": "確認用パスワードを入力してください",
+        "new_password_invalid": "6〜20文字の英字、数字、または記号（スペースを除く）を入力してください。英字、数字、記号のうち少なくとも2種類を含めてください。",
+        "new_password_label": "新しいパスワード",
+        "new_password_required": "新しいパスワードを入力してください",
+        "password_not_match": "2回のパスワード入力が一致しません",
+        "sub_title": "新しいパスワードを入力してください",
+        "title": "パスワードのリセット"
+      },
+      "sub_title": "検証情報を入力してください"
+    },
+    "login_btn_text": "ログイン/登録",
+    "new_user_gift": "新規ユーザーは初回登録で新人ギフトをプレゼント>>",
+    "send_code": "認証コードを取得",
+    "sms_login": {
+      "code_required": "認証コードを入力してください",
+      "phone_invalid": "携帯電話番号の形式が正しくありません",
+      "phone_required": "携帯電話番号を入力してください",
+      "send_code": "認証コードを取得"
+    },
+    "sub_account": {
+      "back_main_login": "メインアカウントのログインに戻る",
+      "bind_phone_email": {
+        "bind_btn_text": "バインド",
+        "bind_success": "紐付け成功",
+        "email": {
+          "code_label": "認証コード",
+          "code_required": "認証コードを入力してください",
+          "duplicate_email_message": "メールアドレスは既に他のアカウントに紐付けられています。もう一度入力してください。",
+          "email_label": "メールアドレス",
+          "fail": "メールアドレスの確認に失敗しました。もう一度お試しください。",
+          "invalid": "メールアドレスの形式が正しくありません",
+          "required": "メールアドレスを入力してください",
+          "send_code": "認証コードを取得",
+          "title": "メールアドレスの連携"
+        },
+        "phone": {
+          "code_label": "認証コード",
+          "code_required": "認証コードを入力してください",
+          "duplicate_phone_message": "この電話番号はすでに他のアカウントに紐付けられています。もう一度入力してください。",
+          "fail": "携帯電話番号の認証に失敗しました。もう一度お試しください。",
+          "invalid": "携帯電話番号の形式が正しくありません",
+          "phone_label": "携帯電話番号",
+          "required": "携帯電話番号を入力してください",
+          "send_code": "認証コードを取得",
+          "title": "携帯電話番号の連携"
+        },
+        "title": "電話番号/メールアドレスの紐付け"
+      },
+      "btn_text": "サブアカウントログイン",
+      "login": "ログイン",
+      "password_invalid": "6～20文字の英字、数字、または記号（スペースを除く）を入力してください。英字、数字、句読記号のうち少なくとも2種類を含めてください。",
+      "password_label": "サブアカウントのパスワード",
+      "password_required": "サブアカウントのパスワードを入力してください",
+      "phone_email_invalid": "携帯電話番号またはメールアドレスの形式が正しくありません。",
+      "phone_email_label": "メインアカウントの携帯電話番号/メールアドレス",
+      "phone_email_required": "メインアカウントの携帯電話番号/メールアドレスを入力してください",
+      "title": "サブアカウントログイン",
+      "username_label": "サブアカウント",
+      "username_required": "サブアカウントを入力してください"
+    },
+    "title": "HELLO！登録・ログインへようこそ"
+  },
+  "logout": {
+    "cancel": "キャンセル",
+    "confirm": "ログアウトしてもよろしいですか？",
+    "ok": "確定",
+    "tip": "お知らせ",
+    "title": "ログアウト"
   },
   "memory": {
     "actions": "アクション",
@@ -2590,11 +2729,12 @@
     "add_to_launchpad": "スタート画面に追加",
     "add_to_sidebar": "サイドバーに追加",
     "deepseek_harness": {
-      "install_failed": "[to be translated]:DeepSeek Harness installation failed",
-      "install_success": "[to be translated]:DeepSeek Harness installed successfully",
-      "installing": "[to be translated]:Installing DeepSeek Harness, please wait…",
-      "start_failed": "[to be translated]:Failed to start DeepSeek Harness",
-      "starting": "[to be translated]:Starting DeepSeek Harness…"
+      "install_failed": "DeepSeek Harnessのインストールに失敗しました",
+      "install_success": "DeepSeek Harnessが正常にインストールされました",
+      "install_timeout": "DeepSeek Harness のインストールがタイムアウトしました。再試行してください。",
+      "installing": "DeepSeek Harness をインストールしています。しばらくお待ちください…",
+      "start_failed": "DeepSeek Harness の起動に失敗しました",
+      "starting": "DeepSeek Harness を起動中…"
     },
     "popup": {
       "close": "ミニアプリを閉じる",
@@ -2734,11 +2874,33 @@
       "embedding": "埋め込み",
       "free": "無料",
       "function_calling": "ツール",
+      "price": {
+        "cache_price": "キャッシュ価格",
+        "cache_think_price": "キャッシュ価格/思考価格",
+        "charge_type_label": "課金方式",
+        "duration": "時間単位での課金",
+        "gold_coin": "金貨",
+        "interactive_num": "ゴールドコイン/枚",
+        "million_tokens": "ゴールドコイン/100万トークン",
+        "output_price": "出力価格",
+        "per_character": "文字数に応じた課金",
+        "per_count": "都度課金",
+        "per_image": "1枚単位で課金",
+        "per_time": "回",
+        "per_tokens": "トークン単位で課金",
+        "second": "秒",
+        "standard": "料金基準",
+        "ten_thousand_chars": "1万文字",
+        "text_tokens": "コイン/回",
+        "title": "有料",
+        "token_price": "ゴールドコイン/Mトークン",
+        "video_input_price": "動画入力価格"
+      },
       "reasoning": "推論",
       "rerank": "再順序付け",
       "select": "モデルタイプ",
       "text": "テキスト",
-      "vision": "画像",
+      "vision": "ビジョン",
       "websearch": "ウェブ検索"
     }
   },
@@ -2916,9 +3078,9 @@
     "title": "Ollama"
   },
   "onboarding": {
-    "newUserGift": "[to be translated]:New users will receive a welcome gift upon their first registration>>",
+    "newUserGift": "新規ユーザーは初回登録時にウェルカムギフトを受け取れます>>",
     "privacy": {
-      "accept_and_continue": "[to be translated]:Accept and Continue",
+      "accept_and_continue": "同意して続行",
       "notice": "続行することで、あなたは以下を読み、同意したことを確認します。",
       "period": "。",
       "policy": "プライバシーポリシー"
@@ -3283,6 +3445,9 @@
     "seed_random": "ランダム",
     "seed_tip": "同じシードとプロンプトで似た画像を生成できます",
     "select_model": "モデルを選択",
+    "settings": {
+      "title": "機能設定"
+    },
     "style_type": "スタイル",
     "style_types": {
       "3d": "3D",
@@ -3402,12 +3567,12 @@
     "zoom_out": "縮小"
   },
   "privacy_policy": {
-    "title": "[to be translated]:Privacy Policy"
+    "title": "プライバシーポリシー"
   },
   "privacy_policy_update": {
-    "description_before_link": "[to be translated]:We have updated the privacy policy. Please review the latest ",
-    "policy": "[to be translated]:Privacy Policy",
-    "title": "[to be translated]:Privacy Policy Updated"
+    "description_before_link": "プライバシーポリシーを更新しました。最新の内容をご確認ください。",
+    "policy": "プライバシーポリシー",
+    "title": "プライバシーポリシーの更新"
   },
   "prompts": {
     "explanation": "この概念を説明してください",
@@ -4621,7 +4786,7 @@
       },
       "custom": {
         "css": {
-          "cherrycss": "cherrycss.comから取得",
+          "gallery": "その他のテーマを取得",
           "label": "カスタムCSS",
           "placeholder": "/* ここにカスタムCSSを入力 */"
         }
@@ -5018,6 +5183,20 @@
       "url": "URL",
       "user": "ユーザー"
     },
+    "menus": {
+      "model": {
+        "title": "モデルの能力"
+      },
+      "other": {
+        "title": "その他"
+      },
+      "quick": {
+        "title": "クイックツール"
+      },
+      "system": {
+        "title": "システム設定"
+      }
+    },
     "messages": {
       "divider": {
         "label": "メッセージ間に区切り線を表示",
@@ -5113,6 +5292,8 @@
     "model": "デフォルトモデル",
     "models": {
       "add": {
+        "activate_desc": "モデル呼び出しなどのサービスを利用する前に、モデルを有効化する必要があります。有効化モードは後払い方式であり、利用した場合はモデルのカタログ価格に基づいてサービス料金が発生し、利用しない場合は費用は発生しません。",
+        "activate_model": "開通",
         "add_model": "モデルを追加",
         "batch_add_models": "モデルを一括追加",
         "endpoint_type": {
@@ -5139,10 +5320,12 @@
           "placeholder": "例：GPT-4",
           "tooltip": "例：GPT-4"
         },
+        "search_placeholder": "モデル名またはサービスプロバイダー名を入力",
         "supported_text_delta": {
           "label": "インクリメンタルテキスト出力のサポート",
           "tooltip": "モデルがテキストをチャンクで返す場合、デフォルトで有効になっています。モデルがサポートしていない場合は、このオプションを無効にしてください"
-        }
+        },
+        "tips": "開通する前に、アカウントのゴールド残高が0より大きいことを必ずご確認ください。そうでない場合、開通できません。"
       },
       "api_key": "API キー",
       "base_url": "ベース URL",
@@ -5173,11 +5356,13 @@
       "default_assistant_model": "デフォルトアシスタントモデル",
       "default_assistant_model_description": "新しいアシスタントを作成する際に使用されるモデル。アシスタントがモデルを設定していない場合、このモデルが使用されます",
       "empty": "モデルが見つかりません",
+      "image_model": "画像生成",
       "manage": {
         "add_listed": {
           "confirm": "すべてのモデルをリストに追加しますか？",
           "label": "リストにモデルを追加"
         },
+        "add_model": "モデルを追加",
         "add_whole_group": "グループ全体を追加",
         "fetch_list": "モデルリストを取得",
         "refetch_list": "モデルリストを再取得",
@@ -5205,6 +5390,7 @@
         "setting_title": "高速モデル設定",
         "tooltip": "軽量モデルの選択を推奨し、思考モデルの選択は推奨しません"
       },
+      "text_model": "テキストモデル",
       "topic_naming": {
         "auto": "トピックの自動命名",
         "label": "トピック名",
@@ -5313,10 +5499,16 @@
             "empty": "APIキーは空にできません"
           },
           "list": {
+            "more": "さらに",
             "open": "管理インターフェースを開く",
             "title": "APIキー管理"
           },
           "new_key": {
+            "cancel": "キャンセル",
+            "confirm": "確定",
+            "editing_tip": "まず現在の編集を完了してください。",
+            "limit_over_tip": "キーは最大200件まで作成できます。一部のキーを削除してください。",
+            "name_placeholder": "キー名を入力してください",
             "placeholder": "1つ以上のキーを入力してください"
           }
         },
@@ -5353,7 +5545,8 @@
           "verbosity": {
             "help": "プロバイダーが冗長度パラメータをサポートしているかどうか",
             "label": "冗長性のサポート"
-          }
+          },
+          "website": "公式サイトへ"
         },
         "url": {
           "preview": "プレビュー: {{url}}",
@@ -5367,7 +5560,50 @@
       "api_host_tooltip": "サービスプロバイダーがカスタムOpenAI互換アドレスを必要とする場合のみ上書きしてください。",
       "api_key": {
         "label": "APIキー",
-        "tip": "複数のキーはカンマまたはスペースで区切ります"
+        "max_tip": "最大200個作成できます",
+        "tip": "複数のキーはカンマまたはスペースで区切ります",
+        "token_plan": {
+          "columns": {
+            "action": "有効/無効",
+            "creditsRest": "使用量(クレジット)",
+            "effective": "有効期限",
+            "planName": "セット名/カテゴリー",
+            "status": "状態",
+            "totalAmount": "価格設定"
+          },
+          "confirm_disable_content": "TokenPlanプランを無効にしますか？無効にすると、自動的にプラットフォームのデフォルトのsk-keyに切り替わります。",
+          "confirm_disable_title": "TokenPlanの利用停止",
+          "confirm_enable_content": "TokenPlanプランを有効にしますか？有効にすると、このプランのtk-keyに切り替わり、このプラン内のモデルに切り替わります。",
+          "confirm_enable_title": "TokenPlanを有効化",
+          "credits": "残り使用量(Credits)",
+          "cur_plan": {
+            "name": "プラン名："
+          },
+          "custom": "日",
+          "effective": "有効期限",
+          "effective_e": "終了",
+          "effective_s": "開始",
+          "model_title": "トークンプランを使用",
+          "month": "月次",
+          "price": "価格設定",
+          "price_type": "￥",
+          "quarter": "四半期",
+          "remaining": "残り",
+          "search": {
+            "planName": "パッケージ名を入力してください",
+            "status_placeholder": "ステータスを選択してください"
+          },
+          "status": {
+            "disabled": "失効しました",
+            "enabled": "有効",
+            "wait_pay": "支払い待ち"
+          },
+          "subscribe_label": "プランを選択",
+          "subscribe_placeholder": "プランを選択してください",
+          "title": "トークンプラン",
+          "total": "合計",
+          "year": "年度"
+        }
       },
       "api_version": "APIバージョン",
       "aws-bedrock": {
@@ -5391,7 +5627,7 @@
           "tip": "Azure OpenAIのAPIバージョン。Response APIを使用する場合は、v1バージョンを入力してください"
         }
       },
-      "balance": "バランス",
+      "balance": "残高",
       "basic_auth": {
         "label": "HTTP 認証",
         "password": {
@@ -5455,7 +5691,7 @@
         "platform_official": "www.DMXAPI.cn（人民元）",
         "select_platform": "プラットフォームを選択"
       },
-      "docs_check": "チェック",
+      "docs_check": "表示",
       "docs_more_details": "詳細を確認",
       "filter": {
         "agent": "エージェントサポート",
@@ -5490,8 +5726,8 @@
           "title": "OAuthログイン"
         },
         "official_website": "公式サイト",
-        "provided_by": "提供",
-        "provided_by_suffix": "I’m ready—please provide the text you’d like translated into Japanese.",
+        "provided_by": "本サービスは",
+        "provided_by_suffix": "によって提供されています",
         "requests": "リクエスト",
         "topup": "チャージ",
         "usage_title": "使用"
@@ -5895,6 +6131,9 @@
     "store": "アシスタントライブラリ",
     "translate": "翻訳"
   },
+  "tokenPlan": {
+    "title": "トークンプラン"
+  },
   "trace": {
     "backList": "リストに戻る",
     "edasSupport": "Powered by Alibaba Cloud EDAS",
@@ -6055,6 +6294,13 @@
     "noReleaseNotes": "暫無更新日誌",
     "saveDataError": "データの保存に失敗しました。もう一度お試しください。",
     "title": "更新"
+  },
+  "user": {
+    "limit": {
+      "limit_day": "1日あたりの限度額",
+      "rest": "残り枠",
+      "title": "限度額"
+    }
   },
   "warning": {
     "missing_provider": "サプライヤーが存在しないため、デフォルトのサプライヤー {{provider}} にロールバックされました。これにより問題が発生する可能性があります。"

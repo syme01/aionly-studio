@@ -48,6 +48,7 @@
     "i18n:hardcoded": "tsx scripts/check-hardcoded-strings.ts",
     "i18n:hardcoded:strict": "I18N_STRICT=true tsx scripts/check-hardcoded-strings.ts",
     "i18n:sync": "dotenv -e .env -- tsx scripts/sync-i18n.ts",
+    "i18n:inject": "tsx scripts/inject-missing-i18n-keys.ts",
     "i18n:translate": "dotenv -e .env -- tsx scripts/auto-translate-i18n.ts",
     "i18n:all": "pnpm i18n:sync && pnpm i18n:translate",
     "skills:sync": "tsx scripts/skills-sync.ts",

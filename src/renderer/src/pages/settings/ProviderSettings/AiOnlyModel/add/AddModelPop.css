@@ -22,7 +22,7 @@
   align-items: center;
   gap: 10px;
   .tab-layout {
-    width: 260px;
+    min-width: 310px;
   }
 }
 

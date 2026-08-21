@@ -570,7 +570,7 @@
       }
     },
     "sidebar_agent": {
-      "add": "创建智能体"
+      "add": "Create Agent"
     },
     "sidebar_title": "Agents",
     "todo": {
@@ -1478,8 +1478,8 @@
       },
       "move_to": "Move to",
       "new": "New Topic",
-      "no_model": "当前账号暂无可用模型",
-      "open_model_text": "去开通",
+      "no_model": "There are currently no available models for this account.",
+      "open_model_text": "Go activate",
       "pin": "Pin Topic",
       "prompt": {
         "edit": {
@@ -1501,7 +1501,7 @@
         "openai": "The GPT-5 model's minimal reasoning effort does not support web search."
       }
     },
-    "welcome": "准备好开始了吗？"
+    "welcome": "Are you ready to get started?"
   },
   "code": {
     "auto_update_to_latest": "Automatically update to latest version",
@@ -1644,7 +1644,7 @@
     "image_preview": "Image preview",
     "image_url": "Image URL",
     "image_url_or_upload": "Enter image URL or upload file",
-    "input": "输入",
+    "input": "Input",
     "inspect": "Inspect",
     "invalid_value": "Invalid Value",
     "knowledge_base": "Knowledge Base",
@@ -1655,16 +1655,16 @@
     "more": "More",
     "name": "Name",
     "next_match": "Next match",
-    "no_more": "没有更多了",
+    "no_more": "No more",
     "no_results": "No results",
     "none": "None",
     "off": "Off",
     "on": "On",
     "open": "Open",
     "open_in": "Open in {{name}}",
-    "output": "输出",
+    "output": "Output",
     "pagination": {
-      "total": "共{{total}}条"
+      "total": "Total {{total}} items"
     },
     "paste": "Paste",
     "placeholders": {
@@ -1955,11 +1955,11 @@
     "split": "Split"
   },
   "identity": {
-    "cancel": "取消",
-    "confirm": "确定要切换身份吗？",
-    "ok": "确定",
-    "tip": "温馨提示",
-    "title": "切换身份"
+    "cancel": "Cancel",
+    "confirm": "Are you sure you want to switch identities?",
+    "ok": "Confirm",
+    "tip": "Gentle Reminder",
+    "title": "Switch identity"
   },
   "import": {
     "chatgpt": {
@@ -2152,123 +2152,123 @@
   },
   "login": {
     "account_login": {
-      "password_invalid": "请输入6-20位英文字母、数字或者符号（除空格），且字母、数字和标点符号至少包含两种",
-      "password_required": "请输入密码",
-      "username_invalid": "手机号或邮箱格式错误",
-      "username_required": "请输入手机号或邮箱"
+      "password_invalid": "Please enter 6–20 characters using English letters, digits, or symbols (excluding spaces), and include at least two of the following: letters, digits, and punctuation.",
+      "password_required": "Please enter the password.",
+      "username_invalid": "Invalid mobile number or email format.",
+      "username_required": "Please enter your mobile number or email address"
     },
     "agreements": {
-      "accept_text": "请勾选同意相关协议",
-      "agree": "我已阅读并同意",
-      "disclaimer": "《免责协议》",
-      "privacy": "《隐私政策》",
-      "user": "《用户协议》",
-      "yu": "与"
+      "accept_text": "Please check the box to agree to the relevant agreements.",
+      "agree": "I have read and agree",
+      "disclaimer": "Liability Waiver Agreement",
+      "privacy": "Privacy Policy",
+      "user": "Terms of Service",
+      "yu": "and"
     },
-    "back_login": "返回登录",
-    "back_main_login": "返回主账号登录",
+    "back_login": "Return to login",
+    "back_main_login": "Return to main account login",
     "email_login": {
-      "code_required": "请输入验证码",
-      "email_invalid": "邮箱格式错误",
-      "email_required": "请输入邮箱",
-      "send_code": "获取验证码"
+      "code_required": "Please enter the verification code",
+      "email_invalid": "Invalid email format",
+      "email_required": "Please enter your email",
+      "send_code": "Get verification code"
     },
-    "forget_password": "忘记密码",
+    "forget_password": "Forgot password",
     "forgot_password": {
       "email": {
-        "code_label": "验证码",
-        "code_required": "请输入验证码",
-        "email_invalid": "邮箱格式错误",
-        "email_label": "邮箱",
-        "email_required": "请输入邮箱",
-        "title": "邮箱"
+        "code_label": "Verification code",
+        "code_required": "Please enter the verification code",
+        "email_invalid": "Invalid email format",
+        "email_label": "Email",
+        "email_required": "Please enter your email address",
+        "title": "Email"
       },
-      "next": "下一步",
+      "next": "Next step",
       "phone": {
-        "code_label": "验证码",
-        "code_required": "请输入验证码",
-        "phone_invalid": "手机号格式错误",
-        "phone_label": "手机号",
-        "phone_required": "请输入手机号",
-        "title": "手机号"
+        "code_label": "Verification code",
+        "code_required": "Please enter the verification code",
+        "phone_invalid": "Invalid mobile phone number format",
+        "phone_label": "Mobile number",
+        "phone_required": "Please enter your mobile phone number",
+        "title": "Mobile phone number"
       },
       "stepOne": {
-        "title": "身份验证"
+        "title": "Authentication"
       },
       "stepThree": {
-        "auto_back_text": "秒后自动返回登录页",
-        "successful": "密码修改成功"
+        "auto_back_text": "Automatically return to the login page in seconds",
+        "successful": "Password changed successfully"
       },
       "stepTwo": {
-        "confirm_password_label": "确认新密码",
-        "confirm_password_required": "请输入确认密码",
-        "new_password_invalid": "请输入6-20位英文字母、数字或者符号（除空格），且字母、数字和标点符号至少包含两种",
-        "new_password_label": "新密码",
-        "new_password_required": "请输入新密码",
-        "password_not_match": "两次密码输入不一致",
-        "sub_title": "请输入新密码",
-        "title": "重置密码"
+        "confirm_password_label": "Confirm new password",
+        "confirm_password_required": "Please enter the confirmation password",
+        "new_password_invalid": "Please enter 6-20 characters consisting of letters, numbers, or symbols (except spaces), and include at least two of the following: letters, numbers, and punctuation.",
+        "new_password_label": "New password",
+        "new_password_required": "Please enter a new password",
+        "password_not_match": "The two passwords do not match",
+        "sub_title": "Please enter a new password",
+        "title": "Reset Password"
       },
-      "sub_title": "请输入验证的信息"
+      "sub_title": "Please enter the verification information"
     },
-    "login_btn_text": "登录/注册",
-    "new_user_gift": "新用户首次注册即送新人礼>>",
-    "send_code": "获取验证码",
+    "login_btn_text": "Login/Register",
+    "new_user_gift": "New users receive a welcome gift upon first registration >>",
+    "send_code": "Get verification code",
     "sms_login": {
-      "code_required": "请输入验证码",
-      "phone_invalid": "手机号格式错误",
-      "phone_required": "请输入手机号",
-      "send_code": "获取验证码"
+      "code_required": "Please enter the verification code.",
+      "phone_invalid": "Invalid mobile phone number format",
+      "phone_required": "Please enter your mobile phone number.",
+      "send_code": "Get verification code"
     },
     "sub_account": {
-      "back_main_login": "返回主账号登录",
+      "back_main_login": "Return to main account login",
       "bind_phone_email": {
-        "bind_btn_text": "绑定",
-        "bind_success": "绑定成功",
+        "bind_btn_text": "Bind",
+        "bind_success": "Binding successful",
         "email": {
-          "code_label": "验证码",
-          "code_required": "请输入验证码",
-          "duplicate_email_message": "邮箱已被其他账号绑定，请重新输入",
-          "email_label": "邮箱",
-          "fail": "校验邮箱失败，请重试",
-          "invalid": "邮箱格式错误",
-          "required": "请输入邮箱",
-          "send_code": "获取验证码",
-          "title": "绑定邮箱"
+          "code_label": "Verification code",
+          "code_required": "Please enter the verification code",
+          "duplicate_email_message": "The email address is already linked to another account. Please enter a different one.",
+          "email_label": "Email",
+          "fail": "Email verification failed. Please try again.",
+          "invalid": "Invalid email format",
+          "required": "Please enter your email address",
+          "send_code": "Get verification code",
+          "title": "Bind Email"
         },
         "phone": {
-          "code_label": "验证码",
-          "code_required": "请输入验证码",
-          "duplicate_phone_message": "手机号已被其他账号绑定，请重新输入",
-          "fail": "校验手机号失败，请重试",
-          "invalid": "手机号格式错误",
-          "phone_label": "手机号",
-          "required": "请输入手机号",
-          "send_code": "获取验证码",
-          "title": "绑定手机号"
+          "code_label": "Verification code",
+          "code_required": "Please enter the verification code",
+          "duplicate_phone_message": "This phone number is already linked to another account. Please enter a different one.",
+          "fail": "Failed to verify the phone number. Please try again.",
+          "invalid": "Invalid mobile number format",
+          "phone_label": "Mobile phone number",
+          "required": "Please enter your phone number",
+          "send_code": "Get verification code",
+          "title": "Bind phone number"
         },
-        "title": "绑定手机号/邮箱"
+        "title": "Bind Phone Number/Email"
       },
-      "btn_text": "子账户登录",
-      "login": "登录",
-      "password_invalid": "请输入6-20位英文字母、数字或者符号（除空格），且字母、数字和标点符号至少包含两种",
-      "password_label": "子账号密码",
-      "password_required": "请输入子账号密码",
-      "phone_email_invalid": "手机号或邮箱格式错误",
-      "phone_email_label": "主账号手机号/邮箱",
-      "phone_email_required": "请输入主账号手机号/邮箱",
-      "title": "子账户登录",
-      "username_label": "子账号",
-      "username_required": "请输入子账号"
+      "btn_text": "Sub-account login",
+      "login": "Log in",
+      "password_invalid": "Please enter 6–20 characters consisting of letters, numbers, or symbols (excluding spaces), and include at least two of the following: letters, numbers, and punctuation.",
+      "password_label": "Sub-account password",
+      "password_required": "Please enter the sub-account password.",
+      "phone_email_invalid": "Invalid phone number or email format.",
+      "phone_email_label": "Primary account phone number/email address",
+      "phone_email_required": "Please enter the primary account phone number/email address",
+      "title": "Sub-account Login",
+      "username_label": "sub-account",
+      "username_required": "Please enter a sub-account."
     },
-    "title": "HELLO! 欢迎注册登录"
+    "title": "HELLO! Welcome to register and log in"
   },
   "logout": {
-    "cancel": "取消",
-    "confirm": "确定要退出登录吗？",
-    "ok": "确定",
-    "tip": "温馨提示",
-    "title": "退出登录"
+    "cancel": "Cancel",
+    "confirm": "Are you sure you want to log out?",
+    "ok": "Confirm",
+    "tip": "Friendly reminder",
+    "title": "Log out"
   },
   "memory": {
     "actions": "Actions",
@@ -2875,26 +2875,26 @@
       "free": "Free",
       "function_calling": "Tool",
       "price": {
-        "cache_price": "缓存价格",
-        "cache_think_price": "缓存价格/思考价格",
-        "charge_type_label": "收费方式",
-        "duration": "按时长收费",
-        "gold_coin": "金币",
-        "interactive_num": "金币/张",
-        "million_tokens": "金币/百万tokens",
-        "output_price": "输出价格",
-        "per_character": "按字符收费",
-        "per_count": "按次收费",
-        "per_image": "按张收费",
-        "per_time": "次",
-        "per_tokens": "按tokens收费",
-        "second": "秒",
-        "standard": "收费标准",
-        "ten_thousand_chars": "万字符",
-        "text_tokens": "金币/次",
-        "title": "收费",
-        "token_price": "金币/M tokens",
-        "video_input_price": "视频输入价格"
+        "cache_price": "Cache price",
+        "cache_think_price": "Cache price/Thinking price",
+        "charge_type_label": "Billing method",
+        "duration": "Billing by duration",
+        "gold_coin": "Gold coin",
+        "interactive_num": "Gold coins/card",
+        "million_tokens": "Gold coins/million tokens",
+        "output_price": "Output Price",
+        "per_character": "Charged by character",
+        "per_count": "Pay per use",
+        "per_image": "Charged per sheet",
+        "per_time": "Time",
+        "per_tokens": "Billed per token",
+        "second": "seconds",
+        "standard": "Fee Standard",
+        "ten_thousand_chars": "10K Characters",
+        "text_tokens": "Coins/time",
+        "title": "Fee",
+        "token_price": "Gold coins/M tokens",
+        "video_input_price": "Video Input Price"
       },
       "reasoning": "Reasoning",
       "rerank": "Reranker",
@@ -3096,7 +3096,6 @@
       "connected": "Successfully connected to Market"
     },
     "welcome": {
-      "login_cherryin": "登录 AiOnly",
       "login_market": "Login with Market",
       "or_continue_with": "OR CONTINUE WITH",
       "other_provider": "Choose Other Providers",
@@ -3447,7 +3446,7 @@
     "seed_tip": "The same seed and prompt can produce similar images",
     "select_model": "Select Model",
     "settings": {
-      "title": "功能设置"
+      "title": "Feature Settings"
     },
     "style_type": "Style",
     "style_types": {
@@ -4787,7 +4786,7 @@
       },
       "custom": {
         "css": {
-          "cherrycss": "Get from cherrycss.com",
+          "gallery": "Get more themes",
           "label": "Custom CSS",
           "placeholder": "/* Put custom CSS here */"
         }
@@ -5186,16 +5185,16 @@
     },
     "menus": {
       "model": {
-        "title": "模型能力"
+        "title": "Model capabilities"
       },
       "other": {
-        "title": "其他"
+        "title": "Other"
       },
       "quick": {
-        "title": "快捷工具"
+        "title": "Quick Tools"
       },
       "system": {
-        "title": "系统设置"
+        "title": "System Settings"
       }
     },
     "messages": {
@@ -5293,8 +5292,8 @@
     "model": "Default Model",
     "models": {
       "add": {
-        "activate_desc": "使用模型调用等服务前需要进行模型的开通，开通模式为先用后付，使用则按照模型的刊例价服务计费，不使用则不产生费用。",
-        "activate_model": "开通",
+        "activate_desc": "Before using services such as model invocation, you must activate the model. The activation mode is pay-after-use; if you use the service, you will be billed at the model's list price, and if you do not use it, no fees will be incurred.",
+        "activate_model": "Activate",
         "add_model": "Add Model",
         "batch_add_models": "Batch Add Models",
         "endpoint_type": {
@@ -5321,12 +5320,12 @@
           "placeholder": "Optional e.g. GPT-4",
           "tooltip": "Optional e.g. GPT-4"
         },
-        "search_placeholder": "输入模型名称或服务商名称",
+        "search_placeholder": "Enter the model name or service provider name",
         "supported_text_delta": {
           "label": "Support incremental text output",
           "tooltip": "The model returns text incrementally, rather than all at once. Enabled by default, if the model does not support it, please disable this option"
         },
-        "tips": "开通前请先确保账户金币余额大于0，否则无法开通。"
+        "tips": "Before activation, please ensure that your account's gold coin balance is greater than 0; otherwise, activation cannot be completed."
       },
       "api_key": "API Key",
       "base_url": "Base URL",
@@ -5357,13 +5356,13 @@
       "default_assistant_model": "Default Assistant Model",
       "default_assistant_model_description": "Model used when creating a new assistant, if the assistant is not set, this model will be used",
       "empty": "No models found",
-      "image_model": "图片生成",
+      "image_model": "Image Generation",
       "manage": {
         "add_listed": {
           "confirm": "Are you sure you want to add all models to the list?",
           "label": "Add models to the list"
         },
-        "add_model": "添加模型",
+        "add_model": "Add Model",
         "add_whole_group": "Add the whole group",
         "fetch_list": "Fetch model list",
         "refetch_list": "Refetch model list",
@@ -5391,7 +5390,7 @@
         "setting_title": "Quick model setup",
         "tooltip": "It is recommended to choose a lightweight model and not recommended to choose a thinking model."
       },
-      "text_model": "文本模型",
+      "text_model": "text model",
       "topic_naming": {
         "auto": "Topic Auto Naming",
         "label": "Topic naming",
@@ -5500,16 +5499,16 @@
             "empty": "API key cannot be empty"
           },
           "list": {
-            "more": "更多",
+            "more": "More",
             "open": "Open Management Interface",
             "title": "API Key Management"
           },
           "new_key": {
-            "cancel": "取消",
-            "confirm": "确定",
-            "editing_tip": "请先完成当前编辑",
-            "limit_over_tip": "密钥最多可创建200个，请删除部分密钥",
-            "name_placeholder": "请输入密钥名称",
+            "cancel": "Cancel",
+            "confirm": "Confirm",
+            "editing_tip": "Please complete the current edit first.",
+            "limit_over_tip": "A maximum of 200 keys can be created. Please delete some keys.",
+            "name_placeholder": "Please enter the key name",
             "placeholder": "Enter one or more keys"
           }
         },
@@ -5547,7 +5546,7 @@
             "help": "Whether the provider supports the verbosity parameter",
             "label": "Support verbosity"
           },
-          "website": "访问官网"
+          "website": "Visit the official website"
         },
         "url": {
           "preview": "Preview: {{url}}",
@@ -5561,49 +5560,49 @@
       "api_host_tooltip": "Override only when your provider requires a custom OpenAI-compatible endpoint.",
       "api_key": {
         "label": "API Key",
-        "max_tip": "最多可创建200个",
+        "max_tip": "Up to 200 can be created.",
         "tip": "Use commas to separate multiple keys",
         "token_plan": {
           "columns": {
-            "action": "启用/停用",
-            "creditsRest": "用量(credits)",
-            "effective": "有效期",
-            "planName": "套餐名称/分类",
-            "status": "状态",
-            "totalAmount": "定价"
+            "action": "Enable/Disable",
+            "creditsRest": "Usage (credits)",
+            "effective": "Validity period",
+            "planName": "Package Name/Category",
+            "status": "Status",
+            "totalAmount": "Pricing"
           },
-          "confirm_disable_content": "是否停用TokenPlan套餐？停用后将自动切换回平台默认sk-key",
-          "confirm_disable_title": "TokenPlan停用",
-          "confirm_enable_content": "是否启用TokenPlan套餐？启用后将切换至该套餐的tk-key并切换为该套餐中的模型",
-          "confirm_enable_title": "TokenPlan启用",
-          "credits": "剩余用量(Credits)",
+          "confirm_disable_content": "Do you want to disable the TokenPlan plan? After it is disabled, it will automatically switch back to the platform default sk-key.",
+          "confirm_disable_title": "TokenPlan disabled",
+          "confirm_enable_content": "Enable the TokenPlan plan? Once enabled, it will switch to the tk-key of this plan and use the models in this plan.",
+          "confirm_enable_title": "Enable TokenPlan",
+          "credits": "Remaining Usage (Credits)",
           "cur_plan": {
-            "name": "套餐名称："
+            "name": "Package Name:"
           },
-          "custom": "天",
-          "effective": "有效期",
-          "effective_e": "止",
-          "effective_s": "起",
-          "model_title": "使用token plan",
-          "month": "月度",
-          "price": "定价",
+          "custom": "Day",
+          "effective": "Validity period",
+          "effective_e": "End",
+          "effective_s": "Start",
+          "model_title": "Use token plan",
+          "month": "Monthly",
+          "price": "Pricing",
           "price_type": "￥",
-          "quarter": "季度",
-          "remaining": "剩",
+          "quarter": "quarter",
+          "remaining": "remaining",
           "search": {
-            "planName": "请输入套餐名称",
-            "status_placeholder": "请选择状态"
+            "planName": "Please enter the package name",
+            "status_placeholder": "Please select a status"
           },
           "status": {
-            "disabled": "已失效",
-            "enabled": "生效中",
-            "wait_pay": "待付款"
+            "disabled": "Invalid",
+            "enabled": "In effect",
+            "wait_pay": "Pending payment"
           },
-          "subscribe_label": "选择套餐",
-          "subscribe_placeholder": "请选择套餐",
+          "subscribe_label": "Select Plan",
+          "subscribe_placeholder": "Please select a package",
           "title": "TokenPlan",
-          "total": "共",
-          "year": "年度"
+          "total": "Total",
+          "year": "year"
         }
       },
       "api_version": "API Version",
@@ -6298,9 +6297,9 @@
   },
   "user": {
     "limit": {
-      "limit_day": "每日额度",
-      "rest": "剩余额度",
-      "title": "额度"
+      "limit_day": "Daily quota",
+      "rest": "Remaining quota",
+      "title": "quota"
     }
   },
   "warning": {

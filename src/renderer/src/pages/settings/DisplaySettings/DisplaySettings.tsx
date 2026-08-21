@@ -471,7 +471,7 @@ const DisplaySettings: FC = () => {
         <SettingTitle>
           {t('settings.display.custom.css.label')}
           <TitleExtra onClick={() => window.api.openWebsite('https://cherrycss.com/')}>
-            {t('settings.display.custom.css.cherrycss')}
+            {t('settings.display.custom.css.gallery')}
           </TitleExtra>
         </SettingTitle>
         <SettingDivider />

@@ -569,6 +569,9 @@
         }
       }
     },
+    "sidebar_agent": {
+      "add": "Créer un agent"
+    },
     "sidebar_title": "Agents",
     "todo": {
       "panel": {
@@ -1475,6 +1478,8 @@
       },
       "move_to": "Déplacer vers",
       "new": "Commencer une nouvelle conversation",
+      "no_model": "Aucun modèle disponible pour le compte actuel.",
+      "open_model_text": "Activer",
       "pin": "Fixer le sujet",
       "prompt": {
         "edit": {
@@ -1495,7 +1500,8 @@
       "warning": {
         "openai": "Le modèle GPT5 avec une intensité de réflexion minimale ne prend pas en charge la recherche sur Internet."
       }
-    }
+    },
+    "welcome": "Prêt à commencer ?"
   },
   "code": {
     "auto_update_to_latest": "Vérifier les mises à jour et installer la dernière version",
@@ -1600,7 +1606,7 @@
     "copy_failed": "Échec de la copie",
     "current": "Actuel",
     "cut": "Couper",
-    "decline": "[to be translated]:Decline",
+    "decline": "Refuser",
     "default": "Défaut",
     "delete": "Supprimer",
     "delete_confirm": "Êtes-vous sûr de vouloir supprimer ?",
@@ -1638,6 +1644,7 @@
     "image_preview": "Aperçu de l'image",
     "image_url": "URL de l'image",
     "image_url_or_upload": "Entrez l'URL de l'image ou téléchargez un fichier",
+    "input": "Entrée",
     "inspect": "Vérifier",
     "invalid_value": "valeur invalide",
     "knowledge_base": "Base de connaissances",
@@ -1648,12 +1655,17 @@
     "more": "Plus",
     "name": "Nom",
     "next_match": "Prochain match",
+    "no_more": "Il n'y en a plus",
     "no_results": "Aucun résultat",
     "none": "Aucun",
     "off": "Désactivé",
     "on": "Marche",
     "open": "Ouvrir",
     "open_in": "Ouvrir dans {{name}}",
+    "output": "Sortie",
+    "pagination": {
+      "total": "{{total}} éléments au total"
+    },
     "paste": "Coller",
     "placeholders": {
       "select": {
@@ -1942,6 +1954,13 @@
     "preview": "Aperçu",
     "split": "Diviser"
   },
+  "identity": {
+    "cancel": "Annuler",
+    "confirm": "Êtes-vous sûr de vouloir changer d'identité ?",
+    "ok": "Confirmer",
+    "tip": "Avis amical",
+    "title": "Changer d'identité"
+  },
   "import": {
     "chatgpt": {
       "assistant_name": "Importation de ChatGPT",
@@ -2130,6 +2149,126 @@
       "title": "Maintenir le temps d'activité"
     },
     "title": "LM Studio"
+  },
+  "login": {
+    "account_login": {
+      "password_invalid": "Veuillez saisir de 6 à 20 lettres, chiffres ou symboles (espaces exclus), et inclure au moins deux types parmi les lettres, les chiffres et les signes de ponctuation.",
+      "password_required": "Veuillez saisir le mot de passe",
+      "username_invalid": "Le format du numéro de téléphone ou de l'adresse e-mail est incorrect.",
+      "username_required": "Veuillez saisir votre numéro de téléphone mobile ou votre adresse e-mail"
+    },
+    "agreements": {
+      "accept_text": "Veuillez cocher pour accepter les accords correspondants",
+      "agree": "J'ai lu et j'accepte",
+      "disclaimer": "《Accord de décharge de responsabilité》",
+      "privacy": "« Politique de confidentialité »",
+      "user": "《Contrat utilisateur》",
+      "yu": "et"
+    },
+    "back_login": "Retour à la connexion",
+    "back_main_login": "Retour à la connexion au compte principal",
+    "email_login": {
+      "code_required": "Veuillez saisir le code de vérification",
+      "email_invalid": "Format d’adresse e-mail incorrect",
+      "email_required": "Veuillez saisir votre adresse e-mail",
+      "send_code": "Obtenir le code de vérification"
+    },
+    "forget_password": "Mot de passe oublié",
+    "forgot_password": {
+      "email": {
+        "code_label": "Code de vérification",
+        "code_required": "Veuillez saisir le code de vérification",
+        "email_invalid": "Format d'adresse e-mail incorrect",
+        "email_label": "E-mail",
+        "email_required": "Veuillez saisir votre adresse e-mail",
+        "title": "Adresse e-mail"
+      },
+      "next": "Étape suivante",
+      "phone": {
+        "code_label": "Code de vérification",
+        "code_required": "Veuillez saisir le code de vérification",
+        "phone_invalid": "Format de numéro de téléphone mobile invalide",
+        "phone_label": "Numéro de téléphone mobile",
+        "phone_required": "Veuillez saisir votre numéro de téléphone mobile",
+        "title": "Numéro de téléphone portable"
+      },
+      "stepOne": {
+        "title": "Authentification"
+      },
+      "stepThree": {
+        "auto_back_text": "Retour automatique à la page de connexion dans quelques secondes",
+        "successful": "Le mot de passe a été modifié avec succès"
+      },
+      "stepTwo": {
+        "confirm_password_label": "Confirmer le nouveau mot de passe",
+        "confirm_password_required": "Veuillez saisir le mot de passe de confirmation",
+        "new_password_invalid": "Veuillez saisir de 6 à 20 caractères : lettres, chiffres ou symboles (à l’exception de l’espace), et inclure au moins deux types parmi les lettres, les chiffres et les signes de ponctuation.",
+        "new_password_label": "Nouveau mot de passe",
+        "new_password_required": "Veuillez saisir le nouveau mot de passe",
+        "password_not_match": "Les deux mots de passe saisis ne correspondent pas.",
+        "sub_title": "Veuillez saisir un nouveau mot de passe",
+        "title": "Réinitialiser le mot de passe"
+      },
+      "sub_title": "Veuillez saisir les informations de vérification"
+    },
+    "login_btn_text": "Connexion/Inscription",
+    "new_user_gift": "Cadeau de bienvenue offert pour toute première inscription d'un nouvel utilisateur >>",
+    "send_code": "Obtenir le code de vérification",
+    "sms_login": {
+      "code_required": "Veuillez saisir le code de vérification",
+      "phone_invalid": "Format de numéro de téléphone mobile incorrect",
+      "phone_required": "Veuillez saisir votre numéro de téléphone portable",
+      "send_code": "Obtenir le code de vérification"
+    },
+    "sub_account": {
+      "back_main_login": "Retour à la connexion au compte principal",
+      "bind_phone_email": {
+        "bind_btn_text": "Lier",
+        "bind_success": "Liaison réussie",
+        "email": {
+          "code_label": "code de vérification",
+          "code_required": "Veuillez saisir le code de vérification",
+          "duplicate_email_message": "Cette adresse e-mail est déjà associée à un autre compte, veuillez en saisir une autre.",
+          "email_label": "Adresse e-mail",
+          "fail": "Échec de la validation de l'adresse e-mail, veuillez réessayer.",
+          "invalid": "Format d'adresse e-mail incorrect",
+          "required": "Veuillez saisir votre adresse e-mail",
+          "send_code": "Obtenir le code de vérification",
+          "title": "Associer l'adresse e-mail"
+        },
+        "phone": {
+          "code_label": "Code de vérification",
+          "code_required": "Veuillez saisir le code de vérification",
+          "duplicate_phone_message": "Le numéro de téléphone mobile est déjà associé à un autre compte, veuillez le saisir à nouveau.",
+          "fail": "Échec de la vérification du numéro de téléphone, veuillez réessayer.",
+          "invalid": "Format de numéro de téléphone mobile incorrect",
+          "phone_label": "Numéro de téléphone portable",
+          "required": "Veuillez saisir votre numéro de téléphone mobile",
+          "send_code": "Obtenir le code de vérification",
+          "title": "Lier le numéro de téléphone"
+        },
+        "title": "Associer un numéro de téléphone / une adresse e-mail"
+      },
+      "btn_text": "Connexion au sous-compte",
+      "login": "Connexion",
+      "password_invalid": "Veuillez saisir de 6 à 20 caractères composés de lettres, de chiffres ou de symboles (à l’exclusion des espaces), et contenant au moins deux des éléments suivants : lettres, chiffres et signes de ponctuation.",
+      "password_label": "Mot de passe du sous-compte",
+      "password_required": "Veuillez saisir le mot de passe du sous-compte",
+      "phone_email_invalid": "Format du numéro de téléphone mobile ou de l'adresse e-mail incorrect",
+      "phone_email_label": "Numéro de téléphone mobile/e-mail du compte principal",
+      "phone_email_required": "Veuillez saisir le numéro de téléphone portable/l'adresse e-mail du compte principal",
+      "title": "Connexion au sous-compte",
+      "username_label": "Sous-compte",
+      "username_required": "Veuillez saisir le sous-compte"
+    },
+    "title": "BONJOUR ! Bienvenue pour vous inscrire et vous connecter."
+  },
+  "logout": {
+    "cancel": "Annuler",
+    "confirm": "Êtes-vous sûr de vouloir vous déconnecter ?",
+    "ok": "Confirmer",
+    "tip": "Rappel amical",
+    "title": "Se déconnecter"
   },
   "memory": {
     "actions": "Actions",
@@ -2590,11 +2729,12 @@
     "add_to_launchpad": "Ajouter au tableau de bord",
     "add_to_sidebar": "Ajouter à la barre latérale",
     "deepseek_harness": {
-      "install_failed": "[to be translated]:DeepSeek Harness installation failed",
-      "install_success": "[to be translated]:DeepSeek Harness installed successfully",
-      "installing": "[to be translated]:Installing DeepSeek Harness, please wait…",
-      "start_failed": "[to be translated]:Failed to start DeepSeek Harness",
-      "starting": "[to be translated]:Starting DeepSeek Harness…"
+      "install_failed": "Échec de l’installation de DeepSeek Harness",
+      "install_success": "DeepSeek Harness installé avec succès",
+      "install_timeout": "L'installation de DeepSeek Harness a expiré, veuillez réessayer",
+      "installing": "Installation de DeepSeek Harness, veuillez patienter…",
+      "start_failed": "Échec du démarrage de DeepSeek Harness",
+      "starting": "Démarrage de DeepSeek Harness…"
     },
     "popup": {
       "close": "Закрыть мини-программу",
@@ -2734,11 +2874,33 @@
       "embedding": "Incorporation",
       "free": "Gratuit",
       "function_calling": "Appel de fonction",
+      "price": {
+        "cache_price": "Tarification du cache",
+        "cache_think_price": "Prix du cache/Prix de la réflexion",
+        "charge_type_label": "Mode de facturation",
+        "duration": "Facturation à la durée",
+        "gold_coin": "Pièces d'or",
+        "interactive_num": "Pièces d'or/unité",
+        "million_tokens": "pièces d'or/million de tokens",
+        "output_price": "Prix de sortie",
+        "per_character": "Facturation par caractère",
+        "per_count": "Tarification à l’acte",
+        "per_image": "Facturation à la pièce",
+        "per_time": "fois",
+        "per_tokens": "Facturation par tokens",
+        "second": "seconde",
+        "standard": "Tarifs",
+        "ten_thousand_chars": "10 000 caractères",
+        "text_tokens": "Pièces/fois",
+        "title": "Payant",
+        "token_price": "Pièces d'or/M jetons",
+        "video_input_price": "Prix d'entrée vidéo"
+      },
       "reasoning": "Raisonnement",
       "rerank": "Reclasser",
       "select": "Types de modèle",
       "text": "Texte",
-      "vision": "Image",
+      "vision": "Vision",
       "websearch": "Recherche web"
     }
   },
@@ -2916,9 +3078,9 @@
     "title": "Ollama"
   },
   "onboarding": {
-    "newUserGift": "[to be translated]:New users will receive a welcome gift upon their first registration>>",
+    "newUserGift": "Les nouveaux utilisateurs recevront un cadeau de bienvenue lors de leur première inscription>>",
     "privacy": {
-      "accept_and_continue": "[to be translated]:Accept and Continue",
+      "accept_and_continue": "Accepter et continuer",
       "notice": "En continuant, vous confirmez avoir lu et accepté",
       "period": ".",
       "policy": "Politique de confidentialité"
@@ -3283,6 +3445,9 @@
     "seed_random": "Aléatoire",
     "seed_tip": "La même graine et le même prompt peuvent générer des images similaires",
     "select_model": "Sélectionner un modèle",
+    "settings": {
+      "title": "Paramètres des fonctionnalités"
+    },
     "style_type": "Style",
     "style_types": {
       "3d": "3D",
@@ -3402,12 +3567,12 @@
     "zoom_out": "réduire"
   },
   "privacy_policy": {
-    "title": "[to be translated]:Privacy Policy"
+    "title": "Politique de confidentialité"
   },
   "privacy_policy_update": {
-    "description_before_link": "[to be translated]:We have updated the privacy policy. Please review the latest ",
-    "policy": "[to be translated]:Privacy Policy",
-    "title": "[to be translated]:Privacy Policy Updated"
+    "description_before_link": "Nous avons mis à jour la politique de confidentialité. Veuillez consulter la dernière",
+    "policy": "Politique de confidentialité",
+    "title": "Politique de confidentialité mise à jour"
   },
   "prompts": {
     "explanation": "Aidez-moi à expliquer ce concept",
@@ -4621,7 +4786,7 @@
       },
       "custom": {
         "css": {
-          "cherrycss": "Obtenir depuis cherrycss.com",
+          "gallery": "Obtenir plus de thèmes",
           "label": "CSS personnalisé",
           "placeholder": "/* Écrire votre CSS personnalisé ici */"
         }
@@ -5018,6 +5183,20 @@
       "url": "URL",
       "user": "Пользователь"
     },
+    "menus": {
+      "model": {
+        "title": "Capacités du modèle"
+      },
+      "other": {
+        "title": "Autre"
+      },
+      "quick": {
+        "title": "Outils rapides"
+      },
+      "system": {
+        "title": "Paramètres système"
+      }
+    },
     "messages": {
       "divider": {
         "label": "Séparateur de messages",
@@ -5113,6 +5292,8 @@
     "model": "Modèle par défaut",
     "models": {
       "add": {
+        "activate_desc": "Avant d’utiliser des services tels que l’appel de modèles, il est nécessaire d’activer le modèle. Le mode d’activation est « utilisation d’abord, paiement ensuite » ; en cas d’utilisation, la facturation est effectuée selon le tarif catalogue du service du modèle, et en cas de non-utilisation, aucun frais n’est généré.",
+        "activate_model": "Activer",
         "add_model": "Ajouter un modèle",
         "batch_add_models": "Ajouter plusieurs modèles",
         "endpoint_type": {
@@ -5139,10 +5320,12 @@
           "placeholder": "Par exemple, GPT-3.5",
           "tooltip": "Par exemple GPT-4"
         },
+        "search_placeholder": "Saisissez le nom du modèle ou du fournisseur de services",
         "supported_text_delta": {
           "label": "sortie de texte incrémentielle",
           "tooltip": "Désactivez ce bouton lorsque le modèle n'est pas pris en charge"
-        }
+        },
+        "tips": "Avant d’activer, veuillez d’abord vous assurer que le solde de pièces d’or de votre compte est supérieur à 0, sinon l’activation ne sera pas possible."
       },
       "api_key": "Clé API",
       "base_url": "URL de base",
@@ -5173,11 +5356,13 @@
       "default_assistant_model": "Modèle d'assistant par défaut",
       "default_assistant_model_description": "Modèle utilisé pour créer de nouveaux assistants, si aucun modèle n'est défini pour l'assistant, ce modèle sera utilisé",
       "empty": "Aucun modèle",
+      "image_model": "Génération d’images",
       "manage": {
         "add_listed": {
           "confirm": "Êtes-vous sûr de vouloir ajouter tous les modèles à la liste ?",
           "label": "Ajouter le modèle dans la liste"
         },
+        "add_model": "Ajouter un modèle",
         "add_whole_group": "Ajouter tout le groupe",
         "fetch_list": "Récupérer la liste des modèles",
         "refetch_list": "Récupérer à nouveau la liste des modèles",
@@ -5205,6 +5390,7 @@
         "setting_title": "Configuration rapide du modèle",
         "tooltip": "Il est recommandé de choisir un modèle léger et déconseillé de choisir un modèle de réflexion."
       },
+      "text_model": "modèle de texte",
       "topic_naming": {
         "auto": "Renommage automatique des sujets",
         "label": "Nom de sujet",
@@ -5313,10 +5499,16 @@
             "empty": "La clé API ne peut pas être vide"
           },
           "list": {
+            "more": "Plus",
             "open": "Ouvrir l'interface de gestion",
             "title": "Gestion des clés API"
           },
           "new_key": {
+            "cancel": "Annuler",
+            "confirm": "Confirmer",
+            "editing_tip": "Veuillez d'abord terminer l'édition en cours",
+            "limit_over_tip": "Le nombre maximal de clés pouvant être créées est de 200. Veuillez supprimer certaines clés.",
+            "name_placeholder": "Veuillez saisir le nom de la clé",
             "placeholder": "Saisir une ou plusieurs clés"
           }
         },
@@ -5353,7 +5545,8 @@
           "verbosity": {
             "help": "Si le fournisseur prend en charge le paramètre de verbosité",
             "label": "Prend en charge la verbosité"
-          }
+          },
+          "website": "Visiter le site officiel"
         },
         "url": {
           "preview": "Aperçu : {{url}}",
@@ -5367,7 +5560,50 @@
       "api_host_tooltip": "Remplacer seulement lorsque le fournisseur nécessite une adresse compatible OpenAI personnalisée.",
       "api_key": {
         "label": "Clé API",
-        "tip": "Séparer les clés multiples par des virgules"
+        "max_tip": "Vous pouvez en créer jusqu'à 200.",
+        "tip": "Séparer les clés multiples par des virgules",
+        "token_plan": {
+          "columns": {
+            "action": "Activer/Désactiver",
+            "creditsRest": "Utilisation(crédits)",
+            "effective": "Date d'expiration",
+            "planName": "Nom du forfait/catégorie",
+            "status": "État",
+            "totalAmount": "Tarification"
+          },
+          "confirm_disable_content": "Désactiver le forfait TokenPlan ? Après désactivation, la plateforme basculera automatiquement vers la sk-key par défaut.",
+          "confirm_disable_title": "Désactivation de TokenPlan",
+          "confirm_enable_content": "Activer le forfait TokenPlan ? Après activation, la tk-key passera à celle de ce forfait et les modèles utilisés seront ceux de ce forfait.",
+          "confirm_enable_title": "Activation de TokenPlan",
+          "credits": "Utilisation restante (Credits)",
+          "cur_plan": {
+            "name": "Nom du forfait :"
+          },
+          "custom": "Jour",
+          "effective": "Date d'expiration",
+          "effective_e": "Au",
+          "effective_s": "Du",
+          "model_title": "Utiliser le plan de jetons",
+          "month": "mensuel",
+          "price": "Tarification",
+          "price_type": "￥",
+          "quarter": "trimestre",
+          "remaining": "restant",
+          "search": {
+            "planName": "Veuillez saisir le nom du forfait",
+            "status_placeholder": "Veuillez sélectionner un état"
+          },
+          "status": {
+            "disabled": "Expiré",
+            "enabled": "En vigueur",
+            "wait_pay": "En attente de paiement"
+          },
+          "subscribe_label": "Choisir une formule",
+          "subscribe_placeholder": "Veuillez sélectionner un forfait",
+          "title": "TokenPlan",
+          "total": "Total",
+          "year": "année"
+        }
       },
       "api_version": "Version API",
       "aws-bedrock": {
@@ -5391,7 +5627,7 @@
           "tip": "Version de l'API Azure OpenAI, veuillez saisir une version v1 si vous souhaitez utiliser l'API de réponse"
         }
       },
-      "balance": "Équilibre",
+      "balance": "Solde",
       "basic_auth": {
         "label": "Authentification HTTP",
         "password": {
@@ -5467,9 +5703,9 @@
       "no_models_for_check": "Aucun modèle détectable (par exemple, modèle de chat)",
       "not_checked": "Non vérifié",
       "notes": {
-        "markdown_editor_default_value": "Область предварительного просмотра",
+        "markdown_editor_default_value": "Zone d’aperçu",
         "placeholder": "Введите содержимое в формате Markdown...",
-        "title": "Примечание к модели"
+        "title": "Notes du modèle"
       },
       "oauth": {
         "balance": "Solde",
@@ -5489,9 +5725,9 @@
           "logout_button": "Déconnexion",
           "title": "Connexion OAuth"
         },
-        "official_website": "Официальный сайт",
+        "official_website": "Site officiel",
         "provided_by": "Fourni par",
-        "provided_by_suffix": "I'm ready to translate. Please provide the text you'd like me to translate into French.",
+        "provided_by_suffix": "",
         "requests": "Demandes",
         "topup": "Recharger",
         "usage_title": "Utilisation"
@@ -5895,6 +6131,9 @@
     "store": "Bibliothèque d'assistants",
     "translate": "Traduire"
   },
+  "tokenPlan": {
+    "title": "plan de jetons"
+  },
   "trace": {
     "backList": "Retour à la liste",
     "edasSupport": "Propulsé par Alibaba Cloud EDAS",
@@ -6055,6 +6294,13 @@
     "noReleaseNotes": "Aucune note de version",
     "saveDataError": "Échec de la sauvegarde des données, veuillez réessayer",
     "title": "Mise à jour"
+  },
+  "user": {
+    "limit": {
+      "limit_day": "Quota quotidien",
+      "rest": "Solde restant",
+      "title": "quota"
+    }
   },
   "warning": {
     "missing_provider": "Le fournisseur n’existe pas, retour au fournisseur par défaut {{provider}}. Cela peut entraîner des problèmes."

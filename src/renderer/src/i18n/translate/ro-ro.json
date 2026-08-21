@@ -569,6 +569,9 @@
         }
       }
     },
+    "sidebar_agent": {
+      "add": "Creare agent inteligent"
+    },
     "sidebar_title": "Agenți",
     "todo": {
       "panel": {
@@ -1475,6 +1478,8 @@
       },
       "move_to": "Mută la",
       "new": "Subiect nou",
+      "no_model": "Contul curent nu are momentan modele disponibile.",
+      "open_model_text": "Activează",
       "pin": "Fixează subiectul",
       "prompt": {
         "edit": {
@@ -1495,7 +1500,8 @@
       "warning": {
         "openai": "Efortul minim de raționament al modelului GPT-5 nu acceptă căutarea web."
       }
-    }
+    },
+    "welcome": "Ești gata să începem?"
   },
   "code": {
     "auto_update_to_latest": "Actualizează automat la cea mai recentă versiune",
@@ -1600,7 +1606,7 @@
     "copy_failed": "Copiere eșuată",
     "current": "Curent",
     "cut": "Decupează",
-    "decline": "[to be translated]:Decline",
+    "decline": "Refuzați",
     "default": "Implicit",
     "delete": "Șterge",
     "delete_confirm": "Ești sigur că vrei să ștergi?",
@@ -1638,6 +1644,7 @@
     "image_preview": "Previzualizare imagine",
     "image_url": "URL imagine",
     "image_url_or_upload": "Introdu URL-ul imaginii sau încarcă fișierul",
+    "input": "Intrare",
     "inspect": "Inspectează",
     "invalid_value": "Valoare invalidă",
     "knowledge_base": "Bază de cunoștințe",
@@ -1648,12 +1655,17 @@
     "more": "Mai mult",
     "name": "Nume",
     "next_match": "Următorul meci",
+    "no_more": "Nu mai există",
     "no_results": "Niciun rezultat",
     "none": "Nimic",
     "off": "Oprit",
     "on": "Pornit",
     "open": "Deschide",
     "open_in": "Deschide în {{name}}",
+    "output": "Ieșire",
+    "pagination": {
+      "total": "În total {{total}} articole"
+    },
     "paste": "Lipește",
     "placeholders": {
       "select": {
@@ -1942,6 +1954,13 @@
     "preview": "Previzualizare",
     "split": "Divizat"
   },
+  "identity": {
+    "cancel": "Anulare",
+    "confirm": "Sigur doriți să schimbați identitatea?",
+    "ok": "Confirmare",
+    "tip": "Notificare prietenoasă",
+    "title": "Schimbare identitate"
+  },
   "import": {
     "chatgpt": {
       "assistant_name": "Import ChatGPT",
@@ -2130,6 +2149,126 @@
       "title": "Timp menținere conexiune"
     },
     "title": "LM Studio"
+  },
+  "login": {
+    "account_login": {
+      "password_invalid": "Introduceți 6-20 de litere, cifre sau simboluri (cu excepția spațiului), iar literele, cifrele și semnele de punctuație trebuie să includă cel puțin două tipuri.",
+      "password_required": "Introduceți parola",
+      "username_invalid": "Formatul numărului de telefon sau al adresei de e-mail este incorect.",
+      "username_required": "Introduceți numărul de telefon sau adresa de e-mail"
+    },
+    "agreements": {
+      "accept_text": "Bifați pentru a accepta acordurile relevante.",
+      "agree": "Am citit și sunt de acord",
+      "disclaimer": "《Acord de exonerare de răspundere》",
+      "privacy": "《Politica de confidențialitate》",
+      "user": "《Acord de utilizare》",
+      "yu": "și"
+    },
+    "back_login": "Înapoi la autentificare",
+    "back_main_login": "Înapoi la autentificarea contului principal",
+    "email_login": {
+      "code_required": "Introduceți codul de verificare",
+      "email_invalid": "Format de e-mail nevalid",
+      "email_required": "Vă rugăm să introduceți adresa de e-mail",
+      "send_code": "Obține codul de verificare"
+    },
+    "forget_password": "Ai uitat parola?",
+    "forgot_password": {
+      "email": {
+        "code_label": "Cod de verificare",
+        "code_required": "Vă rugăm să introduceți codul de verificare",
+        "email_invalid": "Formatul adresei de e-mail este incorect",
+        "email_label": "Email",
+        "email_required": "Vă rugăm să introduceți adresa de e-mail.",
+        "title": "E-mail"
+      },
+      "next": "Pasul următor",
+      "phone": {
+        "code_label": "cod de verificare",
+        "code_required": "Vă rugăm să introduceți codul de verificare",
+        "phone_invalid": "Format greșit al numărului de telefon mobil.",
+        "phone_label": "număr de telefon mobil",
+        "phone_required": "Vă rugăm să introduceți numărul de telefon mobil.",
+        "title": "Număr de telefon mobil"
+      },
+      "stepOne": {
+        "title": "Autentificare"
+      },
+      "stepThree": {
+        "auto_back_text": "După câteva secunde, revine automat la pagina de autentificare",
+        "successful": "Parola a fost modificată cu succes"
+      },
+      "stepTwo": {
+        "confirm_password_label": "Confirmați noua parolă",
+        "confirm_password_required": "Introduceți parola de confirmare",
+        "new_password_invalid": "Vă rugăm să introduceți 6-20 de litere, cifre sau simboluri (cu excepția spațiului), iar dintre litere, cifre și semne de punctuație să fie incluse cel puțin două tipuri.",
+        "new_password_label": "Parolă nouă",
+        "new_password_required": "Vă rugăm să introduceți o parolă nouă",
+        "password_not_match": "Cele două parole introduse nu coincid",
+        "sub_title": "Vă rugăm să introduceți noua parolă",
+        "title": "Resetare parolă"
+      },
+      "sub_title": "Vă rugăm să introduceți informațiile de verificare."
+    },
+    "login_btn_text": "Autentificare/Înregistrare",
+    "new_user_gift": "Utilizatorii noi primesc un cadou de bun venit la prima înregistrare>>",
+    "send_code": "Obține codul de verificare",
+    "sms_login": {
+      "code_required": "Vă rugăm să introduceți codul de verificare",
+      "phone_invalid": "Formatul numărului de telefon mobil este greșit",
+      "phone_required": "Vă rugăm să introduceți numărul de telefon mobil",
+      "send_code": "Obține codul de verificare"
+    },
+    "sub_account": {
+      "back_main_login": "Înapoi la autentificarea contului principal",
+      "bind_phone_email": {
+        "bind_btn_text": "Legare",
+        "bind_success": "Legare reușită",
+        "email": {
+          "code_label": "Cod de verificare",
+          "code_required": "Vă rugăm să introduceți codul de verificare",
+          "duplicate_email_message": "Adresa de e-mail este deja asociată unui alt cont, vă rugăm să o introduceți din nou.",
+          "email_label": "E-mail",
+          "fail": "Verificarea adresei de e-mail a eșuat. Vă rugăm să încercați din nou.",
+          "invalid": "Formatul adresei de e-mail este incorect",
+          "required": "Introduceți adresa de e-mail",
+          "send_code": "Obține codul de verificare",
+          "title": "Asociere adresă de e-mail"
+        },
+        "phone": {
+          "code_label": "Cod de verificare",
+          "code_required": "Vă rugăm să introduceți codul de verificare",
+          "duplicate_phone_message": "Numărul de telefon este deja asociat unui alt cont, vă rugăm să introduceți din nou.",
+          "fail": "Verificarea numărului de telefon a eșuat, vă rugăm să încercați din nou.",
+          "invalid": "Formatul numărului de telefon mobil este incorect",
+          "phone_label": "Număr de telefon mobil",
+          "required": "Introduceți numărul de telefon mobil",
+          "send_code": "Obțineți codul de verificare",
+          "title": "Asociere număr de telefon mobil"
+        },
+        "title": "Asociere număr de telefon/e-mail"
+      },
+      "btn_text": "Autentificare subcont",
+      "login": "Autentificare",
+      "password_invalid": "Vă rugăm să introduceți 6-20 de litere, cifre sau simboluri (cu excepția spațiului) și să conțină cel puțin două dintre litere, cifre și semne de punctuație.",
+      "password_label": "Parolă sub-cont",
+      "password_required": "Introduceți parola subcontului",
+      "phone_email_invalid": "Formatul numărului de telefon sau al adresei de e-mail este incorect",
+      "phone_email_label": "Numărul de telefon mobil/e-mail al contului principal",
+      "phone_email_required": "Vă rugăm să introduceți numărul de telefon mobil/adresa de e-mail ale contului principal.",
+      "title": "Autentificare subcont",
+      "username_label": "subcont",
+      "username_required": "Vă rugăm să introduceți subcontul."
+    },
+    "title": "SALUT! Bine ai venit la înregistrare și autentificare"
+  },
+  "logout": {
+    "cancel": "Anulare",
+    "confirm": "Sigur doriți să vă deconectați?",
+    "ok": "Confirmare",
+    "tip": "Notificare amabilă",
+    "title": "Deconectare"
   },
   "memory": {
     "actions": "Acțiuni",
@@ -2590,11 +2729,12 @@
     "add_to_launchpad": "Adaugă în Launchpad",
     "add_to_sidebar": "Adaugă în bara laterală",
     "deepseek_harness": {
-      "install_failed": "[to be translated]:DeepSeek Harness installation failed",
-      "install_success": "[to be translated]:DeepSeek Harness installed successfully",
-      "installing": "[to be translated]:Installing DeepSeek Harness, please wait…",
-      "start_failed": "[to be translated]:Failed to start DeepSeek Harness",
-      "starting": "[to be translated]:Starting DeepSeek Harness…"
+      "install_failed": "Instalarea DeepSeek Harness a eșuat",
+      "install_success": "DeepSeek Harness instalat cu succes",
+      "install_timeout": "Instalarea DeepSeek Harness a expirat, vă rugăm să încercați din nou.",
+      "installing": "Se instalează DeepSeek Harness, vă rugăm să așteptați…",
+      "start_failed": "Pornirea DeepSeek Harness a eșuat",
+      "starting": "Se pornește DeepSeek Harness…"
     },
     "popup": {
       "close": "Închide MinApp",
@@ -2734,6 +2874,28 @@
       "embedding": "Embedding",
       "free": "Gratuit",
       "function_calling": "Instrument",
+      "price": {
+        "cache_price": "Preț cache",
+        "cache_think_price": "Preț cache/Preț gândire",
+        "charge_type_label": "Metodă de taxare",
+        "duration": "Taxare în funcție de durată",
+        "gold_coin": "Monede de aur",
+        "interactive_num": "monede de aur/buc.",
+        "million_tokens": "Monede de aur/milion de tokens",
+        "output_price": "Preț de ieșire",
+        "per_character": "Taxare pe caracter",
+        "per_count": "Taxare per utilizare",
+        "per_image": "Taxare per pagină",
+        "per_time": "dată",
+        "per_tokens": "Taxare per tokeni",
+        "second": "secundă",
+        "standard": "Standard de tarifare",
+        "ten_thousand_chars": "10 mii de caractere",
+        "text_tokens": "monede/utilizare",
+        "title": "Taxă",
+        "token_price": "Monede de aur/M tokens",
+        "video_input_price": "Preț pentru intrare video"
+      },
       "reasoning": "Raționament",
       "rerank": "Reranker",
       "select": "Tipuri de modele",
@@ -2916,9 +3078,9 @@
     "title": "Ollama"
   },
   "onboarding": {
-    "newUserGift": "[to be translated]:New users will receive a welcome gift upon their first registration>>",
+    "newUserGift": "Utilizatorii noi vor primi un cadou de bun venit la prima lor înregistrare>>",
     "privacy": {
-      "accept_and_continue": "[to be translated]:Accept and Continue",
+      "accept_and_continue": "Acceptați și continuați",
       "notice": "Continuând, confirmi că ai citit și ești de acord cu",
       "period": ".",
       "policy": "Politica de confidențialitate"
@@ -3283,6 +3445,9 @@
     "seed_random": "Aleatoriu",
     "seed_tip": "Același seed și prompt pot produce imagini similare",
     "select_model": "Selectează modelul",
+    "settings": {
+      "title": "Setări funcții"
+    },
     "style_type": "Stil",
     "style_types": {
       "3d": "3D",
@@ -3402,12 +3567,12 @@
     "zoom_out": "Micșorează"
   },
   "privacy_policy": {
-    "title": "[to be translated]:Privacy Policy"
+    "title": "Politica de confidențialitate"
   },
   "privacy_policy_update": {
-    "description_before_link": "[to be translated]:We have updated the privacy policy. Please review the latest ",
-    "policy": "[to be translated]:Privacy Policy",
-    "title": "[to be translated]:Privacy Policy Updated"
+    "description_before_link": "Am actualizat politica de confidențialitate. Vă rugăm să consultați cea mai recentă versiune",
+    "policy": "Politica de confidențialitate",
+    "title": "Politica de confidențialitate actualizată"
   },
   "prompts": {
     "explanation": "Explică-mi acest concept",
@@ -4621,7 +4786,7 @@
       },
       "custom": {
         "css": {
-          "cherrycss": "Obține de la cherrycss.com",
+          "gallery": "Obține mai multe teme",
           "label": "CSS personalizat",
           "placeholder": "/* Pune CSS personalizat aici */"
         }
@@ -5018,6 +5183,20 @@
       "url": "URL",
       "user": "Utilizator"
     },
+    "menus": {
+      "model": {
+        "title": "Capacitățile modelului"
+      },
+      "other": {
+        "title": "Altele"
+      },
+      "quick": {
+        "title": "Instrumente rapide"
+      },
+      "system": {
+        "title": "Setări de sistem"
+      }
+    },
     "messages": {
       "divider": {
         "label": "Afișează divizor între mesaje",
@@ -5113,6 +5292,8 @@
     "model": "Model implicit",
     "models": {
       "add": {
+        "activate_desc": "Înainte de a utiliza servicii precum apelarea modelelor, este necesară activarea modelului. Modul de activare este de tipul „utilizați mai întâi, plătiți ulterior”; dacă modelul este utilizat, facturarea se face conform tarifelor de listă ale serviciului modelului, iar dacă nu este utilizat, nu se generează costuri.",
+        "activate_model": "Activare",
         "add_model": "Adaugă model",
         "batch_add_models": "Adaugă modele în lot",
         "endpoint_type": {
@@ -5139,10 +5320,12 @@
           "placeholder": "Opțional de ex. GPT-4",
           "tooltip": "Opțional de ex. GPT-4"
         },
+        "search_placeholder": "Introduceți numele modelului sau numele furnizorului de servicii",
         "supported_text_delta": {
           "label": "Suportă ieșire text incrementală",
           "tooltip": "Modelul returnează text incremental, mai degrabă decât tot odată. Activat implicit, dacă modelul nu acceptă acest lucru, te rugăm să dezactivezi această opțiune"
-        }
+        },
+        "tips": "Înainte de activare, vă rugăm să vă asigurați mai întâi că soldul de monede de aur din cont este mai mare de 0, în caz contrar activarea nu este posibilă."
       },
       "api_key": "Cheie API",
       "base_url": "URL de bază",
@@ -5173,11 +5356,13 @@
       "default_assistant_model": "Model asistent implicit",
       "default_assistant_model_description": "Model folosit la crearea unui nou asistent; dacă asistentul nu este setat, va fi folosit acest model",
       "empty": "Nu s-au găsit modele",
+      "image_model": "Generare de imagini",
       "manage": {
         "add_listed": {
           "confirm": "Ești sigur că vrei să adaugi toate modelele la listă?",
           "label": "Adaugă modele la listă"
         },
+        "add_model": "Adăugare model",
         "add_whole_group": "Adaugă întregul grup",
         "fetch_list": "Obține lista modelelor",
         "refetch_list": "Reîmprospătează lista modelelor",
@@ -5205,6 +5390,7 @@
         "setting_title": "Configurare model rapid",
         "tooltip": "Se recomandă alegerea unui model ușor, nu a unui model de raționament complex."
       },
+      "text_model": "model textual",
       "topic_naming": {
         "auto": "Numire automată subiect",
         "label": "Numire subiect",
@@ -5313,10 +5499,16 @@
             "empty": "Cheia API nu poate fi goală"
           },
           "list": {
+            "more": "Mai mult",
             "open": "Deschide interfața de gestionare",
             "title": "Gestionare chei API"
           },
           "new_key": {
+            "cancel": "Anulare",
+            "confirm": "Confirmare",
+            "editing_tip": "Vă rugăm să finalizați mai întâi editarea curentă.",
+            "limit_over_tip": "Pot fi create cel mult 200 de chei, vă rugăm să ștergeți unele chei.",
+            "name_placeholder": "Introduceți numele cheii",
             "placeholder": "Introdu una sau mai multe chei"
           }
         },
@@ -5353,7 +5545,8 @@
           "verbosity": {
             "help": "Dacă furnizorul acceptă parametrul verbosity",
             "label": "Suportă verbosity"
-          }
+          },
+          "website": "Accesează site-ul oficial"
         },
         "url": {
           "preview": "Previzualizare: {{url}}",
@@ -5367,7 +5560,50 @@
       "api_host_tooltip": "Suprascrie doar când furnizorul tău necesită un endpoint personalizat compatibil cu OpenAI.",
       "api_key": {
         "label": "Cheie API",
-        "tip": "Folosește virgule pentru a separa mai multe chei"
+        "max_tip": "Se pot crea până la 200.",
+        "tip": "Folosește virgule pentru a separa mai multe chei",
+        "token_plan": {
+          "columns": {
+            "action": "Activare/Dezactivare",
+            "creditsRest": "Utilizare (credite)",
+            "effective": "Perioadă de valabilitate",
+            "planName": "Nume pachet/categorie",
+            "status": "Stare",
+            "totalAmount": "Stabilirea prețului"
+          },
+          "confirm_disable_content": "Dezactivați abonamentul TokenPlan? După dezactivare, sistemul va reveni automat la cheia sk-key implicită a platformei.",
+          "confirm_disable_title": "TokenPlan dezactivat",
+          "confirm_enable_content": "Activați pachetul TokenPlan? După activare, se va comuta la tk-key-ul acestui pachet și la modelul din acest pachet.",
+          "confirm_enable_title": "Activare TokenPlan",
+          "credits": "Utilizare rămasă (Credite)",
+          "cur_plan": {
+            "name": "Nume pachet:"
+          },
+          "custom": "Zi",
+          "effective": "Termen de valabilitate",
+          "effective_e": "Până la",
+          "effective_s": "De la",
+          "model_title": "Utilizați planul de tokenuri",
+          "month": "lunar",
+          "price": "Preț",
+          "price_type": "￥",
+          "quarter": "trimestru",
+          "remaining": "rămas",
+          "search": {
+            "planName": "Introduceți numele pachetului",
+            "status_placeholder": "Selectați starea"
+          },
+          "status": {
+            "disabled": "Expirat",
+            "enabled": "În vigoare",
+            "wait_pay": "În așteptarea plății"
+          },
+          "subscribe_label": "Selectează pachetul",
+          "subscribe_placeholder": "Vă rugăm să selectați pachetul.",
+          "title": "TokenPlan",
+          "total": "Total",
+          "year": "an"
+        }
       },
       "api_version": "Versiune API",
       "aws-bedrock": {
@@ -5391,7 +5627,7 @@
           "tip": "Versiunea API a Azure OpenAI, dacă dorești să folosești API-ul de Răspuns, te rugăm să introduci versiunea v1"
         }
       },
-      "balance": "Echilibru",
+      "balance": "Sold",
       "basic_auth": {
         "label": "Autentificare HTTP",
         "password": {
@@ -5455,7 +5691,7 @@
         "platform_official": "www.DMXAPI.cn (CNY)",
         "select_platform": "Selectează platforma"
       },
-      "docs_check": "Verifică",
+      "docs_check": "Vezi",
       "docs_more_details": "pentru mai multe detalii",
       "filter": {
         "agent": "Asistat de agent",
@@ -5491,7 +5727,7 @@
         },
         "official_website": "Site oficial",
         "provided_by": "Furnizat de",
-        "provided_by_suffix": "I’m ready—please provide the text you’d like translated into Romanian.",
+        "provided_by_suffix": "",
         "requests": "Cereri",
         "topup": "Reîncărcare",
         "usage_title": "Utilizare"
@@ -5895,6 +6131,9 @@
     "store": "Bibliotecă asistenți",
     "translate": "Traducere"
   },
+  "tokenPlan": {
+    "title": "plan de token-uri"
+  },
   "trace": {
     "backList": "Înapoi la listă",
     "edasSupport": "Susținut de Alibaba Cloud EDAS",
@@ -6055,6 +6294,13 @@
     "noReleaseNotes": "Nicio notă de lansare",
     "saveDataError": "Salvarea datelor a eșuat, te rugăm să încerci din nou.",
     "title": "Actualizare"
+  },
+  "user": {
+    "limit": {
+      "limit_day": "Limită zilnică",
+      "rest": "Limită rămasă",
+      "title": "limită"
+    }
   },
   "warning": {
     "missing_provider": "Furnizorul nu există; s-a revenit la furnizorul implicit {{provider}}. Acest lucru poate cauza probleme."

@@ -569,6 +569,9 @@
         }
       }
     },
+    "sidebar_agent": {
+      "add": "Tạo tác nhân"
+    },
     "sidebar_title": "Đại lý",
     "todo": {
       "panel": {
@@ -1475,6 +1478,8 @@
       },
       "move_to": "Di chuyển đến",
       "new": "Chủ đề mới",
+      "no_model": "Tài khoản hiện tại tạm thời không có mô hình khả dụng",
+      "open_model_text": "Đi kích hoạt",
       "pin": "Ghim chủ đề",
       "prompt": {
         "edit": {
@@ -1495,7 +1500,8 @@
       "warning": {
         "openai": "Mô hình GPT-5 với nỗ lực suy luận tối thiểu không hỗ trợ tìm kiếm web."
       }
-    }
+    },
+    "welcome": "Đã sẵn sàng bắt đầu chưa?"
   },
   "code": {
     "auto_update_to_latest": "Tự động cập nhật lên phiên bản mới nhất",
@@ -1600,7 +1606,7 @@
     "copy_failed": "Sao chép thất bại",
     "current": "Hiện tại",
     "cut": "Cắt",
-    "decline": "[to be translated]:Decline",
+    "decline": "Từ chối",
     "default": "Mặc định",
     "delete": "Xóa",
     "delete_confirm": "Bạn có chắc chắn muốn xóa không?",
@@ -1638,6 +1644,7 @@
     "image_preview": "Xem trước hình ảnh",
     "image_url": "URL hình ảnh",
     "image_url_or_upload": "Nhập URL hình ảnh hoặc tải tệp lên",
+    "input": "Nhập",
     "inspect": "Kiểm tra",
     "invalid_value": "Giá trị không hợp lệ",
     "knowledge_base": "Cơ sở tri thức",
@@ -1648,12 +1655,17 @@
     "more": "Thêm",
     "name": "Tên",
     "next_match": "Trận đấu tiếp theo",
+    "no_more": "Không còn thêm nữa",
     "no_results": "Không có kết quả",
     "none": "",
     "off": "Tắt",
     "on": "On",
     "open": "Abierto",
     "open_in": "Mở trong {{name}}",
+    "output": "Đầu ra",
+    "pagination": {
+      "total": "Tổng cộng {{total}} mục"
+    },
     "paste": "Pasta",
     "placeholders": {
       "select": {
@@ -1942,6 +1954,13 @@
     "preview": "Xem trước",
     "split": "Tách"
   },
+  "identity": {
+    "cancel": "Hủy",
+    "confirm": "Bạn có chắc chắn muốn chuyển đổi danh tính không?",
+    "ok": "Xác nhận",
+    "tip": "Nhắc nhở nhẹ nhàng",
+    "title": "Chuyển đổi danh tính"
+  },
   "import": {
     "chatgpt": {
       "assistant_name": "Nhập ChatGPT",
@@ -2130,6 +2149,126 @@
       "title": "Thời gian giữ hoạt động"
     },
     "title": "LM Studio"
+  },
+  "login": {
+    "account_login": {
+      "password_invalid": "Vui lòng nhập từ 6 đến 20 ký tự gồm chữ cái tiếng Anh, chữ số hoặc ký hiệu (ngoại trừ dấu cách), và phải chứa ít nhất hai loại trong số chữ cái, chữ số và dấu câu.",
+      "password_required": "Vui lòng nhập mật khẩu",
+      "username_invalid": "Sai định dạng số điện thoại hoặc email",
+      "username_required": "Vui lòng nhập số điện thoại hoặc email"
+    },
+    "agreements": {
+      "accept_text": "Vui lòng tích chọn đồng ý với các điều khoản liên quan",
+      "agree": "Tôi đã đọc và đồng ý",
+      "disclaimer": "《Thỏa thuận miễn trừ trách nhiệm》",
+      "privacy": "《Chính sách quyền riêng tư》",
+      "user": "《Thỏa thuận người dùng》",
+      "yu": "và"
+    },
+    "back_login": "Quay lại đăng nhập",
+    "back_main_login": "Quay lại đăng nhập tài khoản chính",
+    "email_login": {
+      "code_required": "Vui lòng nhập mã xác minh",
+      "email_invalid": "Định dạng email không hợp lệ",
+      "email_required": "Vui lòng nhập email",
+      "send_code": "Lấy mã xác nhận"
+    },
+    "forget_password": "Quên mật khẩu",
+    "forgot_password": {
+      "email": {
+        "code_label": "Mã xác minh",
+        "code_required": "Vui lòng nhập mã xác minh",
+        "email_invalid": "Định dạng email không hợp lệ",
+        "email_label": "Email",
+        "email_required": "Vui lòng nhập email",
+        "title": "Hộp thư"
+      },
+      "next": "Bước tiếp theo",
+      "phone": {
+        "code_label": "Mã xác thực",
+        "code_required": "Vui lòng nhập mã xác minh",
+        "phone_invalid": "Định dạng số điện thoại không hợp lệ",
+        "phone_label": "Số điện thoại",
+        "phone_required": "Vui lòng nhập số điện thoại",
+        "title": "Số điện thoại di động"
+      },
+      "stepOne": {
+        "title": "Xác minh danh tính"
+      },
+      "stepThree": {
+        "auto_back_text": "giây sau tự động quay lại trang đăng nhập",
+        "successful": "Thay đổi mật khẩu thành công"
+      },
+      "stepTwo": {
+        "confirm_password_label": "Xác nhận mật khẩu mới",
+        "confirm_password_required": "Vui lòng nhập mật khẩu xác nhận",
+        "new_password_invalid": "Vui lòng nhập 6-20 ký tự gồm chữ cái tiếng Anh, chữ số hoặc ký hiệu (ngoại trừ khoảng trắng), và phải chứa ít nhất hai loại: chữ cái, chữ số và dấu câu.",
+        "new_password_label": "Mật khẩu mới",
+        "new_password_required": "Vui lòng nhập mật khẩu mới",
+        "password_not_match": "Hai lần nhập mật khẩu không khớp",
+        "sub_title": "Vui lòng nhập mật khẩu mới",
+        "title": "Đặt lại mật khẩu"
+      },
+      "sub_title": "Vui lòng nhập thông tin xác minh"
+    },
+    "login_btn_text": "Đăng nhập/Đăng ký",
+    "new_user_gift": "Người dùng mới lần đầu đăng ký nhận ngay quà tân thủ >>",
+    "send_code": "Lấy mã xác minh",
+    "sms_login": {
+      "code_required": "Vui lòng nhập mã xác nhận",
+      "phone_invalid": "Số điện thoại không đúng định dạng",
+      "phone_required": "Vui lòng nhập số điện thoại",
+      "send_code": "Lấy mã xác thực"
+    },
+    "sub_account": {
+      "back_main_login": "Quay lại đăng nhập tài khoản chính",
+      "bind_phone_email": {
+        "bind_btn_text": "liên kết",
+        "bind_success": "Liên kết thành công",
+        "email": {
+          "code_label": "Mã xác nhận",
+          "code_required": "Vui lòng nhập mã xác minh",
+          "duplicate_email_message": "Email đã được liên kết với tài khoản khác, vui lòng nhập lại",
+          "email_label": "Hộp thư",
+          "fail": "Xác minh email thất bại, vui lòng thử lại",
+          "invalid": "Định dạng email không hợp lệ",
+          "required": "Vui lòng nhập email",
+          "send_code": "Lấy mã xác nhận",
+          "title": "Liên kết email"
+        },
+        "phone": {
+          "code_label": "Mã xác minh",
+          "code_required": "Vui lòng nhập mã xác nhận",
+          "duplicate_phone_message": "Số điện thoại đã được liên kết với tài khoản khác, vui lòng nhập lại",
+          "fail": "Xác minh số điện thoại thất bại, vui lòng thử lại",
+          "invalid": "Số điện thoại không đúng định dạng",
+          "phone_label": "Số điện thoại di động",
+          "required": "Vui lòng nhập số điện thoại",
+          "send_code": "Lấy mã xác minh",
+          "title": "Liên kết số điện thoại"
+        },
+        "title": "Liên kết số điện thoại/email"
+      },
+      "btn_text": "Đăng nhập tài khoản phụ",
+      "login": "Đăng nhập",
+      "password_invalid": "Vui lòng nhập 6-20 ký tự gồm chữ cái tiếng Anh, chữ số hoặc ký hiệu (ngoại trừ dấu cách), và phải chứa ít nhất hai loại trong số chữ cái, chữ số và dấu câu.",
+      "password_label": "Mật khẩu tài khoản con",
+      "password_required": "Vui lòng nhập mật khẩu tài khoản phụ",
+      "phone_email_invalid": "Số điện thoại hoặc email sai định dạng",
+      "phone_email_label": "Số điện thoại/email của tài khoản chính",
+      "phone_email_required": "Vui lòng nhập số điện thoại/email của tài khoản chính",
+      "title": "Đăng nhập tài khoản phụ",
+      "username_label": "tài khoản phụ",
+      "username_required": "Vui lòng nhập tài khoản phụ"
+    },
+    "title": "XIN CHÀO! Chào mừng đăng ký/đăng nhập"
+  },
+  "logout": {
+    "cancel": "Hủy",
+    "confirm": "Bạn có chắc chắn muốn đăng xuất không?",
+    "ok": "Xác định",
+    "tip": "Lời nhắc ấm áp",
+    "title": "Đăng xuất"
   },
   "memory": {
     "actions": "Hành động",
@@ -2590,11 +2729,12 @@
     "add_to_launchpad": "Ajouter à Launchpad",
     "add_to_sidebar": "Thêm vào thanh bên",
     "deepseek_harness": {
-      "install_failed": "[to be translated]:DeepSeek Harness installation failed",
-      "install_success": "[to be translated]:DeepSeek Harness installed successfully",
-      "installing": "[to be translated]:Installing DeepSeek Harness, please wait…",
-      "start_failed": "[to be translated]:Failed to start DeepSeek Harness",
-      "starting": "[to be translated]:Starting DeepSeek Harness…"
+      "install_failed": "Cài đặt DeepSeek Harness thất bại",
+      "install_success": "DeepSeek Harness đã được cài đặt thành công",
+      "install_timeout": "Cài đặt DeepSeek Harness đã hết thời gian chờ, vui lòng thử lại",
+      "installing": "Đang cài đặt DeepSeek Harness, vui lòng đợi…",
+      "start_failed": "Không thể khởi động DeepSeek Harness",
+      "starting": "Đang khởi động DeepSeek Harness…"
     },
     "popup": {
       "close": "Đóng MinApp",
@@ -2733,7 +2873,29 @@
     "type": {
       "embedding": "Nhúng",
       "free": "Libre",
-      "function_calling": "Herramienta",
+      "function_calling": "Công cụ",
+      "price": {
+        "cache_price": "Giá bộ nhớ đệm",
+        "cache_think_price": "Giá bộ nhớ đệm/Giá suy nghĩ",
+        "charge_type_label": "Phương thức thu phí",
+        "duration": "Tính phí theo thời lượng",
+        "gold_coin": "Xu vàng",
+        "interactive_num": "Xu vàng/tờ",
+        "million_tokens": "Xu/mỗi triệu token",
+        "output_price": "Giá đầu ra",
+        "per_character": "Tính phí theo ký tự",
+        "per_count": "Thu phí theo lần",
+        "per_image": "Thu phí theo tờ",
+        "per_time": "lần",
+        "per_tokens": "Thu phí theo token",
+        "second": "giây",
+        "standard": "Tiêu chuẩn thu phí",
+        "ten_thousand_chars": "10K ký tự",
+        "text_tokens": "Xu/lượt",
+        "title": "Thu phí",
+        "token_price": "Xu/M token",
+        "video_input_price": "Giá đầu vào video"
+      },
       "reasoning": "Lập luận",
       "rerank": "Công cụ sắp xếp lại",
       "select": "Các Loại Mô Hình",
@@ -2916,9 +3078,9 @@
     "title": "Ollama"
   },
   "onboarding": {
-    "newUserGift": "[to be translated]:New users will receive a welcome gift upon their first registration>>",
+    "newUserGift": "Người dùng mới sẽ nhận được quà chào mừng khi đăng ký lần đầu>>",
     "privacy": {
-      "accept_and_continue": "[to be translated]:Accept and Continue",
+      "accept_and_continue": "Chấp nhận và tiếp tục",
       "notice": "Bằng cách tiếp tục, bạn xác nhận rằng bạn đã đọc và đồng ý với",
       "period": ".",
       "policy": "Chính sách quyền riêng tư"
@@ -3283,6 +3445,9 @@
     "seed_random": "Ngẫu nhiên",
     "seed_tip": "Cùng một hạt giống và lời nhắc có thể tạo ra những hình ảnh tương tự",
     "select_model": "Chọn Mô hình",
+    "settings": {
+      "title": "Cài đặt chức năng"
+    },
     "style_type": "Phong cách",
     "style_types": {
       "3d": "3D",
@@ -3402,12 +3567,12 @@
     "zoom_out": "Zum Herauszoomen"
   },
   "privacy_policy": {
-    "title": "[to be translated]:Privacy Policy"
+    "title": "Chính sách bảo mật"
   },
   "privacy_policy_update": {
-    "description_before_link": "[to be translated]:We have updated the privacy policy. Please review the latest ",
-    "policy": "[to be translated]:Privacy Policy",
-    "title": "[to be translated]:Privacy Policy Updated"
+    "description_before_link": "Chúng tôi đã cập nhật chính sách quyền riêng tư. Vui lòng xem lại phiên bản mới nhất",
+    "policy": "Chính sách bảo mật",
+    "title": "Đã cập nhật Chính sách bảo mật"
   },
   "prompts": {
     "explanation": "Giải thích khái niệm này cho tôi",
@@ -4621,7 +4786,7 @@
       },
       "custom": {
         "css": {
-          "cherrycss": "Lấy từ cherrycss.com",
+          "gallery": "Tải thêm chủ đề",
           "label": "CSS Tùy chỉnh",
           "placeholder": "/* Đặt CSS tùy chỉnh tại đây */"
         }
@@ -5018,6 +5183,20 @@
       "url": "URL",
       "user": "Người dùng"
     },
+    "menus": {
+      "model": {
+        "title": "Khả năng của mô hình"
+      },
+      "other": {
+        "title": "Khác"
+      },
+      "quick": {
+        "title": "Công cụ nhanh"
+      },
+      "system": {
+        "title": "Cài đặt hệ thống"
+      }
+    },
     "messages": {
       "divider": {
         "label": "Hiển thị đường phân cách giữa các tin nhắn",
@@ -5034,7 +5213,7 @@
         "confirm_regenerate_message": "Xác nhận trước khi tạo lại tin nhắn",
         "enable_quick_triggers": "Kích hoạt các kích hoạt / và @",
         "paste_long_text_as_file": "Dán văn bản dài dưới dạng tệp",
-        "paste_long_text_threshold": "I’m ready—please provide the long text you’d like translated.",
+        "paste_long_text_threshold": "Độ dài văn bản dài",
         "send_shortcuts": "Gửi phím tắt",
         "show_estimated_tokens": "Hiển thị số token ước tính",
         "title": "Cài đặt đầu vào"
@@ -5113,6 +5292,8 @@
     "model": "Mô hình Mặc định",
     "models": {
       "add": {
+        "activate_desc": "Trước khi sử dụng các dịch vụ như gọi mô hình, bạn cần kích hoạt mô hình. Phương thức kích hoạt là sử dụng trước, thanh toán sau; nếu sử dụng, phí dịch vụ sẽ được tính theo bảng giá niêm yết của mô hình; nếu không sử dụng, sẽ không phát sinh phí.",
+        "activate_model": "Kích hoạt",
         "add_model": "Thêm Mô hình",
         "batch_add_models": "Thêm hàng loạt mô hình",
         "endpoint_type": {
@@ -5139,10 +5320,12 @@
           "placeholder": "Opcional p. ej. GPT-4",
           "tooltip": "Opcjonalnie np. GPT-4"
         },
+        "search_placeholder": "Nhập tên mô hình hoặc tên nhà cung cấp dịch vụ",
         "supported_text_delta": {
           "label": "Hỗ trợ xuất văn bản tăng dần",
           "tooltip": "Mô hình trả về văn bản theo từng phần, thay vì toàn bộ cùng lúc. Được bật theo mặc định, nếu mô hình không hỗ trợ, vui lòng tắt tùy chọn này"
-        }
+        },
+        "tips": "Trước khi kích hoạt, vui lòng đảm bảo số dư xu vàng trong tài khoản lớn hơn 0, nếu không sẽ không thể kích hoạt."
       },
       "api_key": "Khóa API",
       "base_url": "URL cơ sở",
@@ -5173,11 +5356,13 @@
       "default_assistant_model": "Mô hình Trợ lý Mặc định",
       "default_assistant_model_description": "Mô hình được sử dụng khi tạo trợ lý mới, nếu trợ lý chưa được thiết lập, mô hình này sẽ được sử dụng",
       "empty": "Không tìm thấy mô hình nào",
+      "image_model": "Tạo ảnh",
       "manage": {
         "add_listed": {
           "confirm": "Bạn có chắc chắn muốn thêm tất cả các mô hình vào danh sách không?",
           "label": "Thêm các mô hình vào danh sách"
         },
+        "add_model": "Thêm mô hình",
         "add_whole_group": "Thêm toàn bộ nhóm",
         "fetch_list": "Lấy danh sách mô hình",
         "refetch_list": "Tải lại danh sách mô hình",
@@ -5205,6 +5390,7 @@
         "setting_title": "Thiết lập mô hình nhanh",
         "tooltip": "Khuyến nghị chọn mô hình nhẹ và không nên chọn mô hình suy nghĩ."
       },
+      "text_model": "mô hình văn bản",
       "topic_naming": {
         "auto": "Tự động đặt tên chủ đề",
         "label": "Đặt tên chủ đề",
@@ -5306,17 +5492,23 @@
       "api": {
         "key": {
           "check": {
-            "latency": "Latência"
+            "latency": "Thời gian"
           },
           "error": {
             "duplicate": "Khóa API đã tồn tại",
             "empty": "Khóa API không được để trống"
           },
           "list": {
-            "open": "Otevřené rozhraní pro správu",
+            "more": "Thêm",
+            "open": "Mở giao diện quản lý",
             "title": "Quản lý Khóa API"
           },
           "new_key": {
+            "cancel": "Hủy bỏ",
+            "confirm": "Xác nhận",
+            "editing_tip": "Vui lòng hoàn tất chỉnh sửa hiện tại trước.",
+            "limit_over_tip": "Có thể tạo tối đa 200 khóa, vui lòng xóa bớt một số khóa",
+            "name_placeholder": "Vui lòng nhập tên khóa",
             "placeholder": "Nhập một hoặc nhiều khóa"
           }
         },
@@ -5353,7 +5545,8 @@
           "verbosity": {
             "help": "Cho dù nhà cung cấp có hỗ trợ tham số độ chi tiết hay không",
             "label": "Hỗ trợ chế độ chi tiết"
-          }
+          },
+          "website": "Truy cập trang web chính thức"
         },
         "url": {
           "preview": "Xem trước: {{url}}",
@@ -5367,7 +5560,50 @@
       "api_host_tooltip": "Chỉ ghi đè khi nhà cung cấp của bạn yêu cầu một điểm cuối tương thích OpenAI tùy chỉnh.",
       "api_key": {
         "label": "Khóa API",
-        "tip": "Dùng dấu phẩy để phân tách nhiều khóa"
+        "max_tip": "Có thể tạo tối đa 200 mục",
+        "tip": "Dùng dấu phẩy để phân tách nhiều khóa",
+        "token_plan": {
+          "columns": {
+            "action": "Bật/Tắt",
+            "creditsRest": "Lượng sử dụng (credits)",
+            "effective": "Thời hạn sử dụng",
+            "planName": "Tên combo/Phân loại",
+            "status": "Trạng thái",
+            "totalAmount": "Định giá"
+          },
+          "confirm_disable_content": "Có vô hiệu hóa gói TokenPlan không? Sau khi vô hiệu hóa sẽ tự động chuyển về sk-key mặc định của nền tảng.",
+          "confirm_disable_title": "Đã vô hiệu hóa TokenPlan",
+          "confirm_enable_content": "Có kích hoạt gói TokenPlan không? Sau khi kích hoạt, hệ thống sẽ chuyển sang tk-key của gói này và chuyển sang mô hình trong gói đó.",
+          "confirm_enable_title": "Kích hoạt TokenPlan",
+          "credits": "Lượng sử dụng còn lại (Credits)",
+          "cur_plan": {
+            "name": "Tên gói："
+          },
+          "custom": "Ngày",
+          "effective": "Thời hạn hiệu lực",
+          "effective_e": "Đến",
+          "effective_s": "Từ",
+          "model_title": "Sử dụng gói token",
+          "month": "hàng tháng",
+          "price": "Định giá",
+          "price_type": "￥",
+          "quarter": "quý",
+          "remaining": "còn lại",
+          "search": {
+            "planName": "Vui lòng nhập tên gói",
+            "status_placeholder": "Vui lòng chọn trạng thái"
+          },
+          "status": {
+            "disabled": "Đã hết hiệu lực",
+            "enabled": "Đang có hiệu lực",
+            "wait_pay": "Chờ thanh toán"
+          },
+          "subscribe_label": "Chọn gói",
+          "subscribe_placeholder": "Vui lòng chọn gói",
+          "title": "TokenPlan",
+          "total": "Tổng",
+          "year": "Năm"
+        }
       },
       "api_version": "Phiên bản API",
       "aws-bedrock": {
@@ -5391,7 +5627,7 @@
           "tip": "Phiên bản API của Azure OpenAI, nếu bạn muốn sử dụng Response API, vui lòng nhập phiên bản v1"
         }
       },
-      "balance": "Cân bằng",
+      "balance": "Số dư",
       "basic_auth": {
         "label": "Xác thực HTTP",
         "password": {
@@ -5455,7 +5691,7 @@
         "platform_official": "www.DMXAPI.cn (CNY)",
         "select_platform": "Chọn nền tảng"
       },
-      "docs_check": "Kiểm tra",
+      "docs_check": "Xem",
       "docs_more_details": "để biết thêm chi tiết",
       "filter": {
         "agent": "Được hỗ trợ bởi đại lý",
@@ -5467,16 +5703,16 @@
       "no_models_for_check": "Không có mô hình nào khả dụng để kiểm tra (ví dụ: mô hình chat)",
       "not_checked": "Chưa kiểm tra",
       "notes": {
-        "markdown_editor_default_value": "Bereichsvorschau",
+        "markdown_editor_default_value": "Khu vực xem trước",
         "placeholder": "Nhập nội dung Markdown...",
         "title": "Ghi chú mô hình"
       },
       "oauth": {
-        "balance": "Cân bằng",
+        "balance": "Số dư",
         "button": "Iniciar sesión con {{provider}}",
         "connect": "Kết nối {{provider}}",
         "description": "Dịch vụ này được cung cấp bởi <website>{{provider}}</website>",
-        "error": "Autentificación fallida",
+        "error": "Xác thực thất bại",
         "logged_in": "Đã đăng nhập",
         "logout": "Logga ut",
         "logout_confirm": "Bạn có chắc chắn muốn đăng xuất?",
@@ -5491,10 +5727,10 @@
         },
         "official_website": "Trang web chính thức",
         "provided_by": "Được cung cấp bởi",
-        "provided_by_suffix": "I’m ready—please provide the text you’d like me to translate.",
+        "provided_by_suffix": "",
         "requests": "Yêu cầu",
-        "topup": "Recarga",
-        "usage_title": "Cách sử dụng"
+        "topup": "Nạp tiền",
+        "usage_title": "Mức sử dụng"
       },
       "openai": {
         "alert": "Nhà cung cấp OpenAI không còn hỗ trợ các phương thức gọi cũ. Nếu đang sử dụng API của bên thứ ba, vui lòng tạo một nhà cung cấp dịch vụ mới."
@@ -5856,7 +6092,7 @@
         "value": {
           "help": "1~32 ký tự",
           "label": "Tên ngôn ngữ",
-          "placeholder": "I’m ready—please provide the English text you’d like translated."
+          "placeholder": "Tiếng Trung"
         }
       },
       "prompt": "Lời nhắc dịch thuật",
@@ -5894,6 +6130,9 @@
     "settings": "Cài đặt",
     "store": "Thư viện Trợ lý",
     "translate": "Dịch"
+  },
+  "tokenPlan": {
+    "title": "kế hoạch token"
   },
   "trace": {
     "backList": "Quay lại danh sách",
@@ -6055,6 +6294,13 @@
     "noReleaseNotes": "Không có ghi chú phát hành",
     "saveDataError": "Không lưu được dữ liệu, vui lòng thử lại.",
     "title": "Cập nhật"
+  },
+  "user": {
+    "limit": {
+      "limit_day": "Hạn mức hàng ngày",
+      "rest": "Hạn mức còn lại",
+      "title": "hạn mức"
+    }
   },
   "warning": {
     "missing_provider": "Nhà cung cấp không tồn tại; đã chuyển về nhà cung cấp mặc định {{provider}}. Điều này có thể gây ra sự cố."
