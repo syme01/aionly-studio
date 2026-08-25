@@ -342,7 +342,7 @@ export async function convertMessagesToSdkMessages(messages: Message[], model: M
 
     // If no user message found, return messages as-is
     if (lastUserSdkIndex < 0) {
-      return sdkMessages
+      return cleanNonStandardFields(sdkMessages)
     }
 
     // Find the nearest preceding assistant message in original messages
@@ -360,7 +360,7 @@ export async function convertMessagesToSdkMessages(messages: Message[], model: M
 
     // If no images to merge, return messages as-is
     if (imageParts.length === 0) {
-      return sdkMessages
+      return cleanNonStandardFields(sdkMessages)
     }
 
     // Build the new last user message with merged images
@@ -380,8 +380,29 @@ export async function convertMessagesToSdkMessages(messages: Message[], model: M
     const result = [...sdkMessages]
     result[lastUserSdkIndex] = { role: 'user', content: finalUserParts }
 
-    return result
+    return cleanNonStandardFields(result)
   }
 
-  return sdkMessages
+  return cleanNonStandardFields(sdkMessages)
+}
+
+/**
+ * 清理消息中的非标准字段
+ * 某些 API（如 Grok）不接受历史消息中包含 reasoning_content 等非标准字段
+ * 这些字段可能在响应时被添加，但在发送请求时需要被移除
+ *
+ * 注意：此函数作为防御性措施保留，主要的 reasoning part 过滤已在 parameterBuilder.ts 中实现
+ */
+function cleanNonStandardFields(messages: ModelMessage[]): ModelMessage[] {
+  return messages.map((msg) => {
+    // 只处理对象类型的消息（排除 string 类型）
+    if (typeof msg !== 'object' || msg === null) {
+      return msg
+    }
+
+    // 创建浅拷贝并删除非标准字段
+    const { reasoning_content, ...cleanMsg } = msg as any
+
+    return cleanMsg as ModelMessage
+  })
 }

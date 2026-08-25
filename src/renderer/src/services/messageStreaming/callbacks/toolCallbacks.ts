@@ -134,23 +134,60 @@ export const createToolCallbacks = (deps: ToolCallbacksDependencies) => {
           isPlainObject(resolvedInput) ? resolvedInput : null
         )
 
+        // ⚠️ FIXED 2026-08-25: 防止 Error 对象被存储到 metadata.rawMcpToolResponse.response 中
+        // 需要在合并 toolResponse 之前先转换 response 字段
+        let serializableToolResponse = toolResponse.response
+        if (toolResponse.response instanceof Error) {
+          serializableToolResponse = {
+            error: true,
+            message: toolResponse.response.message,
+            name: toolResponse.response.name,
+            stack: toolResponse.response.stack
+          }
+        }
+
         const mergedToolResponse: MCPToolResponse | NormalToolResponse = {
           ...(existingResponse ?? toolResponse),
           ...toolResponse,
+          response: serializableToolResponse, // 使用转换后的 response
           arguments: mergedArguments,
           partialArguments: undefined // Strip redundant streaming buffer to free memory
         }
 
+        // ⚠️ FIXED 2026-08-25: 防止 Error 对象被存储到 Redux state 导致序列化错误
+        // toolResponse.response 可能是 Error 对象，需要转换为可序列化的格式
+        let serializableContent = toolResponse.response
+        if (toolResponse.response instanceof Error) {
+          serializableContent = {
+            error: true,
+            message: toolResponse.response.message,
+            name: toolResponse.response.name,
+            stack: toolResponse.response.stack
+          }
+          logger.warn('Tool response contains Error object, converted to serializable format:', {
+            toolName: toolResponse.tool.name,
+            error: serializableContent
+          })
+        }
+
         const changes: Partial<ToolMessageBlock> = {
-          content: toolResponse.response,
+          content: serializableContent,
           status: finalStatus,
           metadata: { rawMcpToolResponse: mergedToolResponse }
         }
 
         if (finalStatus === MessageBlockStatus.ERROR) {
+          // 如果 content 已经是序列化后的错误对象，使用它的信息
+          const errorDetails =
+            serializableContent instanceof Error
+              ? serializableContent.message
+              : typeof serializableContent === 'object' && serializableContent?.error
+                ? serializableContent.message
+                : serializableContent
+
           changes.error = {
             message: `Tool execution failed/error`,
-            details: toolResponse.response,
+            details: errorDetails,
             name: null,
             stack: null
           }
@@ -158,10 +195,25 @@ export const createToolCallbacks = (deps: ToolCallbacksDependencies) => {
         blockManager.smartBlockUpdate(existingBlockId, changes, MessageBlockType.TOOL, true)
         // Handle citation block creation for web search results
         if (toolResponse.tool.name === BUILTIN_WEB_SEARCH_TOOL_NAME && toolResponse.response) {
+          // ⚠️ FIXED 2026-08-25: 防止 Error 对象被存储到 Redux state 导致序列化错误
+          // 当 web search 失败时，toolResponse.response 可能是一个 Error 对象
+          // Redux 不允许存储不可序列化的值（如 Error 对象），需要转换为纯对象
+          let serializableResponse = toolResponse.response
+          if (toolResponse.response instanceof Error) {
+            // 将 Error 对象转换为可序列化的纯对象
+            serializableResponse = {
+              error: true,
+              message: toolResponse.response.message,
+              name: toolResponse.response.name,
+              stack: toolResponse.response.stack
+            }
+            logger.warn('WebSearch failed with error, converted to serializable format:', serializableResponse)
+          }
+
           const citationBlock = createCitationBlock(
             assistantMsgId,
             {
-              response: { results: toolResponse.response, source: WEB_SEARCH_SOURCE.WEBSEARCH }
+              response: { results: serializableResponse, source: WEB_SEARCH_SOURCE.WEBSEARCH }
             },
             {
               status: MessageBlockStatus.SUCCESS

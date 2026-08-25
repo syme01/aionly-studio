@@ -112,6 +112,65 @@ export async function buildStreamTextParams(
   webSearchPluginConfig?: WebSearchPluginConfig
   idleTimeout: IdleTimeoutHandle
 }> {
+  const model = assistant.model || getDefaultModel()
+
+  // 调试日志（已验证通过，保留用于未来调试）
+  // console.log('[parameterBuilder] DEBUG - Provider info:', {
+  //   id: provider.id,
+  //   type: provider.type,
+  //   name: provider.name,
+  //   apiHost: provider.apiHost
+  // })
+  // console.log('[parameterBuilder] DEBUG - Model info:', {
+  //   id: model.id,
+  //   name: model.name,
+  //   provider: model.provider
+  // })
+  // console.log('[parameterBuilder] DEBUG - Messages contain reasoning parts:',
+  //   sdkMessages.some((msg: any) =>
+  //     Array.isArray(msg.content) &&
+  //     msg.content.some((part: any) => part.type === 'reasoning')
+  //   )
+  // )
+
+  // 清理消息中的 reasoning part
+  // 只对不原生支持 reasoning 的 OpenAI 兼容 API 进行清理
+  // 原生支持 reasoning 的模型（Anthropic Claude 3.5 Sonnet, OpenAI o1 系列）需要保留 reasoning parts
+  const shouldFilterReasoning =
+    provider.type === 'openai' && !provider.apiHost.includes('api.openai.com') && provider.id !== 'openai'
+
+  // console.log('[parameterBuilder] Should filter reasoning:', shouldFilterReasoning)
+
+  const cleanedMessages = shouldFilterReasoning
+    ? sdkMessages.map((msg) => {
+        if (typeof msg !== 'object' || msg === null) {
+          return msg
+        }
+
+        // 创建清理后的消息对象
+        const cleanMsg: any = {
+          role: msg.role,
+          content: msg.content
+        }
+
+        // 如果 content 是数组，过滤掉 reasoning type 的 part
+        if (Array.isArray(cleanMsg.content)) {
+          // const originalLength = cleanMsg.content.length
+          cleanMsg.content = cleanMsg.content.filter((part: any) => {
+            return part.type !== 'reasoning'
+          })
+
+          // if (cleanMsg.content.length < originalLength) {
+          //   console.log(
+          //     `[parameterBuilder] Removed ${originalLength - cleanMsg.content.length} reasoning part(s) from message ${index}`
+          //   )
+          // }
+        }
+
+        return cleanMsg
+      })
+    : sdkMessages
+
   const { mcpTools, requestOptions = {} } = options
   // No caller currently provides a custom timeout; defaultTimeout (10 min) is the fallback.
   const { signal: externalSignal, timeout = DEFAULT_TIMEOUT, headers: inputHeaders = {} } = requestOptions
@@ -125,7 +184,7 @@ export async function buildStreamTextParams(
   }
   const finalSignal = AbortSignal.any(signals)
 
-  const model = assistant.model || getDefaultModel()
+  // const model = assistant.model || getDefaultModel() // 已在函数开头声明
   const aiSdkProviderId = getAiSdkProviderId(provider)
 
   // 这三个变量透传出来，交给下面启用插件/中间件
@@ -207,7 +266,7 @@ export async function buildStreamTextParams(
   const maxToolCalls = getEffectiveMaxToolCalls(assistant.settings)
 
   const params: StreamTextParams = {
-    messages: sdkMessages,
+    messages: cleanedMessages,
     maxOutputTokens: getMaxTokens(assistant, model),
     temperature: getTemperature(assistant, model),
     topP: getTopP(assistant, model),
