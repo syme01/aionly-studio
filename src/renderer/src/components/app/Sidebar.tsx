@@ -191,7 +191,7 @@ const MainMenus: FC = () => {
         iconActive: 'icon-xiaochengxuxuanzhong'
       }
     ]
-    if (serviceInfo?.planStatus == 1 && false) {
+    if (serviceInfo?.planStatus == 1) {
       return [
         ...base,
         {

@@ -741,7 +741,7 @@ const ProviderSetting: FC<Props> = ({ providerId, isOnboarding = false }) => {
 
                 {provider.id !== 'copilot' && (
                   <Flex gap={10}>
-                    {tokenPlanEnabled && false && (
+                    {tokenPlanEnabled && (
                       <Button
                         type="primary"
                         ghost={true}
