@@ -105,6 +105,7 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
   const verifyRef = useRef<any>(null)
 
   const verifyType = useRef('')
+  const isProcessing = useRef(false) // 防止重复提交
 
   const [loading, setLoading] = useState(false)
   const [form] = Form.useForm<SubAccountLoginFieldType>()
@@ -209,10 +210,11 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
 
   /** 接口校验 **/
   const checkByApi = async (params: any) => {
-    if (verifyType.current !== 'bind') {
+    if (verifyType.current !== 'bind' && !isProcessing.current) {
       // console.log('账号登录开始')
       // 直接执行登录
       try {
+        isProcessing.current = true
         setLoading(true)
         const userName = params.username
         const phoneNumber = params.phoneNumber
@@ -235,6 +237,7 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
         logger.error('账号登录失败', error)
       } finally {
         setLoading(false)
+        isProcessing.current = false
       }
     }
   }
@@ -252,8 +255,11 @@ export const SubAccountLogin: React.FC<SubAccountLoginProps> = (props) => {
 
   // 滑块验证码成功回调
   const verifyOnSuccess = async (params: any) => {
-    await sendCode(params)
+    // 先关闭滑块弹窗，防止重复弹出
     verifyRef.current?.closeBox()
+    // 延迟执行登录逻辑，确保滑块组件完全关闭
+    await new Promise((resolve) => setTimeout(resolve, 100))
+    await sendCode(params)
   }
 
   useEffect(() => {
