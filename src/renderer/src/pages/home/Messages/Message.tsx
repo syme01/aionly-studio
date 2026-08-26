@@ -319,13 +319,18 @@ const MessageContainer = styled.div`
     }
     .main{
       //border-radius: 8px 0 8px 8px;
-      width: fit-content;
-      min-width: 25%;
-      max-width: 100%;
+      //width: fit-content;
+      //min-width: 25%;
+      //max-width: 100%;
       margin-right: 55px;
       //background-color: var(--color-list-item);
+      display: flex;
+      justify-content: flex-end;
     }
     .message-inner-wrapper{
+      width: fit-content;
+      min-width: 30%;
+      max-width: 100%;
       background-color: var(--color-list-item);
       border-radius: 8px 0 8px 8px;
     }
