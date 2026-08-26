@@ -65,20 +65,6 @@ export class ConversationService {
     }
   }
 
-  /**
-   * 清理 ModelMessage 中的非标准字段
-   * 某些 API（如 Grok）不接受历史消息中包含 reasoning_content 等非标准字段
-   */
-  private static cleanModelMessages(messages: ModelMessage[]): ModelMessage[] {
-    return messages.map((msg) => {
-      if (typeof msg !== 'object' || msg === null) {
-        return msg
-      }
-      const { reasoning_content, ...cleanMsg } = msg as any
-      return cleanMsg as ModelMessage
-    })
-  }
-
   static needsWebSearch(assistant: Assistant): boolean {
     return !!assistant.webSearchProviderId
   }
