@@ -446,9 +446,9 @@ const NewApiPage: FC<{ Options: string[] }> = ({ Options: _Options }) => {
 
       const res = await response.json()
       // console.log('res:', res)
-      if (res.code != 200) {
+      /*if (res.code != 200) {
         throw new Error(res.message || res.msg || t('paintings.generate_failed'))
-      }
+      }*/
       const urls = res?.data?.filter((item) => item.url).map((item) => item.url)
       const base64s = res?.data
         ?.filter((item) => item.b64_json || item.base64)
