@@ -39,7 +39,7 @@ export const createMessage = async (req: Request, res: Response): Promise<void> 
 
     const messageData = req.body
 
-    logger.info('Creating streaming message', { agentId, sessionId })
+    logger.info('Creating streaming message', { agentId, sessionId, model: session.model })
     logger.debug('Streaming message payload', { messageData })
 
     // Set SSE headers

@@ -1,12 +1,15 @@
 import Verify from '@renderer/components/verifition/Verify'
 import i18n from '@renderer/i18n'
-import { Tabs, TabsProps } from 'antd'
+import type { TabsProps } from 'antd'
+import { Tabs } from 'antd'
 import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
-import EmailForm, { EmailFormRef } from './EmailForm'
-import PhoneForm, { PhoneFormRef } from './PhoneForm'
+import type { EmailFormRef } from './EmailForm'
+import EmailForm from './EmailForm'
+import type { PhoneFormRef } from './PhoneForm'
+import PhoneForm from './PhoneForm'
 
 interface Props {
   changeStep?: (step: number, data?: any) => void

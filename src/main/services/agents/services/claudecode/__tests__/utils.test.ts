@@ -1,6 +1,39 @@
 import { describe, expect, it } from 'vitest'
 
-import { isMarketOfficialHost, isDeepSeekOfficialHost, isMiMoOfficialHost, with1mContextSuffix } from '../utils'
+import {
+  isDeepSeekOfficialHost,
+  isMarketOfficialHost,
+  isMiMoOfficialHost,
+  isOfficialAnthropicHost,
+  with1mContextSuffix
+} from '../utils'
+
+describe('isOfficialAnthropicHost', () => {
+  it('matches the canonical Anthropic API endpoint', () => {
+    expect(isOfficialAnthropicHost('https://api.anthropic.com')).toBe(true)
+    expect(isOfficialAnthropicHost('https://api.anthropic.com/v1')).toBe(true)
+    expect(isOfficialAnthropicHost('  https://api.anthropic.com  ')).toBe(true)
+  })
+
+  it('matches first-party subdomains via hostname suffix', () => {
+    expect(isOfficialAnthropicHost('https://api.anthropic.com')).toBe(true)
+    expect(isOfficialAnthropicHost('https://statsig.anthropic.com')).toBe(true)
+  })
+
+  it('rejects third-party and lookalike hosts', () => {
+    expect(isOfficialAnthropicHost('https://openrouter.ai/api/v1')).toBe(false)
+    expect(isOfficialAnthropicHost('https://anthropic.com.evil.com')).toBe(false)
+    expect(isOfficialAnthropicHost('https://notanthropic.com')).toBe(false)
+    expect(isOfficialAnthropicHost('https://api.deepseek.com/anthropic')).toBe(false)
+  })
+
+  it('handles missing or malformed hosts gracefully', () => {
+    expect(isOfficialAnthropicHost(undefined)).toBe(false)
+    expect(isOfficialAnthropicHost('')).toBe(false)
+    expect(isOfficialAnthropicHost('   ')).toBe(false)
+    expect(isOfficialAnthropicHost('not a url')).toBe(false)
+  })
+})
 
 describe('isDeepSeekOfficialHost', () => {
   it('matches the canonical DeepSeek Anthropic endpoint', () => {

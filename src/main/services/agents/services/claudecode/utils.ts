@@ -131,6 +131,20 @@ const MARKET_OFFICIAL_HOSTNAMES = new Set([
   'open.cherryin.net'
 ])
 
+export function isOfficialAnthropicHost(host: string | undefined): boolean {
+  const trimmed = host?.trim()
+  if (!trimmed) return false
+  try {
+    // Official Anthropic API endpoints (api.anthropic.com and any first-party
+    // subdomain). The leading-dot boundary keeps lookalikes (notanthropic.com,
+    // anthropic.com.evil.com) from matching.
+    const { hostname } = new URL(trimmed)
+    return hostname === 'anthropic.com' || hostname.endsWith('.anthropic.com')
+  } catch {
+    return false
+  }
+}
+
 export function isDeepSeekOfficialHost(host: string | undefined): boolean {
   const trimmed = host?.trim()
   if (!trimmed) return false

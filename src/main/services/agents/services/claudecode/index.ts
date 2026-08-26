@@ -54,14 +54,14 @@ import type {
 } from '../../interfaces/AgentStreamInterface'
 import { skillService } from '../../skills/SkillService'
 import { agentService } from '../AgentService'
+import { PromptBuilder } from '../aionlyclaw/prompt'
 import { isProvisioned, provisionBuiltinAgent } from '../builtin/BuiltinAgentProvisioner'
 import { channelService } from '../ChannelService'
-import { PromptBuilder } from '../aionlyclaw/prompt'
 import { sessionService } from '../SessionService'
 import { buildNamespacedToolCallId } from './claude-stream-state'
 import { promptForToolApproval } from './tool-permissions'
 import { ClaudeStreamState, transformSDKMessageToStreamParts } from './transform'
-import { with1mContextSuffix } from './utils'
+import { isOfficialAnthropicHost, with1mContextSuffix } from './utils'
 
 const require_ = createRequire(import.meta.url)
 const logger = loggerService.withContext('ClaudeCodeService')
@@ -215,6 +215,16 @@ class ClaudeCodeService implements AgentServiceInterface {
       ANTHROPIC_API_KEY: provider.apiKey,
       ANTHROPIC_AUTH_TOKEN: provider.apiKey,
       ANTHROPIC_BASE_URL: anthropicBaseUrl,
+      // Third-party Anthropic-compatible relays (one-api/new-api style) commonly
+      // reject what the CLI sends by default for first-party endpoints: the
+      // `cache_control` field attached for prompt caching (HTTP 400: "Extra
+      // inputs are not permitted") and experimental `anthropic-beta` flags
+      // (HTTP 400: "invalid beta flag"). Keep both enabled only for the official
+      // Anthropic API; users can still override via session env_vars (e.g.
+      // DISABLE_PROMPT_CACHING=0), which merge after this block.
+      ...(isOfficialAnthropicHost(anthropicBaseUrl)
+        ? {}
+        : { DISABLE_PROMPT_CACHING: '1', CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: '1' }),
       ANTHROPIC_CUSTOM_HEADERS: customHeaders,
       ANTHROPIC_MODEL: sdkModelId,
       ANTHROPIC_DEFAULT_OPUS_MODEL: sdkModelId,
@@ -233,6 +243,18 @@ class ClaudeCodeService implements AgentServiceInterface {
       AIONLY_BUN_PATH: bunPath,
       ...(customGitBashPath ? { CLAUDE_CODE_GIT_BASH_PATH: customGitBashPath } : {})
     }
+
+    const relayCompatibilityMode = !isOfficialAnthropicHost(anthropicBaseUrl)
+    logger.info('Invoking Claude Code agent stream', {
+      agentId: session.agent_id,
+      sessionId: session.id,
+      sessionModel: session.model,
+      sdkModelId,
+      baseUrl: anthropicBaseUrl,
+      providerId: provider.id,
+      promptCaching: relayCompatibilityMode ? 'disabled' : 'enabled',
+      experimentalBetas: relayCompatibilityMode ? 'disabled' : 'enabled'
+    })
 
     // Merge user-defined environment variables from session configuration
     const userEnvVars = session.configuration?.env_vars
