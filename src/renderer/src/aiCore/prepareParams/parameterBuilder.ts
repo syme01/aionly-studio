@@ -31,7 +31,12 @@ import { type Assistant, getEffectiveMcpMode, type MCPTool, type Provider, Syste
 import type { StreamTextParams } from '@renderer/types/aiCoreTypes'
 import { IdleTimeoutController, type IdleTimeoutHandle } from '@renderer/utils/IdleTimeoutController'
 import { replacePromptVariables } from '@renderer/utils/prompt'
-import { isAIGatewayProvider, isAwsBedrockProvider, isSupportUrlContextProvider } from '@renderer/utils/provider'
+import {
+  isAIGatewayProvider,
+  isAwsBedrockProvider,
+  isSupportUrlContextProvider,
+  shouldFilterReasoningParts
+} from '@renderer/utils/provider'
 import { DEFAULT_TIMEOUT } from '@shared/config/constant'
 import type { ModelMessage } from 'ai'
 import { stepCountIs } from 'ai'
@@ -114,32 +119,29 @@ export async function buildStreamTextParams(
 }> {
   const model = assistant.model || getDefaultModel()
 
-  // 调试日志（已验证通过，保留用于未来调试）
-  // console.log('[parameterBuilder] DEBUG - Provider info:', {
-  //   id: provider.id,
-  //   type: provider.type,
-  //   name: provider.name,
-  //   apiHost: provider.apiHost
-  // })
-  // console.log('[parameterBuilder] DEBUG - Model info:', {
-  //   id: model.id,
-  //   name: model.name,
-  //   provider: model.provider
-  // })
-  // console.log('[parameterBuilder] DEBUG - Messages contain reasoning parts:',
-  //   sdkMessages.some((msg: any) =>
-  //     Array.isArray(msg.content) &&
-  //     msg.content.some((part: any) => part.type === 'reasoning')
-  //   )
-  // )
-
   // 清理消息中的 reasoning part
   // 只对不原生支持 reasoning 的 OpenAI 兼容 API 进行清理
   // 原生支持 reasoning 的模型（Anthropic Claude 3.5 Sonnet, OpenAI o1 系列）需要保留 reasoning parts
-  const shouldFilterReasoning =
-    provider.type === 'openai' && !provider.apiHost.includes('api.openai.com') && provider.id !== 'openai'
+  // 注意：此处仅过滤历史消息；SDK 工具调用循环内回传的 reasoning 由 stripReasoningPlugin 处理
+  const shouldFilterReasoning = shouldFilterReasoningParts(provider)
 
-  // console.log('[parameterBuilder] Should filter reasoning:', shouldFilterReasoning)
+  const hasReasoningParts = sdkMessages.some(
+    (msg) =>
+      typeof msg === 'object' &&
+      msg !== null &&
+      Array.isArray((msg as { content?: unknown }).content) &&
+      ((msg as { content: Array<{ type?: string }> }).content as Array<{ type?: string }>).some(
+        (part) => part.type === 'reasoning'
+      )
+  )
+  logger.info('Reasoning filter decision', {
+    providerType: provider.type,
+    providerId: provider.id,
+    apiHost: provider.apiHost,
+    modelId: model.id,
+    hasReasoningParts,
+    shouldFilterReasoning
+  })
 
   const cleanedMessages = shouldFilterReasoning
     ? sdkMessages.map((msg) => {

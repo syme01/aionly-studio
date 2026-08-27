@@ -141,6 +141,21 @@ export const isNewApiProvider = (provider: Provider) => {
 }
 
 /**
+ * 判断是否需要过滤发往模型的 reasoning parts
+ *
+ * 非官方 OpenAI 端点的 OpenAI 兼容中转不接受 assistant 消息中的 reasoning 回传：
+ * @ai-sdk/openai-compatible 会将 reasoning part 序列化为 reasoning_content 字段，
+ * 中转将其转换为缺少 summary 的 Responses reasoning item 时会被上游拒绝（422）。
+ * 官方 OpenAI 端点原生支持 reasoning，需要保留 reasoning parts。
+ *
+ * @param {Provider} provider 提供商对象
+ * @returns {boolean} 是否需要过滤 reasoning parts
+ */
+export function shouldFilterReasoningParts(provider: Provider): boolean {
+  return provider.type === 'openai' && !provider.apiHost.includes('api.openai.com') && provider.id !== 'openai'
+}
+
+/**
  * 判断是否为 OpenAI 兼容的提供商
  * @param {Provider} provider 提供商对象
  * @returns {boolean} 是否为 OpenAI 兼容提供商
@@ -161,8 +176,8 @@ export function isAwsBedrockProvider(provider: Provider): boolean {
 export {
   isAnthropicProvider,
   isAzureOpenAIProvider,
-  isMarketAPIProvider,
   isGeminiProvider,
+  isMarketAPIProvider,
   isOllamaProvider,
   isPerplexityProvider,
   isVertexProvider

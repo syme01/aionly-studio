@@ -4,13 +4,14 @@ import { loggerService } from '@logger'
 import {
   isDeepSeekModel,
   isGemini3Model,
+  isGeminiModel,
   isQwen35to39Model,
   isSupportedThinkingTokenQwenModel
 } from '@renderer/config/models'
 import { getEnableDeveloperMode } from '@renderer/hooks/useSettings'
 import type { Assistant, Model, Provider } from '@renderer/types'
 import { SystemProviderIds } from '@renderer/types'
-import { isOllamaProvider, isSupportEnableThinkingProvider } from '@renderer/utils/provider'
+import { isOllamaProvider, isSupportEnableThinkingProvider, shouldFilterReasoningParts } from '@renderer/utils/provider'
 
 import type { AiSdkMiddlewareConfig } from '../types/middlewareConfig'
 import { getReasoningTagName } from '../utils/reasoning'
@@ -21,9 +22,11 @@ import { createOpenrouterReasoningPlugin } from './openrouterReasoningPlugin'
 import { createPdfCompatibilityPlugin } from './pdfCompatibilityPlugin'
 import { createQwenThinkingPlugin } from './qwenThinkingPlugin'
 import { createReasoningExtractionPlugin } from './reasoningExtractionPlugin'
+import { createSanitizeGeminiToolSchemaPlugin } from './sanitizeGeminiToolSchemaPlugin'
 import { searchOrchestrationPlugin } from './searchOrchestrationPlugin'
 import { createSimulateStreamingPlugin } from './simulateStreamingPlugin'
 import { createSkipGeminiThoughtSignaturePlugin } from './skipGeminiThoughtSignaturePlugin'
+import { createStripReasoningPlugin } from './stripReasoningPlugin'
 import { createTelemetryPlugin } from './telemetryPlugin'
 
 const logger = loggerService.withContext('PluginBuilder')
@@ -114,6 +117,22 @@ export function buildPlugins({ provider, model, config }: BuildPluginsContext): 
   // 0.6 Skip Gemini3 thought signature for OpenAI-compatible API
   if (isGemini3Model(model)) {
     plugins.push(createSkipGeminiThoughtSignaturePlugin())
+  }
+
+  // 0.7 Strip reasoning parts for OpenAI-compatible relay providers
+  // SDK 工具调用多步循环会把当前轮次的 reasoning part 以 reasoning_content 回传，
+  // 中转将其转为缺少 summary 的 Responses reasoning item 会被上游拒绝（422）。
+  // parameterBuilder 只能过滤历史消息，这里在语言模型层补上循环内的回传。
+  if (shouldFilterReasoningParts(provider)) {
+    plugins.push(createStripReasoningPlugin())
+  }
+
+  // 0.8 Gemini 工具 schema 清理
+  // Gemini function calling 只支持 OpenAPI Schema 子集（无 additionalProperties / $schema 等字段），
+  // zod→JSON Schema 转换默认输出的这两个字段会被中转透传给 Google 上游而拒绝（400）。
+  // 直连 Google 与走 OpenAI 兼容中转两条路径都会命中，故按模型判定。
+  if (isGeminiModel(model)) {
+    plugins.push(createSanitizeGeminiToolSchemaPlugin())
   }
 
   // 1. Provider 工具注入 — providerToolPlugin 自动按 provider 分发工具
