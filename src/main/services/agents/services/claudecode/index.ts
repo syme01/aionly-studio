@@ -1,8 +1,7 @@
 // src/main/services/agents/services/claudecode/index.ts
-import { fork } from 'node:child_process'
+import { spawn } from 'node:child_process'
 import { EventEmitter } from 'node:events'
 import * as fs from 'node:fs'
-import { createRequire } from 'node:module'
 import os from 'node:os'
 import path from 'node:path'
 
@@ -27,12 +26,8 @@ import ClawServer from '@main/mcpServers/claw'
 import SkillsServer from '@main/mcpServers/skills'
 import WorkspaceMemoryServer from '@main/mcpServers/workspaceMemory'
 import { configManager } from '@main/services/ConfigManager'
-import {
-  getNodeProxyConfigFromEnvironment,
-  getProxyEnvironment,
-  getProxyProtocol
-} from '@main/services/proxy/nodeProxy'
-import { toAsarUnpackedPath } from '@main/utils'
+import { getProxyEnvironment } from '@main/services/proxy/nodeProxy'
+import { resolveClaudeExecutablePath } from '@main/utils/bundledBinaries'
 import { autoDiscoverGitBash, getBinaryPath } from '@main/utils/process'
 import { rtkRewrite } from '@main/utils/rtk'
 import getLoginShellEnvironment from '@main/utils/shell-env'
@@ -63,7 +58,6 @@ import { promptForToolApproval } from './tool-permissions'
 import { ClaudeStreamState, transformSDKMessageToStreamParts } from './transform'
 import { isOfficialAnthropicHost, with1mContextSuffix } from './utils'
 
-const require_ = createRequire(import.meta.url)
 const logger = loggerService.withContext('ClaudeCodeService')
 const promptBuilder = new PromptBuilder()
 const DEFAULT_AUTO_ALLOW_TOOLS = new Set(['Read', 'Glob', 'Grep'])
@@ -98,14 +92,12 @@ class ClaudeCodeStream extends EventEmitter implements AgentStream {
 
 class ClaudeCodeService implements AgentServiceInterface {
   private claudeExecutablePath: string
-  private claudeProxyBootstrapPath: string
 
   constructor() {
-    // Resolve Claude Code CLI robustly (works in dev and in asar)
-    this.claudeExecutablePath = toAsarUnpackedPath(
-      path.join(path.dirname(require_.resolve('@anthropic-ai/claude-agent-sdk')), 'cli.js')
-    )
-    this.claudeProxyBootstrapPath = toAsarUnpackedPath(path.join(app.getAppPath(), 'out', 'proxy', 'index.js'))
+    // Since claude-agent-sdk 0.3.x the CLI ships as a platform-specific
+    // native binary (optional dependency packages), resolved at construction
+    // so a missing binary fails fast instead of on first invoke.
+    this.claudeExecutablePath = resolveClaudeExecutablePath()
   }
 
   async invoke(
@@ -508,34 +500,16 @@ class ClaudeCodeService implements AgentServiceInterface {
       // model: modelInfo.modelId,
       pathToClaudeCodeExecutable: this.claudeExecutablePath,
       spawnClaudeCodeProcess: (spawnOptions) => {
-        const childEnv = { ...spawnOptions.env } as NodeJS.ProcessEnv
-
-        // Ensure the child process can resolve native modules (e.g. @img/sharp)
-        // that live in asar.unpacked alongside the SDK
-        childEnv.NODE_PATH = toAsarUnpackedPath(path.join(app.getAppPath(), 'node_modules'))
-
-        let execArgv = process.execArgv
-
-        const activeProxyConfig = getNodeProxyConfigFromEnvironment(childEnv)
-        if (activeProxyConfig) {
-          const proxyProtocol = getProxyProtocol(activeProxyConfig.proxyRules)
-
-          logger.info('Injecting proxy into Claude Code child process', {
-            proxyProtocol,
-            proxyRules: activeProxyConfig.proxyRules,
-            proxyBypassRules: activeProxyConfig.proxyBypassRules,
-            proxyBootstrapPath: this.claudeProxyBootstrapPath
-          })
-
-          execArgv = [...process.execArgv, '--disable-warning=UNDICI-EHPA', '--require', this.claudeProxyBootstrapPath]
-        }
-
-        const child = fork(spawnOptions.args[0], spawnOptions.args.slice(1), {
+        // Since claude-agent-sdk 0.3.x the CLI is a native binary, so it must
+        // be spawned directly — no fork()/node execArgv. The old --require
+        // proxy bootstrap and NODE_PATH only applied to the cli.js era; the
+        // native binary honors HTTP(S)_PROXY env vars on its own.
+        const child = spawn(spawnOptions.command, spawnOptions.args, {
           cwd: spawnOptions.cwd,
-          env: childEnv,
-          execArgv,
-          stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
-          signal: spawnOptions.signal
+          env: spawnOptions.env,
+          stdio: ['pipe', 'pipe', 'pipe'],
+          signal: spawnOptions.signal,
+          windowsHide: true
         })
         child.stderr?.on('data', (data: Buffer) => {
           const text = data.toString()
