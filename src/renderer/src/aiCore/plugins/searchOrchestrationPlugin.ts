@@ -137,10 +137,13 @@ async function analyzeSearchIntent(
       hasKnowledgeSearch: needKnowledgeExtract
     })
 
+    // 与 cherry #17270 对齐：改写 prompt 作为 user content 发送，不发空 user。
+    // 空 user 会被中转/Gemini 拒绝或返回空，fetchGenerate 吞错后 fallback 会给
+    // 主对话强制注入 builtin_web_search，进而触发 GeminiNativeTool[] 400。
     const result = await fetchGenerate({
       model,
-      prompt: formattedPrompt,
-      content: ''
+      prompt: '',
+      content: formattedPrompt
     }).finally(() => {
       logger.info('Intent analysis generateText call completed', {
         modelId: model.id,
